@@ -1,9 +1,9 @@
 // =================================================================
-// AeroJump Gualeguaychú - Sistema de Gestión Pro v2026
+// AeroJump Gualeguaychú - Sistema de Gestión de Saltos v2026
 // =================================================================
 
-// Importaciones de Firebase SDK (Versión NPM para producción)
-import { initializeApp } from "firebase/app";
+// Importaciones de Firebase SDK (v11.6.1) - CORREGIDO PARA NAVEGADOR
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
 import { 
     getAuth, 
     onAuthStateChanged, 
@@ -14,7 +14,7 @@ import {
     signOut,
     signInWithCustomToken,
     signInAnonymously
-} from "firebase/auth";
+} from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 import { 
     getFirestore, 
     doc, 
@@ -32,10 +32,10 @@ import {
     orderBy, 
     getDoc,
     writeBatch 
-} from "firebase/firestore";
+} from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
 // -----------------------------------------------------------------
-// 1. CONFIGURACIÓN DE FIREBASE (AEROJUMP NEW PROJECT)
+// 1. CONFIGURACIÓN DE FIREBASE (NUEVA CUENTA AEROJUMP)
 // -----------------------------------------------------------------
 const firebaseConfig = {
   apiKey: "AIzaSyBz0V2ieSXehafKWRNQprb951NVN5FvBD4",
@@ -168,16 +168,23 @@ const confirmSaleBtn = document.getElementById('confirm-sale-btn');
 document.addEventListener('DOMContentLoaded', () => {
     console.log("DOM Cargado. Iniciando AeroJump Gualeguaychú v2026...");
     setupEventListeners();
+    registerServiceWorker();
     firebaseInit();
 });
+
+function registerServiceWorker() {
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw.js').catch(error => {
+            console.error('Error Service Worker:', error);
+        });
+    }
+}
 
 async function firebaseInit() {
     try {
         const app = initializeApp(firebaseConfig);
         db = getFirestore(app);
         auth = getAuth(app);
-        
-        // Persistencia para mantener sesión al recargar
         await setPersistence(auth, browserLocalPersistence); 
 
         onAuthStateChanged(auth, async (user) => {
@@ -265,6 +272,27 @@ function setupEventListeners() {
     const cancelBookingBtn = document.getElementById('cancel-booking-btn');
     if (cancelBookingBtn) cancelBookingBtn.onclick = closeModals;
 
+    const cancelEventBtn = document.getElementById('cancel-event-btn');
+    if (cancelEventBtn) cancelEventBtn.onclick = closeModals;
+
+    const closeOptionsBtn = document.getElementById('close-options-btn');
+    if (closeOptionsBtn) closeOptionsBtn.onclick = closeModals;
+
+    const closeViewBtn = document.getElementById('close-view-btn');
+    if (closeViewBtn) closeViewBtn.onclick = closeModals;
+
+    const closeCajaDetailBtn = document.getElementById('close-caja-detail-btn');
+    if (closeCajaDetailBtn) closeCajaDetailBtn.onclick = closeModals;
+
+    const addNewBookingBtn = document.getElementById('add-new-booking-btn');
+    if (addNewBookingBtn) {
+        addNewBookingBtn.onclick = () => {
+            const ds = optionsModal.dataset.date;
+            closeModals();
+            showBookingModal(ds); 
+        };
+    }
+
     const typeBtnCourt = document.getElementById('type-btn-court');
     if (typeBtnCourt) {
         typeBtnCourt.onclick = () => {
@@ -311,6 +339,9 @@ function setupEventListeners() {
     
     if (deleteReasonForm) deleteReasonForm.onsubmit = handleConfirmDelete;
     
+    const cancelDeleteBtn = document.getElementById('cancel-delete-btn');
+    if (cancelDeleteBtn) cancelDeleteBtn.onclick = closeModals;
+
     if (recurringToggle) recurringToggle.onchange = openRecurringModal;
     
     const confirmRecurBtn = document.getElementById('confirm-recurring-btn');
@@ -333,9 +364,29 @@ function setupEventListeners() {
         });
     }
 
+    const addProductBtn = document.getElementById('add-product-btn');
+    if (addProductBtn) {
+        addProductBtn.onclick = () => {
+            const container = document.getElementById('product-form-container');
+            if(container) container.classList.toggle('is-hidden');
+        };
+    }
+    
+    const cancelProductBtn = document.getElementById('cancel-product-btn');
+    if (cancelProductBtn) {
+        cancelProductBtn.onclick = () => {
+            const container = document.getElementById('product-form-container');
+            if(container) container.classList.add('is-hidden');
+        };
+    }
+
     if (productForm) productForm.onsubmit = handleSaveProduct;
     if (inventorySearchInput) inventorySearchInput.oninput = (e) => renderProducts(e.target.value);
     
+    if (document.getElementById('prod-batch-cost')) document.getElementById('prod-batch-cost').oninput = calculateProductPrices;
+    if (document.getElementById('prod-batch-qty')) document.getElementById('prod-batch-qty').oninput = calculateProductPrices;
+    if (document.getElementById('prod-profit-pct')) document.getElementById('prod-profit-pct').oninput = calculateProductPrices;
+
     const headerSaleBtn = document.getElementById('header-sale-btn');
     if (headerSaleBtn) headerSaleBtn.onclick = openSaleModal;
     if (saleSearchInput) saleSearchInput.oninput = handleSaleSearch;
@@ -345,6 +396,9 @@ function setupEventListeners() {
     const qtyPlusBtn = document.getElementById('sale-qty-plus');
     if (qtyPlusBtn) qtyPlusBtn.onclick = () => updateSaleQty(1);
     if (confirmSaleBtn) confirmSaleBtn.onclick = handleConfirmSale;
+
+    const closeSaleBtn = document.getElementById('close-sale-modal-btn');
+    if (closeSaleBtn) closeSaleBtn.onclick = closeModals;
 
     if (restockForm) restockForm.onsubmit = handleConfirmRestock;
     const editFormEl = document.getElementById('edit-product-form');
@@ -405,7 +459,7 @@ async function handleLogin(e) {
 
 async function handleRegister(e) {
     e.preventDefault();
-    showMessage("Registrando administrador AeroJump...");
+    showMessage("Registrando admin AeroJump...");
     const email = document.getElementById('register-email').value;
     const password = document.getElementById('register-password').value;
     try {
@@ -580,7 +634,7 @@ function renderTimeSlots(container, occupied, selected) {
 
 async function loadBookingsForMonth() {
     if (!db || !userId) return; 
-    showMessage("Sincronizando saltos...");
+    showMessage("Sincronizando agenda...");
     if (currentBookingsUnsubscribe) currentBookingsUnsubscribe(); 
     const monthYear = `${currentMonthDate.getFullYear()}-${String(currentMonthDate.getMonth() + 1).padStart(2, '0')}`;
     const q = query(collection(db, bookingsCollectionPath), where("monthYear", "==", monthYear));
@@ -638,7 +692,7 @@ async function handleSaveSingleBooking(event) {
         else { const docRef = await addDoc(collection(db, bookingsCollectionPath), data); bookingId = docRef.id; }
         await logBookingEvent(action, { id: bookingId, ...data });
         await saveCustomer(teamName); 
-        showMessage("¡Salto guardado!"); closeModals(); setTimeout(hideMessage, 1500); 
+        showMessage("¡Turno AeroJump guardado!"); closeModals(); setTimeout(hideMessage, 1500); 
     } catch (error) { showMessage(error.message, true); } finally { saveButton.disabled = false; }
 }
 
@@ -678,7 +732,7 @@ async function handleSaveEvent(event) {
 async function handleSaveRecurringBooking(event) {
     const saveButton = bookingForm.querySelector('button[type="submit"]');
     saveButton.disabled = true;
-    showMessage("Generando serie AeroJump...");
+    showMessage("Generando serie fija...");
 
     const teamName = document.getElementById('teamName').value.trim();
     const courtId = document.querySelector('input[name="courtSelection"]:checked')?.value || 'cancha1';
@@ -709,7 +763,7 @@ async function handleSaveRecurringBooking(event) {
             await logBookingEvent('created-recurring', data);
         }
         await batch.commit();
-        showMessage(`¡Serie creada! (${dates.length} saltos)`);
+        showMessage(`¡Serie fija creada! (${dates.length} saltos)`);
         closeModals(); setTimeout(hideMessage, 2000);
     } catch (e) { showMessage(e.message, true); } finally { saveButton.disabled = false; }
 }
@@ -726,7 +780,7 @@ async function handleConfirmDelete(event) {
         if (snap.exists()) {
             await logBookingEvent('deleted', { id: snap.id, ...snap.data() }, reason);
             await deleteDoc(ref);
-            showMessage("Salto anulado con éxito.");
+            showMessage("Salto anulado.");
         }
         closeModals(); setTimeout(hideMessage, 1500); 
     } catch (error) { showMessage(error.message, true); }
@@ -771,7 +825,7 @@ async function handleConfirmRestock(e) {
     const bCost = parseFloat(document.getElementById('restock-batch-cost').value);
     const nUnit = bCost / addQ;
     const p = allProducts.find(x => x.id === id);
-    const nSale = Math.ceil(nUnit * (1 + (parseInt(document.getElementById('prod-profit-pct')?.value || 40) / 100)));
+    const nSale = Math.ceil(nUnit * 1.40); // 40% margen
 
     try {
         showMessage("Sincronizando stock...");
@@ -779,7 +833,7 @@ async function handleConfirmRestock(e) {
             stock: p.stock + addQ, unitCost: nUnit, salePrice: nSale 
         });
         await logKioscoTransaction(id, `Reposición (+${addQ} un.)`, addQ, nUnit, 'in');
-        closeModals(); showMessage("¡Stock actualizado!"); setTimeout(hideMessage, 2000);
+        closeModals(); showMessage("¡Todo el stock actualizado!"); setTimeout(hideMessage, 2000);
     } catch (err) { alert(err.message); }
 }
 
@@ -821,14 +875,13 @@ function renderProducts(f = "") {
     productList.innerHTML = '';
     allProducts.filter(p => p.name.toLowerCase().includes(f.toLowerCase())).forEach(p => {
         const d = document.createElement('div');
-        d.className = 'bg-white p-6 rounded-3xl border shadow-sm flex flex-col gap-4';
-        d.innerHTML = `<div><h4 class="font-black italic uppercase text-slate-800">${p.name}</h4><span class="text-[9px] font-black uppercase text-violet-500">Stock: ${p.stock} un.</span></div>
-                       <strong class="text-3xl font-black text-violet-600">$${p.salePrice}</strong>
-                       <div class="grid grid-cols-2 gap-2">
-                           <button onclick="window.openRestock('${p.id}')" class="bg-violet-50 text-violet-700 p-3 rounded-xl text-[9px] font-black uppercase">📦 REPONER</button>
-                           <button onclick="window.openHistory('${p.id}')" class="bg-slate-50 text-slate-600 p-3 rounded-xl text-[9px] font-black uppercase">📜 LOGS</button>
-                           <button onclick="window.openEditProduct('${p.id}')" class="bg-slate-50 text-slate-600 p-3 rounded-xl text-[9px] font-black uppercase">✏️ EDITAR</button>
-                           <button onclick="window.deleteProduct('${p.id}')" class="bg-orange-50 text-orange-500 p-3 rounded-xl text-[9px] font-black uppercase">🗑️ BORRAR</button>
+        d.className = 'product-card bg-white p-6 rounded-3xl border shadow-md flex flex-col gap-4 transition-all hover:border-violet-300';
+        d.innerHTML = `<div class="flex justify-between items-start"><div><h4 class="font-black italic uppercase text-slate-800 text-xl tracking-tighter leading-tight">${p.name}</h4><span class="stock-badge ${p.stock < 5 ? 'bg-orange-100 text-orange-600' : 'bg-green-100 text-green-700'} text-[9px] font-black uppercase mt-1 px-2 py-0.5 rounded">Stock: ${p.stock} un.</span></div><div class="text-right"><p class="text-[8px] font-bold text-slate-400 uppercase tracking-widest">Precio</p><p class="text-3xl font-black text-violet-600 italic leading-none tracking-tighter">$${p.salePrice}</p></div></div>
+                       <div class="grid grid-cols-2 gap-2 mt-2">
+                           <button class="p-3 bg-violet-50 text-violet-700 rounded-xl font-bold text-[10px] uppercase shadow-sm" onclick="window.openRestock('${p.id}')">📦 REPONER</button>
+                           <button class="p-3 bg-slate-50 text-slate-600 rounded-xl font-bold text-[10px] uppercase shadow-sm" onclick="window.openHistory('${p.id}')">📜 LOGS</button>
+                           <button class="p-3 bg-slate-50 text-slate-600 rounded-xl font-bold text-[10px] uppercase shadow-sm" onclick="window.openEditProduct('${p.id}')">✏️ FICHA</button>
+                           <button class="p-3 bg-orange-50 text-orange-500 rounded-xl font-bold text-[10px] uppercase shadow-sm" onclick="window.deleteProduct('${p.id}')">🗑️ BORRAR</button>
                        </div>`;
         productList.appendChild(d);
     });
@@ -927,7 +980,7 @@ function renderCajaList(daily) {
     const sorted = Object.keys(daily).sort((a,b) => b.localeCompare(a));
     
     if(sorted.length === 0) {
-        cajaDailyList.innerHTML = '<p class="text-center text-slate-400 font-black p-8 italic uppercase text-xs">Sin movimientos registrados</p>';
+        cajaDailyList.innerHTML = '<p class="text-center text-slate-400 font-black p-8 italic uppercase text-[10px]">Sin movimientos AeroJump</p>';
         return;
     }
 
@@ -938,7 +991,7 @@ function renderCajaList(daily) {
         item.innerHTML = `
             <div>
                 <strong class="text-slate-800 text-xl font-black italic tracking-tighter">${d}/${m}/${y}</strong>
-                <p class="text-[9px] text-slate-400 font-bold uppercase mt-1 tracking-widest">${data.b.length} Turnos | ${data.s.length} Ventas Kiosco</p>
+                <p class="text-[9px] text-slate-400 font-bold uppercase mt-1 tracking-widest">${data.b.length} Saltos | ${data.s.length} Ventas Kiosco</p>
             </div>
             <div class="text-right">
                 <strong class="text-2xl font-black text-violet-600 tracking-tighter italic">$${data.t.toLocaleString('es-AR')}</strong>
@@ -952,9 +1005,6 @@ function showCajaDetail(date, data) {
     if(!cajaDetailModal) return;
     cajaDetailModal.classList.add('is-open'); 
     document.getElementById('caja-detail-title').textContent = date;
-    
-    let sumB = data.b.reduce((a, b) => a + (b.totalPrice || 0), 0);
-    let sumS = data.s.reduce((a, s) => a + (s.total || 0), 0);
     
     let efSum = data.b.filter(x => x.paymentMethod === 'efectivo').reduce((a, b) => a + (b.totalPrice || 0), 0) + 
                 data.s.filter(x => x.paymentMethod === 'efectivo').reduce((a, s) => a + (s.total || 0), 0);
@@ -1000,7 +1050,9 @@ function renderCalendar() {
     const lastDate = new Date(year, month + 1, 0).getDate();
 
     for (let i = 0; i < firstDay; i++) {
-        const d = document.createElement('div'); d.className = 'other-month-day h-20 md:h-28 bg-slate-50 opacity-20 border border-slate-100 rounded-xl'; calendarGrid.appendChild(d);
+        const d = document.createElement('div');
+        d.className = 'other-month-day h-20 md:h-28 bg-slate-50 opacity-20 border border-slate-100 rounded-xl';
+        calendarGrid.appendChild(d);
     }
 
     for (let i = 1; i <= lastDate; i++) {
@@ -1192,16 +1244,16 @@ async function loadHistorialData() {
 async function handleTeamNameInput() {
     if(!teamNameInput || !teamNameSuggestions) return; 
     const qText = teamNameInput.value.trim().toLowerCase(); 
-    if(qText.length < 2) { teamNameSuggestions.classList.add('is-hidden'); return; }
+    if(qText.length < 2) { teamNameSuggestions.style.display = 'none'; return; }
     try {
         const q = query(collection(db, customersCollectionPath), where(documentId(), ">=", qText), where(documentId(), "<=", qText + '\uf8ff'));
         const snap = await getDocs(q); teamNameSuggestions.innerHTML = '';
-        if(snap.empty) { teamNameSuggestions.classList.add('is-hidden'); return; }
+        if(snap.empty) { teamNameSuggestions.style.display = 'none'; return; }
         snap.forEach(d => { 
             const n = d.data().name, i = document.createElement('div'); i.className = 'suggestion-item font-black text-sm p-4 hover:bg-violet-50 cursor-pointer border-b border-slate-50 italic uppercase tracking-tighter'; i.textContent = n;
-            i.onmousedown = () => { teamNameInput.value = n; teamNameSuggestions.classList.add('is-hidden'); }; teamNameSuggestions.appendChild(i);
+            i.onmousedown = () => { teamNameInput.value = n; teamNameSuggestions.style.display = 'none'; }; teamNameSuggestions.appendChild(i);
         }); 
-        teamNameSuggestions.classList.remove('is-hidden');
+        teamNameSuggestions.style.display = 'block';
     } catch (e) {}
 }
 
@@ -1240,4 +1292,4 @@ function saveRecurringSettings() {
 }
 
 window.hideMessage = hideMessage; window.closeModals = closeModals;
-console.log("AeroJump v2026 Pro - Full Engine Sincronizado.");
+console.log("AeroJump v2026 Pro - Motor de Lógica Sincronizado.");
