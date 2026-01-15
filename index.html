@@ -6,243 +6,83 @@
     <title>AeroJump Gualeguaychú - Gestión de Saltos</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="style.css">
     
     <!-- Fuente Inter para un look más moderno -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
     
-    <style>
-        :root {
-            --color-violet: #7c3aed;
-            --color-orange: #f97316;
-            --color-green: #22c55e;
-            --color-violet-light: #f5f3ff;
-            --color-slate: #1e293b;
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f8fafc;
-        }
-
-        /* Estilo para los días que no pertenecen al mes actual */
-        .other-month-day {
-            background-color: #f1f5f9;
-            color: #cbd5e1;
-            border-radius: 1rem;
-        }
-
-        .day-cell {
-            border-radius: 1rem;
-            transition: all 0.2s ease-out;
-            border: 2px solid #f1f5f9;
-        }
-
-        .day-cell:hover {
-            transform: scale(1.05);
-            border-color: var(--color-violet);
-            box-shadow: 0 10px 15px -3px rgba(124, 58, 237, 0.1);
-        }
-
-        .booking-count {
-            position: absolute;
-            top: 0.5rem;
-            right: 0.5rem;
-            background-color: var(--color-violet);
-            color: white;
-            font-size: 0.7rem;
-            font-weight: 900;
-            width: 1.5rem;
-            height: 1.5rem;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 2px solid white;
-        }
-
-        .booking-count.event {
-            background-color: var(--color-orange);
-        }
-
-        /* MODALES */
-        .modal {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background-color: rgba(15, 23, 42, 0.7);
-            backdrop-filter: blur(4px);
-            align-items: flex-start;
-            justify-content: center;
-            overflow-y: auto;
-            padding: 2rem 1rem;
-            z-index: 100;
-        }
-
-        .modal.is-open {
-            display: flex;
-        }
-
-        /* MENÚ */
-        #main-menu {
-            position: fixed;
-            top: 70px;
-            left: 0;
-            width: 280px;
-            height: calc(100vh - 70px);
-            background-color: white;
-            box-shadow: 10px 0 30px rgba(0,0,0,0.05);
-            transform: translateX(-110%);
-            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            z-index: 90;
-            border-right: 1px solid #f1f5f9;
-        }
-
-        #main-menu.is-open {
-            transform: translateX(0);
-        }
-
-        .menu-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 1rem 1.5rem;
-            font-weight: 700;
-            color: #475569;
-            border-radius: 1rem;
-            margin: 0.5rem 1rem;
-            transition: all 0.2s;
-            text-transform: uppercase;
-            font-size: 0.75rem;
-            letter-spacing: 0.05em;
-        }
-
-        .menu-item:hover {
-            background-color: var(--color-violet-light);
-            color: var(--color-violet);
-        }
-
-        .is-hidden { display: none !important; }
-
-        /* GRILLA DE HORARIOS */
-        .time-slot-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 0.5rem;
-            padding: 1rem;
-            background-color: #f8fafc;
-            border-radius: 1.5rem;
-        }
-
-        .time-slot {
-            font-size: 0.8rem;
-            font-weight: 800;
-            padding: 0.75rem 0.25rem;
-            border: 2px solid #e2e8f0;
-            border-radius: 0.75rem;
-            background-color: white;
-            transition: all 0.2s;
-        }
-
-        .time-slot.selected {
-            background-color: var(--color-violet);
-            color: white;
-            border-color: var(--color-violet);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
-        }
-
-        .time-slot.disabled {
-            background-color: #f1f5f9;
-            color: #cbd5e1;
-            cursor: not-allowed;
-            text-decoration: line-through;
-            border-color: transparent;
-        }
-
-        /* ANIMACIÓN DE SALTO (LOADING) */
-        @keyframes jump {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-40px); }
-        }
-        @keyframes flex-trampoline {
-            0%, 100% { transform: scaleX(1) translateY(0); }
-            50% { transform: scaleX(1.1) translateY(5px); }
-        }
-        .jumping-child {
-            animation: jump 0.8s ease-in-out infinite;
-        }
-        .trampoline-line {
-            animation: flex-trampoline 0.8s ease-in-out infinite;
-        }
-
-        /* SCROLLBAR */
-        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
-
-        /* SWITCH */
-        .switch { position: relative; display: inline-block; width: 46px; height: 24px; }
-        .switch input { opacity: 0; width: 0; height: 0; }
-        .slider { position: absolute; cursor: pointer; inset: 0; background-color: #e2e8f0; transition: .4s; border-radius: 24px; }
-        .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
-        input:checked + .slider { background-color: var(--color-violet); }
-        input:checked + .slider:before { transform: translateX(22px); }
-    </style>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#7c3aed">
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 </head>
-<body class="antialiased">
+<body class="bg-gray-100 font-sans antialiased text-gray-900" style="font-family: 'Inter', sans-serif;">
 
     <!-- ============================================= -->
     <!-- VISTAS DE AUTENTICACIÓN -->
     <!-- ============================================= -->
-    <div id="login-view" class="flex items-center justify-center min-h-screen p-6">
-        <div class="bg-white p-10 rounded-[2.5rem] shadow-2xl w-full max-w-md border border-slate-50">
-            <div class="text-center mb-10">
+    
+    <div id="login-view" class="view-container flex items-center justify-center min-h-screen">
+        <div class="bg-white p-8 rounded-[2.5rem] shadow-2xl w-full max-w-sm border border-slate-50">
+            <div class="text-center mb-8">
                 <div class="inline-block p-4 bg-violet-100 rounded-3xl mb-4">
                     <span class="text-4xl">🚀</span>
                 </div>
-                <h2 class="text-4xl font-black text-slate-800 tracking-tighter uppercase italic">AeroJump</h2>
-                <p class="text-slate-400 font-bold text-[10px] uppercase tracking-widest mt-1">Gualeguaychú Management</p>
+                <h2 class="text-3xl font-black text-slate-800 tracking-tighter uppercase italic leading-none">Iniciar Sesión</h2>
+                <p class="text-slate-400 font-bold text-[10px] uppercase tracking-widest mt-2">AeroJump Management</p>
             </div>
-            <form id="login-form" class="space-y-4">
-                <div>
-                    <label class="block text-[10px] font-black text-slate-400 uppercase mb-2 ml-2">Email Admin</label>
-                    <input type="email" id="login-email" class="w-full px-6 py-4 bg-slate-50 border-none rounded-2xl font-bold focus:ring-4 focus:ring-violet-100 outline-none" required>
+            <form id="login-form">
+                <div class="mb-4">
+                    <label for="login-email" class="block text-[10px] font-black text-slate-400 uppercase mb-1 ml-1">Email de Administrador</label>
+                    <input type="email" id="login-email" class="w-full px-4 py-3 border border-slate-100 bg-slate-50 rounded-xl font-bold focus:ring-2 focus:ring-violet-500 outline-none" required>
                 </div>
-                <div>
-                    <label class="block text-[10px] font-black text-slate-400 uppercase mb-2 ml-2">Contraseña</label>
-                    <input type="password" id="login-password" class="w-full px-6 py-4 bg-slate-50 border-none rounded-2xl font-bold focus:ring-4 focus:ring-violet-100 outline-none" required>
+                <div class="mb-6">
+                    <label for="login-password" class="block text-[10px] font-black text-slate-400 uppercase mb-1 ml-1">Contraseña</label>
+                    <input type="password" id="login-password" class="w-full px-4 py-3 border border-slate-100 bg-slate-50 rounded-xl font-bold focus:ring-2 focus:ring-violet-500 outline-none" required>
                 </div>
-                <button type="submit" class="w-full bg-violet-600 hover:bg-violet-700 text-white font-black uppercase tracking-widest py-5 rounded-2xl shadow-xl shadow-violet-100 transition-all active:scale-95">Iniciar Sesión</button>
+                <button type="submit" class="bg-violet-600 hover:bg-violet-700 text-white w-full font-black uppercase tracking-widest py-4 rounded-xl shadow-lg shadow-violet-100 transition-all active:scale-95">Ingresar al Sistema</button>
             </form>
-            <p class="text-center text-[10px] text-slate-400 mt-8 font-black uppercase tracking-widest">
-                ¿Nuevo acceso? <a href="#" id="show-register" class="text-violet-600">Crear cuenta</a>
+            <p class="text-center text-[11px] text-slate-400 mt-6 font-bold uppercase tracking-tight">
+                ¿Nuevo administrador? 
+                <a href="#" id="show-register" class="text-violet-600 hover:underline">Crea una cuenta aquí</a>
             </p>
         </div>
     </div>
 
-    <div id="register-view" class="is-hidden flex items-center justify-center min-h-screen p-6">
-        <div class="bg-white p-10 rounded-[2.5rem] shadow-2xl w-full max-w-md">
-            <h2 class="text-3xl font-black text-center text-slate-800 mb-8 uppercase italic">Registro Admin</h2>
-            <form id="register-form" class="space-y-4">
-                <input type="email" id="register-email" placeholder="Email" class="w-full px-6 py-4 bg-slate-50 border-none rounded-2xl font-bold" required>
-                <input type="password" id="register-password" placeholder="Contraseña" class="w-full px-6 py-4 bg-slate-50 border-none rounded-2xl font-bold" required>
-                <button type="submit" class="w-full bg-violet-600 text-white font-black uppercase py-5 rounded-2xl shadow-xl">Registrar</button>
+    <div id="register-view" class="view-container flex items-center justify-center min-h-screen is-hidden">
+        <div class="bg-white p-8 rounded-[2.5rem] shadow-2xl w-full max-w-sm border border-slate-50">
+            <h2 class="text-3xl font-black text-center text-slate-800 mb-6 tracking-tighter uppercase italic leading-none">Crear Cuenta</h2>
+            <form id="register-form">
+                <div class="mb-4">
+                    <label for="register-email" class="block text-[10px] font-black text-slate-400 uppercase mb-1 ml-1">Email</label>
+                    <input type="email" id="register-email" class="w-full px-4 py-3 border border-slate-100 bg-slate-50 rounded-xl font-bold focus:ring-2 focus:ring-violet-500 outline-none" required>
+                </div>
+                <div class="mb-6">
+                    <label for="register-password" class="block text-[10px] font-black text-slate-400 uppercase mb-1 ml-1">Contraseña (mín. 6 caracteres)</label>
+                    <input type="password" id="register-password" class="w-full px-4 py-3 border border-slate-100 bg-slate-50 rounded-xl font-bold focus:ring-2 focus:ring-violet-500 outline-none" required>
+                </div>
+                <button type="submit" class="bg-violet-600 hover:bg-violet-700 text-white w-full font-black uppercase tracking-widest py-4 rounded-xl shadow-lg shadow-violet-100 transition-all active:scale-95">Registrar Admin</button>
             </form>
-            <p class="text-center text-[10px] text-slate-400 mt-6 font-black uppercase tracking-widest">
-                <a href="#" id="show-login" class="text-violet-600">Volver al login</a>
+            <p class="text-center text-[11px] text-slate-400 mt-6 font-bold uppercase tracking-tight">
+                ¿Ya tienes acceso? 
+                <a href="#" id="show-login" class="text-violet-600 hover:underline">Inicia sesión</a>
             </p>
         </div>
     </div>
 
     <!-- ============================================= -->
-    <!-- CONTENEDOR PRINCIPAL -->
+    <!-- CONTENEDOR PRINCIPAL DE LA APP -->
     <!-- ============================================= -->
     <div id="app-container" class="is-hidden">
+        
         <header class="fixed top-0 left-0 right-0 bg-white/80 backdrop-blur-md shadow-sm p-4 flex justify-between items-center z-50 border-b border-slate-100">
-            <div class="flex items-center gap-4">
-                <button id="menu-btn" class="p-3 rounded-2xl bg-slate-50 hover:bg-slate-100 transition-colors">
-                    <svg class="h-6 w-6 text-slate-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 6h16M4 12h16M4 18h16" /></svg>
+            <div class="flex items-center gap-2">
+                <button id="menu-btn" class="p-2 rounded-lg hover:bg-slate-50 transition-colors">
+                    <svg class="h-6 w-6 text-slate-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
                 </button>
                 <div class="leading-none">
                     <h1 class="text-xl font-black text-slate-800 tracking-tighter uppercase italic">AeroJump</h1>
@@ -250,88 +90,528 @@
                 </div>
             </div>
 
-            <button id="header-sale-btn" class="flex items-center gap-2 bg-orange-500 text-white px-6 py-3 rounded-2xl font-black shadow-lg shadow-orange-100 hover:bg-orange-600 transition-all active:scale-90 group">
+            <!-- Botón Venta Rápida Kiosco -->
+            <button id="header-sale-btn" class="flex items-center gap-2 bg-orange-500 text-white px-5 py-3 rounded-2xl font-black shadow-lg hover:bg-orange-600 transition-all active:scale-90 group">
                 <svg class="w-5 h-5 group-hover:rotate-12 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
-                <span class="text-[10px] uppercase tracking-widest hidden sm:block">Venta Kiosco</span>
+                <span class="text-[10px] uppercase tracking-widest hidden sm:block">Nueva Venta</span>
             </button>
         </header>
 
         <nav id="main-menu">
-            <div class="p-8 border-b border-slate-50">
-                <p class="text-[9px] font-black text-slate-300 uppercase tracking-[0.2em] mb-2">Sesión Activa</p>
-                <p id="user-email-display" class="font-black text-violet-600 truncate text-xs italic"></p>
-                <button id="logout-btn" class="w-full mt-6 py-3 text-[9px] font-black bg-slate-50 text-slate-400 rounded-xl hover:bg-red-50 hover:text-red-500 transition-all uppercase tracking-widest">Cerrar Sesión</button>
+            <div class="p-6 border-b border-slate-50">
+                <p class="text-[9px] font-black text-slate-300 uppercase tracking-[0.2em] mb-1">Administrador</p>
+                <p id="user-email-display" class="font-black text-violet-700 truncate text-xs italic" title="Email del usuario"></p>
+                <button id="logout-btn" class="w-full text-left mt-4 px-4 py-2 text-[10px] font-black bg-slate-50 text-slate-400 rounded-xl hover:bg-red-50 hover:text-red-500 transition-all uppercase tracking-widest">Cerrar Sesión</button>
             </div>
+            
             <div class="mt-4 px-2 space-y-1">
-                <a href="#" class="menu-item" data-view="calendar"><span>🗓️</span> Agenda Saltos</a>
-                <a href="#" class="menu-item" data-view="productos"><span>🥤</span> Stock Kiosco</a>
-                <a href="#" class="menu-item" data-view="caja"><span>💰</span> Arqueo Caja</a>
-                <a href="#" class="menu-item" data-view="stats"><span>🏆</span> Rankings</a>
-                <a href="#" class="menu-item" data-view="historial"><span>📖</span> Bitácora</a>
-                <a href="#" class="menu-item" data-view="configuracion"><span>⚙️</span> Tarifas</a>
+                <a href="#" class="menu-item flex items-center gap-3" data-view="calendar"><span>🗓️</span> Agenda Saltos</a>
+                <a href="#" class="menu-item flex items-center gap-3" data-view="productos"><span>🥤</span> Stock Kiosco</a>
+                <a href="#" class="menu-item flex items-center gap-3" data-view="caja"><span>💰</span> Arqueo Caja</a>
+                <a href="#" class="menu-item flex items-center gap-3" data-view="stats"><span>📊</span> Estadísticas</a>
+                <a href="#" class="menu-item flex items-center gap-3" data-view="historial"><span>📜</span> Historial Log</a> 
+                <a href="#" class="menu-item flex items-center gap-3" data-view="configuracion"><span>⚙️</span> Ajustes Precios</a>
             </div>
         </nav>
         <div id="menu-overlay" class="fixed inset-0 bg-slate-900/40 z-40 hidden" onclick="toggleMenu()"></div>
 
-        <!-- VISTAS -->
-        <main class="pt-24 pb-12 px-4">
-            <!-- CALENDARIO -->
-            <div id="calendar-view" class="view-container container mx-auto max-w-4xl">
-                <div class="flex flex-col sm:flex-row justify-between items-center gap-6 mb-10 text-center sm:text-left">
+
+        <!-- VISTA 1: CALENDARIO -->
+        <div id="calendar-view" class="view-container container mx-auto max-w-4xl p-4 pt-24">
+            <div class="text-center mb-8">
+                <h1 class="text-5xl font-black text-slate-800 tracking-tighter italic uppercase leading-none">Reservas</h1>
+                <p class="text-slate-400 font-bold text-[10px] uppercase tracking-[0.3em] mt-2">Control de turnos y eventos</p>
+            </div>
+            <div class="flex justify-between items-center bg-white p-5 rounded-[2.5rem] shadow-xl mb-6 border border-white">
+                <button id="prev-month-btn" class="p-4 rounded-2xl hover:bg-slate-50 transition-colors font-bold text-slate-300">◀</button>
+                <h2 id="current-month-year" class="text-xl font-black text-violet-700 italic uppercase tracking-tighter"></h2>
+                <button id="next-month-btn" class="p-4 rounded-2xl hover:bg-slate-50 transition-colors font-bold text-slate-300">▶</button>
+            </div>
+            <div class="grid grid-cols-7 gap-3 text-center font-black text-[10px] text-slate-300 uppercase tracking-widest mb-4 px-2">
+                <div>Dom</div> <div>Lun</div> <div>Mar</div> <div>Mié</div> <div>Jue</div> <div>Vie</div> <div>Sáb</div>
+            </div>
+            <div id="calendar-grid" class="grid grid-cols-7 gap-3"></div>
+        </div>
+
+        <!-- VISTA: KIOSCO / PRODUCTOS -->
+        <div id="productos-view" class="view-container container mx-auto max-w-5xl p-4 pt-24 is-hidden">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-10">
+                <div>
+                    <h2 class="text-5xl font-black text-slate-800 tracking-tighter italic uppercase leading-none">Inventario</h2>
+                    <p class="text-slate-400 font-bold text-[10px] uppercase tracking-[0.3em] mt-2 ml-1">Kiosco de AeroJump</p>
+                </div>
+                <button id="add-product-btn" class="bg-violet-600 text-white px-8 py-4 rounded-[1.5rem] font-black shadow-xl shadow-violet-100 hover:bg-violet-700 transition-all uppercase text-[10px] tracking-widest active:scale-95">+ NUEVO PRODUCTO</button>
+            </div>
+
+            <div class="relative mb-10 group">
+                <input type="text" id="inventory-search-input" class="w-full p-6 border-none bg-white rounded-[2rem] shadow-xl font-bold text-lg focus:ring-4 focus:ring-violet-50 transition-all placeholder:text-slate-200" placeholder="Filtrar por nombre...">
+                <span class="absolute right-8 top-1/2 -translate-y-1/2 text-2xl opacity-20 group-focus-within:opacity-100 transition-opacity">🔍</span>
+            </div>
+
+            <!-- Formulario de Carga Producto -->
+            <div id="product-form-container" class="bg-white p-8 md:p-10 rounded-[3rem] shadow-2xl mb-14 is-hidden border-4 border-violet-50 relative overflow-hidden text-sm">
+                <div class="absolute top-0 right-0 p-8 opacity-5 text-6xl font-black italic">NEW</div>
+                <h3 class="text-2xl font-black text-violet-900 mb-8 flex items-center gap-3 uppercase tracking-tighter italic">✨ Alta de Mercadería</h3>
+                <form id="product-form" class="grid grid-cols-1 md:grid-cols-3 gap-8 relative z-10">
+                    <div class="md:col-span-2">
+                        <label class="block text-[10px] font-black text-slate-400 uppercase mb-3 tracking-widest ml-2">Nombre Comercial</label>
+                        <input type="text" id="prod-name" placeholder="Ej: Bebida Energética 500ml" class="w-full px-6 py-5 bg-slate-50 border-none rounded-2xl font-black text-xl shadow-inner focus:ring-4 focus:ring-violet-100 outline-none" required>
+                    </div>
                     <div>
-                        <h2 class="text-5xl font-black text-slate-800 tracking-tighter italic uppercase leading-none">Reservas</h2>
-                        <p class="text-slate-400 font-bold text-[10px] uppercase tracking-[0.4em] mt-2 ml-1">Control de camas y eventos</p>
+                        <label class="block text-[10px] font-black text-slate-400 uppercase mb-3 tracking-widest ml-2">Stock Inicial</label>
+                        <input type="number" id="prod-stock" class="w-full px-6 py-5 bg-slate-50 border-none rounded-2xl font-black text-xl shadow-inner focus:ring-4 focus:ring-violet-100 outline-none" required min="0" value="0">
                     </div>
-                    <div class="flex items-center gap-4 bg-white p-3 rounded-3xl shadow-sm border border-slate-50">
-                        <button id="prev-month-btn" class="p-3 hover:bg-slate-50 rounded-2xl transition-colors font-bold">◀</button>
-                        <h3 id="current-month-year" class="text-sm font-black text-violet-600 uppercase italic tracking-widest w-40 text-center"></h3>
-                        <button id="next-month-btn" class="p-3 hover:bg-slate-50 rounded-2xl transition-colors font-bold">▶</button>
+                    <div>
+                        <label class="block text-[10px] font-black text-slate-400 uppercase mb-3 tracking-widest ml-2">Costo del Bulto ($)</label>
+                        <input type="number" id="prod-batch-cost" class="w-full px-6 py-5 bg-violet-50 border-none rounded-2xl font-black text-2xl text-violet-700 shadow-inner focus:ring-4 focus:ring-violet-100 outline-none" step="0.01" required placeholder="0.00">
                     </div>
-                </div>
-                <div class="grid grid-cols-7 gap-2 text-center text-[10px] font-black text-slate-300 uppercase tracking-widest mb-4">
-                    <div>Dom</div><div>Lun</div><div>Mar</div><div>Mie</div><div>Jue</div><div>Vie</div><div>Sab</div>
-                </div>
-                <div id="calendar-grid" class="grid grid-cols-7 gap-2 sm:gap-4"></div>
+                    <div>
+                        <label class="block text-[10px] font-black text-slate-400 uppercase mb-3 tracking-widest ml-2">Unidades x Bulto</label>
+                        <input type="number" id="prod-batch-qty" class="w-full px-6 py-5 bg-slate-50 border-none rounded-2xl font-black text-xl shadow-inner focus:ring-4 focus:ring-violet-100 outline-none" required min="1" value="1">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-black text-slate-400 uppercase mb-3 tracking-widest ml-2">Margen (%)</label>
+                        <input type="number" id="prod-profit-pct" class="w-full px-6 py-5 bg-orange-50 border-none rounded-2xl font-black text-xl text-orange-700 shadow-inner focus:ring-4 focus:ring-orange-100 outline-none" value="40">
+                    </div>
+                    <div class="md:col-span-3 p-10 bg-slate-900 rounded-[2.5rem] flex flex-col md:flex-row justify-between items-center gap-8 mt-4 shadow-2xl border border-slate-800">
+                        <div class="text-center md:text-left">
+                            <span class="text-[10px] font-black text-green-400 uppercase tracking-[0.3em] block mb-2">Precio de Venta Sugerido</span>
+                            <span id="prod-suggested-price" class="text-6xl font-black text-white tracking-tighter">$0</span>
+                            <input type="hidden" id="prod-unit-cost">
+                        </div>
+                        <div class="flex gap-4 w-full md:w-auto">
+                            <button type="button" id="cancel-product-btn" class="flex-1 px-8 py-5 font-black text-slate-500 hover:text-white transition-colors uppercase text-[10px] tracking-widest">Descartar</button>
+                            <button type="submit" class="flex-2 bg-green-600 text-white px-14 py-6 rounded-2xl font-black shadow-xl uppercase text-xs tracking-widest transition-all active:scale-95 border-b-4 border-green-800">Guardar Ficha</button>
+                        </div>
+                    </div>
+                </form>
             </div>
 
-            <!-- PRODUCTOS -->
-            <div id="productos-view" class="view-container container mx-auto max-w-5xl is-hidden">
-                <div class="flex flex-col sm:flex-row justify-between items-center gap-4 mb-10">
-                    <h2 class="text-4xl font-black text-slate-800 italic uppercase tracking-tighter">Inventario Kiosco</h2>
-                    <button id="add-product-btn" class="w-full sm:w-auto bg-violet-600 text-white px-8 py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-lg">Nuevo Producto</button>
+            <!-- Listado de productos -->
+            <div id="product-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
+        </div>
+
+        <!-- VISTA 2: GESTIÓN DE CAJA -->
+        <div id="caja-view" class="view-container container mx-auto max-w-4xl p-4 pt-24 is-hidden text-sm">
+            <h2 class="text-5xl font-black mb-10 text-center tracking-tighter italic text-slate-800 uppercase leading-none">Arqueo de Caja</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10 text-center">
+                <div class="bg-white p-10 rounded-[3rem] shadow-xl border-b-[12px] border-violet-500 flex flex-col items-center">
+                    <div class="w-12 h-12 bg-violet-50 rounded-full flex items-center justify-center text-2xl mb-4">🗓️</div>
+                    <h3 class="text-slate-400 font-black uppercase text-[10px] tracking-[0.2em] mb-2">Recaudación Saltos</h3>
+                    <p id="caja-total-bookings" class="text-4xl font-black text-violet-600 tracking-tighter">$0</p>
                 </div>
-                <div class="relative mb-8">
-                    <input type="text" id="inventory-search-input" placeholder="Buscar por nombre..." class="w-full px-6 py-4 bg-white border border-slate-200 rounded-2xl font-bold shadow-sm focus:ring-4 focus:ring-violet-100 outline-none">
+                <div class="bg-white p-10 rounded-[3rem] shadow-xl border-b-[12px] border-orange-500 flex flex-col items-center">
+                    <div class="w-12 h-12 bg-orange-50 rounded-full flex items-center justify-center text-2xl mb-4">🥤</div>
+                    <h3 class="text-slate-400 font-black uppercase text-[10px] tracking-[0.2em] mb-2">Recaudación Kiosco</h3>
+                    <p id="caja-total-sales" class="text-4xl font-black text-orange-600 tracking-tighter">$0</p>
                 </div>
-                <div id="product-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
             </div>
 
-            <!-- CAJA -->
-            <div id="caja-view" class="view-container container mx-auto max-w-4xl is-hidden">
-                <h2 class="text-4xl font-black text-slate-800 italic uppercase tracking-tighter mb-10 text-center">Arqueo Diario</h2>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10">
-                    <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-50 text-center">
-                        <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Total Saltos</p>
-                        <p id="caja-total-bookings" class="text-2xl font-black text-violet-600">$0</p>
+            <div class="bg-slate-900 p-12 rounded-[4rem] text-white text-center mb-12 shadow-2xl border-t-8 border-violet-400 relative group overflow-hidden">
+                <div class="absolute inset-0 bg-violet-600 opacity-0 group-hover:opacity-5 transition-opacity duration-700"></div>
+                <h3 class="text-[11px] font-black text-violet-400 uppercase tracking-[0.4em] mb-4">Balance Neto del Periodo</h3>
+                <p id="caja-total-combined" class="text-7xl font-black tracking-tighter leading-none italic">$0</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10 bg-white p-8 rounded-[2.5rem] shadow-xl border border-white">
+                <div>
+                    <label for="caja-date-from" class="block text-[10px] font-black text-slate-400 uppercase mb-2 ml-2 tracking-widest">Fecha Inicio</label>
+                    <input type="date" id="caja-date-from" class="w-full px-4 py-4 bg-slate-50 border-none rounded-xl font-black text-sm shadow-inner outline-none">
+                </div>
+                <div>
+                    <label for="caja-date-to" class="block text-[10px] font-black text-slate-400 uppercase mb-2 ml-2 tracking-widest">Fecha Fin</label>
+                    <input type="date" id="caja-date-to" class="w-full px-4 py-4 bg-slate-50 border-none rounded-xl font-black text-sm shadow-inner outline-none">
+                </div>
+                <button id="caja-filter-btn" class="bg-slate-900 hover:bg-black text-white self-end h-[60px] font-black uppercase text-[11px] tracking-[0.2em] shadow-2xl transition-all active:scale-95 rounded-2xl">Consultar Filtro</button>
+            </div>
+            
+            <h3 class="text-3xl font-black text-slate-800 mb-8 uppercase tracking-tighter italic ml-4">Detalle Cronológico</h3>
+            <div id="caja-daily-list" class="space-y-4 px-2"></div>
+        </div>
+        
+        <!-- VISTA 3: ESTADÍSTICAS -->
+        <div id="stats-view" class="view-container container mx-auto max-w-4xl p-4 pt-24 is-hidden text-sm">
+            <h2 class="text-5xl font-black text-slate-800 mb-10 tracking-tighter uppercase italic leading-none">Rankings</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10 bg-white p-6 rounded-[2rem] shadow-xl">
+                <div>
+                    <label class="block text-[10px] font-black text-slate-400 uppercase mb-2 tracking-widest ml-2 italic">Desde</label>
+                    <input type="date" id="stats-date-from" class="w-full p-4 bg-slate-50 border-none rounded-xl font-bold outline-none">
+                </div>
+                <div>
+                    <label class="block text-[10px] font-black text-slate-400 uppercase mb-2 tracking-widest ml-2 italic">Hasta</label>
+                    <input type="date" id="stats-date-to" class="w-full p-4 bg-slate-50 border-none rounded-xl font-bold outline-none">
+                </div>
+                <button id="stats-filter-btn" class="bg-violet-600 text-white rounded-xl font-black uppercase text-[10px] tracking-widest shadow-lg self-end h-[56px] active:scale-95 transition-all">Ver Ranking</button>
+            </div>
+            <h3 class="text-2xl font-black text-violet-800 mb-6 uppercase tracking-tighter ml-2">🏆 Mejores Clientes</h3>
+            <div id="stats-list" class="space-y-4"></div>
+        </div>
+
+        <!-- VISTA 4: HISTORIAL -->
+        <div id="historial-view" class="view-container container mx-auto max-w-4xl p-4 pt-24 is-hidden text-sm">
+            <h2 class="text-5xl font-black text-slate-800 mb-10 tracking-tighter uppercase italic leading-none text-center">Bitácora</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8 bg-white p-6 rounded-[2rem] shadow-xl">
+                <input type="date" id="historial-date-from" class="p-4 bg-slate-50 border-none rounded-xl font-bold outline-none">
+                <input type="date" id="historial-date-to" class="p-4 bg-slate-50 border-none rounded-xl font-bold outline-none">
+                <button id="historial-filter-btn" class="bg-slate-800 text-white rounded-xl font-black uppercase text-[10px] tracking-widest active:scale-95 transition-all">Filtrar Log</button>
+            </div>
+            <div id="historial-list" class="space-y-4"></div>
+        </div>
+        
+        <!-- VISTA 5: CONFIGURACIÓN -->
+        <div id="configuracion-view" class="view-container container mx-auto max-w-4xl p-4 pt-24 is-hidden text-sm">
+            <h2 class="text-4xl font-black text-slate-800 mb-12 uppercase tracking-tighter text-center italic">Maestro de Tarifas</h2>
+            <div class="bg-white p-12 rounded-[3.5rem] shadow-2xl max-w-md mx-auto border border-white">
+                <form id="config-form" class="space-y-10">
+                    <div class="space-y-6">
+                        <div>
+                            <label class="block text-[10px] font-black text-slate-400 uppercase mb-3 ml-2 tracking-widest italic">Costo Salto 1 Hora</label>
+                            <input type="number" id="config-court1-price" class="w-full px-6 py-5 bg-slate-50 border-none rounded-2xl font-black text-2xl text-violet-700 shadow-inner focus:ring-4 focus:ring-violet-50 outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-black text-slate-400 uppercase mb-3 ml-2 tracking-widest italic">Costo Salto 2 Horas</label>
+                            <input type="number" id="config-court2-price" class="w-full px-6 py-5 bg-slate-50 border-none rounded-2xl font-black text-2xl text-violet-700 shadow-inner focus:ring-4 focus:ring-violet-50 outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-black text-slate-400 uppercase mb-3 ml-2 tracking-widest italic">Costo Combo Especial</label>
+                            <input type="number" id="config-grill-price" class="w-full px-6 py-5 bg-slate-50 border-none rounded-2xl font-black text-2xl text-orange-700 shadow-inner focus:ring-4 focus:ring-orange-50 outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-black text-slate-400 uppercase mb-3 ml-2 tracking-widest italic">Tarifa Evento / Cumple</label>
+                            <input type="number" id="config-event-price" class="w-full px-6 py-5 bg-slate-50 border-none rounded-2xl font-black text-2xl text-blue-700 shadow-inner focus:ring-4 focus:ring-blue-50 outline-none">
+                        </div>
                     </div>
-                    <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-50 text-center">
-                        <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Total Kiosco</p>
-                        <p id="caja-total-sales" class="text-2xl font-black text-orange-500">$0</p>
+                    <button type="submit" class="bg-slate-900 text-white w-full py-6 rounded-3xl font-black text-lg shadow-2xl transition-all active:scale-95 uppercase tracking-widest italic border-b-4 border-black">Actualizar Tarifas</button>
+                </form>
+            </div>
+        </div>
+
+    </div> <!-- Fin de #app-container -->
+
+
+    <!-- ============================================= -->
+    <!-- MODALES DE RESERVA -->
+    <!-- ============================================= -->
+
+    <div id="type-modal" class="modal text-sm">
+        <div class="bg-white rounded-[3rem] shadow-2xl p-10 w-full max-w-sm text-center border border-slate-50">
+            <h3 class="text-3xl font-black text-slate-800 mb-2 italic tracking-tighter">Nuevo Turno</h3>
+            <p class="text-slate-400 font-bold text-[10px] uppercase tracking-widest mb-12">Categoriza el ingreso</p>
+            <div class="flex flex-col gap-6">
+                <button id="type-btn-court" class="p-8 bg-violet-600 text-white rounded-[2.5rem] font-black shadow-xl uppercase tracking-widest text-sm transition-all active:scale-95 border-b-4 border-violet-800">Salto Normal</button>
+                <button id="type-btn-event" class="p-8 bg-orange-500 text-white rounded-[2.5rem] font-black shadow-xl uppercase tracking-widest text-sm transition-all active:scale-95 border-b-4 border-orange-600">Cumple / Evento</button>
+                <button id="type-btn-cancel" class="mt-8 text-slate-300 font-black hover:text-slate-600 transition-colors uppercase text-[10px] tracking-[0.3em]">Cerrar</button>
+            </div>
+        </div>
+    </div>
+    
+    <div id="booking-modal" class="modal text-sm">
+        <div class="bg-white rounded-[4rem] p-10 w-full max-w-3xl max-h-[92vh] overflow-y-auto shadow-2xl border-white border relative">
+            <div class="absolute top-0 right-0 p-10 text-7xl font-black text-slate-50 italic opacity-5 pointer-events-none uppercase">Jump</div>
+            <h3 id="booking-modal-title" class="text-4xl font-black text-violet-900 mb-10 tracking-tighter italic uppercase">Reservar Salto</h3>
+            <form id="booking-form" class="relative z-10">
+                <input type="hidden" id="booking-id"><input type="hidden" id="booking-date">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                    <div class="space-y-8">
+                        <div class="relative">
+                            <label class="block text-[10px] font-black text-slate-400 uppercase mb-3 tracking-widest ml-2 italic">Responsable / Cliente</label>
+                            <input type="text" id="teamName" class="w-full px-8 py-6 bg-slate-50 border-none rounded-3xl font-black text-2xl shadow-inner focus:ring-4 focus:ring-violet-50 italic outline-none" required autocomplete="off">
+                            <div id="teamName-suggestions" class="absolute z-20 w-full top-full mt-3 shadow-2xl rounded-2xl overflow-hidden bg-white is-hidden"></div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-[10px] font-black text-slate-400 uppercase mb-3 tracking-widest ml-2 italic">Saltadores</label>
+                                <input type="number" id="peopleCount" class="w-full px-6 py-5 bg-slate-50 border-none rounded-2xl font-black text-xl shadow-inner outline-none" value="1" required>
+                            </div>
+                            <div>
+                                <label class="block text-[10px] font-black text-slate-400 uppercase mb-3 tracking-widest ml-2 italic">Precio/H</label>
+                                <input type="number" id="costPerHour" class="w-full px-6 py-5 bg-violet-50 border-none rounded-2xl font-black text-xl text-violet-700 outline-none">
+                            </div>
+                        </div>
+
+                        <div class="p-8 bg-violet-50 rounded-[2.5rem] flex justify-between items-center shadow-inner border border-violet-100">
+                            <div>
+                                <span class="font-black text-violet-900 text-sm block uppercase tracking-tighter italic">Salto Recurrente</span>
+                                <span class="text-[9px] text-violet-600 font-bold uppercase tracking-widest">¿Se repite semanalmente?</span>
+                            </div>
+                            <label class="switch"><input type="checkbox" id="recurring-toggle"><span class="slider"></span></label>
+                        </div>
+                        <div id="recurring-summary" class="is-hidden p-6 bg-orange-50 text-orange-800 rounded-3xl font-black text-[12px] leading-relaxed border border-orange-100 italic shadow-sm"></div>
+
+                        <div class="space-y-3">
+                            <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest ml-2 italic">Método de Cobro</label>
+                            <div class="flex gap-3">
+                                <label class="flex-1 bg-slate-50 p-4 rounded-2xl text-center font-black text-[10px] uppercase cursor-pointer border-2 border-transparent has-[:checked]:border-violet-600 transition-all shadow-sm"><input type="radio" name="paymentMethod" value="efectivo" class="hidden" checked> EFECTIVO</label>
+                                <label class="flex-1 bg-slate-50 p-4 rounded-2xl text-center font-black text-[10px] uppercase cursor-pointer border-2 border-transparent has-[:checked]:border-blue-600 transition-all shadow-sm"><input type="radio" name="paymentMethod" value="transferencia" class="hidden"> TRANSF.</label>
+                                <label class="flex-1 bg-slate-50 p-4 rounded-2xl text-center font-black text-[10px] uppercase cursor-pointer border-2 border-transparent has-[:checked]:border-orange-600 transition-all shadow-sm"><input type="radio" name="paymentMethod" value="mercadopago" class="hidden"> M.PAGO</label>
+                            </div>
+                        </div>
                     </div>
-                    <div class="bg-slate-900 p-6 rounded-3xl shadow-xl text-center">
-                        <p class="text-[9px] font-black text-slate-500 uppercase tracking-widest mb-1">Cierre Neto</p>
-                        <p id="caja-total-combined" class="text-2xl font-black text-white">$0</p>
+                    <div class="space-y-8">
+                        <div class="flex gap-4">
+                            <label class="flex-1 border-2 border-slate-50 bg-slate-50 p-5 rounded-3xl text-center font-black cursor-pointer has-[:checked]:border-violet-600 has-[:checked]:bg-white transition-all shadow-sm italic"><input type="radio" name="courtSelection" value="cancha1" class="hidden" checked> ÁREA A</label>
+                            <label class="flex-1 border-2 border-slate-50 bg-slate-50 p-5 rounded-3xl text-center font-black cursor-pointer has-[:checked]:border-violet-600 has-[:checked]:bg-white transition-all shadow-sm italic"><input type="radio" name="courtSelection" value="cancha2" class="hidden"> ÁREA B</label>
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-black text-slate-400 uppercase mb-4 tracking-widest ml-2 italic">Selecciona Horas de Salto</label>
+                            <div id="court-hours-list" class="time-slot-grid"></div>
+                        </div>
+                        <label class="font-black flex items-center gap-4 bg-slate-100 p-6 rounded-3xl cursor-pointer transition-all hover:bg-slate-200 shadow-inner group"><input type="checkbox" id="rentGrill" class="w-7 h-7 rounded-xl accent-violet-600 shadow-inner"> <span class="uppercase tracking-tighter italic text-slate-700 group-hover:text-violet-900">¿Incluye Combo Especial?</span></label>
+                        <div id="grill-hours-section" class="is-hidden mt-2 p-6 bg-orange-50 rounded-[2.5rem] space-y-6 border border-orange-100 shadow-inner">
+                            <input type="number" id="grillCost" class="w-full p-5 border-none bg-white rounded-2xl font-black text-center text-xl text-orange-700 shadow-md outline-none" placeholder="Tarifa Extra ($)">
+                            <div id="grill-hours-list" class="time-slot-grid"></div>
+                        </div>
                     </div>
                 </div>
-                <div id="caja-daily-list" class="space-y-3"></div>
-            </div>
-        </main>
+                <div class="flex flex-col sm:flex-row justify-between items-center pt-10 border-t gap-10 mt-12">
+                    <div class="text-center sm:text-left">
+                        <span class="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em] block mb-2">Monto a Liquidar</span>
+                        <span id="booking-total" class="text-7xl font-black text-violet-700 tracking-tighter leading-none italic">$0</span>
+                    </div>
+                    <div class="flex gap-4 w-full sm:w-auto">
+                        <button type="button" id="cancel-booking-btn" class="flex-1 px-12 py-7 font-black text-slate-300 uppercase text-[10px] tracking-[0.3em]">Atrás</button>
+                        <button type="submit" class="flex-2 bg-violet-600 text-white px-20 py-7 rounded-[2.5rem] font-black shadow-2xl uppercase text-xs tracking-widest transition-all active:scale-95 border-b-8 border-violet-800 italic">Confirmar Operación</button>
+                    </div>
+                </div>
+            </form>
+        </div>
     </div>
 
-    <!-- OVERLAY DE CARGA -->
-    <div id="message-overlay" class="modal bg-white/95 backdrop-blur-md">
-        <div class="flex flex-col items-center justify-center min-h-screen text-center p-10">
-            <svg width="120" height="120" viewBox="0 0 100 100" class="mb-8">
+    <!-- VENTA RÁPIDA -->
+    <div id="sale-modal" class="modal text-sm">
+        <div class="bg-white rounded-[4rem] p-10 md:p-14 w-full max-w-xl shadow-2xl border border-white overflow-hidden">
+            <div class="flex justify-between items-start mb-12">
+                <div>
+                    <h3 class="text-4xl font-black text-violet-800 tracking-tighter uppercase italic leading-none">Nueva Venta</h3>
+                    <p class="text-[10px] text-slate-400 font-bold uppercase tracking-[0.3em] mt-2 ml-1">Mostrador AeroJump</p>
+                </div>
+                <span class="text-4xl opacity-20">🛒</span>
+            </div>
+
+            <div class="relative mb-10 group">
+                <input type="text" id="sale-search-input" class="w-full p-8 border-none bg-slate-100 rounded-[2.5rem] font-black text-2xl focus:ring-8 focus:ring-violet-50 transition-all placeholder:text-slate-300 shadow-inner italic outline-none" placeholder="¿Qué llevas?">
+                <div id="sale-search-results" class="mt-4 max-h-64 overflow-y-auto space-y-3 custom-scrollbar pr-3 mb-10"></div>
+            </div>
+
+            <div id="selected-product-info" class="p-10 bg-violet-900 rounded-[3rem] mb-10 is-hidden border-4 border-violet-800 text-center shadow-2xl relative">
+                <h4 id="sel-prod-name" class="font-black text-violet-200 text-3xl leading-tight tracking-tighter mb-4 italic uppercase"></h4>
+                <p id="sel-prod-price" class="text-6xl font-black text-white tracking-tighter mb-10"></p>
+                <div class="flex items-center justify-center gap-14 relative z-10">
+                    <button id="sale-qty-minus" class="w-20 h-20 bg-violet-800 border-b-4 border-violet-950 rounded-3xl font-black text-4xl text-white hover:bg-violet-700 transition-all active:scale-90">-</button>
+                    <input type="number" id="sale-qty-input" class="w-28 text-center font-black text-6xl bg-transparent border-none focus:ring-0 text-white italic outline-none" value="1">
+                    <button id="sale-qty-plus" class="w-20 h-20 bg-violet-800 border-b-4 border-violet-950 rounded-3xl font-black text-4xl text-white hover:bg-violet-700 transition-all active:scale-90">+</button>
+                </div>
+                <p class="text-[10px] text-violet-400 font-bold uppercase mt-8 tracking-[0.2em] font-black">Disponible: <span id="sel-prod-stock"></span> UNIDADES</p>
+            </div>
+
+            <div id="payment-selection-kiosco" class="mb-10">
+                <label class="block text-[11px] font-black text-slate-400 uppercase mb-4 tracking-widest ml-4 italic">Forma de Pago</label>
+                <div class="flex gap-4">
+                    <label class="flex-1 bg-slate-50 p-6 rounded-[2rem] text-center font-black cursor-pointer border-4 border-transparent has-[:checked]:border-violet-600 transition-all shadow-sm">
+                        <input type="radio" name="salePaymentMethod" value="efectivo" class="hidden" checked>
+                        <span class="block text-xl mb-1">💵</span>
+                        <span class="text-[10px] tracking-widest">EFECTIVO</span>
+                    </label>
+                    <label class="flex-1 bg-slate-50 p-6 rounded-[2rem] text-center font-black cursor-pointer border-4 border-transparent has-[:checked]:border-orange-600 transition-all shadow-sm">
+                        <input type="radio" name="salePaymentMethod" value="mercadopago" class="hidden">
+                        <span class="block text-xl mb-1">📱</span>
+                        <span class="text-[10px] tracking-widest">M. PAGO</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="flex flex-col sm:flex-row justify-between items-center border-t border-slate-100 pt-10 gap-10">
+                <div class="text-center sm:text-left">
+                    <span class="text-[11px] font-black text-slate-400 uppercase tracking-[0.4em] block mb-2">Total a Cobrar</span>
+                    <span id="sale-total-display" class="text-7xl font-black text-violet-700 tracking-tighter leading-none italic">$0</span>
+                </div>
+                <div class="flex gap-5 w-full sm:w-auto">
+                    <button id="close-sale-modal-btn" class="flex-1 py-6 font-black text-slate-300 uppercase text-[10px] tracking-widest" onclick="closeModals()">Cancelar</button>
+                    <button id="confirm-sale-btn" class="flex-2 bg-violet-600 text-white px-16 py-7 rounded-[2.5rem] font-black shadow-xl disabled:opacity-10 uppercase tracking-widest text-xs transition-all active:scale-95 border-b-8 border-violet-800 italic" disabled>Finalizar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL REPOSICIÓN -->
+    <div id="restock-modal" class="modal text-sm">
+        <div class="bg-white rounded-[3.5rem] p-12 w-full max-w-md shadow-2xl border-white border">
+            <h3 class="text-3xl font-black text-violet-700 mb-10 uppercase tracking-tighter italic">📦 Reposición</h3>
+            <form id="restock-form" class="space-y-10">
+                <input type="hidden" id="restock-prod-id">
+                <div class="p-8 bg-slate-50 rounded-[2.5rem] border border-slate-100 text-center shadow-inner">
+                    <h4 id="restock-name" class="font-black text-slate-800 text-3xl leading-none mb-3 italic tracking-tighter uppercase"></h4>
+                    <p class="text-[10px] font-black text-slate-300 uppercase tracking-[0.3em]">Stock Actual: <span id="restock-current-stock" class="text-violet-600 font-black"></span></p>
+                </div>
+                <div class="space-y-8">
+                    <div>
+                        <label class="block text-[10px] font-black text-slate-400 uppercase mb-3 ml-4 tracking-widest italic">Unidades Ingresadas</label>
+                        <input type="number" id="restock-qty" class="w-full px-10 py-7 bg-slate-50 border-none rounded-[2.5rem] font-black text-4xl text-center focus:ring-4 focus:ring-violet-100 shadow-inner outline-none" required min="1">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-black text-slate-400 uppercase mb-3 ml-4 tracking-widest italic">Costo Lote Nuevo ($)</label>
+                        <input type="number" id="restock-batch-cost" class="w-full px-10 py-7 bg-violet-50 border-none rounded-[2.5rem] font-black text-4xl text-violet-700 text-center focus:ring-4 focus:ring-violet-100 shadow-inner outline-none" required step="0.01">
+                    </div>
+                </div>
+                <div class="flex gap-4 pt-4">
+                    <button type="button" onclick="closeModals()" class="flex-1 py-7 font-black text-slate-300 uppercase text-[10px] tracking-[0.2em]">Atrás</button>
+                    <button type="submit" class="flex-2 bg-violet-700 text-white px-12 py-7 rounded-[2rem] font-black shadow-xl uppercase text-xs transition-all active:scale-95 border-b-4 border-violet-900">Aplicar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- OTROS MODALES SISTEMA (RESTORED COMPLETOS) -->
+    <div id="event-modal" class="modal text-sm">
+        <div class="bg-white rounded-[3.5rem] p-10 w-full max-w-xl shadow-2xl border border-white">
+            <h3 id="event-modal-title" class="text-4xl font-black text-orange-600 mb-10 tracking-tighter italic uppercase">Reservar Evento</h3>
+            <form id="event-form" class="space-y-8">
+                <input type="hidden" id="event-booking-id"><input type="hidden" id="event-date">
+                <div class="space-y-2">
+                    <label class="text-[10px] font-black uppercase text-slate-400 ml-4 tracking-widest italic">Descripción del Evento</label>
+                    <input type="text" id="eventName" class="w-full px-8 py-6 bg-slate-50 border-none rounded-[2rem] font-black text-xl shadow-inner italic outline-none" required placeholder="Ej: Cumpleaños de Lucas">
+                </div>
+                <div class="grid grid-cols-2 gap-6">
+                    <input type="text" id="contactPerson" class="px-6 py-5 bg-slate-50 border-none rounded-2xl font-bold italic outline-none" required placeholder="Responsable">
+                    <input type="tel" id="contactPhone" class="px-6 py-5 bg-slate-50 border-none rounded-2xl font-bold italic outline-none" required placeholder="Celular">
+                </div>
+                <div class="space-y-4">
+                    <label class="text-[10px] font-black uppercase text-slate-400 ml-4 tracking-widest italic">Horarios de Ocupación</label>
+                    <div id="event-hours-list" class="time-slot-grid"></div>
+                </div>
+                <div class="flex justify-between items-center pt-10 border-t border-slate-100">
+                    <div>
+                        <span class="text-[10px] font-black text-slate-400 block mb-2 uppercase tracking-widest">Total Especial</span>
+                        <span id="event-total" class="text-6xl font-black text-orange-600 tracking-tighter leading-none italic">$0</span>
+                    </div>
+                    <div class="flex gap-6">
+                        <button type="button" onclick="closeModals()" class="text-slate-300 font-black uppercase text-[10px] tracking-widest">Volver</button>
+                        <button type="submit" class="bg-orange-500 text-white px-16 py-6 rounded-[2rem] font-black shadow-xl uppercase text-xs tracking-widest transition-all active:scale-95 border-b-4 border-orange-700 italic">Guardar</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="options-modal" class="modal text-sm">
+        <div class="bg-white rounded-[4rem] p-12 w-full max-w-sm shadow-2xl text-center border-4 border-violet-50 relative overflow-hidden">
+            <h3 class="text-3xl font-black mb-10 tracking-tighter text-slate-800 uppercase italic">Reservas del Día</h3>
+            <div id="daily-bookings-list" class="space-y-3 mb-12"></div>
+            <div class="flex flex-col gap-4">
+                <button id="add-new-booking-btn" class="w-full bg-violet-600 text-white py-7 rounded-[2rem] font-black shadow-xl uppercase text-[10px] tracking-[0.2em] transition-all active:scale-95 border-b-4 border-violet-800">+ AGREGAR TURNO</button>
+                <button onclick="closeModals()" class="mt-6 text-slate-400 font-black uppercase text-[10px] tracking-[0.3em]">Regresar</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="view-modal" class="modal text-sm">
+        <div class="bg-white p-14 rounded-[4rem] w-full max-w-md shadow-2xl border-white border relative">
+            <div id="view-booking-details" class="relative z-10"></div>
+            <button onclick="closeModals()" class="mt-14 w-full py-6 bg-slate-100 rounded-3xl font-black text-slate-400 uppercase text-[10px] tracking-widest transition-all hover:bg-slate-200">Cerrar Ficha</button>
+        </div>
+    </div>
+
+    <div id="caja-detail-modal" class="modal text-sm">
+        <div class="bg-white rounded-[3.5rem] shadow-2xl p-12 w-full max-w-md border border-white">
+            <h3 id="caja-detail-title" class="text-3xl font-black text-slate-800 mb-10 tracking-tighter uppercase italic leading-none">Resumen Diario</h3>
+            <div id="caja-detail-summary" class="space-y-4 text-slate-700 mb-12 border-b border-slate-50 pb-10"></div>
+            <h4 class="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] mb-6 ml-1">Movimientos de Caja</h4>
+            <div id="caja-detail-booking-list" class="space-y-3 max-h-56 overflow-y-auto custom-scrollbar pr-3"></div>
+            <div class="flex justify-end mt-12">
+                <button onclick="closeModals()" class="px-12 py-5 bg-slate-900 text-white rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-xl active:scale-95">Entendido</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="delete-reason-modal" class="modal text-sm">
+        <div class="bg-white rounded-[3.5rem] shadow-2xl p-12 w-full max-w-sm text-center border-white border">
+            <h3 class="text-2xl font-black text-red-600 mb-8 tracking-tighter uppercase italic">¿Anular Reserva?</h3>
+            <form id="delete-reason-form" class="space-y-8">
+                <input type="hidden" id="delete-booking-id">
+                <div class="space-y-2">
+                    <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest italic ml-2">Motivo de la baja</label>
+                    <textarea id="delete-reason-text" rows="3" class="w-full px-8 py-6 bg-slate-50 border-none rounded-[2rem] font-bold shadow-inner focus:ring-4 focus:ring-red-50 italic outline-none" required placeholder="Explica por qué borras..."></textarea>
+                </div>
+                <div class="flex gap-4">
+                    <button type="button" onclick="closeModals()" class="flex-1 py-6 font-black text-slate-300 uppercase text-[10px] tracking-widest">Atrás</button>
+                    <button type="submit" class="flex-2 bg-red-600 text-white px-10 py-6 rounded-[2rem] font-black shadow-2xl uppercase text-[10px] tracking-widest transition-all active:scale-95 border-b-4 border-red-800 italic">Confirmar Baja</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="recurring-modal" class="modal text-sm">
+        <div class="bg-white p-12 rounded-[4rem] w-full max-w-md shadow-2xl text-center border-white border">
+            <h3 class="text-4xl font-black text-slate-800 mb-2 tracking-tighter italic uppercase">Repetición</h3>
+            <p class="text-[10px] text-slate-400 font-bold uppercase tracking-[0.3em] mb-12 italic leading-relaxed text-center">Configuración de reservas fijas</p>
+            <div class="mb-10 text-left">
+                <label class="block text-[10px] font-black text-slate-400 uppercase mb-4 tracking-widest ml-4 italic">1. Día de la semana</label>
+                <div class="day-selector-grid grid grid-cols-4 gap-2">
+                    <button type="button" class="day-toggle-btn p-2 border rounded-lg text-xs font-bold" data-day="1">Lun</button><button type="button" class="day-toggle-btn p-2 border rounded-lg text-xs font-bold" data-day="2">Mar</button><button type="button" class="day-toggle-btn p-2 border rounded-lg text-xs font-bold" data-day="3">Mié</button><button type="button" class="day-toggle-btn p-2 border rounded-lg text-xs font-bold" data-day="4">Jue</button><button type="button" class="day-toggle-btn p-2 border rounded-lg text-xs font-bold" data-day="5">Vie</button><button type="button" class="day-toggle-btn p-2 border rounded-lg text-xs font-bold" data-day="6">Sáb</button><button type="button" class="day-toggle-btn p-2 border rounded-lg text-xs font-bold" data-day="0">Dom</button>
+                </div>
+            </div>
+            <div class="mb-12 text-left">
+                <label class="block text-[10px] font-black text-slate-400 uppercase mb-4 tracking-widest ml-4 italic">2. Meses del ciclo</label>
+                <div id="recurring-month-list" class="month-selector-grid grid grid-cols-3 gap-2"></div>
+            </div>
+            <div class="flex gap-6">
+                <button type="button" id="cancel-recurring-btn" class="flex-1 py-6 font-black text-slate-300 uppercase text-[10px] tracking-widest transition-all">Descartar</button>
+                <button type="button" id="confirm-recurring-btn" class="flex-2 bg-violet-600 text-white py-6 rounded-[2rem] font-black shadow-2xl text-[10px] uppercase tracking-widest transition-all active:scale-95 border-b-4 border-violet-800 italic">Guardar Ciclo</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="product-history-modal" class="modal text-sm">
+        <div class="bg-white p-12 rounded-[3.5rem] w-full max-w-lg shadow-2xl border border-white">
+            <div class="flex justify-between items-start mb-10">
+                <div>
+                    <h3 class="text-4xl font-black text-slate-800 tracking-tighter italic uppercase leading-none">Bitácora</h3>
+                    <h4 id="history-product-name" class="text-violet-600 font-black mt-2 uppercase tracking-[0.2em] text-[10px] italic"></h4>
+                </div>
+                <span class="text-3xl opacity-10">📜</span>
+            </div>
+            <div id="product-history-list" class="space-y-4 max-h-[30rem] overflow-y-auto pr-4 custom-scrollbar"></div>
+            <button onclick="closeModals()" class="w-full mt-12 py-7 bg-slate-100 rounded-[2rem] font-black text-slate-400 uppercase text-[10px] tracking-widest transition-colors hover:bg-slate-200">Cerrar Historial</button>
+        </div>
+    </div>
+
+    <div id="edit-product-modal" class="modal text-sm">
+        <div class="bg-white rounded-[4rem] p-12 md:p-16 w-full max-w-md shadow-2xl border border-slate-50 text-center relative overflow-hidden">
+            <div class="absolute top-0 right-0 p-8 text-7xl font-black italic opacity-5 pointer-events-none">FILE</div>
+            <h3 class="text-4xl font-black text-slate-800 mb-12 tracking-tighter italic uppercase leading-none">Editar Ficha</h3>
+            <form id="edit-product-form" class="space-y-8 relative z-10 text-left">
+                <input type="hidden" id="edit-prod-id">
+                <div>
+                    <label class="text-[10px] font-black uppercase text-slate-400 mb-3 ml-2 block tracking-widest italic">Nombre del Producto</label>
+                    <input type="text" id="edit-prod-name" class="w-full px-8 py-6 bg-slate-50 border-none rounded-[2rem] font-black text-xl shadow-inner italic outline-none" required>
+                </div>
+                <div class="grid grid-cols-2 gap-6">
+                    <div>
+                        <label class="text-[10px] font-black uppercase text-slate-400 mb-3 ml-2 block tracking-widest italic">Costo Unidad ($)</label>
+                        <input type="number" id="edit-prod-cost" class="w-full px-6 py-5 bg-slate-50 border-none rounded-2xl font-black text-xl shadow-inner outline-none" required step="0.01">
+                    </div>
+                    <div>
+                        <label class="text-[10px] font-black uppercase text-slate-400 mb-3 ml-2 block tracking-widest italic">Precio Venta ($)</label>
+                        <input type="number" id="edit-prod-price" class="w-full px-6 py-5 bg-violet-50 border-none rounded-2xl font-black text-xl text-violet-700 shadow-inner outline-none" required step="0.01">
+                    </div>
+                </div>
+                <div>
+                    <label class="text-[10px] font-black uppercase text-slate-400 mb-3 ml-2 block tracking-widest italic">Stock Disponible</label>
+                    <input type="number" id="edit-prod-stock" class="w-full px-8 py-6 bg-slate-50 border-none rounded-3xl font-black text-xl shadow-inner outline-none" required>
+                </div>
+                <div class="flex gap-6 pt-10">
+                    <button type="button" onclick="closeModals()" class="flex-1 py-7 font-black text-slate-300 uppercase text-[10px] tracking-widest">Atrás</button>
+                    <button type="submit" class="flex-2 bg-slate-900 text-white px-10 py-7 rounded-[2rem] font-black shadow-2xl uppercase text-[11px] tracking-widest transition-all active:scale-95 border-b-8 border-black italic">Guardar Cambios</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Mensaje de Carga/Animación Trampolín -->
+    <div id="message-overlay" class="modal">
+        <div class="bg-white p-10 rounded-[3rem] shadow-2xl flex flex-col items-center gap-6 border-white border border-4">
+            <svg width="120" height="120" viewBox="0 0 100 100">
                 <path d="M10 80 Q 50 80 90 80" stroke="#7c3aed" stroke-width="6" fill="none" stroke-linecap="round" class="trampoline-line"/>
                 <line x1="15" y1="80" x2="10" y2="90" stroke="#475569" stroke-width="4" stroke-linecap="round"/>
                 <line x1="85" y1="80" x2="90" y2="90" stroke="#475569" stroke-width="4" stroke-linecap="round"/>
@@ -344,206 +624,24 @@
                     <line x1="50" y1="65" x2="60" y2="75" stroke="#1e293b" stroke-width="3"/>
                 </g>
             </svg>
-            <p id="message-text" class="text-xl font-black text-slate-800 uppercase italic tracking-tighter">Sincronizando AeroJump...</p>
+            <p id="message-text" class="text-xl font-black text-slate-800 tracking-tighter italic uppercase text-center"></p>
         </div>
     </div>
 
     <!-- SCRIPTS CORE -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signInWithCustomToken, signInAnonymously, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, query, where, onSnapshot, getDocs, doc, setDoc, addDoc, updateDoc, deleteDoc, Timestamp, writeBatch, orderBy, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+    <script type="module" src="app.js"></script>
 
-        // CONFIGURACIÓN (ACTUALIZA AQUÍ CON TU NUEVA CONFIG)
-        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {
-            apiKey: "",
-            authDomain: "reserva-futsal.firebaseapp.com",
-            projectId: "reserva-futsal",
-            storageBucket: "reserva-futsal.firebasestorage.app",
-            messagingSenderId: "285845706235",
-            appId: "1:285845706235:web:9355804aea8181b030275e"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'aerojump-gchu';
-
-        // ESTADO GLOBAL
-        let user = null;
-        let currentMonthDate = new Date();
-        const monthNames = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
-        let allMonthBookings = [];
-        let allProducts = [];
-        let appSettings = { hourPrice: 4000, eventPrice: 15000, margin: 40 };
-
-        // RUTAS FIRESTORE (REGLA 1)
-        const getPublicCollection = (name) => collection(db, 'artifacts', appId, 'public', 'data', name);
-
-        // UI HELPER
-        const showMessage = (msg) => { document.getElementById('message-text').textContent = msg; document.getElementById('message-overlay').classList.add('is-open'); };
-        const hideMessage = () => document.getElementById('message-overlay').classList.remove('is-open');
-
-        // INICIALIZAR AUTH (REGLA 3)
-        const initAuth = async () => {
-            try {
-                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                    await signInWithCustomToken(auth, __initial_auth_token);
-                } else {
-                    await signInAnonymously(auth);
-                }
-            } catch (err) { console.error("Auth Init Error", err); }
-        };
-
-        onAuthStateChanged(auth, (u) => {
-            user = u;
-            if (user && !user.isAnonymous) {
-                document.getElementById('user-email-display').textContent = user.email;
-                document.getElementById('login-view').classList.add('is-hidden');
-                document.getElementById('app-container').classList.remove('is-hidden');
-                startApp();
-            } else {
-                document.getElementById('login-view').classList.remove('is-hidden');
-                document.getElementById('app-container').classList.add('is-hidden');
-                hideMessage();
-            }
-        });
-
-        async function startApp() {
-            showMessage("Conectando...");
-            await loadSettings();
-            syncBookings();
-            syncProducts();
-        }
-
-        async function loadSettings() {
-            const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'app_settings', 'prices');
-            const snap = await getDoc(docRef);
-            if (snap.exists()) appSettings = snap.data();
-        }
-
-        // SINCRONIZACIÓN DE DATOS
-        function syncBookings() {
-            if (!user) return;
-            const monthYear = `${currentMonthDate.getFullYear()}-${String(currentMonthDate.getMonth() + 1).padStart(2, '0')}`;
-            const q = query(getPublicCollection('bookings'), where("monthYear", "==", monthYear));
-            onSnapshot(q, (snap) => {
-                allMonthBookings = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-                renderCalendar();
-                updateCajaStats();
-                hideMessage();
-            });
-        }
-
-        function syncProducts() {
-            if (!user) return;
-            onSnapshot(getPublicCollection('products'), (snap) => {
-                allProducts = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-                renderProducts();
-            });
-        }
-
-        // RENDER CALENDARIO
-        function renderCalendar() {
-            const grid = document.getElementById('calendar-grid');
-            if (!grid) return;
-            grid.innerHTML = '';
-            
-            const year = currentMonthDate.getFullYear();
-            const month = currentMonthDate.getMonth();
-            document.getElementById('current-month-year').textContent = `${monthNames[month]} ${year}`;
-
-            const firstDay = new Date(year, month, 1).getDay();
-            const lastDate = new Date(year, month + 1, 0).getDate();
-
-            for (let i = 0; i < firstDay; i++) {
-                const d = document.createElement('div');
-                d.className = 'other-month-day h-20 sm:h-32 opacity-20';
-                grid.appendChild(d);
-            }
-
-            for (let i = 1; i <= lastDate; i++) {
-                const ds = `${year}-${String(month+1).padStart(2,'0')}-${String(i).padStart(2,'0')}`;
-                const dayBookings = allMonthBookings.filter(b => b.day === ds);
-                
-                const cell = document.createElement('div');
-                cell.className = 'day-cell h-20 sm:h-32 bg-white flex flex-col p-2 relative cursor-pointer shadow-sm overflow-hidden';
-                cell.innerHTML = `<span class="font-black italic text-slate-800 text-lg">${i}</span>`;
-                
-                if (dayBookings.length > 0) {
-                    const hasEvent = dayBookings.some(b => b.type === 'event');
-                    const count = document.createElement('div');
-                    count.className = `booking-count ${hasEvent ? 'event' : ''}`;
-                    count.textContent = dayBookings.length;
-                    cell.appendChild(count);
-                }
-                grid.appendChild(cell);
+    <script>
+        function hideMessage() { const o = document.getElementById('message-overlay'); if(o) o.classList.remove('is-open'); }
+        function closeModals() { document.querySelectorAll('.modal').forEach(m => m.classList.remove('is-open')); }
+        function toggleMenu() {
+            const menu = document.getElementById('main-menu');
+            const overlay = document.getElementById('menu-overlay');
+            if(menu && overlay) {
+                menu.classList.toggle('is-open');
+                overlay.classList.toggle('hidden');
             }
         }
-
-        // INVENTARIO
-        function renderProducts() {
-            const list = document.getElementById('product-list');
-            if (!list) return;
-            list.innerHTML = '';
-            const search = document.getElementById('inventory-search-input').value.toLowerCase();
-            
-            allProducts.filter(p => p.name.toLowerCase().includes(search)).forEach(p => {
-                const card = document.createElement('div');
-                card.className = 'bg-white p-6 rounded-[2rem] shadow-sm border border-slate-100 flex flex-col gap-3 transition-all hover:border-violet-300';
-                card.innerHTML = `
-                    <div class="flex justify-between items-start">
-                        <div>
-                            <h4 class="font-black uppercase italic text-slate-800 leading-tight">${p.name}</h4>
-                            <span class="text-[9px] font-black px-2 py-1 rounded-lg ${p.stock < 5 ? 'bg-orange-100 text-orange-600' : 'bg-green-100 text-green-600'} w-fit block mt-2">STOCK: ${p.stock} UN.</span>
-                        </div>
-                        <p class="text-2xl font-black text-violet-600 tracking-tighter italic">$${p.salePrice}</p>
-                    </div>
-                `;
-                list.appendChild(card);
-            });
-        }
-
-        // CAJA
-        function updateCajaStats() {
-            const today = new Date().toISOString().split('T')[0];
-            const bookingsTotal = allMonthBookings.reduce((sum, b) => sum + (b.totalPrice || 0), 0);
-            
-            document.getElementById('caja-total-bookings').textContent = `$${bookingsTotal.toLocaleString()}`;
-            document.getElementById('caja-total-combined').textContent = `$${bookingsTotal.toLocaleString()}`;
-        }
-
-        // EVENT LISTENERS
-        document.getElementById('login-form').onsubmit = async (e) => {
-            e.preventDefault();
-            showMessage("Validando acceso...");
-            try {
-                await signInWithEmailAndPassword(auth, e.target[0].value, e.target[1].value);
-            } catch (err) { alert("Error: " + err.message); hideMessage(); }
-        };
-
-        window.toggleMenu = () => {
-            document.getElementById('main-menu').classList.toggle('is-open');
-            document.getElementById('menu-overlay').classList.toggle('hidden');
-        };
-
-        document.getElementById('menu-btn').onclick = window.toggleMenu;
-        document.getElementById('logout-btn').onclick = () => signOut(auth);
-        document.getElementById('prev-month-btn').onclick = () => { currentMonthDate.setMonth(currentMonthDate.getMonth() - 1); syncBookings(); };
-        document.getElementById('next-month-btn').onclick = () => { currentMonthDate.setMonth(currentMonthDate.getMonth() + 1); syncBookings(); };
-        document.getElementById('inventory-search-input').oninput = renderProducts;
-
-        document.querySelectorAll('.menu-item').forEach(item => {
-            item.onclick = (e) => {
-                const target = e.currentTarget.dataset.view;
-                document.querySelectorAll('.view-container').forEach(v => v.classList.add('is-hidden'));
-                const v = document.getElementById(`${target}-view`);
-                if(v) v.classList.remove('is-hidden');
-                window.toggleMenu();
-            };
-        });
-
-        initAuth();
     </script>
 </body>
 </html>
