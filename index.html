@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AeroJump Gualeguaychú - Gestión de Saltos</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Fuente Inter para un look más moderno -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --color-violet: #7c3aed;
+            --color-orange: #f97316;
+            --color-green: #22c55e;
+            --color-violet-light: #f5f3ff;
+            --color-slate: #1e293b;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+        }
+
+        /* Estilo para los días que no pertenecen al mes actual */
+        .other-month-day {
+            background-color: #f1f5f9;
+            color: #cbd5e1;
+            border-radius: 1rem;
+        }
+
+        .day-cell {
+            border-radius: 1rem;
+            transition: all 0.2s ease-out;
+            border: 2px solid #f1f5f9;
+        }
+
+        .day-cell:hover {
+            transform: scale(1.05);
+            border-color: var(--color-violet);
+            box-shadow: 0 10px 15px -3px rgba(124, 58, 237, 0.1);
+        }
+
+        .booking-count {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background-color: var(--color-violet);
+            color: white;
+            font-size: 0.7rem;
+            font-weight: 900;
+            width: 1.5rem;
+            height: 1.5rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid white;
+        }
+
+        .booking-count.event {
+            background-color: var(--color-orange);
+        }
+
+        /* MODALES */
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background-color: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(4px);
+            align-items: flex-start;
+            justify-content: center;
+            overflow-y: auto;
+            padding: 2rem 1rem;
+            z-index: 100;
+        }
+
+        .modal.is-open {
+            display: flex;
+        }
+
+        /* MENÚ */
+        #main-menu {
+            position: fixed;
+            top: 70px;
+            left: 0;
+            width: 280px;
+            height: calc(100vh - 70px);
+            background-color: white;
+            box-shadow: 10px 0 30px rgba(0,0,0,0.05);
+            transform: translateX(-110%);
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 90;
+            border-right: 1px solid #f1f5f9;
+        }
+
+        #main-menu.is-open {
+            transform: translateX(0);
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 1rem 1.5rem;
+            font-weight: 700;
+            color: #475569;
+            border-radius: 1rem;
+            margin: 0.5rem 1rem;
+            transition: all 0.2s;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.05em;
+        }
+
+        .menu-item:hover {
+            background-color: var(--color-violet-light);
+            color: var(--color-violet);
+        }
+
+        .is-hidden { display: none !important; }
+
+        /* GRILLA DE HORARIOS */
+        .time-slot-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.5rem;
+            padding: 1rem;
+            background-color: #f8fafc;
+            border-radius: 1.5rem;
+        }
+
+        .time-slot {
+            font-size: 0.8rem;
+            font-weight: 800;
+            padding: 0.75rem 0.25rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 0.75rem;
+            background-color: white;
+            transition: all 0.2s;
+        }
+
+        .time-slot.selected {
+            background-color: var(--color-violet);
+            color: white;
+            border-color: var(--color-violet);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
+        }
+
+        .time-slot.disabled {
+            background-color: #f1f5f9;
+            color: #cbd5e1;
+            cursor: not-allowed;
+            text-decoration: line-through;
+            border-color: transparent;
+        }
+
+        /* ANIMACIÓN DE SALTO (LOADING) */
+        @keyframes jump {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-40px); }
+        }
+        @keyframes flex-trampoline {
+            0%, 100% { transform: scaleX(1) translateY(0); }
+            50% { transform: scaleX(1.1) translateY(5px); }
+        }
+        .jumping-child {
+            animation: jump 0.8s ease-in-out infinite;
+        }
+        .trampoline-line {
+            animation: flex-trampoline 0.8s ease-in-out infinite;
+        }
+
+        /* SCROLLBAR */
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
+
+        /* SWITCH */
+        .switch { position: relative; display: inline-block; width: 46px; height: 24px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; inset: 0; background-color: #e2e8f0; transition: .4s; border-radius: 24px; }
+        .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
+        input:checked + .slider { background-color: var(--color-violet); }
+        input:checked + .slider:before { transform: translateX(22px); }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- ============================================= -->
+    <!-- VISTAS DE AUTENTICACIÓN -->
+    <!-- ============================================= -->
+    <div id="login-view" class="flex items-center justify-center min-h-screen p-6">
+        <div class="bg-white p-10 rounded-[2.5rem] shadow-2xl w-full max-w-md border border-slate-50">
+            <div class="text-center mb-10">
+                <div class="inline-block p-4 bg-violet-100 rounded-3xl mb-4">
+                    <span class="text-4xl">🚀</span>
+                </div>
+                <h2 class="text-4xl font-black text-slate-800 tracking-tighter uppercase italic">AeroJump</h2>
+                <p class="text-slate-400 font-bold text-[10px] uppercase tracking-widest mt-1">Gualeguaychú Management</p>
+            </div>
+            <form id="login-form" class="space-y-4">
+                <div>
+                    <label class="block text-[10px] font-black text-slate-400 uppercase mb-2 ml-2">Email Admin</label>
+                    <input type="email" id="login-email" class="w-full px-6 py-4 bg-slate-50 border-none rounded-2xl font-bold focus:ring-4 focus:ring-violet-100 outline-none" required>
+                </div>
+                <div>
+                    <label class="block text-[10px] font-black text-slate-400 uppercase mb-2 ml-2">Contraseña</label>
+                    <input type="password" id="login-password" class="w-full px-6 py-4 bg-slate-50 border-none rounded-2xl font-bold focus:ring-4 focus:ring-violet-100 outline-none" required>
+                </div>
+                <button type="submit" class="w-full bg-violet-600 hover:bg-violet-700 text-white font-black uppercase tracking-widest py-5 rounded-2xl shadow-xl shadow-violet-100 transition-all active:scale-95">Iniciar Sesión</button>
+            </form>
+            <p class="text-center text-[10px] text-slate-400 mt-8 font-black uppercase tracking-widest">
+                ¿Nuevo acceso? <a href="#" id="show-register" class="text-violet-600">Crear cuenta</a>
+            </p>
+        </div>
+    </div>
+
+    <div id="register-view" class="is-hidden flex items-center justify-center min-h-screen p-6">
+        <div class="bg-white p-10 rounded-[2.5rem] shadow-2xl w-full max-w-md">
+            <h2 class="text-3xl font-black text-center text-slate-800 mb-8 uppercase italic">Registro Admin</h2>
+            <form id="register-form" class="space-y-4">
+                <input type="email" id="register-email" placeholder="Email" class="w-full px-6 py-4 bg-slate-50 border-none rounded-2xl font-bold" required>
+                <input type="password" id="register-password" placeholder="Contraseña" class="w-full px-6 py-4 bg-slate-50 border-none rounded-2xl font-bold" required>
+                <button type="submit" class="w-full bg-violet-600 text-white font-black uppercase py-5 rounded-2xl shadow-xl">Registrar</button>
+            </form>
+            <p class="text-center text-[10px] text-slate-400 mt-6 font-black uppercase tracking-widest">
+                <a href="#" id="show-login" class="text-violet-600">Volver al login</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- ============================================= -->
+    <!-- CONTENEDOR PRINCIPAL -->
+    <!-- ============================================= -->
+    <div id="app-container" class="is-hidden">
+        <header class="fixed top-0 left-0 right-0 bg-white/80 backdrop-blur-md shadow-sm p-4 flex justify-between items-center z-50 border-b border-slate-100">
+            <div class="flex items-center gap-4">
+                <button id="menu-btn" class="p-3 rounded-2xl bg-slate-50 hover:bg-slate-100 transition-colors">
+                    <svg class="h-6 w-6 text-slate-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 6h16M4 12h16M4 18h16" /></svg>
+                </button>
+                <div class="leading-none">
+                    <h1 class="text-xl font-black text-slate-800 tracking-tighter uppercase italic">AeroJump</h1>
+                    <span class="text-[8px] font-black text-violet-500 uppercase tracking-[0.3em]">Gualeguaychú</span>
+                </div>
+            </div>
+
+            <button id="header-sale-btn" class="flex items-center gap-2 bg-orange-500 text-white px-6 py-3 rounded-2xl font-black shadow-lg shadow-orange-100 hover:bg-orange-600 transition-all active:scale-90 group">
+                <svg class="w-5 h-5 group-hover:rotate-12 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                <span class="text-[10px] uppercase tracking-widest hidden sm:block">Venta Kiosco</span>
+            </button>
+        </header>
+
+        <nav id="main-menu">
+            <div class="p-8 border-b border-slate-50">
+                <p class="text-[9px] font-black text-slate-300 uppercase tracking-[0.2em] mb-2">Sesión Activa</p>
+                <p id="user-email-display" class="font-black text-violet-600 truncate text-xs italic"></p>
+                <button id="logout-btn" class="w-full mt-6 py-3 text-[9px] font-black bg-slate-50 text-slate-400 rounded-xl hover:bg-red-50 hover:text-red-500 transition-all uppercase tracking-widest">Cerrar Sesión</button>
+            </div>
+            <div class="mt-4 px-2 space-y-1">
+                <a href="#" class="menu-item" data-view="calendar"><span>🗓️</span> Agenda Saltos</a>
+                <a href="#" class="menu-item" data-view="productos"><span>🥤</span> Stock Kiosco</a>
+                <a href="#" class="menu-item" data-view="caja"><span>💰</span> Arqueo Caja</a>
+                <a href="#" class="menu-item" data-view="stats"><span>🏆</span> Rankings</a>
+                <a href="#" class="menu-item" data-view="historial"><span>📖</span> Bitácora</a>
+                <a href="#" class="menu-item" data-view="configuracion"><span>⚙️</span> Tarifas</a>
+            </div>
+        </nav>
+        <div id="menu-overlay" class="fixed inset-0 bg-slate-900/40 z-40 hidden" onclick="toggleMenu()"></div>
+
+        <!-- VISTAS -->
+        <main class="pt-24 pb-12 px-4">
+            <!-- CALENDARIO -->
+            <div id="calendar-view" class="view-container container mx-auto max-w-4xl">
+                <div class="flex flex-col sm:flex-row justify-between items-center gap-6 mb-10 text-center sm:text-left">
+                    <div>
+                        <h2 class="text-5xl font-black text-slate-800 tracking-tighter italic uppercase leading-none">Reservas</h2>
+                        <p class="text-slate-400 font-bold text-[10px] uppercase tracking-[0.4em] mt-2 ml-1">Control de camas y eventos</p>
+                    </div>
+                    <div class="flex items-center gap-4 bg-white p-3 rounded-3xl shadow-sm border border-slate-50">
+                        <button id="prev-month-btn" class="p-3 hover:bg-slate-50 rounded-2xl transition-colors font-bold">◀</button>
+                        <h3 id="current-month-year" class="text-sm font-black text-violet-600 uppercase italic tracking-widest w-40 text-center"></h3>
+                        <button id="next-month-btn" class="p-3 hover:bg-slate-50 rounded-2xl transition-colors font-bold">▶</button>
+                    </div>
+                </div>
+                <div class="grid grid-cols-7 gap-2 text-center text-[10px] font-black text-slate-300 uppercase tracking-widest mb-4">
+                    <div>Dom</div><div>Lun</div><div>Mar</div><div>Mie</div><div>Jue</div><div>Vie</div><div>Sab</div>
+                </div>
+                <div id="calendar-grid" class="grid grid-cols-7 gap-2 sm:gap-4"></div>
+            </div>
+
+            <!-- PRODUCTOS -->
+            <div id="productos-view" class="view-container container mx-auto max-w-5xl is-hidden">
+                <div class="flex flex-col sm:flex-row justify-between items-center gap-4 mb-10">
+                    <h2 class="text-4xl font-black text-slate-800 italic uppercase tracking-tighter">Inventario Kiosco</h2>
+                    <button id="add-product-btn" class="w-full sm:w-auto bg-violet-600 text-white px-8 py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-lg">Nuevo Producto</button>
+                </div>
+                <div class="relative mb-8">
+                    <input type="text" id="inventory-search-input" placeholder="Buscar por nombre..." class="w-full px-6 py-4 bg-white border border-slate-200 rounded-2xl font-bold shadow-sm focus:ring-4 focus:ring-violet-100 outline-none">
+                </div>
+                <div id="product-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+            </div>
+
+            <!-- CAJA -->
+            <div id="caja-view" class="view-container container mx-auto max-w-4xl is-hidden">
+                <h2 class="text-4xl font-black text-slate-800 italic uppercase tracking-tighter mb-10 text-center">Arqueo Diario</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10">
+                    <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-50 text-center">
+                        <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Total Saltos</p>
+                        <p id="caja-total-bookings" class="text-2xl font-black text-violet-600">$0</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-50 text-center">
+                        <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Total Kiosco</p>
+                        <p id="caja-total-sales" class="text-2xl font-black text-orange-500">$0</p>
+                    </div>
+                    <div class="bg-slate-900 p-6 rounded-3xl shadow-xl text-center">
+                        <p class="text-[9px] font-black text-slate-500 uppercase tracking-widest mb-1">Cierre Neto</p>
+                        <p id="caja-total-combined" class="text-2xl font-black text-white">$0</p>
+                    </div>
+                </div>
+                <div id="caja-daily-list" class="space-y-3"></div>
+            </div>
+        </main>
+    </div>
+
+    <!-- OVERLAY DE CARGA -->
+    <div id="message-overlay" class="modal bg-white/95 backdrop-blur-md">
+        <div class="flex flex-col items-center justify-center min-h-screen text-center p-10">
+            <svg width="120" height="120" viewBox="0 0 100 100" class="mb-8">
+                <path d="M10 80 Q 50 80 90 80" stroke="#7c3aed" stroke-width="6" fill="none" stroke-linecap="round" class="trampoline-line"/>
+                <line x1="15" y1="80" x2="10" y2="90" stroke="#475569" stroke-width="4" stroke-linecap="round"/>
+                <line x1="85" y1="80" x2="90" y2="90" stroke="#475569" stroke-width="4" stroke-linecap="round"/>
+                <g class="jumping-child">
+                    <circle cx="50" cy="40" r="8" fill="#f97316"/>
+                    <line x1="50" y1="48" x2="50" y2="65" stroke="#1e293b" stroke-width="4"/>
+                    <line x1="50" y1="52" x2="35" y2="45" stroke="#1e293b" stroke-width="3"/>
+                    <line x1="50" y1="52" x2="65" y2="45" stroke="#1e293b" stroke-width="3"/>
+                    <line x1="50" y1="65" x2="40" y2="75" stroke="#1e293b" stroke-width="3"/>
+                    <line x1="50" y1="65" x2="60" y2="75" stroke="#1e293b" stroke-width="3"/>
+                </g>
+            </svg>
+            <p id="message-text" class="text-xl font-black text-slate-800 uppercase italic tracking-tighter">Sincronizando AeroJump...</p>
+        </div>
+    </div>
+
+    <!-- SCRIPTS CORE -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signInWithCustomToken, signInAnonymously, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, query, where, onSnapshot, getDocs, doc, setDoc, addDoc, updateDoc, deleteDoc, Timestamp, writeBatch, orderBy, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // CONFIGURACIÓN (ACTUALIZA AQUÍ CON TU NUEVA CONFIG)
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {
+            apiKey: "",
+            authDomain: "reserva-futsal.firebaseapp.com",
+            projectId: "reserva-futsal",
+            storageBucket: "reserva-futsal.firebasestorage.app",
+            messagingSenderId: "285845706235",
+            appId: "1:285845706235:web:9355804aea8181b030275e"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'aerojump-gchu';
+
+        // ESTADO GLOBAL
+        let user = null;
+        let currentMonthDate = new Date();
+        const monthNames = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+        let allMonthBookings = [];
+        let allProducts = [];
+        let appSettings = { hourPrice: 4000, eventPrice: 15000, margin: 40 };
+
+        // RUTAS FIRESTORE (REGLA 1)
+        const getPublicCollection = (name) => collection(db, 'artifacts', appId, 'public', 'data', name);
+
+        // UI HELPER
+        const showMessage = (msg) => { document.getElementById('message-text').textContent = msg; document.getElementById('message-overlay').classList.add('is-open'); };
+        const hideMessage = () => document.getElementById('message-overlay').classList.remove('is-open');
+
+        // INICIALIZAR AUTH (REGLA 3)
+        const initAuth = async () => {
+            try {
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await signInAnonymously(auth);
+                }
+            } catch (err) { console.error("Auth Init Error", err); }
+        };
+
+        onAuthStateChanged(auth, (u) => {
+            user = u;
+            if (user && !user.isAnonymous) {
+                document.getElementById('user-email-display').textContent = user.email;
+                document.getElementById('login-view').classList.add('is-hidden');
+                document.getElementById('app-container').classList.remove('is-hidden');
+                startApp();
+            } else {
+                document.getElementById('login-view').classList.remove('is-hidden');
+                document.getElementById('app-container').classList.add('is-hidden');
+                hideMessage();
+            }
+        });
+
+        async function startApp() {
+            showMessage("Conectando...");
+            await loadSettings();
+            syncBookings();
+            syncProducts();
+        }
+
+        async function loadSettings() {
+            const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'app_settings', 'prices');
+            const snap = await getDoc(docRef);
+            if (snap.exists()) appSettings = snap.data();
+        }
+
+        // SINCRONIZACIÓN DE DATOS
+        function syncBookings() {
+            if (!user) return;
+            const monthYear = `${currentMonthDate.getFullYear()}-${String(currentMonthDate.getMonth() + 1).padStart(2, '0')}`;
+            const q = query(getPublicCollection('bookings'), where("monthYear", "==", monthYear));
+            onSnapshot(q, (snap) => {
+                allMonthBookings = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+                renderCalendar();
+                updateCajaStats();
+                hideMessage();
+            });
+        }
+
+        function syncProducts() {
+            if (!user) return;
+            onSnapshot(getPublicCollection('products'), (snap) => {
+                allProducts = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+                renderProducts();
+            });
+        }
+
+        // RENDER CALENDARIO
+        function renderCalendar() {
+            const grid = document.getElementById('calendar-grid');
+            if (!grid) return;
+            grid.innerHTML = '';
+            
+            const year = currentMonthDate.getFullYear();
+            const month = currentMonthDate.getMonth();
+            document.getElementById('current-month-year').textContent = `${monthNames[month]} ${year}`;
+
+            const firstDay = new Date(year, month, 1).getDay();
+            const lastDate = new Date(year, month + 1, 0).getDate();
+
+            for (let i = 0; i < firstDay; i++) {
+                const d = document.createElement('div');
+                d.className = 'other-month-day h-20 sm:h-32 opacity-20';
+                grid.appendChild(d);
+            }
+
+            for (let i = 1; i <= lastDate; i++) {
+                const ds = `${year}-${String(month+1).padStart(2,'0')}-${String(i).padStart(2,'0')}`;
+                const dayBookings = allMonthBookings.filter(b => b.day === ds);
+                
+                const cell = document.createElement('div');
+                cell.className = 'day-cell h-20 sm:h-32 bg-white flex flex-col p-2 relative cursor-pointer shadow-sm overflow-hidden';
+                cell.innerHTML = `<span class="font-black italic text-slate-800 text-lg">${i}</span>`;
+                
+                if (dayBookings.length > 0) {
+                    const hasEvent = dayBookings.some(b => b.type === 'event');
+                    const count = document.createElement('div');
+                    count.className = `booking-count ${hasEvent ? 'event' : ''}`;
+                    count.textContent = dayBookings.length;
+                    cell.appendChild(count);
+                }
+                grid.appendChild(cell);
+            }
+        }
+
+        // INVENTARIO
+        function renderProducts() {
+            const list = document.getElementById('product-list');
+            if (!list) return;
+            list.innerHTML = '';
+            const search = document.getElementById('inventory-search-input').value.toLowerCase();
+            
+            allProducts.filter(p => p.name.toLowerCase().includes(search)).forEach(p => {
+                const card = document.createElement('div');
+                card.className = 'bg-white p-6 rounded-[2rem] shadow-sm border border-slate-100 flex flex-col gap-3 transition-all hover:border-violet-300';
+                card.innerHTML = `
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h4 class="font-black uppercase italic text-slate-800 leading-tight">${p.name}</h4>
+                            <span class="text-[9px] font-black px-2 py-1 rounded-lg ${p.stock < 5 ? 'bg-orange-100 text-orange-600' : 'bg-green-100 text-green-600'} w-fit block mt-2">STOCK: ${p.stock} UN.</span>
+                        </div>
+                        <p class="text-2xl font-black text-violet-600 tracking-tighter italic">$${p.salePrice}</p>
+                    </div>
+                `;
+                list.appendChild(card);
+            });
+        }
+
+        // CAJA
+        function updateCajaStats() {
+            const today = new Date().toISOString().split('T')[0];
+            const bookingsTotal = allMonthBookings.reduce((sum, b) => sum + (b.totalPrice || 0), 0);
+            
+            document.getElementById('caja-total-bookings').textContent = `$${bookingsTotal.toLocaleString()}`;
+            document.getElementById('caja-total-combined').textContent = `$${bookingsTotal.toLocaleString()}`;
+        }
+
+        // EVENT LISTENERS
+        document.getElementById('login-form').onsubmit = async (e) => {
+            e.preventDefault();
+            showMessage("Validando acceso...");
+            try {
+                await signInWithEmailAndPassword(auth, e.target[0].value, e.target[1].value);
+            } catch (err) { alert("Error: " + err.message); hideMessage(); }
+        };
+
+        window.toggleMenu = () => {
+            document.getElementById('main-menu').classList.toggle('is-open');
+            document.getElementById('menu-overlay').classList.toggle('hidden');
+        };
+
+        document.getElementById('menu-btn').onclick = window.toggleMenu;
+        document.getElementById('logout-btn').onclick = () => signOut(auth);
+        document.getElementById('prev-month-btn').onclick = () => { currentMonthDate.setMonth(currentMonthDate.getMonth() - 1); syncBookings(); };
+        document.getElementById('next-month-btn').onclick = () => { currentMonthDate.setMonth(currentMonthDate.getMonth() + 1); syncBookings(); };
+        document.getElementById('inventory-search-input').oninput = renderProducts;
+
+        document.querySelectorAll('.menu-item').forEach(item => {
+            item.onclick = (e) => {
+                const target = e.currentTarget.dataset.view;
+                document.querySelectorAll('.view-container').forEach(v => v.classList.add('is-hidden'));
+                const v = document.getElementById(`${target}-view`);
+                if(v) v.classList.remove('is-hidden');
+                window.toggleMenu();
+            };
+        });
+
+        initAuth();
+    </script>
+</body>
+</html>
