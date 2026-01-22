@@ -1,8 +1,8 @@
 // =================================================================
-// AeroJump Gualeguaychú - Sistema de Gestión de Saltos v2026
+// AeroJump Gualeguaychú - Sistema de Gestión v2026 (Logic Engine)
 // =================================================================
 
-// Importaciones de Firebase SDK (v11.6.1) - CDN para Navegador
+// Importaciones de Firebase SDK (v11.6.1) vía CDN para compatibilidad directa
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
 import { 
     getAuth, 
@@ -20,7 +20,7 @@ import {
     doc, 
     setDoc, 
     addDoc,
-    updateDoc, 
+    updateDoc,
     deleteDoc, 
     collection, 
     query, 
@@ -68,7 +68,7 @@ let allMonthBookings = [];
 let allProducts = []; 
 let currentSelectedProduct = null;
 
-// Estado del Carrito Multiproducto
+// Estado del Carrito de Ventas
 let saleCart = [];
 
 let appSettings = { 
@@ -159,7 +159,7 @@ const productList = document.getElementById('product-list');
 const inventorySearchInput = document.getElementById('inventory-search-input');
 const restockForm = document.getElementById('restock-form');
 
-// Referencias Carrito
+// Referencias Carrito (NUEVO MOTOR)
 const saleModal = document.getElementById('sale-modal');
 const saleCartList = document.getElementById('sale-cart-list');
 const saleCatalogGrid = document.getElementById('sale-catalog-grid');
@@ -222,7 +222,7 @@ async function firebaseInit() {
         });
     } catch (error) {
         console.error("Fallo Firebase:", error);
-        showMessage(`Error de conexión: ${error.message}`, true);
+        showMessage(`Error de conexión AeroJump: ${error.message}`, true);
     }
 }
 
@@ -344,7 +344,6 @@ function setupEventListeners() {
     if (productForm) productForm.onsubmit = handleSaveProduct;
     if (inventorySearchInput) inventorySearchInput.oninput = (e) => renderProducts(e.target.value);
     
-    // Listeners para cálculos de precios
     if (document.getElementById('prod-batch-cost')) document.getElementById('prod-batch-cost').oninput = calculateProductPrices;
     if (document.getElementById('prod-batch-qty')) document.getElementById('prod-batch-qty').oninput = calculateProductPrices;
     if (document.getElementById('prod-profit-pct')) document.getElementById('prod-profit-pct').oninput = calculateProductPrices;
@@ -352,6 +351,7 @@ function setupEventListeners() {
     const headerSaleBtn = document.getElementById('header-sale-btn');
     if (headerSaleBtn) headerSaleBtn.onclick = openSaleModal;
     
+    // Filtro Catálogo Venta
     if (saleCatalogFilter) {
         saleCatalogFilter.oninput = (e) => renderSaleCatalog(e.target.value);
     }
@@ -398,7 +398,7 @@ function showView(viewName) {
 
 async function handleLogin(e) {
     e.preventDefault();
-    showMessage("Validando acceso...");
+    showMessage("Validando AeroJump...");
     const email = document.getElementById('login-email').value;
     const password = document.getElementById('login-password').value;
     try {
@@ -412,7 +412,7 @@ async function handleLogin(e) {
 
 async function handleRegister(e) {
     e.preventDefault();
-    showMessage("Creando administrador...");
+    showMessage("Registrando admin...");
     const email = document.getElementById('register-email').value;
     const password = document.getElementById('register-password').value;
     try {
@@ -453,7 +453,6 @@ async function handleSaveConfig(e) {
     showMessage("Sincronizando tarifas...");
     const newSettings = {
         court1Price: parseFloat(configCourt1Price.value) || 0,
-        court2Price: parseFloat(configCourt1Price.value) || 0,
         grillPrice: parseFloat(document.getElementById('config-grill-price').value) || 0,
         eventPrice: parseFloat(document.getElementById('config-event-price').value) || 0
     };
@@ -623,7 +622,7 @@ async function handleSaveSingleBooking() {
         else { const docRef = await addDoc(collection(db, bookingsCollectionPath), data); }
         await logBookingEvent(action, data);
         await saveCustomer(teamName); 
-        showMessage("¡Turno AeroJump guardado!"); closeModals(); setTimeout(hideMessage, 1500); 
+        showMessage("¡Turno guardado!"); closeModals(); setTimeout(hideMessage, 1500); 
     } catch (error) { showMessage(error.message, true); } finally { saveButton.disabled = false; }
 }
 
@@ -633,7 +632,7 @@ async function handleSaveEvent() {
     showMessage("Guardando Evento...");
     const bookingId = eventBookingIdInput.value;
     const dateStr = eventDateInput.value;
-    const selectedHours = Array.from(eventHoursList.querySelectorAll('.time-slot.selected')).map(el => parseInt(el.dataset.hour, 10));
+    const selectedHours = Array.from(document.getElementById('event-hours-list').querySelectorAll('.time-slot.selected')).map(el => parseInt(el.dataset.hour, 10));
 
     if (selectedHours.length === 0) { showMessage("Marca horarios.", true); saveButton.disabled = false; return; }
 
@@ -647,14 +646,15 @@ async function handleSaveEvent() {
     };
 
     try {
+        let action = bookingId ? 'updated' : 'created';
         if (bookingId) await setDoc(doc(db, bookingsCollectionPath, bookingId), data, { merge: true });
         else { await addDoc(collection(db, bookingsCollectionPath), data); }
-        await logBookingEvent(bookingId ? 'updated' : 'created', data);
+        await logBookingEvent(action, data);
         showMessage("¡Evento guardado!"); closeModals(); setTimeout(hideMessage, 1500);
     } catch (error) { showMessage(error.message, true); } finally { saveButton.disabled = false; }
 }
 
-async function handleSaveRecurringBooking() {
+async function handleSaveRecurringBooking(event) {
     const saveButton = bookingForm.querySelector('button[type="submit"]');
     saveButton.disabled = true;
     showMessage("Generando serie fija...");
@@ -753,8 +753,10 @@ function addToCart(product) {
     const existing = saleCart.find(item => item.id === product.id);
     if (existing) {
         if (existing.qty < product.stock) existing.qty++;
+        else showMessage("Stock insuficiente", true);
     } else {
         if (product.stock > 0) saleCart.push({ ...product, qty: 1 });
+        else showMessage("Sin stock disponible", true);
     }
     renderSaleCart();
 }
@@ -873,7 +875,7 @@ async function handleConfirmRestock(e) {
         showMessage("Actualizando stock...");
         await updateDoc(doc(db, productsCollectionPath, id), { stock: p.stock + addQ, unitCost: nUnit, salePrice: nSale });
         await logKioscoTransaction(id, `Reposición (+${addQ} un.)`, addQ, nUnit, 'in');
-        closeModals(); showMessage("¡Stock actualizado!"); setTimeout(hideMessage, 2000);
+        closeModals(); showMessage("¡Todo el stock actualizado!"); setTimeout(hideMessage, 2000);
     } catch (err) { alert(err.message); }
 }
 
@@ -927,9 +929,9 @@ function renderProducts(f = "") {
         d.innerHTML = `<div class="flex justify-between items-start text-left"><div><h4 class="font-black italic uppercase text-slate-800 leading-tight">${p.name}</h4><span class="text-[9px] font-black text-violet-500 uppercase mt-1 inline-block">Stock: ${p.stock} un.</span></div><strong class="text-3xl font-black text-violet-600 italic tracking-tighter">$${p.salePrice}</strong></div>
                        <div class="grid grid-cols-2 gap-2 mt-2">
                            <button onclick="window.openRestock('${p.id}')" class="p-3 bg-violet-50 text-violet-700 rounded-xl font-bold text-[9px] uppercase shadow-sm">📦 REPONER</button>
-                           <button onclick="window.openHistory('${p.id}')" class="p-3 bg-slate-50 text-slate-600 rounded-xl font-bold text-[9px] uppercase shadow-sm">📜 LOGS</button>
-                           <button onclick="window.openEditProduct('${p.id}')" class="p-3 bg-slate-50 text-slate-600 rounded-xl font-bold text-[9px] uppercase shadow-sm">✏️ FICHA</button>
-                           <button onclick="window.deleteProduct('${p.id}')" class="p-3 bg-orange-50 text-orange-500 rounded-xl font-bold text-[9px] uppercase shadow-sm">🗑️ BORRAR</button>
+                           <button onclick="window.openHistory('${p.id}')" class="p-3 bg-slate-50 text-slate-600 rounded-xl font-bold text-[10px] uppercase shadow-sm">📜 LOGS</button>
+                           <button onclick="window.openEditProduct('${p.id}')" class="p-3 bg-slate-50 text-slate-600 rounded-xl font-bold text-[10px] uppercase shadow-sm">✏️ FICHA</button>
+                           <button onclick="window.deleteProduct('${p.id}')" class="p-3 bg-orange-50 text-orange-500 rounded-xl font-bold text-[10px] uppercase shadow-sm">🗑️ BORRAR</button>
                        </div>`;
         productList.appendChild(d);
     });
@@ -971,7 +973,7 @@ function renderCajaList(daily) {
         const data = daily[day], [y, m, d] = day.split('-');
         const item = document.createElement('div');
         item.className = 'bg-white p-6 rounded-3xl flex justify-between items-center cursor-pointer mb-3 border-l-8 border-violet-500 shadow-sm';
-        item.innerHTML = `<div><strong class="text-slate-800 text-xl font-black italic tracking-tighter">${d}/${m}/${y}</strong><p class="text-[9px] text-slate-400 font-bold uppercase mt-1 tracking-widest">${data.b.length} Saltos | ${data.s.length} Ventas</p></div><strong class="text-2xl font-black text-violet-600 italic tracking-tighter">$${data.t.toLocaleString()}</strong>`;
+        item.innerHTML = `<div><strong class="text-slate-800 text-xl font-black italic tracking-tighter">${d}/${m}/${y}</strong><p class="text-[9px] text-slate-400 font-bold uppercase mt-1 tracking-widest">${data.b.length} Turnos | ${data.s.length} Ventas</p></div><strong class="text-2xl font-black text-violet-600 italic tracking-tighter">$${data.t.toLocaleString()}</strong>`;
         item.onclick = () => showCajaDetail(`${d}/${m}/${y}`, data);
         cajaDailyList.appendChild(item);
     });
@@ -983,8 +985,8 @@ function showCajaDetail(date, data) {
     document.getElementById('caja-detail-title').textContent = date;
     const list = document.getElementById('caja-detail-booking-list');
     list.innerHTML = '';
-    data.b.forEach(b => { list.innerHTML += `<div class="p-3 bg-slate-50 rounded-xl mb-2 flex justify-between items-center text-[11px] font-black border border-slate-100"><span>🗓️ ${b.teamName}</span><strong>$${(b.totalPrice || 0).toLocaleString()}</strong></div>`; });
-    data.s.forEach(s => { list.innerHTML += `<div class="p-3 bg-violet-50 rounded-xl mb-2 flex justify-between items-center text-[11px] font-black border border-violet-100"><span>🥤 ${s.name} (x${s.qty})</span><strong>$${(s.total || 0).toLocaleString()}</strong></div>`; });
+    data.b.forEach(b => { list.innerHTML += `<div class="p-3 bg-slate-50 rounded-xl mb-2 flex justify-between items-center text-[11px] font-black border border-slate-100 text-left"><span>🗓️ ${b.teamName}</span><strong>$${(b.totalPrice || 0).toLocaleString()}</strong></div>`; });
+    data.s.forEach(s => { list.innerHTML += `<div class="p-3 bg-violet-50 rounded-xl mb-2 flex justify-between items-center text-[11px] font-black border border-violet-100 text-left"><span>🥤 ${s.name} (x${s.qty})</span><strong>$${(s.total || 0).toLocaleString()}</strong></div>`; });
 }
 
 // -----------------------------------------------------------------
@@ -1144,7 +1146,7 @@ function saveRecurringSettings() {
     recurringModal.classList.remove('is-open');
 }
 
-// Globalización de funciones
+// Globalización de funciones (Carrito y Reservas)
 window.updateCartQty = updateCartQty;
 window.removeFromCart = removeFromCart;
 window.addToCart = addToCart;
@@ -1189,7 +1191,7 @@ window.openHistory = async (id) => {
     list.innerHTML = '';
     snap.forEach(d => {
         const t = d.data();
-        list.innerHTML += `<div class="p-4 bg-slate-50 rounded-2xl mb-2 flex justify-between border-l-4 ${t.type==='in'?'border-green-500':'border-orange-500'} shadow-sm text-sm"><div><strong class="font-black italic uppercase">${t.desc}</strong><p class="text-[8px] text-slate-400 mt-1">${t.timestamp.toDate().toLocaleString()}</p></div><strong class="${t.type==='in'?'text-green-600':'text-orange-600'} text-lg font-black">${t.type==='in'?'+':'-'}${t.qty}</strong></div>`;
+        list.innerHTML += `<div class="p-4 bg-slate-50 rounded-2xl mb-2 flex justify-between border-l-4 ${t.type==='in'?'border-green-500':'border-orange-500'} shadow-sm text-sm"><div><strong class="font-black italic uppercase text-slate-800 leading-none block">${t.desc}</strong><p class="text-[8px] text-slate-400 font-bold mt-1 uppercase">${t.timestamp.toDate().toLocaleString()}</p></div><strong class="${t.type==='in'?'text-green-600':'text-orange-600'} text-lg font-black">${t.type==='in'?'+':'-'}${t.qty}</strong></div>`;
     });
     document.getElementById('product-history-modal').classList.add('is-open');
 };
