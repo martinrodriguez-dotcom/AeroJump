@@ -2,7 +2,7 @@
 // AeroJump Gualeguaychú - Sistema de Gestión v2026 (Logic Engine)
 // =================================================================
 
-// Importaciones de Firebase SDK (v11.6.1) vía CDN para compatibilidad directa
+// Importaciones de Firebase SDK (v11.6.1) vía CDN
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
 import { 
     getAuth, 
@@ -174,17 +174,8 @@ const emptyCartMsg = document.getElementById('empty-cart-msg');
 document.addEventListener('DOMContentLoaded', () => {
     console.log("DOM Cargado. Iniciando AeroJump Gualeguaychú v2026...");
     setupEventListeners();
-    registerServiceWorker();
     firebaseInit();
 });
-
-function registerServiceWorker() {
-    if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/sw.js').catch(error => {
-            console.error('Error Service Worker:', error);
-        });
-    }
-}
 
 async function firebaseInit() {
     try {
@@ -305,6 +296,9 @@ function setupEventListeners() {
         };
     }
 
+    const typeBtnCancel = document.getElementById('type-btn-cancel');
+    if (typeBtnCancel) typeBtnCancel.onclick = closeModals;
+
     if (cajaFilterBtn) cajaFilterBtn.onclick = loadCajaData;
 
     if (teamNameInput) {
@@ -341,9 +335,27 @@ function setupEventListeners() {
         });
     }
 
+    // FORMULARIO NUEVO PRODUCTO (RESTAURADO)
+    const addProductBtn = document.getElementById('add-product-btn');
+    if (addProductBtn) {
+        addProductBtn.onclick = () => {
+            const container = document.getElementById('product-form-container');
+            if(container) container.classList.toggle('is-hidden');
+        };
+    }
+    
+    const cancelProductBtn = document.getElementById('cancel-product-btn');
+    if (cancelProductBtn) {
+        cancelProductBtn.onclick = () => {
+            const container = document.getElementById('product-form-container');
+            if(container) container.classList.add('is-hidden');
+        };
+    }
+
     if (productForm) productForm.onsubmit = handleSaveProduct;
     if (inventorySearchInput) inventorySearchInput.oninput = (e) => renderProducts(e.target.value);
     
+    // Cálculos de precios (RESTAURADO)
     if (document.getElementById('prod-batch-cost')) document.getElementById('prod-batch-cost').oninput = calculateProductPrices;
     if (document.getElementById('prod-batch-qty')) document.getElementById('prod-batch-qty').oninput = calculateProductPrices;
     if (document.getElementById('prod-profit-pct')) document.getElementById('prod-profit-pct').oninput = calculateProductPrices;
@@ -412,7 +424,7 @@ async function handleLogin(e) {
 
 async function handleRegister(e) {
     e.preventDefault();
-    showMessage("Registrando admin...");
+    showMessage("Registrando admin AeroJump...");
     const email = document.getElementById('register-email').value;
     const password = document.getElementById('register-password').value;
     try {
@@ -444,8 +456,10 @@ async function loadAppSettings() {
 function loadConfigDataIntoForm() {
     if (!configCourt1Price) return;
     configCourt1Price.value = appSettings.court1Price;
-    document.getElementById('config-grill-price').value = appSettings.grillPrice;
-    document.getElementById('config-event-price').value = appSettings.eventPrice;
+    const grillEl = document.getElementById('config-grill-price');
+    if(grillEl) grillEl.value = appSettings.grillPrice;
+    const eventEl = document.getElementById('config-event-price');
+    if(eventEl) eventEl.value = appSettings.eventPrice;
 }
 
 async function handleSaveConfig(e) {
@@ -459,7 +473,7 @@ async function handleSaveConfig(e) {
     try {
         await setDoc(doc(db, settingsDocPath), newSettings);
         appSettings = newSettings;
-        showMessage("¡Precios actualizados!");
+        showMessage("¡Precios AeroJump actualizados!");
         setTimeout(hideMessage, 1500);
     } catch (error) { showMessage(`Error: ${error.message}`, true); }
 }
@@ -622,7 +636,7 @@ async function handleSaveSingleBooking() {
         else { const docRef = await addDoc(collection(db, bookingsCollectionPath), data); }
         await logBookingEvent(action, data);
         await saveCustomer(teamName); 
-        showMessage("¡Turno guardado!"); closeModals(); setTimeout(hideMessage, 1500); 
+        showMessage("¡Turno AeroJump guardado!"); closeModals(); setTimeout(hideMessage, 1500); 
     } catch (error) { showMessage(error.message, true); } finally { saveButton.disabled = false; }
 }
 
@@ -738,11 +752,14 @@ function renderSaleCatalog(filter = "") {
     
     allProducts.filter(p => p.name.toLowerCase().includes(filter.toLowerCase())).forEach(p => {
         const card = document.createElement('div');
-        card.className = 'bg-slate-50 p-4 rounded-3xl border border-slate-100 flex flex-col items-center text-center gap-2 hover:bg-violet-50 transition-colors cursor-pointer';
+        card.className = 'bg-slate-50 p-5 rounded-[2rem] border-2 border-slate-100 flex flex-col items-center text-center gap-3 hover:bg-violet-50 hover:border-violet-200 transition-all cursor-pointer shadow-sm group';
         card.innerHTML = `
-            <span class="text-xs font-black uppercase text-slate-800 leading-tight">${p.name}</span>
-            <strong class="text-violet-700 text-lg">$${p.salePrice}</strong>
-            <span class="text-[8px] font-black text-slate-400 uppercase">Stock: ${p.stock}</span>
+            <div class="flex flex-col items-center">
+                <span class="text-xs font-black uppercase text-slate-700 leading-none mb-1 group-hover:text-violet-700 transition-colors">${p.name}</span>
+                <span class="text-[8px] font-black text-slate-400 uppercase tracking-widest">En Stock: ${p.stock}</span>
+            </div>
+            <strong class="text-violet-600 text-2xl font-black italic tracking-tighter leading-none">$${p.salePrice}</strong>
+            <button class="bg-violet-600 text-white w-full py-2 rounded-xl text-[9px] font-black uppercase shadow-lg shadow-violet-100 opacity-0 group-hover:opacity-100 transition-all">Sumar +</button>
         `;
         card.onclick = () => addToCart(p);
         saleCatalogGrid.appendChild(card);
@@ -799,19 +816,19 @@ function renderSaleCart() {
         total += (item.salePrice * item.qty);
         count += item.qty;
         const row = document.createElement('div');
-        row.className = 'flex justify-between items-center bg-white p-4 rounded-2xl shadow-sm border border-slate-100';
+        row.className = 'flex justify-between items-center bg-white p-4 rounded-3xl shadow-sm border border-slate-100 transition-all hover:border-violet-100';
         row.innerHTML = `
             <div class="flex-1 text-left">
-                <p class="font-black text-xs uppercase italic text-slate-800">${item.name}</p>
-                <p class="text-[9px] font-bold text-violet-600">$${item.salePrice} c/u</p>
+                <p class="font-black text-xs uppercase italic text-slate-800 leading-tight">${item.name}</p>
+                <p class="text-[9px] font-bold text-violet-500">$${item.salePrice} c/u</p>
             </div>
             <div class="flex items-center gap-4">
-                <div class="flex items-center bg-slate-100 rounded-xl px-2">
-                    <button onclick="window.updateCartQty('${item.id}', -1)" class="w-8 h-8 font-black text-slate-400 hover:text-violet-600">-</button>
-                    <span class="w-8 text-center font-black text-xs">${item.qty}</span>
-                    <button onclick="window.updateCartQty('${item.id}', 1)" class="w-8 h-8 font-black text-slate-400 hover:text-violet-600">+</button>
+                <div class="flex items-center bg-slate-100 rounded-2xl px-2 py-1">
+                    <button onclick="window.updateCartQty('${item.id}', -1)" class="w-10 h-10 font-black text-slate-400 hover:text-violet-600 transition-colors text-xl">-</button>
+                    <span class="w-10 text-center font-black text-sm italic">${item.qty}</span>
+                    <button onclick="window.updateCartQty('${item.id}', 1)" class="w-10 h-10 font-black text-slate-400 hover:text-violet-600 transition-colors text-xl">+</button>
                 </div>
-                <button onclick="window.removeFromCart('${item.id}')" class="text-orange-500 p-2">🗑️</button>
+                <button onclick="window.removeFromCart('${item.id}')" class="text-orange-500 p-3 hover:bg-orange-50 rounded-2xl transition-colors">🗑️</button>
             </div>`;
         saleCartList.appendChild(row);
     });
@@ -973,7 +990,7 @@ function renderCajaList(daily) {
         const data = daily[day], [y, m, d] = day.split('-');
         const item = document.createElement('div');
         item.className = 'bg-white p-6 rounded-3xl flex justify-between items-center cursor-pointer mb-3 border-l-8 border-violet-500 shadow-sm';
-        item.innerHTML = `<div><strong class="text-slate-800 text-xl font-black italic tracking-tighter">${d}/${m}/${y}</strong><p class="text-[9px] text-slate-400 font-bold uppercase mt-1 tracking-widest">${data.b.length} Turnos | ${data.s.length} Ventas</p></div><strong class="text-2xl font-black text-violet-600 italic tracking-tighter">$${data.t.toLocaleString()}</strong>`;
+        item.innerHTML = `<div><strong class="text-slate-800 text-xl font-black italic tracking-tighter">${d}/${m}/${y}</strong><p class="text-[9px] text-slate-400 font-bold uppercase mt-1 tracking-widest">${data.b.length} Saltos | ${data.s.length} Ventas</p></div><strong class="text-2xl font-black text-violet-600 italic tracking-tighter">$${data.t.toLocaleString()}</strong>`;
         item.onclick = () => showCajaDetail(`${d}/${m}/${y}`, data);
         cajaDailyList.appendChild(item);
     });
@@ -1146,7 +1163,7 @@ function saveRecurringSettings() {
     recurringModal.classList.remove('is-open');
 }
 
-// Globalización de funciones (Carrito y Reservas)
+// Globalización de funciones
 window.updateCartQty = updateCartQty;
 window.removeFromCart = removeFromCart;
 window.addToCart = addToCart;
@@ -1195,6 +1212,6 @@ window.openHistory = async (id) => {
     });
     document.getElementById('product-history-modal').classList.add('is-open');
 };
-window.deleteProduct = async (id) => { if(confirm("¿Eliminar ficha permanentemente de AeroJump?")) await deleteDoc(doc(db, productsCollectionPath, id)); };
+window.deleteProduct = async (id) => { if(confirm("¿Borrar ficha permanentemente de AeroJump?")) await deleteDoc(doc(db, productsCollectionPath, id)); };
 
-console.log("AeroJump v2026 - Core Logic Active and Error-Free.");
+console.log("AeroJump v2026 - Motor Logic Active y Reparado.");
