@@ -40,7 +40,7 @@
                 </div>
                 <div class="mb-6">
                     <label for="login-password" class="block text-[10px] font-black text-slate-400 uppercase mb-1 ml-1">Contraseña</label>
-                    <input type="password" id="login-password" class="w-full px-4 py-3 border border-slate-100 bg-slate-50 rounded-xl font-bold focus:ring-2 focus:ring-violet-500 outline-none" required>
+                    <input type="password" id="login-password" class="w-full px-4 py-3 border border-slate-100 bg-slate-50 rounded-xl font-bold focus:ring-2 focus:ring-violet-50 outline-none" required>
                 </div>
                 <button type="submit" class="bg-violet-600 hover:bg-violet-700 text-white w-full font-black uppercase tracking-widest py-4 rounded-xl shadow-lg shadow-violet-100 transition-all active:scale-95">Ingresar al Sistema</button>
             </form>
@@ -57,11 +57,11 @@
             <form id="register-form">
                 <div class="mb-4">
                     <label for="register-email" class="block text-[10px] font-black text-slate-400 uppercase mb-1 ml-1">Email</label>
-                    <input type="email" id="register-email" class="w-full px-4 py-3 border border-slate-100 bg-slate-50 rounded-xl font-bold focus:ring-2 focus:ring-violet-500 outline-none" required>
+                    <input type="email" id="register-email" class="w-full px-4 py-3 border border-slate-100 bg-slate-50 rounded-xl font-bold focus:ring-2 focus:ring-violet-50 outline-none" required>
                 </div>
                 <div class="mb-6">
                     <label for="register-password" class="block text-[10px] font-black text-slate-400 uppercase mb-1 ml-1">Contraseña (mín. 6 caracteres)</label>
-                    <input type="password" id="register-password" class="w-full px-4 py-3 border border-slate-100 bg-slate-50 rounded-xl font-bold focus:ring-2 focus:ring-violet-500 outline-none" required>
+                    <input type="password" id="register-password" class="w-full px-6 py-4 bg-slate-50 border-none rounded-2xl font-bold focus:ring-4 focus:ring-violet-100 outline-none" required>
                 </div>
                 <button type="submit" class="bg-violet-600 hover:bg-violet-700 text-white w-full font-black uppercase tracking-widest py-4 rounded-xl shadow-lg shadow-violet-100 transition-all active:scale-95">Registrar Admin</button>
             </form>
@@ -144,7 +144,7 @@
             </div>
 
             <div class="relative mb-10 group">
-                <input type="text" id="inventory-search-input" class="w-full p-6 border-none bg-white rounded-[2rem] shadow-xl font-bold text-lg focus:ring-4 focus:ring-violet-50 transition-all placeholder:text-slate-200" placeholder="Filtrar por nombre...">
+                <input type="text" id="inventory-search-input" class="w-full p-6 border-none bg-white rounded-[2rem] shadow-xl font-bold text-lg focus:ring-4 focus:ring-violet-50 transition-all placeholder:text-slate-200 outline-none" placeholder="Filtrar por nombre...">
                 <span class="absolute right-8 top-1/2 -translate-y-1/2 text-2xl opacity-20 group-focus-within:opacity-100 transition-opacity">🔍</span>
             </div>
 
@@ -154,23 +154,23 @@
                 <h3 class="text-2xl font-black text-violet-900 mb-8 flex items-center gap-3 uppercase tracking-tighter italic">✨ Alta de Mercadería</h3>
                 <form id="product-form" class="grid grid-cols-1 md:grid-cols-3 gap-8 relative z-10">
                     <div class="md:col-span-2">
-                        <label class="block text-[10px] font-black text-slate-400 uppercase mb-3 tracking-widest ml-2">Nombre Comercial</label>
+                        <label class="block text-[10px] font-black text-slate-400 uppercase mb-3 ml-2">Nombre Comercial</label>
                         <input type="text" id="prod-name" placeholder="Ej: Bebida Energética 500ml" class="w-full px-6 py-5 bg-slate-50 border-none rounded-2xl font-black text-xl shadow-inner focus:ring-4 focus:ring-violet-100 outline-none" required>
                     </div>
                     <div>
-                        <label class="block text-[10px] font-black text-slate-400 uppercase mb-3 tracking-widest ml-2">Stock Inicial</label>
+                        <label class="block text-[10px] font-black text-slate-400 uppercase mb-3 ml-2">Stock Inicial</label>
                         <input type="number" id="prod-stock" class="w-full px-6 py-5 bg-slate-50 border-none rounded-2xl font-black text-xl shadow-inner focus:ring-4 focus:ring-violet-100 outline-none" required min="0" value="0">
                     </div>
                     <div>
-                        <label class="block text-[10px] font-black text-slate-400 uppercase mb-3 tracking-widest ml-2">Costo del Bulto ($)</label>
+                        <label class="block text-[10px] font-black text-slate-400 uppercase mb-3 ml-2">Costo del Bulto ($)</label>
                         <input type="number" id="prod-batch-cost" class="w-full px-6 py-5 bg-violet-50 border-none rounded-2xl font-black text-2xl text-violet-700 shadow-inner focus:ring-4 focus:ring-violet-100 outline-none" step="0.01" required placeholder="0.00">
                     </div>
                     <div>
-                        <label class="block text-[10px] font-black text-slate-400 uppercase mb-3 tracking-widest ml-2">Unidades x Bulto</label>
+                        <label class="block text-[10px] font-black text-slate-400 uppercase mb-3 ml-2">Unidades x Bulto</label>
                         <input type="number" id="prod-batch-qty" class="w-full px-6 py-5 bg-slate-50 border-none rounded-2xl font-black text-xl shadow-inner focus:ring-4 focus:ring-violet-100 outline-none" required min="1" value="1">
                     </div>
                     <div>
-                        <label class="block text-[10px] font-black text-slate-400 uppercase mb-3 tracking-widest ml-2">Margen (%)</label>
+                        <label class="block text-[10px] font-black text-slate-400 uppercase mb-3 ml-2">Margen (%)</label>
                         <input type="number" id="prod-profit-pct" class="w-full px-6 py-5 bg-orange-50 border-none rounded-2xl font-black text-xl text-orange-700 shadow-inner focus:ring-4 focus:ring-orange-100 outline-none" value="40">
                     </div>
                     <div class="md:col-span-3 p-10 bg-slate-900 rounded-[2.5rem] flex flex-col md:flex-row justify-between items-center gap-8 mt-4 shadow-2xl border border-slate-800">
@@ -301,7 +301,7 @@
             <div class="flex flex-col gap-6">
                 <button id="type-btn-court" class="p-8 bg-violet-600 text-white rounded-[2.5rem] font-black shadow-xl uppercase tracking-widest text-sm transition-all active:scale-95 border-b-4 border-violet-800">Salto Normal</button>
                 <button id="type-btn-event" class="p-8 bg-orange-500 text-white rounded-[2.5rem] font-black shadow-xl uppercase tracking-widest text-sm transition-all active:scale-95 border-b-4 border-orange-600">Cumple / Evento</button>
-                <button id="type-btn-cancel" class="mt-8 text-slate-300 font-black hover:text-slate-600 transition-colors uppercase text-[10px] tracking-[0.3em]">Cerrar</button>
+                <button id="type-btn-cancel" class="mt-8 text-slate-300 font-black hover:text-slate-600 transition-colors uppercase text-[10px] tracking-[0.3em]" onclick="closeModals()">Cerrar</button>
             </div>
         </div>
     </div>
@@ -315,17 +315,17 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
                     <div class="space-y-8">
                         <div class="relative">
-                            <label class="block text-[10px] font-black text-slate-400 uppercase mb-3 tracking-widest ml-2 italic">Responsable / Cliente</label>
+                            <label class="block text-[10px] font-black text-slate-400 uppercase mb-3 ml-2 italic">Responsable / Cliente</label>
                             <input type="text" id="teamName" class="w-full px-8 py-6 bg-slate-50 border-none rounded-3xl font-black text-2xl shadow-inner focus:ring-4 focus:ring-violet-50 italic outline-none" required autocomplete="off">
-                            <div id="teamName-suggestions" class="absolute z-20 w-full top-full mt-3 shadow-2xl rounded-2xl overflow-hidden bg-white is-hidden"></div>
+                            <div id="teamName-suggestions" class="absolute z-20 w-full top-full mt-3 shadow-2xl rounded-2xl overflow-hidden bg-white is-hidden text-left"></div>
                         </div>
                         <div class="grid grid-cols-2 gap-6">
                             <div>
-                                <label class="block text-[10px] font-black text-slate-400 uppercase mb-3 tracking-widest ml-2 italic">Saltadores</label>
+                                <label class="block text-[10px] font-black text-slate-400 uppercase mb-3 ml-2 italic">Saltadores</label>
                                 <input type="number" id="peopleCount" class="w-full px-6 py-5 bg-slate-50 border-none rounded-2xl font-black text-xl shadow-inner outline-none" value="1" required>
                             </div>
                             <div>
-                                <label class="block text-[10px] font-black text-slate-400 uppercase mb-3 tracking-widest ml-2 italic">Precio/H</label>
+                                <label class="block text-[10px] font-black text-slate-400 uppercase mb-3 ml-2 italic">Precio/H</label>
                                 <input type="number" id="costPerHour" class="w-full px-6 py-5 bg-violet-50 border-none rounded-2xl font-black text-xl text-violet-700 outline-none">
                             </div>
                         </div>
@@ -364,13 +364,13 @@
                         </div>
                     </div>
                 </div>
-                <div class="flex flex-col sm:flex-row justify-between items-center pt-10 border-t gap-10 mt-12">
-                    <div class="text-center sm:text-left">
+                <div class="flex flex-col sm:flex-row justify-between items-center pt-10 border-t gap-10 mt-12 text-center sm:text-left">
+                    <div>
                         <span class="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em] block mb-2">Monto a Liquidar</span>
                         <span id="booking-total" class="text-7xl font-black text-violet-700 tracking-tighter leading-none italic">$0</span>
                     </div>
                     <div class="flex gap-4 w-full sm:w-auto">
-                        <button type="button" id="cancel-booking-btn" class="flex-1 px-12 py-7 font-black text-slate-300 uppercase text-[10px] tracking-[0.3em]">Atrás</button>
+                        <button type="button" id="cancel-booking-btn" class="flex-1 px-12 py-7 font-black text-slate-300 uppercase text-[10px] tracking-[0.3em]" onclick="closeModals()">Atrás</button>
                         <button type="submit" class="flex-2 bg-violet-600 text-white px-20 py-7 rounded-[2.5rem] font-black shadow-2xl uppercase text-xs tracking-widest transition-all active:scale-95 border-b-8 border-violet-800 italic">Confirmar Operación</button>
                     </div>
                 </div>
@@ -378,240 +378,186 @@
         </div>
     </div>
 
-    <!-- VENTA RÁPIDA -->
+    <!-- MODAL DE VENTA MULTIPRODUCTO (ACTUALIZADO: Carrito Fijo) -->
     <div id="sale-modal" class="modal text-sm">
-        <div class="bg-white rounded-[4rem] p-10 md:p-14 w-full max-w-xl shadow-2xl border border-white overflow-hidden">
-            <div class="flex justify-between items-start mb-12">
+        <div class="bg-white rounded-[4rem] p-8 w-full max-w-2xl max-h-[95vh] overflow-hidden flex flex-col shadow-2xl border-white border">
+            <div class="flex justify-between items-center mb-6">
                 <div>
-                    <h3 class="text-4xl font-black text-violet-800 tracking-tighter uppercase italic leading-none">Nueva Venta</h3>
-                    <p class="text-[10px] text-slate-400 font-bold uppercase tracking-[0.3em] mt-2 ml-1">Mostrador AeroJump</p>
+                    <h3 class="text-3xl font-black text-violet-800 tracking-tighter uppercase italic leading-none">Nueva Venta</h3>
+                    <p class="text-[9px] text-slate-400 font-black uppercase tracking-widest mt-1">Caja Registradora AeroJump</p>
                 </div>
-                <span class="text-4xl opacity-20">🛒</span>
+                <button onclick="closeModals()" class="p-2 text-slate-300 hover:text-slate-600 transition-colors">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
             </div>
 
-            <div class="relative mb-10 group">
-                <input type="text" id="sale-search-input" class="w-full p-8 border-none bg-slate-100 rounded-[2.5rem] font-black text-2xl focus:ring-8 focus:ring-violet-50 transition-all placeholder:text-slate-300 shadow-inner italic outline-none" placeholder="¿Qué llevas?">
-                <div id="sale-search-results" class="mt-4 max-h-64 overflow-y-auto space-y-3 custom-scrollbar pr-3 mb-10"></div>
-            </div>
-
-            <div id="selected-product-info" class="p-10 bg-violet-900 rounded-[3rem] mb-10 is-hidden border-4 border-violet-800 text-center shadow-2xl relative">
-                <h4 id="sel-prod-name" class="font-black text-violet-200 text-3xl leading-tight tracking-tighter mb-4 italic uppercase"></h4>
-                <p id="sel-prod-price" class="text-6xl font-black text-white tracking-tighter mb-10"></p>
-                <div class="flex items-center justify-center gap-14 relative z-10">
-                    <button id="sale-qty-minus" class="w-20 h-20 bg-violet-800 border-b-4 border-violet-950 rounded-3xl font-black text-4xl text-white hover:bg-violet-700 transition-all active:scale-90">-</button>
-                    <input type="number" id="sale-qty-input" class="w-28 text-center font-black text-6xl bg-transparent border-none focus:ring-0 text-white italic outline-none" value="1">
-                    <button id="sale-qty-plus" class="w-20 h-20 bg-violet-800 border-b-4 border-violet-950 rounded-3xl font-black text-4xl text-white hover:bg-violet-700 transition-all active:scale-90">+</button>
-                </div>
-                <p class="text-[10px] text-violet-400 font-bold uppercase mt-8 tracking-[0.2em] font-black">Disponible: <span id="sel-prod-stock"></span> UNIDADES</p>
-            </div>
-
-            <div id="payment-selection-kiosco" class="mb-10">
-                <label class="block text-[11px] font-black text-slate-400 uppercase mb-4 tracking-widest ml-4 italic">Forma de Pago</label>
-                <div class="flex gap-4">
-                    <label class="flex-1 bg-slate-50 p-6 rounded-[2rem] text-center font-black cursor-pointer border-4 border-transparent has-[:checked]:border-violet-600 transition-all shadow-sm">
-                        <input type="radio" name="salePaymentMethod" value="efectivo" class="hidden" checked>
-                        <span class="block text-xl mb-1">💵</span>
-                        <span class="text-[10px] tracking-widest">EFECTIVO</span>
-                    </label>
-                    <label class="flex-1 bg-slate-50 p-6 rounded-[2rem] text-center font-black cursor-pointer border-4 border-transparent has-[:checked]:border-orange-600 transition-all shadow-sm">
-                        <input type="radio" name="salePaymentMethod" value="mercadopago" class="hidden">
-                        <span class="block text-xl mb-1">📱</span>
-                        <span class="text-[10px] tracking-widest">M. PAGO</span>
-                    </label>
+            <!-- SECCIÓN 1: RESUMEN FIJO DEL CARRITO -->
+            <div class="bg-slate-50 rounded-[2.5rem] p-6 mb-6 overflow-y-auto max-h-56 border border-slate-100 shadow-inner custom-scrollbar">
+                <h4 class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4 flex items-center gap-2 italic">
+                    <span>🛒 Artículos en Carrito</span>
+                    <span id="cart-count-badge" class="bg-violet-600 text-white px-2 py-0.5 rounded-full text-[8px]">0</span>
+                </h4>
+                <div id="sale-cart-list" class="space-y-3">
+                    <p id="empty-cart-msg" class="text-center py-6 text-slate-300 font-bold italic uppercase text-[10px]">Añade productos para comenzar</p>
                 </div>
             </div>
 
-            <div class="flex flex-col sm:flex-row justify-between items-center border-t border-slate-100 pt-10 gap-10">
-                <div class="text-center sm:text-left">
-                    <span class="text-[11px] font-black text-slate-400 uppercase tracking-[0.4em] block mb-2">Total a Cobrar</span>
-                    <span id="sale-total-display" class="text-7xl font-black text-violet-700 tracking-tighter leading-none italic">$0</span>
+            <!-- SECCIÓN 2: BUSCADOR -->
+            <div class="flex-1 flex flex-col min-h-0 relative">
+                <div class="relative group">
+                    <input type="text" id="sale-search-input" class="w-full p-6 border-none bg-slate-100 rounded-[2rem] font-black text-xl focus:ring-8 focus:ring-violet-50 transition-all placeholder:text-slate-300 shadow-inner italic outline-none" placeholder="Buscar producto para añadir...">
+                    <div id="sale-search-results" class="absolute z-30 w-full mt-2 max-h-64 overflow-y-auto bg-white shadow-2xl rounded-3xl border border-slate-100 is-hidden custom-scrollbar text-left"></div>
                 </div>
-                <div class="flex gap-5 w-full sm:w-auto">
-                    <button id="close-sale-modal-btn" class="flex-1 py-6 font-black text-slate-300 uppercase text-[10px] tracking-widest" onclick="closeModals()">Cancelar</button>
-                    <button id="confirm-sale-btn" class="flex-2 bg-violet-600 text-white px-16 py-7 rounded-[2.5rem] font-black shadow-xl disabled:opacity-10 uppercase tracking-widest text-xs transition-all active:scale-95 border-b-8 border-violet-800 italic" disabled>Finalizar</button>
+            </div>
+
+            <!-- SECCIÓN 3: PAGO Y CIERRE -->
+            <div class="mt-6 pt-6 border-t border-slate-100">
+                <div class="flex flex-col md:flex-row justify-between items-center gap-6">
+                    <div class="w-full md:w-1/2">
+                        <label class="block text-[10px] font-black text-slate-400 uppercase mb-3 ml-4 italic">Medio de Pago</label>
+                        <div class="flex gap-2">
+                            <label class="flex-1 bg-slate-50 p-4 rounded-2xl text-center font-black cursor-pointer border-2 border-transparent has-[:checked]:border-violet-600 has-[:checked]:bg-white transition-all shadow-sm">
+                                <input type="radio" name="salePaymentMethod" value="efectivo" class="hidden" checked>
+                                <span class="text-[9px] tracking-widest">EFECTIVO</span>
+                            </label>
+                            <label class="flex-1 bg-slate-50 p-4 rounded-2xl text-center font-black cursor-pointer border-2 border-transparent has-[:checked]:border-orange-600 has-[:checked]:bg-white transition-all shadow-sm">
+                                <input type="radio" name="salePaymentMethod" value="mercadopago" class="hidden">
+                                <span class="text-[9px] tracking-widest">M. PAGO</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="text-center md:text-right">
+                        <span class="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em] block mb-1">Total Venta</span>
+                        <span id="sale-total-display" class="text-6xl font-black text-violet-700 tracking-tighter italic leading-none">$0</span>
+                    </div>
                 </div>
+                <button id="confirm-sale-btn" class="w-full mt-8 bg-violet-600 text-white py-6 rounded-[2.5rem] font-black shadow-xl uppercase tracking-widest text-xs transition-all active:scale-95 border-b-8 border-violet-800 italic disabled:opacity-30" disabled>Finalizar Venta de Carrito</button>
             </div>
         </div>
     </div>
 
-    <!-- MODAL REPOSICIÓN -->
+    <!-- MODALES DE APOYO (REPOSICIÓN, EDITAR, LOGS) -->
     <div id="restock-modal" class="modal text-sm">
-        <div class="bg-white rounded-[3.5rem] p-12 w-full max-w-md shadow-2xl border-white border">
-            <h3 class="text-3xl font-black text-violet-700 mb-10 uppercase tracking-tighter italic">📦 Reposición</h3>
-            <form id="restock-form" class="space-y-10">
+        <div class="bg-white rounded-[3.5rem] p-12 w-full max-w-md shadow-2xl border-white border text-center">
+            <h3 class="text-3xl font-black text-violet-700 mb-10 uppercase italic">📦 Reposición</h3>
+            <form id="restock-form" class="space-y-8">
                 <input type="hidden" id="restock-prod-id">
-                <div class="p-8 bg-slate-50 rounded-[2.5rem] border border-slate-100 text-center shadow-inner">
-                    <h4 id="restock-name" class="font-black text-slate-800 text-3xl leading-none mb-3 italic tracking-tighter uppercase"></h4>
-                    <p class="text-[10px] font-black text-slate-300 uppercase tracking-[0.3em]">Stock Actual: <span id="restock-current-stock" class="text-violet-600 font-black"></span></p>
-                </div>
-                <div class="space-y-8">
-                    <div>
-                        <label class="block text-[10px] font-black text-slate-400 uppercase mb-3 ml-4 tracking-widest italic">Unidades Ingresadas</label>
-                        <input type="number" id="restock-qty" class="w-full px-10 py-7 bg-slate-50 border-none rounded-[2.5rem] font-black text-4xl text-center focus:ring-4 focus:ring-violet-100 shadow-inner outline-none" required min="1">
-                    </div>
-                    <div>
-                        <label class="block text-[10px] font-black text-slate-400 uppercase mb-3 ml-4 tracking-widest italic">Costo Lote Nuevo ($)</label>
-                        <input type="number" id="restock-batch-cost" class="w-full px-10 py-7 bg-violet-50 border-none rounded-[2.5rem] font-black text-4xl text-violet-700 text-center focus:ring-4 focus:ring-violet-100 shadow-inner outline-none" required step="0.01">
-                    </div>
-                </div>
-                <div class="flex gap-4 pt-4">
-                    <button type="button" onclick="closeModals()" class="flex-1 py-7 font-black text-slate-300 uppercase text-[10px] tracking-[0.2em]">Atrás</button>
-                    <button type="submit" class="flex-2 bg-violet-700 text-white px-12 py-7 rounded-[2rem] font-black shadow-xl uppercase text-xs transition-all active:scale-95 border-b-4 border-violet-900">Aplicar</button>
-                </div>
+                <h4 id="restock-name" class="text-2xl font-black text-slate-800 uppercase italic"></h4>
+                <p class="text-xs text-slate-400 uppercase font-black">Stock Actual: <span id="restock-current-stock" class="text-violet-600"></span></p>
+                <input type="number" id="restock-qty" class="w-full p-6 bg-slate-50 rounded-2xl font-black text-4xl text-center outline-none" required placeholder="Cantidad">
+                <input type="number" id="restock-batch-cost" class="w-full p-6 bg-violet-50 rounded-2xl font-black text-4xl text-center text-violet-700 outline-none" required placeholder="Costo Total" step="0.01">
+                <button type="submit" class="w-full bg-violet-700 text-white py-6 rounded-2xl font-black uppercase">Aplicar Stock</button>
             </form>
-        </div>
-    </div>
-
-    <!-- OTROS MODALES SISTEMA (RESTORED COMPLETOS) -->
-    <div id="event-modal" class="modal text-sm">
-        <div class="bg-white rounded-[3.5rem] p-10 w-full max-w-xl shadow-2xl border border-white">
-            <h3 id="event-modal-title" class="text-4xl font-black text-orange-600 mb-10 tracking-tighter italic uppercase">Reservar Evento</h3>
-            <form id="event-form" class="space-y-8">
-                <input type="hidden" id="event-booking-id"><input type="hidden" id="event-date">
-                <div class="space-y-2">
-                    <label class="text-[10px] font-black uppercase text-slate-400 ml-4 tracking-widest italic">Descripción del Evento</label>
-                    <input type="text" id="eventName" class="w-full px-8 py-6 bg-slate-50 border-none rounded-[2rem] font-black text-xl shadow-inner italic outline-none" required placeholder="Ej: Cumpleaños de Lucas">
-                </div>
-                <div class="grid grid-cols-2 gap-6">
-                    <input type="text" id="contactPerson" class="px-6 py-5 bg-slate-50 border-none rounded-2xl font-bold italic outline-none" required placeholder="Responsable">
-                    <input type="tel" id="contactPhone" class="px-6 py-5 bg-slate-50 border-none rounded-2xl font-bold italic outline-none" required placeholder="Celular">
-                </div>
-                <div class="space-y-4">
-                    <label class="text-[10px] font-black uppercase text-slate-400 ml-4 tracking-widest italic">Horarios de Ocupación</label>
-                    <div id="event-hours-list" class="time-slot-grid"></div>
-                </div>
-                <div class="flex justify-between items-center pt-10 border-t border-slate-100">
-                    <div>
-                        <span class="text-[10px] font-black text-slate-400 block mb-2 uppercase tracking-widest">Total Especial</span>
-                        <span id="event-total" class="text-6xl font-black text-orange-600 tracking-tighter leading-none italic">$0</span>
-                    </div>
-                    <div class="flex gap-6">
-                        <button type="button" onclick="closeModals()" class="text-slate-300 font-black uppercase text-[10px] tracking-widest">Volver</button>
-                        <button type="submit" class="bg-orange-500 text-white px-16 py-6 rounded-[2rem] font-black shadow-xl uppercase text-xs tracking-widest transition-all active:scale-95 border-b-4 border-orange-700 italic">Guardar</button>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <div id="options-modal" class="modal text-sm">
-        <div class="bg-white rounded-[4rem] p-12 w-full max-w-sm shadow-2xl text-center border-4 border-violet-50 relative overflow-hidden">
-            <h3 class="text-3xl font-black mb-10 tracking-tighter text-slate-800 uppercase italic">Reservas del Día</h3>
-            <div id="daily-bookings-list" class="space-y-3 mb-12"></div>
-            <div class="flex flex-col gap-4">
-                <button id="add-new-booking-btn" class="w-full bg-violet-600 text-white py-7 rounded-[2rem] font-black shadow-xl uppercase text-[10px] tracking-[0.2em] transition-all active:scale-95 border-b-4 border-violet-800">+ AGREGAR TURNO</button>
-                <button onclick="closeModals()" class="mt-6 text-slate-400 font-black uppercase text-[10px] tracking-[0.3em]">Regresar</button>
-            </div>
-        </div>
-    </div>
-
-    <div id="view-modal" class="modal text-sm">
-        <div class="bg-white p-14 rounded-[4rem] w-full max-w-md shadow-2xl border-white border relative">
-            <div id="view-booking-details" class="relative z-10"></div>
-            <button onclick="closeModals()" class="mt-14 w-full py-6 bg-slate-100 rounded-3xl font-black text-slate-400 uppercase text-[10px] tracking-widest transition-all hover:bg-slate-200">Cerrar Ficha</button>
-        </div>
-    </div>
-
-    <div id="caja-detail-modal" class="modal text-sm">
-        <div class="bg-white rounded-[3.5rem] shadow-2xl p-12 w-full max-w-md border border-white">
-            <h3 id="caja-detail-title" class="text-3xl font-black text-slate-800 mb-10 tracking-tighter uppercase italic leading-none">Resumen Diario</h3>
-            <div id="caja-detail-summary" class="space-y-4 text-slate-700 mb-12 border-b border-slate-50 pb-10"></div>
-            <h4 class="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] mb-6 ml-1">Movimientos de Caja</h4>
-            <div id="caja-detail-booking-list" class="space-y-3 max-h-56 overflow-y-auto custom-scrollbar pr-3"></div>
-            <div class="flex justify-end mt-12">
-                <button onclick="closeModals()" class="px-12 py-5 bg-slate-900 text-white rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-xl active:scale-95">Entendido</button>
-            </div>
-        </div>
-    </div>
-
-    <div id="delete-reason-modal" class="modal text-sm">
-        <div class="bg-white rounded-[3.5rem] shadow-2xl p-12 w-full max-w-sm text-center border-white border">
-            <h3 class="text-2xl font-black text-red-600 mb-8 tracking-tighter uppercase italic">¿Anular Reserva?</h3>
-            <form id="delete-reason-form" class="space-y-8">
-                <input type="hidden" id="delete-booking-id">
-                <div class="space-y-2">
-                    <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest italic ml-2">Motivo de la baja</label>
-                    <textarea id="delete-reason-text" rows="3" class="w-full px-8 py-6 bg-slate-50 border-none rounded-[2rem] font-bold shadow-inner focus:ring-4 focus:ring-red-50 italic outline-none" required placeholder="Explica por qué borras..."></textarea>
-                </div>
-                <div class="flex gap-4">
-                    <button type="button" onclick="closeModals()" class="flex-1 py-6 font-black text-slate-300 uppercase text-[10px] tracking-widest">Atrás</button>
-                    <button type="submit" class="flex-2 bg-red-600 text-white px-10 py-6 rounded-[2rem] font-black shadow-2xl uppercase text-[10px] tracking-widest transition-all active:scale-95 border-b-4 border-red-800 italic">Confirmar Baja</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <div id="recurring-modal" class="modal text-sm">
-        <div class="bg-white p-12 rounded-[4rem] w-full max-w-md shadow-2xl text-center border-white border">
-            <h3 class="text-4xl font-black text-slate-800 mb-2 tracking-tighter italic uppercase">Repetición</h3>
-            <p class="text-[10px] text-slate-400 font-bold uppercase tracking-[0.3em] mb-12 italic leading-relaxed text-center">Configuración de reservas fijas</p>
-            <div class="mb-10 text-left">
-                <label class="block text-[10px] font-black text-slate-400 uppercase mb-4 tracking-widest ml-4 italic">1. Día de la semana</label>
-                <div class="day-selector-grid grid grid-cols-4 gap-2">
-                    <button type="button" class="day-toggle-btn p-2 border rounded-lg text-xs font-bold" data-day="1">Lun</button><button type="button" class="day-toggle-btn p-2 border rounded-lg text-xs font-bold" data-day="2">Mar</button><button type="button" class="day-toggle-btn p-2 border rounded-lg text-xs font-bold" data-day="3">Mié</button><button type="button" class="day-toggle-btn p-2 border rounded-lg text-xs font-bold" data-day="4">Jue</button><button type="button" class="day-toggle-btn p-2 border rounded-lg text-xs font-bold" data-day="5">Vie</button><button type="button" class="day-toggle-btn p-2 border rounded-lg text-xs font-bold" data-day="6">Sáb</button><button type="button" class="day-toggle-btn p-2 border rounded-lg text-xs font-bold" data-day="0">Dom</button>
-                </div>
-            </div>
-            <div class="mb-12 text-left">
-                <label class="block text-[10px] font-black text-slate-400 uppercase mb-4 tracking-widest ml-4 italic">2. Meses del ciclo</label>
-                <div id="recurring-month-list" class="month-selector-grid grid grid-cols-3 gap-2"></div>
-            </div>
-            <div class="flex gap-6">
-                <button type="button" id="cancel-recurring-btn" class="flex-1 py-6 font-black text-slate-300 uppercase text-[10px] tracking-widest transition-all">Descartar</button>
-                <button type="button" id="confirm-recurring-btn" class="flex-2 bg-violet-600 text-white py-6 rounded-[2rem] font-black shadow-2xl text-[10px] uppercase tracking-widest transition-all active:scale-95 border-b-4 border-violet-800 italic">Guardar Ciclo</button>
-            </div>
-        </div>
-    </div>
-
-    <div id="product-history-modal" class="modal text-sm">
-        <div class="bg-white p-12 rounded-[3.5rem] w-full max-w-lg shadow-2xl border border-white">
-            <div class="flex justify-between items-start mb-10">
-                <div>
-                    <h3 class="text-4xl font-black text-slate-800 tracking-tighter italic uppercase leading-none">Bitácora</h3>
-                    <h4 id="history-product-name" class="text-violet-600 font-black mt-2 uppercase tracking-[0.2em] text-[10px] italic"></h4>
-                </div>
-                <span class="text-3xl opacity-10">📜</span>
-            </div>
-            <div id="product-history-list" class="space-y-4 max-h-[30rem] overflow-y-auto pr-4 custom-scrollbar"></div>
-            <button onclick="closeModals()" class="w-full mt-12 py-7 bg-slate-100 rounded-[2rem] font-black text-slate-400 uppercase text-[10px] tracking-widest transition-colors hover:bg-slate-200">Cerrar Historial</button>
         </div>
     </div>
 
     <div id="edit-product-modal" class="modal text-sm">
-        <div class="bg-white rounded-[4rem] p-12 md:p-16 w-full max-w-md shadow-2xl border border-slate-50 text-center relative overflow-hidden">
-            <div class="absolute top-0 right-0 p-8 text-7xl font-black italic opacity-5 pointer-events-none">FILE</div>
-            <h3 class="text-4xl font-black text-slate-800 mb-12 tracking-tighter italic uppercase leading-none">Editar Ficha</h3>
-            <form id="edit-product-form" class="space-y-8 relative z-10 text-left">
+        <div class="bg-white rounded-[4rem] p-12 w-full max-w-md shadow-2xl border border-slate-50 text-left">
+            <h3 class="text-3xl font-black text-slate-800 mb-10 uppercase italic">Editar Ficha</h3>
+            <form id="edit-product-form" class="space-y-8">
                 <input type="hidden" id="edit-prod-id">
-                <div>
-                    <label class="text-[10px] font-black uppercase text-slate-400 mb-3 ml-2 block tracking-widest italic">Nombre del Producto</label>
-                    <input type="text" id="edit-prod-name" class="w-full px-8 py-6 bg-slate-50 border-none rounded-[2rem] font-black text-xl shadow-inner italic outline-none" required>
+                <input type="text" id="edit-prod-name" class="w-full p-5 bg-slate-50 rounded-2xl font-black outline-none" required placeholder="Nombre">
+                <div class="grid grid-cols-2 gap-4">
+                    <input type="number" id="edit-prod-cost" class="p-5 bg-slate-50 rounded-2xl font-black outline-none" required step="0.01" placeholder="Costo Unit.">
+                    <input type="number" id="edit-prod-price" class="p-5 bg-violet-50 rounded-2xl font-black text-violet-700 outline-none" required step="0.01" placeholder="Precio Venta">
                 </div>
-                <div class="grid grid-cols-2 gap-6">
-                    <div>
-                        <label class="text-[10px] font-black uppercase text-slate-400 mb-3 ml-2 block tracking-widest italic">Costo Unidad ($)</label>
-                        <input type="number" id="edit-prod-cost" class="w-full px-6 py-5 bg-slate-50 border-none rounded-2xl font-black text-xl shadow-inner outline-none" required step="0.01">
-                    </div>
-                    <div>
-                        <label class="text-[10px] font-black uppercase text-slate-400 mb-3 ml-2 block tracking-widest italic">Precio Venta ($)</label>
-                        <input type="number" id="edit-prod-price" class="w-full px-6 py-5 bg-violet-50 border-none rounded-2xl font-black text-xl text-violet-700 shadow-inner outline-none" required step="0.01">
-                    </div>
+                <input type="number" id="edit-prod-stock" class="w-full p-5 bg-slate-50 rounded-2xl font-black outline-none" required placeholder="Stock">
+                <button type="submit" class="w-full bg-slate-900 text-white py-6 rounded-2xl font-black uppercase italic transition-all active:scale-95">Guardar Cambios</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="product-history-modal" class="modal text-sm">
+        <div class="bg-white p-12 rounded-[3.5rem] w-full max-w-lg shadow-2xl border border-white text-center">
+            <div class="flex justify-between items-start mb-10 leading-none">
+                <div class="text-left">
+                    <h3 class="text-4xl font-black text-slate-800 tracking-tighter uppercase italic leading-none">Bitácora</h3>
+                    <h4 id="history-product-name" class="text-violet-600 font-black mt-2 uppercase text-[10px] italic"></h4>
                 </div>
-                <div>
-                    <label class="text-[10px] font-black uppercase text-slate-400 mb-3 ml-2 block tracking-widest italic">Stock Disponible</label>
-                    <input type="number" id="edit-prod-stock" class="w-full px-8 py-6 bg-slate-50 border-none rounded-3xl font-black text-xl shadow-inner outline-none" required>
-                </div>
-                <div class="flex gap-6 pt-10">
-                    <button type="button" onclick="closeModals()" class="flex-1 py-7 font-black text-slate-300 uppercase text-[10px] tracking-widest">Atrás</button>
-                    <button type="submit" class="flex-2 bg-slate-900 text-white px-10 py-7 rounded-[2rem] font-black shadow-2xl uppercase text-[11px] tracking-widest transition-all active:scale-95 border-b-8 border-black italic">Guardar Cambios</button>
+                <span class="text-3xl opacity-10">📜</span>
+            </div>
+            <div id="product-history-list" class="space-y-4 max-h-[30rem] overflow-y-auto pr-4 custom-scrollbar text-left"></div>
+            <button onclick="closeModals()" class="w-full mt-12 py-7 bg-slate-100 rounded-[2.5rem] font-black text-slate-400 uppercase text-[10px] hover:bg-slate-200">Cerrar</button>
+        </div>
+    </div>
+
+    <!-- MODAL OPCIONES DÍA -->
+    <div id="options-modal" class="modal text-sm">
+        <div class="bg-white rounded-[4rem] p-12 w-full max-w-sm shadow-2xl text-center border-4 border-violet-50">
+            <h3 class="text-3xl font-black mb-10 tracking-tighter text-slate-800 uppercase italic">Reservas del Día</h3>
+            <div id="daily-bookings-list" class="space-y-3 mb-12 italic"></div>
+            <div class="flex flex-col gap-4">
+                <button id="add-new-booking-btn" class="w-full bg-violet-600 text-white py-7 rounded-[2rem] font-black shadow-xl uppercase text-[10px] active:scale-95 border-b-4 border-violet-800">+ AGREGAR TURNO</button>
+                <button onclick="closeModals()" class="mt-6 text-slate-400 font-black uppercase text-[10px]">Regresar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DETALLE SALTO -->
+    <div id="view-modal" class="modal text-sm">
+        <div class="bg-white p-14 rounded-[4rem] w-full max-w-md shadow-2xl border-white border text-left relative">
+            <div id="view-booking-details" class="relative z-10"></div>
+            <button onclick="closeModals()" class="mt-14 w-full py-6 bg-slate-100 rounded-3xl font-black text-slate-400 uppercase text-[10px] hover:bg-slate-200">Cerrar Ficha</button>
+        </div>
+    </div>
+
+    <!-- MODAL ARQUEO DETALLE -->
+    <div id="caja-detail-modal" class="modal text-sm text-center">
+        <div class="bg-white rounded-[3.5rem] shadow-2xl p-12 w-full max-w-md border border-white">
+            <h3 id="caja-detail-title" class="text-3xl font-black text-slate-800 mb-10 uppercase italic leading-none">Cierre Diario</h3>
+            <div id="caja-detail-summary" class="space-y-4 text-slate-700 mb-12 border-b border-slate-50 pb-10"></div>
+            <div id="caja-detail-booking-list" class="space-y-3 max-h-56 overflow-y-auto custom-scrollbar pr-3 text-left"></div>
+            <button onclick="closeModals()" class="mt-12 px-12 py-5 bg-slate-900 text-white rounded-2xl font-black uppercase text-[10px] shadow-xl">Entendido</button>
+        </div>
+    </div>
+
+    <!-- MODAL ELIMINACIÓN -->
+    <div id="delete-reason-modal" class="modal text-sm text-center">
+        <div class="bg-white rounded-[3.5rem] shadow-2xl p-12 w-full max-w-sm border-white border">
+            <h3 class="text-2xl font-black text-red-600 mb-8 uppercase italic tracking-tighter">¿Anular Reserva?</h3>
+            <form id="delete-reason-form" class="space-y-8">
+                <input type="hidden" id="delete-booking-id">
+                <textarea id="delete-reason-text" rows="3" class="w-full px-8 py-6 bg-slate-50 border-none rounded-[2rem] font-bold shadow-inner focus:ring-4 focus:ring-red-50 italic outline-none" required placeholder="Motivo..."></textarea>
+                <div class="flex gap-4">
+                    <button type="button" onclick="closeModals()" class="flex-1 py-6 font-black text-slate-300 uppercase text-[10px]">Atrás</button>
+                    <button type="submit" class="flex-2 bg-red-600 text-white px-10 py-6 rounded-[2rem] font-black uppercase active:scale-95 italic">Confirmar Baja</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- Mensaje de Carga/Animación Trampolín -->
-    <div id="message-overlay" class="modal">
-        <div class="bg-white p-10 rounded-[3rem] shadow-2xl flex flex-col items-center gap-6 border-white border border-4">
-            <svg width="120" height="120" viewBox="0 0 100 100">
+    <!-- MODAL RECURRENCIA -->
+    <div id="recurring-modal" class="modal text-sm text-center">
+        <div class="bg-white p-12 rounded-[4rem] w-full max-w-md shadow-2xl border-white border">
+            <h3 class="text-4xl font-black text-slate-800 mb-2 italic uppercase">Repetición</h3>
+            <p class="text-[10px] text-slate-400 font-bold uppercase mb-12 italic text-center">Configuración de saltos fijos</p>
+            <div class="mb-10 text-left">
+                <label class="block text-[10px] font-black text-slate-400 uppercase mb-4 ml-4 italic">1. Día de la semana</label>
+                <div class="day-selector-grid grid grid-cols-4 gap-2">
+                    <button type="button" class="day-toggle-btn p-3 border rounded-xl text-xs font-black uppercase" data-day="1">Lun</button>
+                    <button type="button" class="day-toggle-btn p-3 border rounded-xl text-xs font-black uppercase" data-day="2">Mar</button>
+                    <button type="button" class="day-toggle-btn p-3 border rounded-xl text-xs font-black uppercase" data-day="3">Mié</button>
+                    <button type="button" class="day-toggle-btn p-3 border rounded-xl text-xs font-black uppercase" data-day="4">Jue</button>
+                    <button type="button" class="day-toggle-btn p-3 border rounded-xl text-xs font-black uppercase" data-day="5">Vie</button>
+                    <button type="button" class="day-toggle-btn p-3 border rounded-xl text-xs font-black uppercase" data-day="6">Sáb</button>
+                    <button type="button" class="day-toggle-btn p-3 border rounded-xl text-xs font-black uppercase" data-day="0">Dom</button>
+                </div>
+            </div>
+            <div class="mb-12 text-left">
+                <label class="block text-[10px] font-black text-slate-400 uppercase mb-4 ml-4 italic">2. Meses del ciclo</label>
+                <div id="recurring-month-list" class="month-selector-grid grid grid-cols-3 gap-2"></div>
+            </div>
+            <div class="flex gap-6">
+                <button type="button" onclick="closeModals()" class="flex-1 py-6 font-black text-slate-300 uppercase text-[10px]">Descartar</button>
+                <button type="button" id="confirm-recurring-btn" class="flex-2 bg-violet-600 text-white py-6 rounded-[2rem] font-black shadow-2xl text-[10px] uppercase active:scale-95 italic">Guardar Ciclo</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- OVERLAY DE CARGA -->
+    <div id="message-overlay" class="modal bg-white/95 backdrop-blur-md">
+        <div class="flex flex-col items-center justify-center min-h-screen text-center p-10">
+            <svg width="120" height="120" viewBox="0 0 100 100" class="mb-8">
                 <path d="M10 80 Q 50 80 90 80" stroke="#7c3aed" stroke-width="6" fill="none" stroke-linecap="round" class="trampoline-line"/>
                 <line x1="15" y1="80" x2="10" y2="90" stroke="#475569" stroke-width="4" stroke-linecap="round"/>
                 <line x1="85" y1="80" x2="90" y2="90" stroke="#475569" stroke-width="4" stroke-linecap="round"/>
