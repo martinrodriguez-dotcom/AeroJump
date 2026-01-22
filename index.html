@@ -5,65 +5,65 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AeroJump Gualeguaychú - Gestión de Saltos</title>
     
+    <!-- Tailwind CSS para utilidades rápidas -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Estilos personalizados AeroJump -->
     <link rel="stylesheet" href="style.css">
     
-    <!-- Fuente Inter para un look más moderno -->
+    <!-- Fuente Inter para legibilidad premium -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     
+    <!-- PWA y Meta tags -->
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#7c3aed">
     <link rel="icon" href="/favicon.ico" type="image/x-icon">
-    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 </head>
-<body class="bg-gray-100 font-sans antialiased text-gray-900" style="font-family: 'Inter', sans-serif;">
+<body class="bg-gray-100 font-sans antialiased text-gray-900">
 
     <!-- ============================================= -->
-    <!-- VISTAS DE AUTENTICACIÓN -->
+    <!-- VISTAS DE ACCESO (AUTH)                     -->
     <!-- ============================================= -->
     
     <div id="login-view" class="view-container flex items-center justify-center min-h-screen">
-        <div class="bg-white p-8 rounded-[2.5rem] shadow-2xl w-full max-w-sm border border-slate-50">
-            <div class="text-center mb-8">
-                <div class="inline-block p-4 bg-violet-100 rounded-3xl mb-4">
-                    <span class="text-4xl">🚀</span>
-                </div>
-                <h2 class="text-3xl font-black text-slate-800 tracking-tighter uppercase italic leading-none">Iniciar Sesión</h2>
-                <p class="text-slate-400 font-bold text-[10px] uppercase tracking-widest mt-2">AeroJump Management</p>
+        <div class="bg-white p-8 rounded-[2.5rem] shadow-2xl w-full max-w-sm border border-slate-50 text-center">
+            <div class="inline-block p-4 bg-violet-100 rounded-3xl mb-4">
+                <span class="text-4xl">🚀</span>
             </div>
+            <h2 class="text-3xl font-black text-slate-800 tracking-tighter uppercase italic leading-none">Iniciar Sesión</h2>
+            <p class="text-slate-400 font-bold text-[10px] uppercase tracking-widest mt-2 mb-8">AeroJump Management</p>
             <form id="login-form">
-                <div class="mb-4">
-                    <label for="login-email" class="block text-[10px] font-black text-slate-400 uppercase mb-1 ml-1">Email de Administrador</label>
-                    <input type="email" id="login-email" class="w-full px-4 py-3 border border-slate-100 bg-slate-50 rounded-xl font-bold focus:ring-2 focus:ring-violet-500 outline-none" required>
+                <div class="text-left mb-4">
+                    <label class="block text-[10px] font-black text-slate-400 uppercase mb-1 ml-1">Email Admin</label>
+                    <input type="email" id="login-email" class="w-full px-4 py-3 bg-slate-50 border-none rounded-xl font-bold focus:ring-2 focus:ring-violet-500 outline-none" required>
                 </div>
-                <div class="mb-6">
-                    <label for="login-password" class="block text-[10px] font-black text-slate-400 uppercase mb-1 ml-1">Contraseña</label>
-                    <input type="password" id="login-password" class="w-full px-4 py-3 border border-slate-100 bg-slate-50 rounded-xl font-bold focus:ring-2 focus:ring-violet-50 outline-none" required>
+                <div class="text-left mb-6">
+                    <label class="block text-[10px] font-black text-slate-400 uppercase mb-1 ml-1">Contraseña</label>
+                    <input type="password" id="login-password" class="w-full px-4 py-3 bg-slate-50 border-none rounded-xl font-bold focus:ring-2 focus:ring-violet-500 outline-none" required>
                 </div>
-                <button type="submit" class="bg-violet-600 hover:bg-violet-700 text-white w-full font-black uppercase tracking-widest py-4 rounded-xl shadow-lg shadow-violet-100 transition-all active:scale-95">Ingresar al Sistema</button>
+                <button type="submit" class="bg-violet-600 hover:bg-violet-700 text-white w-full font-black uppercase tracking-widest py-4 rounded-xl shadow-lg transition-all active:scale-95">Ingresar</button>
             </form>
             <p class="text-center text-[11px] text-slate-400 mt-6 font-bold uppercase tracking-tight">
                 ¿Nuevo administrador? 
-                <a href="#" id="show-register" class="text-violet-600 hover:underline">Crea una cuenta aquí</a>
+                <a href="#" id="show-register" class="text-violet-600 hover:underline">Crear cuenta</a>
             </p>
         </div>
     </div>
 
     <div id="register-view" class="view-container flex items-center justify-center min-h-screen is-hidden">
-        <div class="bg-white p-8 rounded-[2.5rem] shadow-2xl w-full max-w-sm border border-slate-50">
-            <h2 class="text-3xl font-black text-center text-slate-800 mb-6 tracking-tighter uppercase italic leading-none">Crear Cuenta</h2>
+        <div class="bg-white p-8 rounded-[2.5rem] shadow-2xl w-full max-w-sm border border-slate-50 text-center">
+            <h2 class="text-3xl font-black text-slate-800 tracking-tighter uppercase italic leading-none mb-8">Crear Cuenta</h2>
             <form id="register-form">
-                <div class="mb-4">
-                    <label for="register-email" class="block text-[10px] font-black text-slate-400 uppercase mb-1 ml-1">Email</label>
-                    <input type="email" id="register-email" class="w-full px-4 py-3 border border-slate-100 bg-slate-50 rounded-xl font-bold focus:ring-2 focus:ring-violet-500 outline-none" required>
+                <div class="text-left mb-4">
+                    <label class="block text-[10px] font-black text-slate-400 uppercase mb-1 ml-1">Email</label>
+                    <input type="email" id="register-email" class="w-full px-4 py-3 bg-slate-50 border-none rounded-xl font-bold focus:ring-2 focus:ring-violet-500 outline-none" required>
                 </div>
-                <div class="mb-6">
-                    <label for="register-password" class="block text-[10px] font-black text-slate-400 uppercase mb-1 ml-1">Contraseña (mín. 6 caracteres)</label>
-                    <input type="password" id="register-password" class="w-full px-6 py-4 bg-slate-50 border-none rounded-2xl font-bold focus:ring-4 focus:ring-violet-100 outline-none" required>
+                <div class="text-left mb-6">
+                    <label class="block text-[10px] font-black text-slate-400 uppercase mb-1 ml-1">Contraseña</label>
+                    <input type="password" id="register-password" class="w-full px-4 py-3 bg-slate-50 border-none rounded-xl font-bold focus:ring-2 focus:ring-violet-500 outline-none" required>
                 </div>
-                <button type="submit" class="bg-violet-600 hover:bg-violet-700 text-white w-full font-black uppercase tracking-widest py-4 rounded-xl shadow-lg shadow-violet-100 transition-all active:scale-95">Registrar Admin</button>
+                <button type="submit" class="bg-violet-600 hover:bg-violet-700 text-white w-full font-black uppercase tracking-widest py-4 rounded-xl shadow-lg transition-all active:scale-95">Registrar Admin</button>
             </form>
             <p class="text-center text-[11px] text-slate-400 mt-6 font-bold uppercase tracking-tight">
                 ¿Ya tienes acceso? 
@@ -73,13 +73,13 @@
     </div>
 
     <!-- ============================================= -->
-    <!-- CONTENEDOR PRINCIPAL DE LA APP -->
+    <!-- CONTENEDOR PRINCIPAL DE LA APP             -->
     <!-- ============================================= -->
     <div id="app-container" class="is-hidden">
         
         <header class="fixed top-0 left-0 right-0 bg-white/80 backdrop-blur-md shadow-sm p-4 flex justify-between items-center z-50 border-b border-slate-100">
-            <div class="flex items-center gap-2">
-                <button id="menu-btn" class="p-2 rounded-lg hover:bg-slate-50 transition-colors">
+            <div class="flex items-center gap-3">
+                <button id="menu-btn" class="p-2 rounded-xl bg-slate-50 hover:bg-slate-100 transition-colors">
                     <svg class="h-6 w-6 text-slate-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 6h16M4 12h16M4 18h16" />
                     </svg>
@@ -90,471 +90,493 @@
                 </div>
             </div>
 
-            <!-- Botón Venta Rápida Kiosco -->
             <button id="header-sale-btn" class="flex items-center gap-2 bg-orange-500 text-white px-5 py-3 rounded-2xl font-black shadow-lg hover:bg-orange-600 transition-all active:scale-90 group">
                 <svg class="w-5 h-5 group-hover:rotate-12 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
                 <span class="text-[10px] uppercase tracking-widest hidden sm:block">Nueva Venta</span>
             </button>
         </header>
 
-        <nav id="main-menu">
-            <div class="p-6 border-b border-slate-50">
+        <nav id="main-menu" class="custom-scrollbar overflow-y-auto">
+            <div class="p-8 border-b border-slate-50 text-left">
                 <p class="text-[9px] font-black text-slate-300 uppercase tracking-[0.2em] mb-1">Administrador</p>
-                <p id="user-email-display" class="font-black text-violet-700 truncate text-xs italic" title="Email del usuario"></p>
-                <button id="logout-btn" class="w-full text-left mt-4 px-4 py-2 text-[10px] font-black bg-slate-50 text-slate-400 rounded-xl hover:bg-red-50 hover:text-red-500 transition-all uppercase tracking-widest">Cerrar Sesión</button>
+                <p id="user-email-display" class="font-black text-violet-700 truncate text-xs italic mb-6"></p>
+                <button id="logout-btn" class="w-full text-left px-4 py-2 text-[10px] font-black bg-slate-50 text-slate-400 rounded-xl hover:bg-red-50 hover:text-red-500 transition-all uppercase tracking-widest">Cerrar Sesión</button>
             </div>
             
             <div class="mt-4 px-2 space-y-1">
-                <a href="#" class="menu-item flex items-center gap-3" data-view="calendar"><span>🗓️</span> Agenda Saltos</a>
-                <a href="#" class="menu-item flex items-center gap-3" data-view="productos"><span>🥤</span> Stock Kiosco</a>
-                <a href="#" class="menu-item flex items-center gap-3" data-view="caja"><span>💰</span> Arqueo Caja</a>
-                <a href="#" class="menu-item flex items-center gap-3" data-view="stats"><span>📊</span> Estadísticas</a>
-                <a href="#" class="menu-item flex items-center gap-3" data-view="historial"><span>📜</span> Historial Log</a> 
-                <a href="#" class="menu-item flex items-center gap-3" data-view="configuracion"><span>⚙️</span> Ajustes Precios</a>
+                <a href="#" class="menu-item" data-view="calendar"><span>🗓️</span> Agenda Saltos</a>
+                <a href="#" class="menu-item" data-view="productos"><span>🥤</span> Stock Kiosco</a>
+                <a href="#" class="menu-item" data-view="caja"><span>💰</span> Arqueo Caja</a>
+                <a href="#" class="menu-item" data-view="stats"><span>📊</span> Estadísticas</a>
+                <a href="#" class="menu-item" data-view="historial"><span>📜</span> Historial Log</a> 
+                <a href="#" class="menu-item" data-view="configuracion"><span>⚙️</span> Ajustes Precios</a>
             </div>
         </nav>
         <div id="menu-overlay" class="fixed inset-0 bg-slate-900/40 z-40 hidden" onclick="toggleMenu()"></div>
 
-
-        <!-- VISTA 1: CALENDARIO -->
-        <div id="calendar-view" class="view-container container mx-auto max-w-4xl p-4 pt-24">
-            <div class="text-center mb-8">
-                <h1 class="text-5xl font-black text-slate-800 tracking-tighter italic uppercase leading-none">Reservas</h1>
-                <p class="text-slate-400 font-bold text-[10px] uppercase tracking-[0.3em] mt-2">Control de turnos y eventos</p>
-            </div>
-            <div class="flex justify-between items-center bg-white p-5 rounded-[2.5rem] shadow-xl mb-6 border border-white">
-                <button id="prev-month-btn" class="p-4 rounded-2xl hover:bg-slate-50 transition-colors font-bold text-slate-300">◀</button>
-                <h2 id="current-month-year" class="text-xl font-black text-violet-700 italic uppercase tracking-tighter"></h2>
-                <button id="next-month-btn" class="p-4 rounded-2xl hover:bg-slate-50 transition-colors font-bold text-slate-300">▶</button>
-            </div>
-            <div class="grid grid-cols-7 gap-3 text-center font-black text-[10px] text-slate-300 uppercase tracking-widest mb-4 px-2">
-                <div>Dom</div> <div>Lun</div> <div>Mar</div> <div>Mié</div> <div>Jue</div> <div>Vie</div> <div>Sáb</div>
-            </div>
-            <div id="calendar-grid" class="grid grid-cols-7 gap-3"></div>
-        </div>
-
-        <!-- VISTA: KIOSCO / PRODUCTOS -->
-        <div id="productos-view" class="view-container container mx-auto max-w-5xl p-4 pt-24 is-hidden">
-            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-10">
-                <div>
-                    <h2 class="text-5xl font-black text-slate-800 tracking-tighter italic uppercase leading-none">Inventario</h2>
-                    <p class="text-slate-400 font-bold text-[10px] uppercase tracking-[0.3em] mt-2 ml-1">Kiosco de AeroJump</p>
-                </div>
-                <button id="add-product-btn" class="bg-violet-600 text-white px-8 py-4 rounded-[1.5rem] font-black shadow-xl shadow-violet-100 hover:bg-violet-700 transition-all uppercase text-[10px] tracking-widest active:scale-95">+ NUEVO PRODUCTO</button>
-            </div>
-
-            <div class="relative mb-10 group">
-                <input type="text" id="inventory-search-input" class="w-full p-6 border-none bg-white rounded-[2rem] shadow-xl font-bold text-lg focus:ring-4 focus:ring-violet-50 transition-all placeholder:text-slate-200 outline-none" placeholder="Filtrar por nombre...">
-                <span class="absolute right-8 top-1/2 -translate-y-1/2 text-2xl opacity-20 group-focus-within:opacity-100 transition-opacity">🔍</span>
-            </div>
-
-            <!-- Formulario de Carga Producto -->
-            <div id="product-form-container" class="bg-white p-8 md:p-10 rounded-[3rem] shadow-2xl mb-14 is-hidden border-4 border-violet-50 relative overflow-hidden text-sm">
-                <div class="absolute top-0 right-0 p-8 opacity-5 text-6xl font-black italic">NEW</div>
-                <h3 class="text-2xl font-black text-violet-900 mb-8 flex items-center gap-3 uppercase tracking-tighter italic">✨ Alta de Mercadería</h3>
-                <form id="product-form" class="grid grid-cols-1 md:grid-cols-3 gap-8 relative z-10">
-                    <div class="md:col-span-2">
-                        <label class="block text-[10px] font-black text-slate-400 uppercase mb-3 ml-2">Nombre Comercial</label>
-                        <input type="text" id="prod-name" placeholder="Ej: Bebida Energética 500ml" class="w-full px-6 py-5 bg-slate-50 border-none rounded-2xl font-black text-xl shadow-inner focus:ring-4 focus:ring-violet-100 outline-none" required>
-                    </div>
-                    <div>
-                        <label class="block text-[10px] font-black text-slate-400 uppercase mb-3 ml-2">Stock Inicial</label>
-                        <input type="number" id="prod-stock" class="w-full px-6 py-5 bg-slate-50 border-none rounded-2xl font-black text-xl shadow-inner focus:ring-4 focus:ring-violet-100 outline-none" required min="0" value="0">
-                    </div>
-                    <div>
-                        <label class="block text-[10px] font-black text-slate-400 uppercase mb-3 ml-2">Costo del Bulto ($)</label>
-                        <input type="number" id="prod-batch-cost" class="w-full px-6 py-5 bg-violet-50 border-none rounded-2xl font-black text-2xl text-violet-700 shadow-inner focus:ring-4 focus:ring-violet-100 outline-none" step="0.01" required placeholder="0.00">
-                    </div>
-                    <div>
-                        <label class="block text-[10px] font-black text-slate-400 uppercase mb-3 ml-2">Unidades x Bulto</label>
-                        <input type="number" id="prod-batch-qty" class="w-full px-6 py-5 bg-slate-50 border-none rounded-2xl font-black text-xl shadow-inner focus:ring-4 focus:ring-violet-100 outline-none" required min="1" value="1">
-                    </div>
-                    <div>
-                        <label class="block text-[10px] font-black text-slate-400 uppercase mb-3 ml-2">Margen (%)</label>
-                        <input type="number" id="prod-profit-pct" class="w-full px-6 py-5 bg-orange-50 border-none rounded-2xl font-black text-xl text-orange-700 shadow-inner focus:ring-4 focus:ring-orange-100 outline-none" value="40">
-                    </div>
-                    <div class="md:col-span-3 p-10 bg-slate-900 rounded-[2.5rem] flex flex-col md:flex-row justify-between items-center gap-8 mt-4 shadow-2xl border border-slate-800">
-                        <div class="text-center md:text-left">
-                            <span class="text-[10px] font-black text-green-400 uppercase tracking-[0.3em] block mb-2">Precio de Venta Sugerido</span>
-                            <span id="prod-suggested-price" class="text-6xl font-black text-white tracking-tighter">$0</span>
-                            <input type="hidden" id="prod-unit-cost">
-                        </div>
-                        <div class="flex gap-4 w-full md:w-auto">
-                            <button type="button" id="cancel-product-btn" class="flex-1 px-8 py-5 font-black text-slate-500 hover:text-white transition-colors uppercase text-[10px] tracking-widest">Descartar</button>
-                            <button type="submit" class="flex-2 bg-green-600 text-white px-14 py-6 rounded-2xl font-black shadow-xl uppercase text-xs tracking-widest transition-all active:scale-95 border-b-4 border-green-800">Guardar Ficha</button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-
-            <!-- Listado de productos -->
-            <div id="product-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
-        </div>
-
-        <!-- VISTA 2: GESTIÓN DE CAJA -->
-        <div id="caja-view" class="view-container container mx-auto max-w-4xl p-4 pt-24 is-hidden text-sm">
-            <h2 class="text-5xl font-black mb-10 text-center tracking-tighter italic text-slate-800 uppercase leading-none">Arqueo de Caja</h2>
+        <main class="pt-24 pb-12 px-4">
             
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10 text-center">
-                <div class="bg-white p-10 rounded-[3rem] shadow-xl border-b-[12px] border-violet-500 flex flex-col items-center">
-                    <div class="w-12 h-12 bg-violet-50 rounded-full flex items-center justify-center text-2xl mb-4">🗓️</div>
-                    <h3 class="text-slate-400 font-black uppercase text-[10px] tracking-[0.2em] mb-2">Recaudación Saltos</h3>
-                    <p id="caja-total-bookings" class="text-4xl font-black text-violet-600 tracking-tighter">$0</p>
+            <!-- VISTA 1: CALENDARIO -->
+            <div id="calendar-view" class="view-container container mx-auto max-w-4xl p-4 pt-10">
+                <div class="text-center mb-10">
+                    <h1 class="text-5xl font-black text-slate-800 tracking-tighter italic uppercase leading-none">Reservas</h1>
+                    <p class="text-slate-400 font-bold text-[10px] uppercase tracking-[0.3em] mt-2">Control de turnos y eventos</p>
                 </div>
-                <div class="bg-white p-10 rounded-[3rem] shadow-xl border-b-[12px] border-orange-500 flex flex-col items-center">
-                    <div class="w-12 h-12 bg-orange-50 rounded-full flex items-center justify-center text-2xl mb-4">🥤</div>
-                    <h3 class="text-slate-400 font-black uppercase text-[10px] tracking-[0.2em] mb-2">Recaudación Kiosco</h3>
-                    <p id="caja-total-sales" class="text-4xl font-black text-orange-600 tracking-tighter">$0</p>
+                <div class="flex justify-between items-center bg-white p-5 rounded-[2.5rem] shadow-xl mb-6 border border-white">
+                    <button id="prev-month-btn" class="p-4 rounded-2xl hover:bg-slate-50 transition-colors font-bold text-slate-300 text-xl">◀</button>
+                    <h2 id="current-month-year" class="text-xl font-black text-violet-700 italic uppercase tracking-tighter"></h2>
+                    <button id="next-month-btn" class="p-4 rounded-2xl hover:bg-slate-50 transition-colors font-bold text-slate-300 text-xl">▶</button>
                 </div>
+                <div class="grid grid-cols-7 gap-3 text-center font-black text-[10px] text-slate-300 uppercase tracking-widest mb-4 px-2">
+                    <div>Dom</div> <div>Lun</div> <div>Mar</div> <div>Mié</div> <div>Jue</div> <div>Vie</div> <div>Sáb</div>
+                </div>
+                <div id="calendar-grid" class="grid grid-cols-7 gap-3"></div>
             </div>
 
-            <div class="bg-slate-900 p-12 rounded-[4rem] text-white text-center mb-12 shadow-2xl border-t-8 border-violet-400 relative group overflow-hidden">
-                <div class="absolute inset-0 bg-violet-600 opacity-0 group-hover:opacity-5 transition-opacity duration-700"></div>
-                <h3 class="text-[11px] font-black text-violet-400 uppercase tracking-[0.4em] mb-4">Balance Neto del Periodo</h3>
-                <p id="caja-total-combined" class="text-7xl font-black tracking-tighter leading-none italic">$0</p>
+            <!-- VISTA 2: PRODUCTOS / INVENTARIO -->
+            <div id="productos-view" class="view-container container mx-auto max-w-5xl p-4 pt-10 is-hidden">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-10">
+                    <div class="text-left">
+                        <h2 class="text-5xl font-black text-slate-800 tracking-tighter italic uppercase leading-none">Inventario</h2>
+                        <p class="text-slate-400 font-bold text-[10px] uppercase tracking-[0.3em] mt-2 ml-1">Kiosco AeroJump</p>
+                    </div>
+                    <button id="add-product-btn" class="bg-violet-600 text-white px-8 py-4 rounded-[1.5rem] font-black shadow-xl hover:bg-violet-700 transition-all uppercase text-[10px] tracking-widest active:scale-95">+ NUEVO PRODUCTO</button>
+                </div>
+
+                <div id="product-form-container" class="bg-white p-8 md:p-10 rounded-[3rem] shadow-2xl mb-14 is-hidden border-4 border-violet-50 relative overflow-hidden text-sm text-left">
+                    <h3 class="text-2xl font-black text-violet-900 mb-8 uppercase italic tracking-tighter">✨ Alta de Mercadería</h3>
+                    <form id="product-form" class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        <div class="md:col-span-2">
+                            <label class="block text-[10px] font-black text-slate-400 uppercase mb-3 ml-2 tracking-widest">Nombre Comercial</label>
+                            <input type="text" id="prod-name" placeholder="Ej: Bebida Energética 500ml" class="w-full px-6 py-4 bg-slate-50 border-none rounded-2xl font-black text-lg outline-none focus:ring-4 focus:ring-violet-100" required>
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-black text-slate-400 uppercase mb-3 ml-2 tracking-widest">Stock Inicial</label>
+                            <input type="number" id="prod-stock" class="w-full px-6 py-4 bg-slate-50 border-none rounded-2xl font-black text-lg outline-none focus:ring-4 focus:ring-violet-100" required min="0" value="0">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-black text-slate-400 uppercase mb-3 ml-2 tracking-widest">Costo del Bulto ($)</label>
+                            <input type="number" id="prod-batch-cost" class="w-full px-6 py-4 bg-violet-50 border-none rounded-2xl font-black text-xl text-violet-700 outline-none focus:ring-4 focus:ring-violet-100" step="0.01" required>
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-black text-slate-400 uppercase mb-3 ml-2 tracking-widest">Unidades x Bulto</label>
+                            <input type="number" id="prod-batch-qty" class="w-full px-6 py-4 bg-slate-50 border-none rounded-2xl font-black text-lg outline-none focus:ring-4 focus:ring-violet-100" required min="1" value="1">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-black text-slate-400 uppercase mb-3 ml-2 tracking-widest">Margen (%)</label>
+                            <input type="number" id="prod-profit-pct" class="w-full px-6 py-4 bg-orange-50 border-none rounded-2xl font-black text-lg text-orange-700 outline-none focus:ring-4 focus:ring-orange-100" value="40">
+                        </div>
+                        <div class="md:col-span-3 p-8 bg-slate-900 rounded-[2.5rem] flex flex-col md:flex-row justify-between items-center gap-8 mt-4 shadow-2xl">
+                            <div>
+                                <span class="text-[10px] font-black text-green-400 uppercase tracking-widest block mb-1">Precio Sugerido AeroJump</span>
+                                <span id="prod-suggested-price" class="text-5xl font-black text-white tracking-tighter italic">$0</span>
+                                <input type="hidden" id="prod-unit-cost">
+                            </div>
+                            <div class="flex gap-4 w-full md:w-auto">
+                                <button type="button" id="cancel-product-btn" class="flex-1 px-8 py-4 font-black text-slate-400 hover:text-white transition-colors uppercase text-[10px]">Descartar</button>
+                                <button type="submit" class="flex-2 bg-green-600 text-white px-12 py-5 rounded-2xl font-black shadow-xl uppercase text-xs tracking-widest active:scale-95 border-b-4 border-green-800">Guardar Ficha</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="relative mb-10">
+                    <input type="text" id="inventory-search-input" class="w-full p-6 border-none bg-white rounded-[2.5rem] shadow-xl font-bold text-lg focus:ring-4 focus:ring-violet-50 transition-all outline-none" placeholder="🔍 Filtrar inventario...">
+                </div>
+                
+                <div id="product-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10 bg-white p-8 rounded-[2.5rem] shadow-xl border border-white">
-                <div>
-                    <label for="caja-date-from" class="block text-[10px] font-black text-slate-400 uppercase mb-2 ml-2 tracking-widest">Fecha Inicio</label>
-                    <input type="date" id="caja-date-from" class="w-full px-4 py-4 bg-slate-50 border-none rounded-xl font-black text-sm shadow-inner outline-none">
+            <!-- VISTA 3: CAJA -->
+            <div id="caja-view" class="view-container container mx-auto max-w-4xl p-4 pt-10 is-hidden">
+                <h2 class="text-5xl font-black mb-12 text-center tracking-tighter italic text-slate-800 uppercase leading-none">Arqueo de Caja</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10 text-center">
+                    <div class="bg-white p-10 rounded-[3rem] shadow-xl border-b-[12px] border-violet-500">
+                        <h3 class="text-slate-400 font-black uppercase text-[10px] tracking-[0.2em] mb-2">Turnos Agenda</h3>
+                        <p id="caja-total-bookings" class="text-4xl font-black text-violet-600 tracking-tighter italic">$0</p>
+                    </div>
+                    <div class="bg-white p-10 rounded-[3rem] shadow-xl border-b-[12px] border-orange-500">
+                        <h3 class="text-slate-400 font-black uppercase text-[10px] tracking-[0.2em] mb-2">Ventas Kiosco</h3>
+                        <p id="caja-total-sales" class="text-4xl font-black text-orange-600 tracking-tighter italic">$0</p>
+                    </div>
                 </div>
-                <div>
-                    <label for="caja-date-to" class="block text-[10px] font-black text-slate-400 uppercase mb-2 ml-2 tracking-widest">Fecha Fin</label>
-                    <input type="date" id="caja-date-to" class="w-full px-4 py-4 bg-slate-50 border-none rounded-xl font-black text-sm shadow-inner outline-none">
+
+                <div class="bg-slate-900 p-12 rounded-[4rem] text-white text-center mb-12 shadow-2xl border-t-8 border-violet-400 relative overflow-hidden">
+                    <h3 class="text-[11px] font-black text-violet-400 uppercase tracking-[0.4em] mb-4">Balance Neto General</h3>
+                    <p id="caja-total-combined" class="text-7xl font-black tracking-tighter leading-none italic">$0</p>
                 </div>
-                <button id="caja-filter-btn" class="bg-slate-900 hover:bg-black text-white self-end h-[60px] font-black uppercase text-[11px] tracking-[0.2em] shadow-2xl transition-all active:scale-95 rounded-2xl">Consultar Filtro</button>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12 bg-white p-8 rounded-[2.5rem] shadow-xl border border-white">
+                    <input type="date" id="caja-date-from" class="p-4 bg-slate-50 border-none rounded-xl font-black text-sm outline-none">
+                    <input type="date" id="caja-date-to" class="p-4 bg-slate-50 border-none rounded-xl font-black text-sm outline-none">
+                    <button id="caja-filter-btn" class="bg-slate-900 text-white h-[56px] font-black uppercase text-[10px] tracking-[0.2em] shadow-xl rounded-2xl active:scale-95 transition-all">Consultar</button>
+                </div>
+                
+                <h3 class="text-3xl font-black text-slate-800 mb-8 uppercase tracking-tighter italic ml-4 text-left">Resumen Cronológico</h3>
+                <div id="caja-daily-list" class="space-y-4 px-2"></div>
             </div>
             
-            <h3 class="text-3xl font-black text-slate-800 mb-8 uppercase tracking-tighter italic ml-4">Detalle Cronológico</h3>
-            <div id="caja-daily-list" class="space-y-4 px-2"></div>
-        </div>
-        
-        <!-- VISTA 3: ESTADÍSTICAS -->
-        <div id="stats-view" class="view-container container mx-auto max-w-4xl p-4 pt-24 is-hidden text-sm">
-            <h2 class="text-5xl font-black text-slate-800 mb-10 tracking-tighter uppercase italic leading-none">Rankings</h2>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10 bg-white p-6 rounded-[2rem] shadow-xl">
-                <div>
-                    <label class="block text-[10px] font-black text-slate-400 uppercase mb-2 tracking-widest ml-2 italic">Desde</label>
-                    <input type="date" id="stats-date-from" class="w-full p-4 bg-slate-50 border-none rounded-xl font-bold outline-none">
-                </div>
-                <div>
-                    <label class="block text-[10px] font-black text-slate-400 uppercase mb-2 tracking-widest ml-2 italic">Hasta</label>
-                    <input type="date" id="stats-date-to" class="w-full p-4 bg-slate-50 border-none rounded-xl font-bold outline-none">
-                </div>
-                <button id="stats-filter-btn" class="bg-violet-600 text-white rounded-xl font-black uppercase text-[10px] tracking-widest shadow-lg self-end h-[56px] active:scale-95 transition-all">Ver Ranking</button>
+            <!-- VISTA 4: ESTADÍSTICAS -->
+            <div id="stats-view" class="view-container container mx-auto max-w-4xl p-4 pt-10 is-hidden">
+                <h2 class="text-5xl font-black text-slate-800 mb-10 tracking-tighter uppercase italic leading-none text-left">Rankings</h2>
+                <h3 class="text-2xl font-black text-violet-800 mb-6 uppercase tracking-tighter ml-2 text-left">🏆 Mejores Clientes</h3>
+                <div id="stats-list" class="space-y-4"></div>
             </div>
-            <h3 class="text-2xl font-black text-violet-800 mb-6 uppercase tracking-tighter ml-2">🏆 Mejores Clientes</h3>
-            <div id="stats-list" class="space-y-4"></div>
-        </div>
 
-        <!-- VISTA 4: HISTORIAL -->
-        <div id="historial-view" class="view-container container mx-auto max-w-4xl p-4 pt-24 is-hidden text-sm">
-            <h2 class="text-5xl font-black text-slate-800 mb-10 tracking-tighter uppercase italic leading-none text-center">Bitácora</h2>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8 bg-white p-6 rounded-[2rem] shadow-xl">
-                <input type="date" id="historial-date-from" class="p-4 bg-slate-50 border-none rounded-xl font-bold outline-none">
-                <input type="date" id="historial-date-to" class="p-4 bg-slate-50 border-none rounded-xl font-bold outline-none">
-                <button id="historial-filter-btn" class="bg-slate-800 text-white rounded-xl font-black uppercase text-[10px] tracking-widest active:scale-95 transition-all">Filtrar Log</button>
+            <!-- VISTA 5: HISTORIAL LOG -->
+            <div id="historial-view" class="view-container container mx-auto max-w-4xl p-4 pt-10 is-hidden">
+                <h2 class="text-5xl font-black text-slate-800 mb-10 tracking-tighter uppercase italic leading-none text-center">Bitácora</h2>
+                <div id="historial-list" class="space-y-4"></div>
             </div>
-            <div id="historial-list" class="space-y-4"></div>
-        </div>
-        
-        <!-- VISTA 5: CONFIGURACIÓN -->
-        <div id="configuracion-view" class="view-container container mx-auto max-w-4xl p-4 pt-24 is-hidden text-sm">
-            <h2 class="text-4xl font-black text-slate-800 mb-12 uppercase tracking-tighter text-center italic">Maestro de Tarifas</h2>
-            <div class="bg-white p-12 rounded-[3.5rem] shadow-2xl max-w-md mx-auto border border-white">
-                <form id="config-form" class="space-y-10">
-                    <div class="space-y-6">
-                        <div>
-                            <label class="block text-[10px] font-black text-slate-400 uppercase mb-3 ml-2 tracking-widest italic">Costo Salto 1 Hora</label>
-                            <input type="number" id="config-court1-price" class="w-full px-6 py-5 bg-slate-50 border-none rounded-2xl font-black text-2xl text-violet-700 shadow-inner focus:ring-4 focus:ring-violet-50 outline-none">
+            
+            <!-- VISTA 6: CONFIGURACIÓN -->
+            <div id="configuracion-view" class="view-container container mx-auto max-w-md p-4 pt-10 is-hidden">
+                <h2 class="text-3xl font-black text-slate-800 mb-10 text-center italic uppercase tracking-tighter">Maestro de Tarifas</h2>
+                <div class="bg-white p-12 rounded-[3.5rem] shadow-2xl border border-white">
+                    <form id="config-form" class="space-y-10 text-left">
+                        <div class="space-y-6">
+                            <div>
+                                <label class="block text-[10px] font-black text-slate-400 uppercase mb-2 ml-2 italic tracking-widest">Costo Salto 1 Hora</label>
+                                <input type="number" id="config-court1-price" class="w-full px-6 py-5 bg-slate-50 border-none rounded-2xl font-black text-2xl text-violet-700 outline-none focus:ring-4 focus:ring-violet-50">
+                            </div>
+                            <div>
+                                <label class="block text-[10px] font-black text-slate-400 uppercase mb-2 ml-2 italic tracking-widest">Combo Especial Extra</label>
+                                <input type="number" id="config-grill-price" class="w-full px-6 py-5 bg-slate-50 border-none rounded-2xl font-black text-2xl text-orange-700 outline-none focus:ring-4 focus:ring-orange-50">
+                            </div>
+                            <div>
+                                <label class="block text-[10px] font-black text-slate-400 uppercase mb-2 ml-2 italic tracking-widest">Tarifa Evento Base</label>
+                                <input type="number" id="config-event-price" class="w-full px-6 py-5 bg-slate-50 border-none rounded-2xl font-black text-2xl text-blue-700 outline-none focus:ring-4 focus:ring-blue-50">
+                            </div>
                         </div>
-                        <div>
-                            <label class="block text-[10px] font-black text-slate-400 uppercase mb-3 ml-2 tracking-widest italic">Costo Salto 2 Horas</label>
-                            <input type="number" id="config-court2-price" class="w-full px-6 py-5 bg-slate-50 border-none rounded-2xl font-black text-2xl text-violet-700 shadow-inner focus:ring-4 focus:ring-violet-50 outline-none">
-                        </div>
-                        <div>
-                            <label class="block text-[10px] font-black text-slate-400 uppercase mb-3 ml-2 tracking-widest italic">Costo Combo Especial</label>
-                            <input type="number" id="config-grill-price" class="w-full px-6 py-5 bg-slate-50 border-none rounded-2xl font-black text-2xl text-orange-700 shadow-inner focus:ring-4 focus:ring-orange-50 outline-none">
-                        </div>
-                        <div>
-                            <label class="block text-[10px] font-black text-slate-400 uppercase mb-3 ml-2 tracking-widest italic">Tarifa Evento / Cumple</label>
-                            <input type="number" id="config-event-price" class="w-full px-6 py-5 bg-slate-50 border-none rounded-2xl font-black text-2xl text-blue-700 shadow-inner focus:ring-4 focus:ring-blue-50 outline-none">
-                        </div>
-                    </div>
-                    <button type="submit" class="bg-slate-900 text-white w-full py-6 rounded-3xl font-black text-lg shadow-2xl transition-all active:scale-95 uppercase tracking-widest italic border-b-4 border-black">Actualizar Tarifas</button>
-                </form>
+                        <button type="submit" class="bg-slate-900 text-white w-full py-6 rounded-3xl font-black text-lg shadow-2xl transition-all active:scale-95 uppercase tracking-widest italic border-b-4 border-black">Actualizar Tarifas</button>
+                    </form>
+                </div>
             </div>
-        </div>
-
-    </div> <!-- Fin de #app-container -->
+        </main>
+    </div>
 
 
     <!-- ============================================= -->
-    <!-- MODALES DE RESERVA -->
+    <!-- SISTEMA DE MODALES (VENTANAS EXTRA)         -->
     <!-- ============================================= -->
 
-    <div id="type-modal" class="modal text-sm">
-        <div class="bg-white rounded-[3rem] shadow-2xl p-10 w-full max-w-sm text-center border border-slate-50">
-            <h3 class="text-3xl font-black text-slate-800 mb-2 italic tracking-tighter">Nuevo Turno</h3>
-            <p class="text-slate-400 font-bold text-[10px] uppercase tracking-widest mb-12">Categoriza el ingreso</p>
+    <!-- 1. MODAL TIPO TURNO -->
+    <div id="type-modal" class="modal">
+        <div class="bg-white rounded-[3.5rem] shadow-2xl p-10 w-full max-w-sm text-center border border-slate-50">
+            <h3 class="text-3xl font-black text-slate-800 mb-2 italic tracking-tighter uppercase">Nuevo Turno</h3>
+            <p class="text-slate-400 font-bold text-[10px] uppercase tracking-widest mb-10">Categoriza el ingreso de AeroJump</p>
             <div class="flex flex-col gap-6">
-                <button id="type-btn-court" class="p-8 bg-violet-600 text-white rounded-[2.5rem] font-black shadow-xl uppercase tracking-widest text-sm transition-all active:scale-95 border-b-4 border-violet-800">Salto Normal</button>
-                <button id="type-btn-event" class="p-8 bg-orange-500 text-white rounded-[2.5rem] font-black shadow-xl uppercase tracking-widest text-sm transition-all active:scale-95 border-b-4 border-orange-600">Cumple / Evento</button>
-                <button id="type-btn-cancel" class="mt-8 text-slate-300 font-black hover:text-slate-600 transition-colors uppercase text-[10px] tracking-[0.3em]" onclick="closeModals()">Cerrar</button>
+                <button id="type-btn-court" class="p-8 bg-violet-600 text-white rounded-[2.5rem] font-black shadow-xl uppercase tracking-widest text-sm transition-all active:scale-95 border-b-8 border-violet-800 italic">Salto Normal</button>
+                <button id="type-btn-event" class="p-8 bg-orange-500 text-white rounded-[2.5rem] font-black shadow-xl uppercase tracking-widest text-sm transition-all active:scale-95 border-b-8 border-orange-700 italic">Cumple / Evento</button>
+                <button onclick="closeModals()" class="mt-4 text-slate-300 font-black hover:text-slate-500 transition-colors uppercase text-[10px] tracking-[0.3em]">Cerrar</button>
             </div>
         </div>
     </div>
     
-    <div id="booking-modal" class="modal text-sm">
-        <div class="bg-white rounded-[4rem] p-10 w-full max-w-3xl max-h-[92vh] overflow-y-auto shadow-2xl border-white border relative text-left">
-            <div class="absolute top-0 right-0 p-10 text-7xl font-black text-slate-50 italic opacity-5 pointer-events-none uppercase">Jump</div>
+    <!-- 2. MODAL RESERVA NORMAL -->
+    <div id="booking-modal" class="modal">
+        <div class="modal-content max-w-3xl p-10 text-left relative">
             <h3 id="booking-modal-title" class="text-4xl font-black text-violet-900 mb-10 tracking-tighter italic uppercase">Reservar Salto</h3>
             <form id="booking-form" class="relative z-10">
                 <input type="hidden" id="booking-id"><input type="hidden" id="booking-date">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
                     <div class="space-y-8">
-                        <div class="relative text-left">
-                            <label class="block text-[10px] font-black text-slate-400 uppercase mb-3 ml-2 italic">Responsable / Cliente</label>
-                            <input type="text" id="teamName" class="w-full px-8 py-6 bg-slate-50 border-none rounded-3xl font-black text-2xl shadow-inner focus:ring-4 focus:ring-violet-50 italic outline-none" required autocomplete="off">
-                            <div id="teamName-suggestions" class="absolute z-20 w-full top-full mt-3 shadow-2xl rounded-2xl overflow-hidden bg-white is-hidden"></div>
+                        <div class="relative">
+                            <label class="block text-[10px] font-black text-slate-400 uppercase mb-3 ml-2 italic tracking-widest">Responsable / Cliente</label>
+                            <input type="text" id="teamName" class="w-full px-8 py-6 bg-slate-50 border-none rounded-3xl font-black text-2xl shadow-inner outline-none focus:ring-4 focus:ring-violet-50 italic" required autocomplete="off">
+                            <div id="teamName-suggestions" class="absolute z-50 w-full top-full mt-3 shadow-2xl rounded-2xl overflow-hidden bg-white is-hidden"></div>
                         </div>
                         <div class="grid grid-cols-2 gap-6">
                             <div>
-                                <label class="block text-[10px] font-black text-slate-400 uppercase mb-3 ml-2 italic">Saltadores</label>
-                                <input type="number" id="peopleCount" class="w-full px-6 py-5 bg-slate-50 border-none rounded-2xl font-black text-xl shadow-inner outline-none" value="1" required>
+                                <label class="block text-[10px] font-black text-slate-400 uppercase mb-2 ml-2 italic tracking-widest">Saltadores</label>
+                                <input type="number" id="peopleCount" class="w-full p-5 bg-slate-50 rounded-2xl font-black text-xl shadow-inner outline-none" value="1" required>
                             </div>
                             <div>
-                                <label class="block text-[10px] font-black text-slate-400 uppercase mb-3 ml-2 italic">Precio/H</label>
-                                <input type="number" id="costPerHour" class="w-full px-6 py-5 bg-violet-50 border-none rounded-2xl font-black text-xl text-violet-700 outline-none">
+                                <label class="block text-[10px] font-black text-slate-400 uppercase mb-2 ml-2 italic tracking-widest">Precio/H</label>
+                                <input type="number" id="costPerHour" class="w-full p-5 bg-violet-50 rounded-2xl font-black text-xl text-violet-700 shadow-inner outline-none">
                             </div>
                         </div>
-
-                        <div class="p-8 bg-violet-50 rounded-[2.5rem] flex justify-between items-center shadow-inner border border-violet-100">
+                        <div class="p-6 bg-violet-50 rounded-[2.5rem] flex justify-between items-center shadow-inner border border-violet-100">
                             <div>
-                                <span class="font-black text-violet-900 text-sm block uppercase tracking-tighter italic">Salto Recurrente</span>
-                                <span class="text-[9px] text-violet-600 font-bold uppercase tracking-widest">¿Se repite semanalmente?</span>
+                                <span class="font-black text-violet-900 text-sm block uppercase tracking-tighter italic">Recurrente</span>
+                                <span class="text-[8px] text-violet-400 font-bold uppercase tracking-widest">¿Repite semanalmente?</span>
                             </div>
                             <label class="switch"><input type="checkbox" id="recurring-toggle"><span class="slider"></span></label>
                         </div>
-                        <div id="recurring-summary" class="is-hidden p-6 bg-orange-50 text-orange-800 rounded-3xl font-black text-[12px] leading-relaxed border border-orange-100 italic shadow-sm"></div>
-
-                        <div class="space-y-3">
-                            <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest ml-2 italic">Método de Cobro</label>
-                            <div class="flex gap-3">
-                                <label class="flex-1 bg-slate-50 p-4 rounded-2xl text-center font-black text-[10px] uppercase cursor-pointer border-2 border-transparent has-[:checked]:border-violet-600 transition-all shadow-sm"><input type="radio" name="paymentMethod" value="efectivo" class="hidden" checked> EFECTIVO</label>
-                                <label class="flex-1 bg-slate-50 p-4 rounded-2xl text-center font-black text-[10px] uppercase cursor-pointer border-2 border-transparent has-[:checked]:border-blue-600 transition-all shadow-sm"><input type="radio" name="paymentMethod" value="transferencia" class="hidden"> TRANSF.</label>
-                                <label class="flex-1 bg-slate-50 p-4 rounded-2xl text-center font-black text-[10px] uppercase cursor-pointer border-2 border-transparent has-[:checked]:border-orange-600 transition-all shadow-sm"><input type="radio" name="paymentMethod" value="mercadopago" class="hidden"> M.PAGO</label>
-                            </div>
-                        </div>
+                        <div id="recurring-summary" class="is-hidden p-6 bg-orange-50 text-orange-800 rounded-3xl font-black text-xs leading-relaxed border border-orange-100 italic shadow-sm"></div>
                     </div>
                     <div class="space-y-8">
                         <div class="flex gap-4">
-                            <label class="flex-1 border-2 border-slate-50 bg-slate-50 p-5 rounded-3xl text-center font-black cursor-pointer has-[:checked]:border-violet-600 has-[:checked]:bg-white transition-all shadow-sm italic"><input type="radio" name="courtSelection" value="cancha1" class="hidden" checked> ÁREA A</label>
-                            <label class="flex-1 border-2 border-slate-50 bg-slate-50 p-5 rounded-3xl text-center font-black cursor-pointer has-[:checked]:border-violet-600 has-[:checked]:bg-white transition-all shadow-sm italic"><input type="radio" name="courtSelection" value="cancha2" class="hidden"> ÁREA B</label>
+                            <label class="flex-1 bg-slate-50 p-4 rounded-3xl text-center font-black cursor-pointer border-2 border-transparent has-[:checked]:border-violet-600 has-[:checked]:bg-white transition-all shadow-sm italic text-xs"><input type="radio" name="courtSelection" value="cancha1" class="hidden" checked> ÁREA A</label>
+                            <label class="flex-1 bg-slate-50 p-4 rounded-3xl text-center font-black cursor-pointer border-2 border-transparent has-[:checked]:border-violet-600 has-[:checked]:bg-white transition-all shadow-sm italic text-xs"><input type="radio" name="courtSelection" value="cancha2" class="hidden"> ÁREA B</label>
                         </div>
                         <div>
-                            <label class="block text-[10px] font-black text-slate-400 uppercase mb-4 tracking-widest ml-2 italic text-left">Selecciona Horas de Salto</label>
+                            <label class="block text-[10px] font-black text-slate-400 uppercase mb-4 tracking-widest ml-2 italic">Horarios de Salto</label>
                             <div id="court-hours-list" class="time-slot-grid"></div>
                         </div>
-                        <label class="font-black flex items-center gap-4 bg-slate-100 p-6 rounded-3xl cursor-pointer transition-all hover:bg-slate-200 shadow-inner group"><input type="checkbox" id="rentGrill" class="w-7 h-7 rounded-xl accent-violet-600 shadow-inner"> <span class="uppercase tracking-tighter italic text-slate-700 group-hover:text-violet-900">¿Incluye Combo Especial?</span></label>
-                        <div id="grill-hours-section" class="is-hidden mt-2 p-6 bg-orange-50 rounded-[2.5rem] space-y-6 border border-orange-100 shadow-inner">
-                            <input type="number" id="grillCost" class="w-full p-5 border-none bg-white rounded-2xl font-black text-center text-xl text-orange-700 shadow-md outline-none" placeholder="Tarifa Combo ($)">
+                        <label class="font-black flex items-center gap-4 bg-slate-100 p-6 rounded-3xl cursor-pointer transition-all hover:bg-slate-200 shadow-inner group"><input type="checkbox" id="rentGrill" class="w-7 h-7 rounded-xl accent-violet-600"> <span class="uppercase tracking-tighter italic text-slate-700">¿Incluye Combo Especial?</span></label>
+                        <div id="grill-hours-section" class="is-hidden mt-2 p-6 bg-orange-50 rounded-[2.5rem] border border-orange-100 shadow-inner space-y-6">
+                            <input type="number" id="grillCost" class="w-full p-4 border-none bg-white rounded-2xl font-black text-center text-xl text-orange-700 shadow-md outline-none" placeholder="Tarifa Combo ($)">
                             <div id="grill-hours-list" class="time-slot-grid"></div>
                         </div>
                     </div>
                 </div>
-                <div class="flex flex-col sm:flex-row justify-between items-center pt-10 border-t gap-10 mt-12">
-                    <div class="text-center sm:text-left">
-                        <span class="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em] block mb-2">Total a Liquidar</span>
+                <div class="flex flex-col sm:flex-row justify-between items-center pt-10 border-t gap-10 mt-12 text-center sm:text-left">
+                    <div>
+                        <span class="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em] block mb-2 italic">Total Operación</span>
                         <span id="booking-total" class="text-7xl font-black text-violet-700 tracking-tighter leading-none italic">$0</span>
                     </div>
                     <div class="flex gap-4 w-full sm:w-auto">
-                        <button type="button" id="cancel-booking-btn" class="flex-1 px-12 py-7 font-black text-slate-300 uppercase text-[10px] tracking-widest" onclick="closeModals()">Atrás</button>
-                        <button type="submit" class="flex-2 bg-violet-600 text-white px-20 py-7 rounded-[2.5rem] font-black shadow-2xl uppercase text-xs tracking-widest transition-all active:scale-95 border-b-8 border-violet-800 italic">Confirmar Operación</button>
+                        <button type="button" onclick="closeModals()" class="flex-1 px-12 py-7 font-black text-slate-300 uppercase text-[10px] tracking-widest">Atrás</button>
+                        <button type="submit" class="flex-2 bg-violet-600 text-white px-20 py-7 rounded-[2.5rem] font-black shadow-2xl uppercase text-xs tracking-widest transition-all active:scale-95 border-b-8 border-violet-800 italic">Confirmar</button>
                     </div>
+                </div>
+                <div class="hidden">
+                    <input type="radio" name="paymentMethod" value="efectivo" checked><input type="radio" name="paymentMethod" value="transferencia"><input type="radio" name="paymentMethod" value="mercadopago">
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- MODAL DE VENTA MULTIPRODUCTO (NUEVA ESTRUCTURA) -->
-    <div id="sale-modal" class="modal text-sm">
-        <div class="bg-white rounded-[4rem] p-8 w-full max-w-3xl max-h-[92vh] overflow-hidden flex flex-col shadow-2xl border-white border relative">
-            <div class="flex justify-between items-center mb-6">
+    <!-- 3. MODAL DE VENTA MULTIPRODUCTO (REFORMADO: ESTACIÓN DE TRABAJO) -->
+    <div id="sale-modal" class="modal">
+        <div class="modal-content max-w-3xl">
+            <!-- Header Fijo -->
+            <div class="sale-header flex justify-between items-center">
                 <div class="text-left">
-                    <h3 class="text-3xl font-black text-violet-800 tracking-tighter uppercase italic leading-none">Venta Kiosco</h3>
-                    <p class="text-[9px] text-slate-400 font-black uppercase tracking-widest mt-1">AeroJump Gualeguaychú</p>
+                    <h3 class="text-3xl font-black text-violet-800 tracking-tighter uppercase italic leading-none">Nueva Venta</h3>
+                    <p class="text-[9px] text-slate-400 font-black uppercase tracking-widest mt-1">Caja Registradora AeroJump</p>
                 </div>
                 <button onclick="closeModals()" class="p-2 text-slate-300 hover:text-slate-600 transition-colors">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path></svg>
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path></svg>
                 </button>
             </div>
+            
+            <!-- Resumen de Carrito (Dashed Area) -->
+            <div id="sale-cart-list" class="custom-scrollbar text-left">
+                <p id="empty-cart-msg" class="text-center py-4 text-slate-300 font-bold italic uppercase text-[10px]">Añade productos del catálogo abajo</p>
+            </div>
 
-            <!-- SECCIÓN 1: RESUMEN FIJO SUPERIOR (CARRITO) -->
-            <div class="bg-slate-50 rounded-[2.5rem] p-6 mb-6 overflow-y-auto max-h-56 border border-slate-100 shadow-inner custom-scrollbar text-left">
-                <h4 class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4 flex items-center gap-2">
-                    <span>🛒 Artículos en Carrito</span>
-                    <span id="cart-count-badge" class="bg-violet-600 text-white px-2 py-0.5 rounded-full text-[8px]">0</span>
-                </h4>
-                <div id="sale-cart-list" class="space-y-3">
-                    <p id="empty-cart-msg" class="text-center py-6 text-slate-300 font-bold italic uppercase text-[10px]">El carrito está vacío</p>
+            <!-- Filtro de Búsqueda -->
+            <div class="catalog-search-container">
+                <div class="relative group">
+                    <input type="text" id="sale-catalog-filter" class="placeholder:text-slate-300" placeholder="🔍 Buscar producto en catálogo...">
                 </div>
             </div>
 
-            <!-- SECCIÓN 2: BUSCADOR / FILTRO -->
-            <div class="px-2 mb-4">
-                <input type="text" id="sale-catalog-filter" class="w-full p-4 bg-white border border-slate-200 rounded-2xl font-black text-sm shadow-sm outline-none focus:ring-4 focus:ring-violet-50 italic" placeholder="🔍 Filtrar catálogo...">
+            <!-- Grilla del Catálogo (Protagonista con Scroll) -->
+            <div id="sale-catalog-grid" class="custom-scrollbar">
+                <!-- Se inyectan las tarjetas desde app.js -->
             </div>
 
-            <!-- SECCIÓN 3: CATÁLOGO DE TODOS LOS PRODUCTOS -->
-            <div class="flex-1 overflow-y-auto px-2 custom-scrollbar min-h-0">
-                <div id="sale-catalog-grid" class="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                    <!-- Aquí se inyectan todos los productos desde app.js -->
-                </div>
-            </div>
-
-            <!-- SECCIÓN 4: PAGO Y CIERRE -->
-            <div class="mt-6 pt-6 border-t border-slate-100">
+            <!-- Footer Fijo de Pago -->
+            <div class="sale-footer">
                 <div class="flex flex-col md:flex-row justify-between items-center gap-6">
                     <div class="w-full md:w-1/2 text-left">
-                        <label class="block text-[10px] font-black text-slate-400 uppercase mb-3 ml-4 italic">Medio de Pago</label>
+                        <label class="block text-[10px] font-black text-slate-400 uppercase mb-3 ml-4 italic tracking-widest">Medio de Pago</label>
                         <div class="flex gap-2 text-[9px] font-black">
-                            <label class="flex-1 bg-slate-50 p-4 rounded-2xl text-center cursor-pointer border-2 border-transparent has-[:checked]:border-violet-600 has-[:checked]:bg-white transition-all shadow-sm">
-                                <input type="radio" name="salePaymentMethod" value="efectivo" class="hidden" checked>
-                                <span>EFECTIVO</span>
+                            <label class="flex-1 bg-slate-50 p-5 rounded-2xl text-center cursor-pointer border-4 border-transparent has-[:checked]:border-violet-600 has-[:checked]:bg-white transition-all shadow-sm">
+                                <input type="radio" name="salePaymentMethod" value="efectivo" class="hidden" checked>EFECTIVO
                             </label>
-                            <label class="flex-1 bg-slate-50 p-4 rounded-2xl text-center cursor-pointer border-2 border-transparent has-[:checked]:border-orange-600 has-[:checked]:bg-white transition-all shadow-sm">
-                                <input type="radio" name="salePaymentMethod" value="mercadopago" class="hidden">
-                                <span>M. PAGO</span>
+                            <label class="flex-1 bg-slate-50 p-5 rounded-2xl text-center cursor-pointer border-4 border-transparent has-[:checked]:border-orange-600 has-[:checked]:bg-white transition-all shadow-sm">
+                                <input type="radio" name="salePaymentMethod" value="mercadopago" class="hidden">M. PAGO
                             </label>
                         </div>
                     </div>
                     <div class="text-center md:text-right">
-                        <span class="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em] block mb-1">Total AeroJump</span>
-                        <span id="sale-total-display" class="text-6xl font-black text-violet-700 tracking-tighter leading-none">$0</span>
+                        <span class="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em] block mb-1">Subtotal AeroJump</span>
+                        <span id="sale-total-display" class="text-7xl font-black text-violet-700 tracking-tighter italic leading-none">$0</span>
                     </div>
                 </div>
-                <button id="confirm-sale-btn" class="w-full mt-8 bg-violet-600 text-white py-6 rounded-[2.5rem] font-black shadow-xl uppercase tracking-widest text-xs transition-all active:scale-95 border-b-8 border-violet-800 italic disabled:opacity-30" disabled>Finalizar Venta de Carrito</button>
+                <button id="confirm-sale-btn" class="w-full mt-8 bg-violet-600 text-white py-7 rounded-[2.5rem] font-black shadow-xl uppercase tracking-widest text-xs transition-all active:scale-95 border-b-8 border-violet-950 italic disabled:opacity-20" disabled>Finalizar Venta de Todos los Productos</button>
             </div>
         </div>
     </div>
 
-    <!-- MODAL REPOSICIÓN -->
-    <div id="restock-modal" class="modal text-sm">
-        <div class="bg-white rounded-[3.5rem] p-12 w-full max-w-md shadow-2xl border-white border text-center">
-            <h3 class="text-3xl font-black text-violet-700 mb-10 uppercase italic">📦 Reposición</h3>
+    <!-- 4. MODAL REPOSICIÓN -->
+    <div id="restock-modal" class="modal">
+        <div class="modal-content max-w-sm p-10 text-center">
+            <h3 class="text-3xl font-black text-violet-700 mb-10 uppercase tracking-tighter italic leading-none">📦 Reposición</h3>
             <form id="restock-form" class="space-y-8">
                 <input type="hidden" id="restock-prod-id">
-                <h4 id="restock-name" class="text-2xl font-black text-slate-800 uppercase italic leading-tight"></h4>
-                <p class="text-xs text-slate-400 uppercase font-black">Stock Actual: <span id="restock-current-stock" class="text-violet-600"></span></p>
-                <input type="number" id="restock-qty" class="w-full p-6 bg-slate-50 rounded-2xl font-black text-4xl text-center outline-none" required placeholder="Cantidad">
-                <input type="number" id="restock-batch-cost" class="w-full p-6 bg-violet-50 rounded-2xl font-black text-4xl text-center text-violet-700 outline-none" required placeholder="Costo Total" step="0.01">
-                <button type="submit" class="w-full bg-violet-700 text-white py-6 rounded-2xl font-black uppercase shadow-xl transition-all active:scale-95">Aplicar Stock</button>
+                <div class="p-6 bg-slate-50 rounded-3xl border border-slate-100 shadow-inner">
+                    <h4 id="restock-name" class="font-black text-slate-800 text-2xl italic leading-tight mb-2 uppercase"></h4>
+                    <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Stock Actual: <span id="restock-current-stock" class="text-violet-600"></span></p>
+                </div>
+                <div class="text-left space-y-6">
+                    <div>
+                        <label class="text-[10px] font-black uppercase text-slate-400 ml-4 italic tracking-widest block mb-2">Unidades Ingresadas</label>
+                        <input type="number" id="restock-qty" class="w-full p-6 bg-slate-50 border-none rounded-[2.5rem] font-black text-4xl text-center focus:ring-4 focus:ring-violet-100 shadow-inner outline-none" required min="1">
+                    </div>
+                    <div>
+                        <label class="text-[10px] font-black uppercase text-slate-400 ml-4 italic tracking-widest block mb-2">Costo Lote Nuevo ($)</label>
+                        <input type="number" id="restock-batch-cost" class="w-full p-6 bg-violet-50 border-none rounded-[2.5rem] font-black text-4xl text-violet-700 text-center focus:ring-4 focus:ring-violet-100 shadow-inner outline-none" required step="0.01">
+                    </div>
+                </div>
+                <button type="submit" class="w-full bg-violet-700 text-white py-6 rounded-[2rem] font-black shadow-xl uppercase text-xs transition-all active:scale-95 border-b-8 border-violet-950 italic">Aplicar Stock</button>
             </form>
         </div>
     </div>
 
-    <!-- MODAL EDITAR PRODUCTO -->
-    <div id="edit-product-modal" class="modal text-sm">
-        <div class="bg-white rounded-[4rem] p-12 w-full max-w-md shadow-2xl border border-slate-50 text-left">
-            <h3 class="text-3xl font-black text-slate-800 mb-10 uppercase italic">Editar Ficha</h3>
+    <!-- 5. MODAL EDITAR PRODUCTO -->
+    <div id="edit-product-modal" class="modal">
+        <div class="modal-content max-w-sm p-12 text-left">
+            <h3 class="text-3xl font-black text-slate-800 mb-10 uppercase italic tracking-tighter leading-none">Editar Ficha</h3>
             <form id="edit-product-form" class="space-y-8">
                 <input type="hidden" id="edit-prod-id">
-                <input type="text" id="edit-prod-name" class="w-full p-5 bg-slate-50 rounded-2xl font-black outline-none" required placeholder="Nombre">
-                <div class="grid grid-cols-2 gap-4">
-                    <input type="number" id="edit-prod-cost" class="p-5 bg-slate-50 rounded-2xl font-black outline-none" required step="0.01" placeholder="Costo Unit.">
-                    <input type="number" id="edit-prod-price" class="p-5 bg-violet-50 rounded-2xl font-black text-violet-700 outline-none" required step="0.01" placeholder="Precio Venta">
+                <div>
+                    <label class="text-[10px] font-black uppercase text-slate-400 mb-3 ml-2 block tracking-widest italic">Nombre</label>
+                    <input type="text" id="edit-prod-name" class="w-full p-5 bg-slate-50 rounded-2xl font-black italic outline-none shadow-inner" required>
                 </div>
-                <input type="number" id="edit-prod-stock" class="w-full p-5 bg-slate-50 rounded-2xl font-black outline-none" required placeholder="Stock">
-                <button type="submit" class="w-full bg-slate-900 text-white py-6 rounded-2xl font-black uppercase italic transition-all active:scale-95">Guardar Cambios</button>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="text-[10px] font-black uppercase text-slate-400 mb-3 ml-2 block tracking-widest italic">Costo Unidad</label>
+                        <input type="number" id="edit-prod-cost" class="w-full p-4 bg-slate-50 rounded-xl font-bold shadow-inner outline-none" required step="0.01">
+                    </div>
+                    <div>
+                        <label class="text-[10px] font-black uppercase text-slate-400 mb-3 ml-2 block tracking-widest italic">Precio Venta</label>
+                        <input type="number" id="edit-prod-price" class="w-full p-4 bg-violet-50 rounded-xl font-black text-violet-700 shadow-inner outline-none" required step="0.01">
+                    </div>
+                </div>
+                <div>
+                    <label class="text-[10px] font-black uppercase text-slate-400 mb-3 ml-2 block tracking-widest italic">Stock Disponible</label>
+                    <input type="number" id="edit-prod-stock" class="w-full p-5 bg-slate-50 rounded-2xl font-black shadow-inner outline-none" required>
+                </div>
+                <button type="submit" class="w-full bg-slate-900 text-white py-6 rounded-2xl font-black shadow-2xl uppercase tracking-widest text-xs border-b-8 border-black italic transition-all active:scale-95">Guardar Cambios</button>
             </form>
         </div>
     </div>
 
-    <!-- MODAL OPCIONES DÍA -->
-    <div id="options-modal" class="modal text-sm">
-        <div class="bg-white rounded-[4rem] p-12 w-full max-w-sm shadow-2xl text-center border-4 border-violet-50">
-            <h3 class="text-3xl font-black mb-10 tracking-tighter text-slate-800 uppercase italic">Reservas del Día</h3>
-            <div id="daily-bookings-list" class="space-y-3 mb-12 italic"></div>
+    <!-- 6. MODAL EVENTO ESPECIAL -->
+    <div id="event-modal" class="modal">
+        <div class="modal-content max-w-xl p-10 text-left">
+            <h3 id="event-modal-title" class="text-3xl font-black text-orange-600 mb-8 tracking-tighter italic uppercase leading-none">Reservar Evento</h3>
+            <form id="event-form" class="space-y-6">
+                <input type="hidden" id="event-booking-id"><input type="hidden" id="event-date">
+                <div class="space-y-2">
+                    <label class="text-[10px] font-black uppercase text-slate-400 ml-4 italic tracking-widest">Descripción</label>
+                    <input type="text" id="eventName" class="w-full p-6 bg-slate-50 border-none rounded-[2rem] font-black text-xl italic shadow-inner outline-none" required placeholder="Ej: Cumple de Lucas">
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <input type="text" id="contactPerson" class="p-5 bg-slate-50 rounded-2xl font-bold shadow-inner outline-none italic" required placeholder="Responsable">
+                    <input type="tel" id="contactPhone" class="p-5 bg-slate-50 rounded-2xl font-bold shadow-inner outline-none italic" required placeholder="Celular">
+                </div>
+                <div>
+                    <label class="text-[10px] font-black uppercase text-slate-400 ml-4 italic tracking-widest block mb-4">Horarios de Ocupación</label>
+                    <div id="event-hours-list" class="time-slot-grid bg-slate-50 p-4 rounded-3xl"></div>
+                </div>
+                <div class="flex justify-between items-center pt-8 border-t border-slate-100">
+                    <div>
+                        <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-1">Total Especial</span>
+                        <span id="event-total" class="text-6xl font-black text-orange-600 tracking-tighter leading-none italic">$0</span>
+                    </div>
+                    <div class="flex gap-4">
+                        <button type="button" onclick="closeModals()" class="font-black text-slate-300 uppercase text-[10px] tracking-widest">Volver</button>
+                        <button type="submit" class="bg-orange-500 text-white px-14 py-6 rounded-[2rem] font-black shadow-xl uppercase text-xs active:scale-95 border-b-8 border-orange-800 italic">Guardar</button>
+                    </div>
+                </div>
+                <div class="hidden">
+                    <input type="radio" name="eventPaymentMethod" value="efectivo" checked>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 7. MODAL OPCIONES DÍA -->
+    <div id="options-modal" class="modal">
+        <div class="modal-content max-w-sm p-10 text-center border-4 border-violet-50">
+            <h3 class="text-3xl font-black mb-10 tracking-tighter text-slate-800 uppercase italic leading-none">Reservas del Día</h3>
+            <div id="daily-bookings-list" class="space-y-3 mb-10 text-left custom-scrollbar max-h-64 overflow-y-auto pr-2 italic"></div>
             <div class="flex flex-col gap-4">
-                <button id="add-new-booking-btn" class="w-full bg-violet-600 text-white py-7 rounded-[2rem] font-black shadow-xl uppercase text-[10px] active:scale-95 border-b-4 border-violet-800">+ AGREGAR TURNO</button>
-                <button onclick="closeModals()" class="mt-6 text-slate-400 font-black uppercase text-[10px] tracking-widest hover:text-slate-600">Regresar</button>
+                <button id="add-new-booking-btn" class="w-full bg-violet-600 text-white py-6 rounded-[2rem] font-black shadow-xl uppercase text-[10px] active:scale-95 border-b-8 border-violet-950 italic tracking-widest">+ AGREGAR TURNO</button>
+                <button onclick="closeModals()" class="mt-4 text-slate-300 font-black uppercase text-[10px] tracking-widest hover:text-slate-500 transition-colors">Regresar</button>
             </div>
         </div>
     </div>
 
-    <!-- MODAL DETALLE SALTO -->
-    <div id="view-modal" class="modal text-sm">
-        <div class="bg-white p-14 rounded-[4rem] w-full max-w-md shadow-2xl border-white border text-left relative">
-            <div id="view-booking-details" class="relative z-10 text-left"></div>
-            <button onclick="closeModals()" class="mt-14 w-full py-6 bg-slate-100 rounded-3xl font-black text-slate-400 uppercase text-[10px] hover:bg-slate-200">Cerrar Ficha</button>
+    <!-- 8. MODAL DETALLE VISTA -->
+    <div id="view-modal" class="modal">
+        <div class="modal-content max-w-md p-14 text-left border-white border">
+            <div id="view-booking-details" class="relative z-10"></div>
+            <button onclick="closeModals()" class="mt-14 w-full py-6 bg-slate-100 rounded-3xl font-black text-slate-400 uppercase text-[10px] tracking-widest hover:bg-slate-200 transition-colors">Cerrar Ficha</button>
         </div>
     </div>
 
-    <!-- MODAL ARQUEO DETALLE -->
-    <div id="caja-detail-modal" class="modal text-sm text-center">
-        <div class="bg-white rounded-[3.5rem] shadow-2xl p-12 w-full max-w-md border border-white">
-            <h3 id="caja-detail-title" class="text-3xl font-black text-slate-800 mb-10 uppercase italic leading-none text-left tracking-tighter">Cierre Diario</h3>
-            <div id="caja-detail-summary" class="space-y-4 text-slate-700 mb-12 border-b border-slate-50 pb-10"></div>
-            <div id="caja-detail-booking-list" class="space-y-3 max-h-56 overflow-y-auto custom-scrollbar pr-3 text-left"></div>
-            <button onclick="closeModals()" class="mt-12 px-12 py-5 bg-slate-900 text-white rounded-2xl font-black uppercase text-[10px] shadow-xl">Entendido</button>
+    <!-- 9. MODAL ARQUEO CAJA DETALLE -->
+    <div id="caja-detail-modal" class="modal">
+        <div class="modal-content max-w-md p-12 text-center">
+            <h3 id="caja-detail-title" class="text-3xl font-black text-slate-800 mb-10 uppercase italic leading-none tracking-tighter text-left">Cierre Diario</h3>
+            <div id="caja-detail-summary" class="space-y-4 text-slate-700 mb-10 border-b border-slate-50 pb-10 text-left"></div>
+            <div id="caja-detail-booking-list" class="space-y-3 max-h-60 overflow-y-auto custom-scrollbar pr-3 text-left"></div>
+            <div class="flex justify-end mt-12">
+                <button onclick="closeModals()" class="px-12 py-5 bg-slate-900 text-white rounded-2xl font-black uppercase text-[10px] shadow-xl active:scale-95 transition-all">Entendido</button>
+            </div>
         </div>
     </div>
 
-    <!-- MODAL ELIMINACIÓN -->
-    <div id="delete-reason-modal" class="modal text-sm text-center">
-        <div class="bg-white rounded-[3.5rem] shadow-2xl p-12 w-full max-w-sm border-white border">
-            <h3 class="text-2xl font-black text-red-600 mb-8 uppercase italic tracking-tighter">¿Anular Reserva?</h3>
+    <!-- 10. MODAL ELIMINACIÓN -->
+    <div id="delete-reason-modal" class="modal">
+        <div class="modal-content max-w-sm p-12 text-center">
+            <h3 class="text-2xl font-black text-red-600 mb-8 uppercase italic tracking-tighter leading-none">¿Anular Reserva?</h3>
             <form id="delete-reason-form" class="space-y-8">
                 <input type="hidden" id="delete-booking-id">
-                <textarea id="delete-reason-text" rows="3" class="w-full px-8 py-6 bg-slate-50 border-none rounded-[2rem] font-bold shadow-inner focus:ring-4 focus:ring-red-50 italic outline-none" required placeholder="Motivo de la baja..."></textarea>
+                <div class="text-left">
+                    <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest italic ml-2 mb-2">Motivo de la baja</label>
+                    <textarea id="delete-reason-text" rows="3" class="w-full p-6 bg-slate-50 border-none rounded-[2rem] font-bold shadow-inner focus:ring-4 focus:ring-red-50 italic outline-none" required placeholder="Explica por qué borras..."></textarea>
+                </div>
                 <div class="flex gap-4">
-                    <button type="button" onclick="closeModals()" class="flex-1 py-6 font-black text-slate-300 uppercase text-[10px]">Atrás</button>
-                    <button type="submit" class="flex-2 bg-red-600 text-white px-10 py-6 rounded-[2rem] font-black uppercase active:scale-95 italic">Confirmar Baja</button>
+                    <button type="button" onclick="closeModals()" class="flex-1 py-6 font-black text-slate-300 uppercase text-[10px] tracking-widest">Atrás</button>
+                    <button type="submit" class="flex-2 bg-red-600 text-white px-10 py-6 rounded-[2rem] font-black uppercase shadow-xl active:scale-95 border-b-8 border-red-900 italic text-[10px]">Anular Salto</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- MODAL RECURRENCIA -->
-    <div id="recurring-modal" class="modal text-sm text-center">
-        <div class="bg-white p-12 rounded-[4rem] w-full max-w-md shadow-2xl border-white border">
+    <!-- 11. MODAL RECURRENCIA -->
+    <div id="recurring-modal" class="modal">
+        <div class="modal-content max-w-md p-12 text-center">
             <h3 class="text-4xl font-black text-slate-800 mb-2 italic uppercase tracking-tighter">Repetición</h3>
-            <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-12 italic text-center">Configuración de saltos fijos</p>
-            <div class="mb-10 text-left">
-                <label class="block text-[10px] font-black text-slate-400 uppercase mb-4 ml-4 italic">1. Día de la semana</label>
+            <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-10 italic">Configuración de saltos fijos</p>
+            <div class="mb-8 text-left">
+                <label class="block text-[10px] font-black text-slate-400 uppercase mb-4 ml-4 italic tracking-widest">1. Día de la semana</label>
                 <div class="day-selector-grid grid grid-cols-4 gap-2">
-                    <button type="button" class="day-toggle-btn p-3 border rounded-xl text-xs font-black uppercase transition-all" data-day="1">Lun</button><button type="button" class="day-toggle-btn p-3 border rounded-xl text-xs font-black uppercase transition-all" data-day="2">Mar</button><button type="button" class="day-toggle-btn p-3 border rounded-xl text-xs font-black uppercase transition-all" data-day="3">Mié</button><button type="button" class="day-toggle-btn p-3 border rounded-xl text-xs font-black uppercase transition-all" data-day="4">Jue</button><button type="button" class="day-toggle-btn p-3 border rounded-xl text-xs font-black uppercase transition-all" data-day="5">Vie</button><button type="button" class="day-toggle-btn p-3 border rounded-xl text-xs font-black uppercase transition-all" data-day="6">Sáb</button><button type="button" class="day-toggle-btn p-3 border rounded-xl text-xs font-black uppercase transition-all" data-day="0">Dom</button>
+                    <button type="button" class="day-toggle-btn p-3 border-2 border-slate-100 rounded-xl text-xs font-black uppercase transition-all" data-day="1">Lun</button>
+                    <button type="button" class="day-toggle-btn p-3 border-2 border-slate-100 rounded-xl text-xs font-black uppercase transition-all" data-day="2">Mar</button>
+                    <button type="button" class="day-toggle-btn p-3 border-2 border-slate-100 rounded-xl text-xs font-black uppercase transition-all" data-day="3">Mié</button>
+                    <button type="button" class="day-toggle-btn p-3 border-2 border-slate-100 rounded-xl text-xs font-black uppercase transition-all" data-day="4">Jue</button>
+                    <button type="button" class="day-toggle-btn p-3 border-2 border-slate-100 rounded-xl text-xs font-black uppercase transition-all" data-day="5">Vie</button>
+                    <button type="button" class="day-toggle-btn p-3 border-2 border-slate-100 rounded-xl text-xs font-black uppercase transition-all" data-day="6">Sáb</button>
+                    <button type="button" class="day-toggle-btn p-3 border-2 border-slate-100 rounded-xl text-xs font-black uppercase transition-all" data-day="0">Dom</button>
                 </div>
             </div>
-            <div class="mb-12 text-left">
-                <label class="block text-[10px] font-black text-slate-400 uppercase mb-4 ml-4 italic">2. Meses del ciclo</label>
+            <div class="mb-10 text-left">
+                <label class="block text-[10px] font-black text-slate-400 uppercase mb-4 ml-4 italic tracking-widest">2. Meses del ciclo</label>
                 <div id="recurring-month-list" class="month-selector-grid grid grid-cols-3 gap-2"></div>
             </div>
-            <div class="flex gap-6">
-                <button type="button" onclick="closeModals()" class="flex-1 py-6 font-black text-slate-300 uppercase text-[10px]">Descartar</button>
-                <button type="button" id="confirm-recurring-btn" class="flex-2 bg-violet-600 text-white py-6 rounded-[2rem] font-black shadow-2xl text-[10px] uppercase active:scale-95 border-b-4 border-violet-800 italic">Guardar Ciclo</button>
+            <div class="flex gap-4">
+                <button type="button" onclick="closeModals()" class="flex-1 py-6 font-black text-slate-300 uppercase text-[10px] tracking-widest transition-all">Cerrar</button>
+                <button type="button" id="confirm-recurring-btn" class="flex-2 bg-violet-600 text-white py-6 rounded-[2rem] font-black shadow-xl active:scale-95 border-b-8 border-violet-950 italic text-[10px]">Guardar Ciclo</button>
             </div>
         </div>
     </div>
 
-    <!-- MODAL HISTORIAL PRODUCTO -->
-    <div id="product-history-modal" class="modal text-sm text-center">
-        <div class="bg-white p-12 rounded-[3.5rem] w-full max-w-lg shadow-2xl border border-white">
+    <!-- 12. MODAL HISTORIAL LOGS -->
+    <div id="product-history-modal" class="modal">
+        <div class="modal-content max-w-lg p-10 text-left">
             <div class="flex justify-between items-start mb-10 leading-none">
-                <div class="text-left">
-                    <h3 class="text-4xl font-black text-slate-800 tracking-tighter uppercase italic leading-none">Logística</h3>
-                    <h4 id="history-product-name" class="text-violet-600 font-black mt-2 uppercase text-[10px] italic"></h4>
+                <div>
+                    <h3 class="text-4xl font-black text-slate-800 tracking-tighter uppercase italic">Logística</h3>
+                    <h4 id="history-product-name" class="text-violet-600 font-black mt-2 uppercase text-[10px] italic tracking-[0.2em]"></h4>
                 </div>
-                <span class="text-3xl opacity-10 font-bold italic">📜</span>
+                <span class="text-3xl opacity-10 font-bold italic">📦</span>
             </div>
-            <div id="product-history-list" class="space-y-4 max-h-[30rem] overflow-y-auto pr-4 custom-scrollbar text-left"></div>
-            <button onclick="closeModals()" class="w-full mt-12 py-7 bg-slate-100 rounded-[2.5rem] font-black text-slate-400 uppercase text-[10px] hover:bg-slate-200 transition-colors">Cerrar Historial</button>
+            <div id="product-history-list" class="space-y-3 max-h-[30rem] overflow-y-auto custom-scrollbar pr-3"></div>
+            <button onclick="closeModals()" class="w-full mt-12 py-6 bg-slate-900 text-white rounded-2xl font-black uppercase text-[10px] tracking-widest italic active:scale-95 transition-all">Cerrar Historial</button>
         </div>
     </div>
 
-    <!-- OVERLAY DE CARGA -->
+    <!-- OVERLAY DE CARGA / ANIMACIÓN TRAMPOLÍN -->
     <div id="message-overlay" class="modal bg-white/95 backdrop-blur-md">
         <div class="flex flex-col items-center justify-center min-h-screen text-center p-10">
             <svg width="120" height="120" viewBox="0 0 100 100" class="mb-8">
@@ -570,7 +592,7 @@
                     <line x1="50" y1="65" x2="60" y2="75" stroke="#1e293b" stroke-width="3"/>
                 </g>
             </svg>
-            <p id="message-text" class="text-xl font-black text-slate-800 uppercase italic tracking-tighter text-center"></p>
+            <p id="message-text" class="text-xl font-black text-slate-800 uppercase italic tracking-tighter leading-none"></p>
         </div>
     </div>
 
@@ -583,10 +605,7 @@
         function toggleMenu() {
             const menu = document.getElementById('main-menu');
             const overlay = document.getElementById('menu-overlay');
-            if(menu && overlay) {
-                menu.classList.toggle('is-open');
-                overlay.classList.toggle('hidden');
-            }
+            if(menu && overlay) { menu.classList.toggle('is-open'); overlay.classList.toggle('hidden'); }
         }
     </script>
 </body>
