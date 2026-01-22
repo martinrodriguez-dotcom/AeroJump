@@ -2,7 +2,7 @@
 // AeroJump Gualeguaychú - Sistema de Gestión de Saltos v2026
 // =================================================================
 
-// Importaciones de Firebase SDK (v11.6.1) - CORREGIDO PARA NAVEGADOR
+// Importaciones de Firebase SDK (v11.6.1) - CDN para Navegador
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
 import { 
     getAuth, 
@@ -20,7 +20,7 @@ import {
     doc, 
     setDoc, 
     addDoc,
-    updateDoc,
+    updateDoc, 
     deleteDoc, 
     collection, 
     query, 
@@ -35,7 +35,7 @@ import {
 } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
 // -----------------------------------------------------------------
-// 1. CONFIGURACIÓN DE FIREBASE (NUEVA CUENTA AEROJUMP)
+// 1. CONFIGURACIÓN DE FIREBASE (PROYECTO AEROJUMP)
 // -----------------------------------------------------------------
 const firebaseConfig = {
   apiKey: "AIzaSyBz0V2ieSXehafKWRNQprb951NVN5FvBD4",
@@ -68,7 +68,7 @@ let allMonthBookings = [];
 let allProducts = []; 
 let currentSelectedProduct = null;
 
-// Carrito de Ventas (NUEVO)
+// Estado del Carrito Multiproducto
 let saleCart = [];
 
 let appSettings = { 
@@ -144,7 +144,6 @@ const eventDateInput = document.getElementById('event-date');
 const eventNameInput = document.getElementById('eventName');
 const contactPersonInput = document.getElementById('contactPerson');
 const contactPhoneInput = document.getElementById('contactPhone');
-const eventCostPerHourInput = document.getElementById('eventCostPerHour');
 const eventHoursList = document.getElementById('event-hours-list');
 const eventTotal = document.getElementById('event-total');
 
@@ -154,14 +153,13 @@ const deleteBookingIdInput = document.getElementById('delete-booking-id');
 
 const configForm = document.getElementById('config-form');
 const configCourt1Price = document.getElementById('config-court1-price');
-const configCourt2Price = document.getElementById('config-court2-price');
 
 const productForm = document.getElementById('product-form');
 const productList = document.getElementById('product-list');
 const inventorySearchInput = document.getElementById('inventory-search-input');
 const restockForm = document.getElementById('restock-form');
 
-// Referencias Carrito (NUEVO)
+// Referencias Carrito
 const saleModal = document.getElementById('sale-modal');
 const saleCartList = document.getElementById('sale-cart-list');
 const saleCatalogGrid = document.getElementById('sale-catalog-grid');
@@ -197,7 +195,7 @@ async function firebaseInit() {
 
         onAuthStateChanged(auth, async (user) => {
             if (user) {
-                console.log("Acceso AeroJump autorizado:", user.email);
+                console.log("Acceso autorizado AeroJump:", user.email);
                 userId = user.uid;
                 userEmail = user.email;
                 await loadAppSettings(); 
@@ -224,7 +222,7 @@ async function firebaseInit() {
         });
     } catch (error) {
         console.error("Fallo Firebase:", error);
-        showMessage(`Error de conexión AeroJump: ${error.message}`, true);
+        showMessage(`Error de conexión: ${error.message}`, true);
     }
 }
 
@@ -253,8 +251,8 @@ function setupEventListeners() {
     if (showRegisterLink) {
         showRegisterLink.onclick = (e) => {
             e.preventDefault();
-            if (loginView) loginView.classList.add('is-hidden');
-            if (registerView) registerView.classList.remove('is-hidden');
+            loginView.classList.add('is-hidden');
+            registerView.classList.remove('is-hidden');
         };
     }
     
@@ -262,8 +260,8 @@ function setupEventListeners() {
     if (showLoginLink) {
         showLoginLink.onclick = (e) => {
             e.preventDefault();
-            if (registerView) registerView.classList.add('is-hidden');
-            if (loginView) loginView.classList.remove('is-hidden');
+            registerView.classList.add('is-hidden');
+            loginView.classList.remove('is-hidden');
         };
     }
     
@@ -279,18 +277,6 @@ function setupEventListeners() {
 
     const cancelBookingBtn = document.getElementById('cancel-booking-btn');
     if (cancelBookingBtn) cancelBookingBtn.onclick = closeModals;
-
-    const cancelEventBtn = document.getElementById('cancel-event-btn');
-    if (cancelEventBtn) cancelEventBtn.onclick = closeModals;
-
-    const closeOptionsBtn = document.getElementById('close-options-btn');
-    if (closeOptionsBtn) closeOptionsBtn.onclick = closeModals;
-
-    const closeViewBtn = document.getElementById('close-view-btn');
-    if (closeViewBtn) closeViewBtn.onclick = closeModals;
-
-    const closeCajaDetailBtn = document.getElementById('close-caja-detail-btn');
-    if (closeCajaDetailBtn) closeCajaDetailBtn.onclick = closeModals;
 
     const addNewBookingBtn = document.getElementById('add-new-booking-btn');
     if (addNewBookingBtn) {
@@ -319,9 +305,6 @@ function setupEventListeners() {
         };
     }
 
-    const typeBtnCancel = document.getElementById('type-btn-cancel');
-    if (typeBtnCancel) typeBtnCancel.onclick = closeModals;
-
     if (cajaFilterBtn) cajaFilterBtn.onclick = loadCajaData;
 
     if (teamNameInput) {
@@ -343,28 +326,14 @@ function setupEventListeners() {
     
     if (costPerHourInput) costPerHourInput.oninput = updateTotalPrice;
     if (grillCostInput) grillCostInput.oninput = updateTotalPrice;
-    if (eventCostPerHourInput) eventCostPerHourInput.oninput = updateEventTotalPrice;
     
     if (deleteReasonForm) deleteReasonForm.onsubmit = handleConfirmDelete;
     
-    const cancelDeleteBtn = document.getElementById('cancel-delete-btn');
-    if (cancelDeleteBtn) cancelDeleteBtn.onclick = closeModals;
-
     if (recurringToggle) recurringToggle.onchange = openRecurringModal;
     
     const confirmRecurBtn = document.getElementById('confirm-recurring-btn');
     if (confirmRecurBtn) confirmRecurBtn.onclick = saveRecurringSettings;
 
-    const cancelRecurBtn = document.getElementById('cancel-recurring-btn');
-    if (cancelRecurBtn) {
-        cancelRecurBtn.onclick = () => {
-            if (recurringModal) recurringModal.classList.remove('is-open');
-            if (recurringToggle) recurringToggle.checked = false;
-            if (recurringSummary) recurringSummary.classList.add('is-hidden');
-            recurringSettings = { dayOfWeek: null, months: [] };
-        };
-    }
-    
     const dayGrid = document.querySelector('.day-selector-grid');
     if (dayGrid) {
         dayGrid.querySelectorAll('.day-toggle-btn').forEach(btn => {
@@ -372,25 +341,10 @@ function setupEventListeners() {
         });
     }
 
-    const addProductBtn = document.getElementById('add-product-btn');
-    if (addProductBtn) {
-        addProductBtn.onclick = () => {
-            const container = document.getElementById('product-form-container');
-            if(container) container.classList.toggle('is-hidden');
-        };
-    }
-    
-    const cancelProductBtn = document.getElementById('cancel-product-btn');
-    if (cancelProductBtn) {
-        cancelProductBtn.onclick = () => {
-            const container = document.getElementById('product-form-container');
-            if(container) container.classList.add('is-hidden');
-        };
-    }
-
     if (productForm) productForm.onsubmit = handleSaveProduct;
     if (inventorySearchInput) inventorySearchInput.oninput = (e) => renderProducts(e.target.value);
     
+    // Listeners para cálculos de precios
     if (document.getElementById('prod-batch-cost')) document.getElementById('prod-batch-cost').oninput = calculateProductPrices;
     if (document.getElementById('prod-batch-qty')) document.getElementById('prod-batch-qty').oninput = calculateProductPrices;
     if (document.getElementById('prod-profit-pct')) document.getElementById('prod-profit-pct').oninput = calculateProductPrices;
@@ -398,7 +352,6 @@ function setupEventListeners() {
     const headerSaleBtn = document.getElementById('header-sale-btn');
     if (headerSaleBtn) headerSaleBtn.onclick = openSaleModal;
     
-    // Filtro Catálogo Venta (Carrito)
     if (saleCatalogFilter) {
         saleCatalogFilter.oninput = (e) => renderSaleCatalog(e.target.value);
     }
@@ -431,12 +384,7 @@ function showView(viewName) {
     const viewToShow = views[viewName];
     if (viewToShow) {
         viewToShow.classList.remove('is-hidden');
-        if (viewName === 'caja') {
-            const hoy = new Date().toISOString().split('T')[0];
-            if (!cajaDateFrom.value) cajaDateFrom.value = hoy;
-            if (!cajaDateTo.value) cajaDateTo.value = hoy;
-            loadCajaData();
-        }
+        if (viewName === 'caja') loadCajaData();
         else if (viewName === 'stats') loadStatsData();
         else if (viewName === 'historial') loadHistorialData();
         else if (viewName === 'configuracion') loadConfigDataIntoForm(); 
@@ -450,7 +398,7 @@ function showView(viewName) {
 
 async function handleLogin(e) {
     e.preventDefault();
-    showMessage("Validando AeroJump...");
+    showMessage("Validando acceso...");
     const email = document.getElementById('login-email').value;
     const password = document.getElementById('login-password').value;
     try {
@@ -464,7 +412,7 @@ async function handleLogin(e) {
 
 async function handleRegister(e) {
     e.preventDefault();
-    showMessage("Registrando admin AeroJump...");
+    showMessage("Creando administrador...");
     const email = document.getElementById('register-email').value;
     const password = document.getElementById('register-password').value;
     try {
@@ -477,11 +425,7 @@ async function handleRegister(e) {
 }
 
 async function handleLogout() {
-    try {
-        await signOut(auth);
-    } catch (error) {
-        console.error(error);
-    }
+    try { await signOut(auth); } catch (error) { console.error(error); }
 }
 
 // -----------------------------------------------------------------
@@ -492,49 +436,37 @@ async function loadAppSettings() {
     try {
         const docRef = doc(db, settingsDocPath);
         const docSnap = await getDoc(docRef);
-        if (docSnap.exists()) {
-            appSettings = docSnap.data();
-        } else {
-            await setDoc(docRef, appSettings); 
-        }
-    } catch (error) {
-        console.error(error);
-    }
+        if (docSnap.exists()) { appSettings = docSnap.data(); } 
+        else { await setDoc(docRef, appSettings); }
+    } catch (error) { console.error(error); }
 }
 
 function loadConfigDataIntoForm() {
     if (!configCourt1Price) return;
     configCourt1Price.value = appSettings.court1Price;
-    configCourt2Price.value = appSettings.court2Price;
-    
-    const grillEl = document.getElementById('config-grill-price');
-    if(grillEl) grillEl.value = appSettings.grillPrice;
-    
-    const eventEl = document.getElementById('config-event-price');
-    if(eventEl) eventEl.value = appSettings.eventPrice;
+    document.getElementById('config-grill-price').value = appSettings.grillPrice;
+    document.getElementById('config-event-price').value = appSettings.eventPrice;
 }
 
 async function handleSaveConfig(e) {
     e.preventDefault();
-    showMessage("Actualizando tarifas...");
+    showMessage("Sincronizando tarifas...");
     const newSettings = {
         court1Price: parseFloat(configCourt1Price.value) || 0,
-        court2Price: parseFloat(configCourt2Price.value) || 0,
+        court2Price: parseFloat(configCourt1Price.value) || 0,
         grillPrice: parseFloat(document.getElementById('config-grill-price').value) || 0,
         eventPrice: parseFloat(document.getElementById('config-event-price').value) || 0
     };
     try {
         await setDoc(doc(db, settingsDocPath), newSettings);
         appSettings = newSettings;
-        showMessage("¡Precios AeroJump actualizados!");
+        showMessage("¡Precios actualizados!");
         setTimeout(hideMessage, 1500);
-    } catch (error) {
-        showMessage(`Error: ${error.message}`, true);
-    }
+    } catch (error) { showMessage(`Error: ${error.message}`, true); }
 }
 
 // -----------------------------------------------------------------
-// 6. FORMULARIOS DE RESERVA Y EVENTOS (DETALLADOS)
+// 6. FORMULARIOS DE RESERVA Y EVENTOS
 // -----------------------------------------------------------------
 
 async function showBookingModal(dateStr, bookingToEdit = null) {
@@ -567,10 +499,8 @@ async function showBookingModal(dateStr, bookingToEdit = null) {
 async function showEventModal(dateStr, eventToEdit = null) {
     closeModals();
     if(eventForm) eventForm.reset();
-    
     const dateInput = document.getElementById('event-date');
     if(dateInput) dateInput.value = dateStr;
-    
     const title = document.getElementById('event-modal-title');
 
     if (eventToEdit) {
@@ -579,11 +509,9 @@ async function showEventModal(dateStr, eventToEdit = null) {
         if(eventNameInput) eventNameInput.value = eventToEdit.teamName;
         if(contactPersonInput) contactPersonInput.value = eventToEdit.contactPerson;
         if(contactPhoneInput) contactPhoneInput.value = eventToEdit.contactPhone;
-        if(eventCostPerHourInput) eventCostPerHourInput.value = eventToEdit.costPerHour;
     } else {
         if(title) title.textContent = `Evento Especial (${dateStr})`;
         if(document.getElementById('event-booking-id')) document.getElementById('event-booking-id').value = '';
-        if(eventCostPerHourInput) eventCostPerHourInput.value = appSettings.eventPrice;
     }
     
     renderTimeSlots(eventHoursList, new Set(), eventToEdit ? eventToEdit.courtHours : []);
@@ -601,9 +529,7 @@ function updateCourtAvailability() {
         .forEach(b => { if(b.courtHours) b.courtHours.forEach(h => occupied.add(h)); });
     
     const currentBooking = allMonthBookings.find(b => b.id === editingId);
-    const selected = currentBooking ? currentBooking.courtHours : [];
-
-    renderTimeSlots(courtHoursList, occupied, selected);
+    renderTimeSlots(courtHoursList, occupied, currentBooking ? currentBooking.courtHours : []);
     
     const grillOccupied = new Set();
     allMonthBookings
@@ -655,7 +581,7 @@ async function handleSaveBooking(event) {
     if (recurringToggle && recurringToggle.checked && recurringSettings.dayOfWeek !== null && recurringSettings.months.length > 0) {
         await handleSaveRecurringBooking(event);
     } else {
-        await handleSaveSingleBooking(event);
+        await handleSaveSingleBooking();
     }
 }
 
@@ -701,8 +627,7 @@ async function handleSaveSingleBooking() {
     } catch (error) { showMessage(error.message, true); } finally { saveButton.disabled = false; }
 }
 
-async function handleSaveEvent(event) {
-    event.preventDefault();
+async function handleSaveEvent() {
     const saveButton = eventForm.querySelector('button[type="submit"]');
     saveButton.disabled = true;
     showMessage("Guardando Evento...");
@@ -710,26 +635,21 @@ async function handleSaveEvent(event) {
     const dateStr = eventDateInput.value;
     const selectedHours = Array.from(eventHoursList.querySelectorAll('.time-slot.selected')).map(el => parseInt(el.dataset.hour, 10));
 
-    if (selectedHours.length === 0) {
-        showMessage("Marca horarios del evento.", true);
-        saveButton.disabled = false;
-        return;
-    }
+    if (selectedHours.length === 0) { showMessage("Marca horarios.", true); saveButton.disabled = false; return; }
 
     const data = {
         type: 'event', teamName: eventNameInput.value.trim(), contactPerson: contactPersonInput.value.trim(), 
-        contactPhone: contactPhoneInput.value.trim(), costPerHour: parseFloat(eventCostPerHourInput.value), 
+        contactPhone: contactPhoneInput.value.trim(), costPerHour: appSettings.eventPrice, 
         day: dateStr, monthYear: dateStr.substring(0, 7), 
-        paymentMethod: document.querySelector('input[name="eventPaymentMethod"]:checked')?.value || 'efectivo', 
+        paymentMethod: 'efectivo', 
         courtHours: selectedHours, totalPrice: updateEventTotalPrice(),
         timestamp: Timestamp.now(), adminId: userId, adminEmail: userEmail
     };
 
     try {
-        let action = bookingId ? 'updated' : 'created';
         if (bookingId) await setDoc(doc(db, bookingsCollectionPath, bookingId), data, { merge: true });
         else { await addDoc(collection(db, bookingsCollectionPath), data); }
-        await logBookingEvent(action, data);
+        await logBookingEvent(bookingId ? 'updated' : 'created', data);
         showMessage("¡Evento guardado!"); closeModals(); setTimeout(hideMessage, 1500);
     } catch (error) { showMessage(error.message, true); } finally { saveButton.disabled = false; }
 }
@@ -762,13 +682,13 @@ async function handleSaveRecurringBooking() {
                 type: 'court', teamName, courtId, day: d, monthYear: d.substring(0, 7), 
                 courtHours: selectedHours, totalPrice: updateTotalPrice(), 
                 paymentMethod: 'efectivo', timestamp: Timestamp.now(), adminId: userId, adminEmail: userEmail,
-                peopleCount: 10, costPerHour: parseFloat(costPerHourInput.value), rentGrill: false, grillCost: 0, grillHours: []
+                peopleCount: 1, costPerHour: parseFloat(costPerHourInput.value), rentGrill: false, grillCost: 0, grillHours: []
             };
             batch.set(docRef, data);
             await logBookingEvent('created-recurring', data);
         }
         await batch.commit();
-        showMessage(`¡Serie fija creada! (${dates.length} saltos)`);
+        showMessage(`¡Serie creada! (${dates.length} saltos)`);
         closeModals(); setTimeout(hideMessage, 2000);
     } catch (e) { showMessage(e.message, true); } finally { saveButton.disabled = false; }
 }
@@ -801,7 +721,7 @@ async function logBookingEvent(action, data, reason = null) {
 }
 
 // -----------------------------------------------------------------
-// 8. KIOSCO PRO: CARRITO MULTIPRODUCTO (INTEGRACIÓN)
+// 8. KIOSCO PRO: MOTOR DE CARRITO MULTIPRODUCTO
 // -----------------------------------------------------------------
 
 function openSaleModal() {
@@ -879,7 +799,7 @@ function renderSaleCart() {
         const row = document.createElement('div');
         row.className = 'flex justify-between items-center bg-white p-4 rounded-2xl shadow-sm border border-slate-100';
         row.innerHTML = `
-            <div class="flex-1">
+            <div class="flex-1 text-left">
                 <p class="font-black text-xs uppercase italic text-slate-800">${item.name}</p>
                 <p class="text-[9px] font-bold text-violet-600">$${item.salePrice} c/u</p>
             </div>
@@ -909,23 +829,15 @@ async function handleConfirmSale() {
         const mesAnio = hoy.substring(0, 7);
 
         for (const item of saleCart) {
-            // Venta
             const saleRef = doc(collection(db, salesCollectionPath));
             batch.set(saleRef, {
                 name: item.name, qty: item.qty, total: item.qty * item.salePrice,
                 paymentMethod: method, day: hoy, monthYear: mesAnio, 
                 timestamp: Timestamp.now(), adminEmail: userEmail
             });
-            // Stock
             const productRef = doc(db, productsCollectionPath, item.id);
             batch.update(productRef, { stock: item.stock - item.qty });
-            // Transacción
-            const logRef = doc(collection(db, transactionsCollectionPath));
-            batch.set(logRef, { 
-                productId: item.id, desc: `Venta Carrito (${method})`, 
-                qty: item.qty, cost: item.unitCost || 0, type: 'out', 
-                timestamp: Timestamp.now(), adminEmail: userEmail 
-            });
+            await logKioscoTransaction(item.id, `Venta Carrito (${method})`, item.qty, item.unitCost, 'out');
         }
         await batch.commit();
         closeModals(); showMessage("¡Venta completada!"); setTimeout(hideMessage, 1500);
@@ -933,7 +845,7 @@ async function handleConfirmSale() {
 }
 
 // -----------------------------------------------------------------
-// 9. GESTIÓN DE PRODUCTOS (RESTORED)
+// 9. GESTIÓN DE PRODUCTOS (CÁLCULOS Y CRUD)
 // -----------------------------------------------------------------
 
 function calculateProductPrices() {
@@ -942,8 +854,8 @@ function calculateProductPrices() {
     const margin = parseFloat(document.getElementById('prod-profit-pct').value) || 40;
     const u = cost / qty;
     const s = Math.ceil(u * (1 + (margin / 100)));
-    const sugg = document.getElementById('prod-suggested-price');
-    if(sugg) sugg.textContent = `$${s}`;
+    const suggEl = document.getElementById('prod-suggested-price');
+    if(suggEl) suggEl.textContent = `$${s}`;
     const unitEl = document.getElementById('prod-unit-cost');
     if(unitEl) unitEl.value = u;
 }
@@ -958,11 +870,28 @@ async function handleConfirmRestock(e) {
     const nSale = Math.ceil(nUnit * 1.40);
 
     try {
-        showMessage("Sincronizando stock...");
+        showMessage("Actualizando stock...");
         await updateDoc(doc(db, productsCollectionPath, id), { stock: p.stock + addQ, unitCost: nUnit, salePrice: nSale });
         await logKioscoTransaction(id, `Reposición (+${addQ} un.)`, addQ, nUnit, 'in');
-        closeModals(); showMessage("¡Todo el stock actualizado!"); setTimeout(hideMessage, 2000);
+        closeModals(); showMessage("¡Stock actualizado!"); setTimeout(hideMessage, 2000);
     } catch (err) { alert(err.message); }
+}
+
+async function handleConfirmEditProduct(e) {
+    e.preventDefault();
+    const idVal = document.getElementById('edit-prod-id').value;
+    const d = { 
+        name: document.getElementById('edit-prod-name').value, 
+        unitCost: parseFloat(document.getElementById('edit-prod-cost').value), 
+        salePrice: parseFloat(document.getElementById('edit-prod-price').value), 
+        stock: parseInt(document.getElementById('edit-prod-stock').value) 
+    };
+    try {
+        await updateDoc(doc(db, productsCollectionPath, idVal), d);
+        closeModals();
+        showMessage("Ficha actualizada.");
+        setTimeout(hideMessage, 1500);
+    } catch(err) { alert(err.message); }
 }
 
 async function handleSaveProduct(e) {
@@ -995,12 +924,12 @@ function renderProducts(f = "") {
     allProducts.filter(p => p.name.toLowerCase().includes(f.toLowerCase())).forEach(p => {
         const d = document.createElement('div');
         d.className = 'product-card bg-white p-6 rounded-3xl border shadow-sm flex flex-col gap-4 transition-all hover:border-violet-300';
-        d.innerHTML = `<div class="flex justify-between items-start text-left"><div><h4 class="font-black italic uppercase text-slate-800 text-xl tracking-tighter leading-tight">${p.name}</h4><span class="stock-badge ${p.stock < 5 ? 'bg-orange-100 text-orange-600' : 'bg-green-100 text-green-700'} text-[9px] font-black uppercase mt-1 px-2 py-0.5 rounded inline-block">Stock: ${p.stock} un.</span></div><div class="text-right"><p class="text-3xl font-black text-violet-600 italic leading-none tracking-tighter">$${p.salePrice}</p></div></div>
+        d.innerHTML = `<div class="flex justify-between items-start text-left"><div><h4 class="font-black italic uppercase text-slate-800 leading-tight">${p.name}</h4><span class="text-[9px] font-black text-violet-500 uppercase mt-1 inline-block">Stock: ${p.stock} un.</span></div><strong class="text-3xl font-black text-violet-600 italic tracking-tighter">$${p.salePrice}</strong></div>
                        <div class="grid grid-cols-2 gap-2 mt-2">
-                           <button onclick="window.openRestock('${p.id}')" class="p-3 bg-violet-50 text-violet-700 rounded-xl font-bold text-[10px] uppercase shadow-sm">📦 REPONER</button>
-                           <button onclick="window.openHistory('${p.id}')" class="p-3 bg-slate-50 text-slate-600 rounded-xl font-bold text-[10px] uppercase shadow-sm">📜 LOGS</button>
-                           <button onclick="window.openEditProduct('${p.id}')" class="p-3 bg-slate-50 text-slate-600 rounded-xl font-bold text-[10px] uppercase shadow-sm">✏️ FICHA</button>
-                           <button onclick="window.deleteProduct('${p.id}')" class="p-3 bg-orange-50 text-orange-500 rounded-xl font-bold text-[10px] uppercase shadow-sm">🗑️ BORRAR</button>
+                           <button onclick="window.openRestock('${p.id}')" class="p-3 bg-violet-50 text-violet-700 rounded-xl font-bold text-[9px] uppercase shadow-sm">📦 REPONER</button>
+                           <button onclick="window.openHistory('${p.id}')" class="p-3 bg-slate-50 text-slate-600 rounded-xl font-bold text-[9px] uppercase shadow-sm">📜 LOGS</button>
+                           <button onclick="window.openEditProduct('${p.id}')" class="p-3 bg-slate-50 text-slate-600 rounded-xl font-bold text-[9px] uppercase shadow-sm">✏️ FICHA</button>
+                           <button onclick="window.deleteProduct('${p.id}')" class="p-3 bg-orange-50 text-orange-500 rounded-xl font-bold text-[9px] uppercase shadow-sm">🗑️ BORRAR</button>
                        </div>`;
         productList.appendChild(d);
     });
@@ -1011,7 +940,7 @@ async function logKioscoTransaction(productId, desc, qty, cost, type) {
 }
 
 // -----------------------------------------------------------------
-// 10. CAJA, STATS E HISTORIAL (RESTORED)
+// 10. CAJA, STATS E HISTORIAL
 // -----------------------------------------------------------------
 
 async function loadCajaData() {
@@ -1027,9 +956,9 @@ async function loadCajaData() {
         snapB.docs.forEach(doc => { const b = doc.data(); tB += (b.totalPrice || 0); if(!daily[b.day]) daily[b.day] = {t:0, b:[], s:[]}; daily[b.day].t += (b.totalPrice || 0); daily[b.day].b.push({id: doc.id, ...b}); });
         snapS.docs.forEach(doc => { const s = doc.data(); tS += (s.total || 0); if(!daily[s.day]) daily[s.day] = {t:0, b:[], s:[]}; daily[s.day].t += (s.total || 0); daily[s.day].s.push({id: doc.id, ...s}); });
 
-        cajaTotalBookings.textContent = `$${tB.toLocaleString('es-AR')}`;
-        cajaTotalSales.textContent = `$${tS.toLocaleString('es-AR')}`;
-        cajaTotalCombined.textContent = `$${(tB + tS).toLocaleString('es-AR')}`;
+        cajaTotalBookings.textContent = `$${tB.toLocaleString()}`;
+        cajaTotalSales.textContent = `$${tS.toLocaleString()}`;
+        cajaTotalCombined.textContent = `$${(tB + tS).toLocaleString()}`;
         renderCajaList(daily); hideMessage();
     } catch (e) { console.error(e); hideMessage(); }
 }
@@ -1041,8 +970,8 @@ function renderCajaList(daily) {
     sorted.forEach(day => {
         const data = daily[day], [y, m, d] = day.split('-');
         const item = document.createElement('div');
-        item.className = 'bg-white p-6 rounded-3xl flex justify-between items-center cursor-pointer mb-3 border-l-8 border-violet-500 hover:scale-[1.01] transition-transform shadow-sm';
-        item.innerHTML = `<div><strong class="text-slate-800 text-xl font-black italic">${d}/${m}/${y}</strong><p class="text-[9px] text-slate-400 font-bold uppercase mt-1 tracking-widest">${data.b.length} Turnos | ${data.s.length} Ventas</p></div><strong class="text-2xl font-black text-violet-600 italic">$${data.t.toLocaleString()}</strong>`;
+        item.className = 'bg-white p-6 rounded-3xl flex justify-between items-center cursor-pointer mb-3 border-l-8 border-violet-500 shadow-sm';
+        item.innerHTML = `<div><strong class="text-slate-800 text-xl font-black italic tracking-tighter">${d}/${m}/${y}</strong><p class="text-[9px] text-slate-400 font-bold uppercase mt-1 tracking-widest">${data.b.length} Saltos | ${data.s.length} Ventas</p></div><strong class="text-2xl font-black text-violet-600 italic tracking-tighter">$${data.t.toLocaleString()}</strong>`;
         item.onclick = () => showCajaDetail(`${d}/${m}/${y}`, data);
         cajaDailyList.appendChild(item);
     });
@@ -1055,7 +984,7 @@ function showCajaDetail(date, data) {
     const list = document.getElementById('caja-detail-booking-list');
     list.innerHTML = '';
     data.b.forEach(b => { list.innerHTML += `<div class="p-3 bg-slate-50 rounded-xl mb-2 flex justify-between items-center text-[11px] font-black border border-slate-100"><span>🗓️ ${b.teamName}</span><strong>$${(b.totalPrice || 0).toLocaleString()}</strong></div>`; });
-    data.s.forEach(s => { list.innerHTML += `<div class="p-3 bg-violet-50 rounded-xl mb-2 flex justify-between items-center text-[11px] font-black border border-violet-100"><span>🥤 ${s.name}</span><strong>$${(s.total || 0).toLocaleString()}</strong></div>`; });
+    data.s.forEach(s => { list.innerHTML += `<div class="p-3 bg-violet-50 rounded-xl mb-2 flex justify-between items-center text-[11px] font-black border border-violet-100"><span>🥤 ${s.name} (x${s.qty})</span><strong>$${(s.total || 0).toLocaleString()}</strong></div>`; });
 }
 
 // -----------------------------------------------------------------
@@ -1097,7 +1026,7 @@ function showOptionsModal(dateStr, bks) {
     list.innerHTML = '';
     bks.forEach(b => {
         const item = document.createElement('div');
-        item.className = 'flex justify-between items-center p-4 bg-slate-50 border border-slate-100 rounded-2xl mb-2 text-left';
+        item.className = 'flex justify-between items-center p-4 bg-slate-50 border border-slate-100 rounded-2xl mb-2 text-left shadow-sm';
         item.innerHTML = `<div><p class="font-black text-sm uppercase italic leading-none">${b.teamName}</p><p class="text-[9px] font-bold text-slate-400 mt-1 uppercase">${b.courtHours ? b.courtHours.join(', ') : 'S/H'}hs</p></div>
                           <div class="flex gap-1">
                               <button class="bg-violet-600 text-white p-2 rounded-lg text-[8px] font-black uppercase" onclick="window.viewBookingDetail('${b.id}')">VER</button>
@@ -1115,7 +1044,7 @@ function showOptionsModal(dateStr, bks) {
 
 function showMessage(msg, isError = false) { 
     const t = document.getElementById('message-text'); 
-    if(t) { t.textContent = msg; t.className = isError ? 'text-2xl font-black text-orange-600 tracking-tighter italic uppercase' : 'text-2xl font-black text-violet-800 tracking-tighter italic uppercase'; }
+    if(t) { t.textContent = msg; t.className = isError ? 'text-2xl font-black text-orange-600 tracking-tighter' : 'text-2xl font-black text-slate-800 tracking-tighter'; }
     if(messageOverlay) messageOverlay.classList.add('is-open'); 
 }
 function hideMessage() { if(messageOverlay) messageOverlay.classList.remove('is-open'); }
@@ -1151,7 +1080,7 @@ async function handleTeamNameInput() {
         const snap = await getDocs(q); teamNameSuggestions.innerHTML = '';
         if(snap.empty) { teamNameSuggestions.classList.add('is-hidden'); return; }
         snap.forEach(d => { 
-            const n = d.data().name, i = document.createElement('div'); i.className = 'p-4 hover:bg-violet-50 cursor-pointer border-b border-slate-50 font-black italic uppercase text-xs'; i.textContent = n;
+            const n = d.data().name, i = document.createElement('div'); i.className = 'p-4 hover:bg-violet-50 cursor-pointer border-b border-slate-50 font-black italic uppercase text-xs text-left'; i.textContent = n;
             i.onmousedown = () => { teamNameInput.value = n; teamNameSuggestions.classList.add('is-hidden'); }; teamNameSuggestions.appendChild(i);
         }); 
         teamNameSuggestions.classList.remove('is-hidden');
@@ -1174,7 +1103,7 @@ async function loadHistorialData() {
     const snap = await getDocs(query(collection(db, logCollectionPath), orderBy("timestamp", "desc")));
     if(historialList) {
         historialList.innerHTML = ''; snap.forEach(d => { const e = d.data();
-            historialList.innerHTML += `<div class="bg-white p-4 mb-2 rounded-2xl flex justify-between items-start text-left border border-slate-50 shadow-sm"><div><strong class="text-xs uppercase italic font-black text-slate-800">${e.teamName || 'S/N'}</strong><p class="text-[8px] text-slate-400 font-bold uppercase mt-1">${e.timestamp.toDate().toLocaleString()} | ${e.action}</p></div><span class="text-[7px] font-black uppercase bg-slate-100 p-1 rounded-md text-slate-500">AeroLog</span></div>`;
+            historialList.innerHTML += `<div class="bg-white p-4 mb-2 rounded-2xl flex justify-between items-start text-left border border-slate-50 shadow-sm"><div><strong class="text-xs uppercase italic font-black text-slate-800">${e.teamName || 'S/N'}</strong><p class="text-[8px] text-slate-400 font-bold uppercase mt-1">${e.timestamp.toDate().toLocaleString()} | ${e.action}</p></div><span class="text-[7px] font-black uppercase bg-slate-100 p-1 rounded-md text-slate-500 italic">Log</span></div>`;
         });
     }
 }
@@ -1209,13 +1138,13 @@ function saveRecurringSettings() {
     recurringSettings.dayOfWeek = parseInt(dBtn.dataset.day, 10);
     recurringSettings.months = Array.from(mBtns).map(b => ({ month: b.dataset.month, year: b.dataset.year }));
     if(recurringSummary) { 
-        recurringSummary.textContent = `Ciclo: Todos los ${WEEKDAYS_ES[recurringSettings.dayOfWeek]}.`; 
+        recurringSummary.textContent = `Ciclo AeroJump: Todos los ${WEEKDAYS_ES[recurringSettings.dayOfWeek]}.`; 
         recurringSummary.classList.remove('is-hidden'); 
     }
     recurringModal.classList.remove('is-open');
 }
 
-// Globalización de funciones (Carrito y Reservas)
+// Globalización de funciones
 window.updateCartQty = updateCartQty;
 window.removeFromCart = removeFromCart;
 window.addToCart = addToCart;
@@ -1224,7 +1153,7 @@ window.closeModals = closeModals;
 window.viewBookingDetail = async (id) => {
     const b = allMonthBookings.find(x => x.id === id);
     const det = document.getElementById('view-booking-details');
-    det.innerHTML = `<h3 class="text-3xl font-black text-violet-900 uppercase italic tracking-tighter">${b.teamName}</h3><p class="text-xl font-black mt-4 text-slate-800 italic uppercase underline decoration-violet-500 decoration-4 underline-offset-4">Liquidado: $${(b.totalPrice || 0).toLocaleString()}</p>`;
+    det.innerHTML = `<h3 class="text-3xl font-black text-violet-900 uppercase italic tracking-tighter leading-none">${b.teamName}</h3><p class="text-xl font-black mt-6 text-slate-800 uppercase italic underline decoration-violet-400 decoration-4 underline-offset-4 tracking-tighter">Total: $${(b.totalPrice || 0).toLocaleString()}</p>`;
     viewModal.classList.add('is-open');
 };
 window.editBooking = (id) => { 
@@ -1260,10 +1189,10 @@ window.openHistory = async (id) => {
     list.innerHTML = '';
     snap.forEach(d => {
         const t = d.data();
-        list.innerHTML += `<div class="p-4 bg-slate-50 rounded-2xl mb-2 flex justify-between border-l-4 ${t.type==='in'?'border-green-500':'border-orange-500'} shadow-sm"><div><strong class="text-xs font-black uppercase text-slate-800 leading-none block">${t.desc}</strong><p class="text-[8px] text-slate-400 font-bold mt-1 uppercase">${t.timestamp.toDate().toLocaleString()}</p></div><strong class="${t.type==='in'?'text-green-600':'text-orange-600'} text-lg font-black">${t.type==='in'?'+':'-'}${t.qty}</strong></div>`;
+        list.innerHTML += `<div class="p-4 bg-slate-50 rounded-2xl mb-2 flex justify-between border-l-4 ${t.type==='in'?'border-green-500':'border-orange-500'} shadow-sm text-sm"><div><strong class="font-black italic uppercase">${t.desc}</strong><p class="text-[8px] text-slate-400 mt-1">${t.timestamp.toDate().toLocaleString()}</p></div><strong class="${t.type==='in'?'text-green-600':'text-orange-600'} text-lg font-black">${t.type==='in'?'+':'-'}${t.qty}</strong></div>`;
     });
     document.getElementById('product-history-modal').classList.add('is-open');
 };
-window.deleteProduct = async (id) => { if(confirm("¿Eliminar producto AeroJump?")) await deleteDoc(doc(db, productsCollectionPath, id)); };
+window.deleteProduct = async (id) => { if(confirm("¿Eliminar ficha permanentemente de AeroJump?")) await deleteDoc(doc(db, productsCollectionPath, id)); };
 
-console.log("AeroJump Gualeguaychú v2026 - Core Logic Active.");
+console.log("AeroJump v2026 - Core Logic Active and Error-Free.");
