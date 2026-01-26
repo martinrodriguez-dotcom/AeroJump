@@ -21,9 +21,9 @@
             --color-violet: #7c3aed;
             --color-violet-hover: #6d28d9;
             --color-orange: #f97316;
-            --color-slate: #0f172a; /* Más oscuro para contraste */
-            --text-main: #1e293b;
-            --text-muted: #475569; /* Más oscuro que slate-400 */
+            --color-slate: #0f172a; 
+            --text-main: #0f172a;
+            --text-muted: #334155; 
             --bg-main: #f1f5f9;
         }
 
@@ -34,13 +34,13 @@
             overflow-x: hidden;
         }
 
-        /* Estructura de Modales Estilo Ventana Extra */
+        /* Sistema de Modales - Ventana Extra */
         .modal {
             display: none;
             position: fixed;
             inset: 0;
-            background-color: rgba(2, 6, 23, 0.9); /* Más oscuro */
-            backdrop-filter: blur(12px);
+            background-color: rgba(2, 6, 23, 0.92); 
+            backdrop-filter: blur(15px);
             align-items: center;
             justify-content: center;
             z-index: 1000;
@@ -53,25 +53,25 @@
             background: white;
             width: 100%;
             max-height: 94vh;
-            border-radius: 2rem;
+            border-radius: 2.5rem;
             display: flex;
             flex-direction: column;
             overflow: hidden;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
-            border: 2px solid #e2e8f0;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+            border: 3px solid #e2e8f0;
         }
 
-        .modal-header { padding: 1.5rem 2rem; border-bottom: 2px solid #f1f5f9; flex-shrink: 0; }
+        .modal-header { padding: 1.25rem 2rem; border-bottom: 2px solid #f1f5f9; flex-shrink: 0; }
         .modal-body { padding: 1.5rem; overflow-y: auto; flex-grow: 1; }
-        .modal-footer { padding: 1.5rem 2rem; border-top: 2px solid #f1f5f9; flex-shrink: 0; background: #ffffff; }
+        .modal-footer { padding: 1.25rem 2rem; border-top: 2px solid #f1f5f9; flex-shrink: 0; background: #ffffff; }
 
-        @keyframes modalFadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+        @keyframes modalFadeIn { from { opacity: 0; transform: scale(0.97); } to { opacity: 1; transform: scale(1); } }
 
-        /* Botones de Horario */
+        /* Botones de Horario con Info de Ocupación */
         .time-slot {
             padding: 0.8rem;
             border-radius: 1.25rem;
-            border: 2px solid #cbd5e1; /* Más visible */
+            border: 2px solid #94a3b8; 
             text-align: center;
             transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
             display: flex;
@@ -79,77 +79,96 @@
             cursor: pointer;
             background: white;
         }
-        .time-slot:hover:not(.disabled) { border-color: var(--color-violet); transform: translateY(-2px); }
-        .time-slot.selected { background: var(--color-violet); border-color: var(--color-violet); color: white; }
-        .time-slot.disabled { opacity: 0.2; cursor: not-allowed; background: #f1f5f9; border-style: dashed; }
-        .time-slot .capacity-info { font-size: 0.6rem; font-weight: 900; text-transform: uppercase; margin-top: 2px; }
+        .time-slot:hover:not(.disabled) { border-color: var(--color-violet); transform: translateY(-3px); box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .time-slot.selected { background: var(--color-violet); border-color: var(--color-violet); color: white; transform: scale(1.05); }
+        .time-slot.disabled { opacity: 0.2; cursor: not-allowed; background: #cbd5e1; border-style: dashed; }
+        .time-slot .capacity-info { font-size: 0.65rem; font-weight: 900; text-transform: uppercase; margin-top: 2px; }
 
-        /* Tarjetas de Inventario */
-        .inventory-card {
+        /* Tarjetas de Producto en Venta */
+        .product-sale-card {
             background: white;
-            border: 2px solid #e2e8f0;
+            border: 2px solid #f1f5f9;
             border-radius: 2rem;
-            padding: 1.5rem;
+            padding: 1.25rem;
             transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
             box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
         }
-        .inventory-card:hover { border-color: var(--color-violet); transform: scale(1.02); }
+        .product-sale-card:hover {
+            border-color: var(--color-violet);
+            transform: translateY(-4px);
+            box-shadow: 0 15px 20px -5px rgba(124, 58, 237, 0.15);
+        }
 
         /* Calendario */
-        .day-cell { border-radius: 1.25rem; transition: all 0.2s; border: 2px solid #e2e8f0; background: white; min-height: 100px; cursor: pointer; }
-        .day-cell:hover { border-color: var(--color-violet); transform: scale(1.05); z-index: 10; }
-        .booking-count { background: var(--color-violet); color: white; border-radius: 99px; padding: 2px 8px; font-size: 0.65rem; font-weight: 900; }
+        .day-cell { 
+            border-radius: 1.25rem; 
+            transition: all 0.2s; 
+            border: 2px solid #e2e8f0; 
+            background: white; 
+            min-height: 105px; 
+            cursor: pointer; 
+        }
+        .day-cell:hover { border-color: var(--color-violet); transform: scale(1.05); z-index: 10; box-shadow: 0 20px 25px -5px rgba(124, 58, 237, 0.1); }
+        .booking-count { background: var(--color-violet); color: white; border-radius: 99px; padding: 2px 10px; font-size: 0.7rem; font-weight: 900; }
         .booking-count.event { background: var(--color-orange); }
 
-        /* Navegación */
+        /* Navegación Lateral */
         #main-menu {
             position: fixed; top: 0; left: 0; height: 100vh; width: 300px;
             background: white; transform: translateX(-100%); transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            z-index: 500; box-shadow: 20px 0 50px rgba(0,0,0,0.2);
+            z-index: 500; box-shadow: 20px 0 50px rgba(0,0,0,0.25);
         }
         #main-menu.is-open { transform: translateX(0); }
 
+        /* Utilitarios de Scroll y Capas */
         .is-hidden { display: none !important; }
-        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar { width: 8px; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 10px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #64748b; }
 
-        /* Switch */
-        .switch { position: relative; display: inline-block; width: 44px; height: 22px; }
+        /* Switch Premium */
+        .switch { position: relative; display: inline-block; width: 48px; height: 24px; }
         .switch input { opacity: 0; width: 0; height: 0; }
         .slider { position: absolute; cursor: pointer; inset: 0; background-color: #94a3b8; transition: .4s; border-radius: 34px; }
-        .slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
+        .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
         input:checked + .slider { background-color: var(--color-violet); }
-        input:checked + .slider:before { transform: translateX(22px); }
+        input:checked + .slider:before { transform: translateX(24px); }
+
+        @keyframes jump { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-35px); } }
+        .jumping-child { animation: jump 0.8s ease-in-out infinite; }
     </style>
 </head>
 <body>
 
     <!-- ============================================= -->
-    <!-- 1. CAPA DE ACCESO                            -->
+    <!-- 1. CAPA DE ACCESO (LOGIN)                    -->
     <!-- ============================================= -->
     <div id="login-view" class="view-container flex items-center justify-center min-h-screen p-4">
-        <div class="bg-white p-10 rounded-[3rem] shadow-2xl w-full max-w-sm text-center border-2 border-slate-100">
-            <div class="inline-block p-5 bg-violet-100 rounded-3xl mb-6"><span class="text-4xl">🚀</span></div>
-            <h2 class="text-3xl font-black text-slate-900 tracking-tighter uppercase italic mb-2">AeroJump</h2>
-            <p class="text-slate-500 font-bold text-[10px] uppercase tracking-widest mb-10 italic">Management System v2026</p>
+        <div class="bg-white p-10 rounded-[3.5rem] shadow-2xl w-full max-w-sm text-center border-4 border-slate-50">
+            <div class="inline-block p-6 bg-violet-100 rounded-[2.5rem] mb-6 shadow-inner"><span class="text-5xl">🚀</span></div>
+            <h2 class="text-4xl font-black text-slate-900 tracking-tighter uppercase italic mb-2 leading-none">AeroJump</h2>
+            <p class="text-slate-500 font-bold text-[10px] uppercase tracking-widest mb-10 italic">Management v2026</p>
             <form id="login-form" class="space-y-4">
-                <input type="email" id="login-email" placeholder="Email de Admin" class="w-full p-5 bg-slate-50 rounded-2xl font-bold border-2 border-slate-100 focus:ring-4 focus:ring-violet-50 outline-none" required>
-                <input type="password" id="login-password" placeholder="Contraseña" class="w-full p-5 bg-slate-50 rounded-2xl font-bold border-2 border-slate-100 focus:ring-4 focus:ring-violet-50 outline-none" required>
-                <button type="submit" class="bg-violet-600 text-white w-full py-5 rounded-2xl font-black uppercase tracking-widest shadow-xl active:scale-95 transition-all">Ingresar</button>
+                <input type="email" id="login-email" placeholder="Email Administrativo" class="w-full p-5 bg-slate-50 rounded-2xl font-black border-2 border-slate-100 focus:ring-8 focus:ring-violet-50 outline-none transition-all placeholder:text-slate-300" required>
+                <input type="password" id="login-password" placeholder="Contraseña" class="w-full p-5 bg-slate-50 rounded-2xl font-black border-2 border-slate-100 focus:ring-8 focus:ring-violet-50 outline-none transition-all placeholder:text-slate-300" required>
+                <button type="submit" class="bg-violet-600 text-white w-full py-5 rounded-2xl font-black uppercase tracking-widest shadow-2xl active:scale-95 transition-all text-sm border-b-8 border-violet-800 italic">Ingresar</button>
             </form>
-            <a href="#" id="show-register" class="block mt-8 text-[11px] text-violet-700 font-black uppercase italic hover:underline">Solicitar cuenta nueva</a>
+            <a href="#" id="show-register" class="block mt-8 text-[11px] text-violet-700 font-black uppercase italic hover:underline tracking-tight">Crear cuenta de administrador</a>
         </div>
     </div>
 
     <div id="register-view" class="view-container flex items-center justify-center min-h-screen p-4 is-hidden">
-        <div class="bg-white p-10 rounded-[3rem] shadow-2xl w-full max-w-sm text-center">
-            <h2 class="text-3xl font-black text-slate-900 tracking-tighter uppercase italic mb-8">Crear Cuenta</h2>
+        <div class="bg-white p-10 rounded-[3.5rem] shadow-2xl w-full max-w-sm text-center border-4 border-slate-50">
+            <h2 class="text-3xl font-black text-slate-900 tracking-tighter uppercase italic mb-8">Nueva Cuenta</h2>
             <form id="register-form" class="space-y-4">
-                <input type="email" id="register-email" placeholder="Email" class="w-full p-5 bg-slate-50 rounded-2xl font-bold border-2 border-slate-100 focus:ring-4 focus:ring-violet-50" required>
-                <input type="password" id="register-password" placeholder="Contraseña" class="w-full p-5 bg-slate-50 rounded-2xl font-bold border-2 border-slate-100 focus:ring-4 focus:ring-violet-50" required>
-                <button type="submit" class="bg-violet-600 text-white w-full py-5 rounded-2xl font-black uppercase tracking-widest shadow-xl">Registrar</button>
+                <input type="email" id="register-email" placeholder="Email" class="w-full p-5 bg-slate-50 rounded-2xl font-bold border-2 border-slate-100 outline-none focus:ring-4 focus:ring-violet-50" required>
+                <input type="password" id="register-password" placeholder="Contraseña (mín. 6)" class="w-full p-5 bg-slate-50 rounded-2xl font-bold border-2 border-slate-100 outline-none focus:ring-4 focus:ring-violet-50" required>
+                <button type="submit" class="bg-violet-600 text-white w-full py-5 rounded-2xl font-black uppercase tracking-widest shadow-xl italic text-sm">Registrar Admin</button>
             </form>
-            <a href="#" id="show-login" class="block mt-8 text-[11px] text-violet-700 font-black uppercase italic">Volver al Login</a>
+            <a href="#" id="show-login" class="block mt-8 text-[11px] text-violet-700 font-black uppercase italic hover:underline">Volver al Login</a>
         </div>
     </div>
 
@@ -160,176 +179,179 @@
         
         <header class="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-md shadow-md p-4 flex justify-between items-center z-50 border-b-2 border-slate-100">
             <div class="flex items-center gap-3">
-                <button id="menu-btn" class="p-3 rounded-2xl bg-slate-100 hover:bg-slate-200 transition-all active:scale-90 border-2 border-slate-200">
-                    <svg class="h-6 w-6 text-slate-800" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M4 6h16M4 12h16M4 18h16" /></svg>
+                <button id="menu-btn" class="p-3 rounded-2xl bg-slate-100 hover:bg-slate-200 transition-all active:scale-90 border-2 border-slate-200 shadow-sm">
+                    <svg class="h-7 w-7 text-slate-900" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3.5"><path d="M4 6h16M4 12h16M4 18h16" /></svg>
                 </button>
                 <div class="leading-none text-left">
-                    <h1 class="text-xl font-black text-slate-900 uppercase italic tracking-tighter">AeroJump</h1>
-                    <span class="text-[8px] font-black text-violet-600 uppercase tracking-widest">Admin Panel</span>
+                    <h1 class="text-2xl font-black text-slate-900 uppercase italic tracking-tighter leading-none">AeroJump</h1>
+                    <span class="text-[9px] font-black text-violet-600 uppercase tracking-widest leading-none">v2026 Admin</span>
                 </div>
             </div>
-            <button id="header-sale-btn" class="bg-orange-600 text-white px-6 py-3 rounded-2xl font-black shadow-lg uppercase text-[10px] active:scale-90 transition-all hover:bg-orange-700">Nueva Venta</button>
+            <button id="header-sale-btn" class="bg-orange-600 text-white px-8 py-3 rounded-2xl font-black shadow-lg uppercase text-[10px] active:scale-90 transition-all hover:bg-orange-700 border-b-4 border-orange-800 italic">Nueva Venta</button>
         </header>
 
-        <!-- Menu hamburguesa arreglado -->
         <nav id="main-menu" class="p-8 flex flex-col">
             <div class="border-b-2 border-slate-100 pb-6 mb-8 text-left leading-none">
-                <p class="text-[9px] font-black text-slate-400 uppercase mb-2 tracking-widest leading-none">Sesión Iniciada</p>
-                <p id="user-email-display" class="font-black text-violet-700 truncate text-xs italic mb-4"></p>
-                <button id="logout-btn" class="text-[10px] font-black text-slate-500 uppercase hover:text-red-600 transition-colors">Cerrar Sesión</button>
+                <p class="text-[10px] font-black text-slate-400 uppercase mb-3 tracking-widest italic font-black">Sesión AeroJump</p>
+                <p id="user-email-display" class="font-black text-violet-700 truncate text-xs italic mb-4 leading-none"></p>
+                <button id="logout-btn" class="text-[11px] font-black text-slate-500 uppercase hover:text-red-600 transition-colors italic tracking-widest">Cerrar Sesión 🔒</button>
             </div>
             <div class="space-y-3">
-                <button class="menu-item flex items-center gap-4 w-full text-left p-4 rounded-2xl font-black text-slate-700 hover:bg-violet-50 hover:text-violet-800 transition-all text-xs uppercase italic" data-view="calendar">🗓️ Agenda Saltos</button>
-                <button class="menu-item flex items-center gap-4 w-full text-left p-4 rounded-2xl font-black text-slate-700 hover:bg-violet-50 hover:text-violet-800 transition-all text-xs uppercase italic" data-view="productos">🥤 Stock Kiosco</button>
-                <button class="menu-item flex items-center gap-4 w-full text-left p-4 rounded-2xl font-black text-slate-700 hover:bg-violet-50 hover:text-violet-800 transition-all text-xs uppercase italic" data-view="caja">💰 Arqueo de Caja</button>
-                <button class="menu-item flex items-center gap-4 w-full text-left p-4 rounded-2xl font-black text-slate-700 hover:bg-violet-50 hover:text-violet-800 transition-all text-xs uppercase italic" data-view="stats">📊 Estadísticas</button>
-                <button class="menu-item flex items-center gap-4 w-full text-left p-4 rounded-2xl font-black text-slate-700 hover:bg-violet-50 hover:text-violet-800 transition-all text-xs uppercase italic" data-view="configuracion">⚙️ Configuración</button>
+                <button class="menu-item flex items-center gap-4 w-full text-left p-5 rounded-2xl font-black text-slate-800 hover:bg-violet-50 hover:text-violet-800 transition-all text-xs uppercase italic tracking-widest border-2 border-transparent hover:border-violet-100 shadow-sm" data-view="calendar"><span>🗓️</span> Agenda de Saltos</button>
+                <button class="menu-item flex items-center gap-4 w-full text-left p-5 rounded-2xl font-black text-slate-800 hover:bg-violet-50 hover:text-violet-800 transition-all text-xs uppercase italic tracking-widest border-2 border-transparent hover:border-violet-100 shadow-sm" data-view="productos"><span>🥤</span> Stock Kiosco</button>
+                <button class="menu-item flex items-center gap-4 w-full text-left p-5 rounded-2xl font-black text-slate-800 hover:bg-violet-50 hover:text-violet-800 transition-all text-xs uppercase italic tracking-widest border-2 border-transparent hover:border-violet-100 shadow-sm" data-view="caja"><span>💰</span> Arqueo de Caja</button>
+                <button class="menu-item flex items-center gap-4 w-full text-left p-5 rounded-2xl font-black text-slate-800 hover:bg-violet-50 hover:text-violet-800 transition-all text-xs uppercase italic tracking-widest border-2 border-transparent hover:border-violet-100 shadow-sm" data-view="stats"><span>📊</span> Estadísticas</button>
+                <button class="menu-item flex items-center gap-4 w-full text-left p-5 rounded-2xl font-black text-slate-800 hover:bg-violet-50 hover:text-violet-800 transition-all text-xs uppercase italic tracking-widest border-2 border-transparent hover:border-violet-100 shadow-sm" data-view="configuracion"><span>⚙️</span> Tarifas Maestro</button>
             </div>
         </nav>
-        <div id="menu-overlay" class="fixed inset-0 bg-slate-900/60 z-40 hidden"></div>
+        <div id="menu-overlay" class="fixed inset-0 bg-slate-950/70 z-40 hidden"></div>
 
-        <main class="pt-28 pb-12 px-4 max-w-6xl mx-auto">
+        <main class="pt-32 pb-12 px-4 max-w-6xl mx-auto text-left">
             
             <!-- VISTA: CALENDARIO -->
             <div id="calendar-view" class="view-container">
-                <div class="flex justify-between items-center bg-white p-6 rounded-[2.5rem] shadow-xl mb-8 border-2">
-                    <button id="prev-month-btn" class="p-3 text-slate-400 font-black hover:text-violet-700 transition-colors text-2xl">◀</button>
-                    <h2 id="current-month-year" class="text-2xl font-black text-violet-800 uppercase italic tracking-tighter text-center"></h2>
-                    <button id="next-month-btn" class="p-3 text-slate-400 font-black hover:text-violet-700 transition-colors text-2xl">▶</button>
+                <div class="flex justify-between items-center bg-white p-6 rounded-[2.5rem] shadow-xl mb-10 border-4 border-slate-50 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 p-10 opacity-[0.03] text-8xl font-black italic select-none">AGENDA</div>
+                    <button id="prev-month-btn" class="p-4 text-slate-400 font-black hover:text-violet-700 transition-all text-2xl active:scale-90">◀</button>
+                    <h2 id="current-month-year" class="text-3xl font-black text-violet-800 uppercase italic tracking-tighter text-center leading-none"></h2>
+                    <button id="next-month-btn" class="p-4 text-slate-400 font-black hover:text-violet-700 transition-all text-2xl active:scale-90">▶</button>
                 </div>
                 <div id="calendar-grid" class="grid grid-cols-7 gap-4"></div>
             </div>
 
             <!-- VISTA: PRODUCTOS (STOCK) -->
             <div id="productos-view" class="view-container is-hidden">
-                <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 text-left gap-6">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 text-left gap-6">
                     <div>
-                        <h2 class="text-5xl font-black italic uppercase text-slate-900 leading-none tracking-tighter">Stock</h2>
-                        <p class="text-slate-500 font-bold text-[11px] uppercase mt-2 italic tracking-widest">Gestión de Inventario Kiosco</p>
+                        <h2 class="text-5xl font-black italic uppercase text-slate-900 leading-none tracking-tighter">Inventario</h2>
+                        <p class="text-slate-500 font-bold text-[11px] uppercase mt-2 italic tracking-[0.2em] font-black">Control Maestro de Mercadería</p>
                     </div>
-                    <button id="add-product-btn" class="bg-violet-700 text-white px-10 py-5 rounded-[1.5rem] font-black shadow-xl text-[11px] active:scale-95 transition-all border-b-4 border-violet-900">+ NUEVO ARTÍCULO</button>
+                    <button id="add-product-btn" class="bg-violet-700 text-white px-10 py-5 rounded-[2rem] font-black shadow-2xl text-[11px] active:scale-95 transition-all border-b-8 border-violet-900">+ AGREGAR ARTÍCULO</button>
                 </div>
                 
-                <div id="product-form-container" class="bg-white p-10 rounded-[3rem] shadow-2xl mb-12 is-hidden border-4 border-violet-100 text-left relative overflow-hidden text-sm">
-                    <h3 class="text-2xl font-black text-violet-900 mb-8 uppercase italic tracking-tighter">✨ Nuevo Producto</h3>
+                <div id="product-form-container" class="bg-white p-10 rounded-[3rem] shadow-2xl mb-12 is-hidden border-4 border-violet-50 text-left relative overflow-hidden">
+                    <h3 class="text-2xl font-black text-violet-900 mb-8 uppercase italic tracking-tighter">✨ Registro de Producto</h3>
                     <form id="product-form" class="grid grid-cols-1 md:grid-cols-3 gap-8">
                         <div class="md:col-span-2">
-                            <label class="text-[10px] font-black uppercase text-slate-500 ml-2 italic">Nombre Comercial</label>
-                            <input type="text" id="prod-name" placeholder="Ej: Coca Cola 500ml" class="w-full p-5 bg-slate-50 rounded-2xl font-bold border-2 border-slate-100 focus:ring-4 focus:ring-violet-50 outline-none" required>
+                            <label class="text-[10px] font-black uppercase text-slate-600 ml-2 italic">Nombre Comercial</label>
+                            <input type="text" id="prod-name" placeholder="Ej: Bebida 500ml" class="w-full p-5 bg-slate-50 rounded-2xl font-black text-xl italic border-2 border-slate-100 focus:ring-8 focus:ring-violet-50 outline-none transition-all" required>
                         </div>
                         <div>
-                            <label class="text-[10px] font-black uppercase text-slate-500 ml-2 italic">Stock Inicial</label>
-                            <input type="number" id="prod-stock" class="w-full p-5 bg-slate-50 rounded-2xl font-bold border-2 border-slate-100 outline-none" required min="0">
+                            <label class="text-[10px] font-black uppercase text-slate-600 ml-2 italic">Stock Inicial</label>
+                            <input type="number" id="prod-stock" class="w-full p-5 bg-slate-50 rounded-2xl font-black text-xl italic border-2 border-slate-100 focus:ring-8 focus:ring-violet-50 outline-none text-center" required min="0">
                         </div>
                         <div>
-                            <label class="text-[10px] font-black uppercase text-slate-500 ml-2 italic">Costo de Bulto ($)</label>
-                            <input type="number" id="prod-batch-cost" class="w-full p-5 bg-violet-50 rounded-2xl font-black text-xl text-violet-700 border-2 border-violet-100 outline-none" required step="0.01">
+                            <label class="text-[10px] font-black uppercase text-slate-600 ml-2 italic">Costo de Bulto ($)</label>
+                            <input type="number" id="prod-batch-cost" class="w-full p-5 bg-violet-50 rounded-2xl font-black text-2xl text-violet-700 border-2 border-violet-100 outline-none focus:ring-8 focus:ring-violet-50" required step="0.01">
                         </div>
                         <div>
-                            <label class="text-[10px] font-black uppercase text-slate-500 ml-2 italic">Unidades x Bulto</label>
-                            <input type="number" id="prod-batch-qty" class="w-full p-5 bg-slate-50 rounded-2xl font-bold border-2 border-slate-100 outline-none" required min="1" value="1">
+                            <label class="text-[10px] font-black uppercase text-slate-600 ml-2 italic">Unidades por Bulto</label>
+                            <input type="number" id="prod-batch-qty" class="w-full p-5 bg-slate-50 rounded-2xl font-black text-xl border-2 border-slate-100 outline-none text-center focus:ring-8 focus:ring-violet-50" required min="1" value="1">
                         </div>
                         <div>
-                            <label class="text-[10px] font-black uppercase text-slate-500 ml-2 italic">Margen (%)</label>
-                            <input type="number" id="prod-profit-pct" class="w-full p-5 bg-orange-50 rounded-2xl font-bold border-2 border-orange-100 outline-none" value="40">
+                            <label class="text-[10px] font-black uppercase text-slate-600 ml-2 italic">Margen de Ganancia (%)</label>
+                            <input type="number" id="prod-profit-pct" class="w-full p-5 bg-orange-50 rounded-2xl font-black text-xl border-2 border-orange-100 outline-none text-center focus:ring-8 focus:ring-orange-50" value="40">
                         </div>
-                        <div class="md:col-span-3 p-8 bg-slate-900 rounded-[2.5rem] flex flex-col md:flex-row justify-between items-center gap-8 shadow-2xl">
-                            <div class="text-left">
-                                <span class="text-[10px] font-black text-green-400 uppercase block mb-1 italic tracking-widest leading-none">Precio Final Sugerido</span>
-                                <span id="prod-suggested-price" class="text-6xl font-black text-white italic tracking-tighter leading-none">$0</span>
+                        <div class="md:col-span-3 p-10 bg-slate-950 rounded-[3.5rem] flex flex-col md:flex-row justify-between items-center gap-10 shadow-2xl border-t-[10px] border-violet-500">
+                            <div class="text-left leading-none">
+                                <span class="text-[11px] font-black text-green-400 uppercase block mb-3 italic tracking-widest">Precio de Venta Sugerido</span>
+                                <span id="prod-suggested-price" class="text-7xl font-black text-white italic tracking-tighter">$0</span>
                             </div>
                             <div class="flex gap-4 w-full md:w-auto">
-                                <button type="button" id="cancel-product-btn" class="flex-1 px-8 py-5 text-slate-400 font-black uppercase text-xs">Cancelar</button>
-                                <button type="submit" class="flex-2 bg-green-600 text-white px-14 py-6 rounded-2xl font-black uppercase text-xs shadow-xl active:scale-95 transition-all border-b-8 border-green-800">Cargar Ficha</button>
+                                <button type="button" id="cancel-product-btn" class="flex-1 px-8 py-5 text-slate-500 font-black uppercase text-[10px] italic">Descartar</button>
+                                <button type="submit" class="flex-2 bg-green-600 text-white px-14 py-7 rounded-3xl font-black uppercase text-xs shadow-xl active:scale-95 transition-all border-b-8 border-green-900 italic tracking-widest">Confirmar Alta</button>
                             </div>
                         </div>
                         <input type="hidden" id="prod-unit-cost">
                     </form>
                 </div>
-                <!-- Grilla de Inventario con botones -->
-                <div id="product-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 text-left"></div>
+                <div id="product-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10"></div>
             </div>
 
             <!-- VISTA: CAJA -->
             <div id="caja-view" class="view-container is-hidden">
-                <h2 class="text-5xl font-black mb-12 text-center uppercase italic text-slate-900 tracking-tighter">Arqueo de Caja</h2>
-                <div class="bg-slate-900 p-12 rounded-[4.5rem] text-white mb-10 shadow-2xl text-center border-t-[12px] border-violet-600 relative overflow-hidden">
-                    <p class="text-[11px] font-black text-violet-400 uppercase mb-3 tracking-[0.4em] italic leading-none">Cierre Total AeroJump v2026</p>
-                    <p id="caja-total-combined" class="text-8xl font-black italic tracking-tighter leading-none">$0</p>
+                <h2 class="text-5xl font-black mb-12 text-center uppercase italic text-slate-900 tracking-tighter">Arqueo Diario</h2>
+                <div class="bg-slate-950 p-16 rounded-[4.5rem] text-white mb-12 shadow-2xl text-center relative overflow-hidden border-t-[14px] border-violet-600">
+                    <p class="text-[12px] font-black text-violet-400 uppercase mb-4 tracking-[0.4em] italic leading-none">Total Recaudado AeroJump</p>
+                    <p id="caja-total-combined" class="text-[7rem] font-black italic tracking-tighter text-white leading-none">$0</p>
                 </div>
-                <div id="caja-daily-list" class="space-y-4"></div>
+                <div id="caja-daily-list" class="space-y-6"></div>
             </div>
 
             <!-- VISTA: CONFIGURACIÓN -->
             <div id="configuracion-view" class="view-container is-hidden max-w-md mx-auto">
-                <div class="bg-white p-12 rounded-[4rem] shadow-2xl border-2 border-slate-100 text-left">
-                    <h2 class="text-3xl font-black mb-10 uppercase italic text-center text-slate-900">Ajustes</h2>
-                    <form id="config-form" class="space-y-8">
+                <div class="bg-white p-12 rounded-[4rem] shadow-2xl border-4 border-slate-100 text-left">
+                    <h2 class="text-3xl font-black mb-10 uppercase italic text-center text-slate-900 tracking-tighter leading-none">Configuración de Tarifas</h2>
+                    <form id="config-form" class="space-y-10">
                         <div>
-                            <label class="block text-[11px] font-black text-slate-600 uppercase mb-2 ml-2 italic tracking-widest">Costo Salto 1 Hora ($)</label>
-                            <input type="number" id="config-court1-price" class="w-full p-6 bg-slate-50 rounded-3xl font-black text-3xl text-violet-700 outline-none border-2 border-slate-100 focus:ring-8 focus:ring-violet-50 transition-all">
+                            <label class="block text-[11px] font-black text-slate-600 uppercase mb-3 ml-2 italic tracking-widest font-black">Costo Salto 1 Hora ($)</label>
+                            <input type="number" id="config-court1-price" class="w-full p-6 bg-slate-50 rounded-[2rem] font-black text-4xl text-violet-700 outline-none border-2 border-slate-100 focus:ring-8 focus:ring-violet-50 transition-all shadow-inner text-center">
                         </div>
-                        <button type="submit" class="w-full bg-slate-900 text-white py-6 rounded-[2.5rem] font-black uppercase italic border-b-8 border-black active:scale-95 transition-all shadow-xl">Actualizar Tarifas</button>
+                        <button type="submit" class="w-full bg-slate-950 text-white py-7 rounded-[2.5rem] font-black uppercase italic border-b-8 border-black active:scale-95 transition-all shadow-2xl tracking-widest">Actualizar Valores</button>
                     </form>
                 </div>
             </div>
 
             <!-- VISTA: ESTADÍSTICAS -->
             <div id="stats-view" class="view-container is-hidden text-left">
-                <h2 class="text-5xl font-black mb-12 uppercase italic text-slate-900 tracking-tighter">Rankings</h2>
+                <h2 class="text-5xl font-black mb-12 uppercase italic text-slate-900 tracking-tighter leading-none">Rankings AeroJump</h2>
                 <div id="stats-list" class="space-y-4"></div>
             </div>
         </main>
     </div>
 
     <!-- ============================================= -->
-    <!-- SISTEMA DE MODALES                           -->
+    <!-- SISTEMA DE MODALES (VENTANAS EXTRA)         -->
     <!-- ============================================= -->
 
     <!-- MODAL RESERVA -->
     <div id="booking-modal" class="modal">
         <div class="modal-content max-w-3xl">
-            <div class="modal-header text-left bg-slate-50">
-                <h3 id="booking-modal-title" class="text-3xl font-black text-violet-900 uppercase italic tracking-tighter leading-none">Reservar Salto</h3>
-                <p class="text-[9px] text-slate-500 font-bold uppercase mt-1 tracking-widest">Capacidad limitada a 30 por hora</p>
+            <div class="modal-header text-left bg-slate-900 text-white border-none p-10 leading-none">
+                <h3 id="booking-modal-title" class="text-4xl font-black uppercase italic tracking-tighter leading-none">Reservar Salto</h3>
+                <p class="text-[10px] text-violet-400 font-bold uppercase mt-2 tracking-widest italic">AeroJump Gualeguaychú</p>
             </div>
             <form id="booking-form" class="flex flex-col overflow-hidden text-left">
                 <div class="modal-body custom-scrollbar bg-white">
                     <input type="hidden" id="booking-id"><input type="hidden" id="booking-date">
-                    <div class="space-y-10">
+                    <div class="space-y-12">
                         <div>
-                            <label class="text-[10px] font-black uppercase text-slate-600 ml-2 italic tracking-widest">Responsable del Turno</label>
-                            <input type="text" id="teamName" class="w-full p-7 bg-slate-50 rounded-[2.5rem] font-black text-3xl italic outline-none focus:ring-8 focus:ring-violet-50 border-2 border-slate-100 transition-all" required placeholder="Nombre..." autocomplete="off">
-                            <div id="teamName-suggestions" class="absolute z-50 bg-white shadow-2xl rounded-3xl is-hidden w-full max-w-md border-2 border-slate-100 overflow-hidden mt-2"></div>
+                            <label class="text-[10px] font-black uppercase text-slate-600 ml-4 italic tracking-widest block mb-2">Responsable / Cliente</label>
+                            <input type="text" id="teamName" class="w-full p-7 bg-slate-50 rounded-[2.5rem] font-black text-4xl italic outline-none focus:ring-[12px] focus:ring-violet-50 border-2 border-slate-100 transition-all tracking-tighter" required placeholder="Nombre Completo..." autocomplete="off">
+                            <div id="teamName-suggestions" class="absolute z-50 bg-white shadow-2xl rounded-3xl is-hidden w-full max-w-md border-2 border-slate-100 overflow-hidden mt-3"></div>
                         </div>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                            <div class="p-8 bg-slate-50 rounded-[3rem] border-2 border-slate-100 text-center relative overflow-hidden">
-                                <label class="text-[10px] font-black uppercase text-slate-600 block mb-4 italic tracking-widest font-black">Cantidad de Saltadores</label>
-                                <div class="flex items-center justify-center gap-8">
-                                    <button type="button" onclick="window.adjustJumpers(-1)" class="w-16 h-16 bg-white border-2 border-slate-100 rounded-2xl font-black shadow-lg text-2xl active:scale-90 transition-all">-</button>
-                                    <input type="number" id="peopleCount" class="w-24 text-center font-black text-5xl bg-transparent outline-none italic leading-none" value="1" min="1" max="30">
-                                    <button type="button" onclick="window.adjustJumpers(1)" class="w-16 h-16 bg-white border-2 border-slate-100 rounded-2xl font-black shadow-lg text-2xl active:scale-90 transition-all">+</button>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                            <div class="p-8 bg-slate-50 rounded-[3rem] border-2 border-slate-100 text-center relative overflow-hidden group">
+                                <label class="text-[11px] font-black uppercase text-slate-600 block mb-5 italic tracking-widest font-black">Cantidad de Personas</label>
+                                <div class="flex items-center justify-center gap-10">
+                                    <button type="button" onclick="window.adjustJumpers(-1)" class="w-20 h-20 bg-white border-2 border-slate-200 rounded-[2rem] font-black shadow-xl text-3xl active:scale-90 transition-all hover:bg-slate-50">-</button>
+                                    <input type="number" id="peopleCount" class="w-24 text-center font-black text-6xl bg-transparent outline-none italic leading-none text-slate-900" value="1" min="1" max="30">
+                                    <button type="button" onclick="window.adjustJumpers(1)" class="w-20 h-20 bg-white border-2 border-slate-200 rounded-[2rem] font-black shadow-xl text-3xl active:scale-90 transition-all hover:bg-slate-50">+</button>
+                                </div>
+                                <p class="text-[9px] font-black text-slate-400 mt-6 uppercase italic tracking-[0.2em]">Máximo permitido: 30</p>
+                            </div>
+                            <div class="p-8 bg-violet-50 rounded-[3rem] border-2 border-violet-100 flex flex-col justify-center text-center relative overflow-hidden">
+                                <span class="text-[11px] font-black text-violet-400 uppercase mb-2 italic tracking-widest">Tarifa Base por Hora</span>
+                                <div class="flex items-center justify-center">
+                                    <span class="text-4xl font-black text-violet-300 mr-2 italic">$</span>
+                                    <input type="number" id="costPerHour" class="bg-transparent font-black text-6xl text-violet-700 outline-none italic text-center leading-none tracking-tighter w-full">
                                 </div>
                             </div>
-                            <div class="p-8 bg-violet-50 rounded-[3rem] border-2 border-violet-100 flex flex-col justify-center text-center">
-                                <span class="text-[10px] font-black text-violet-400 uppercase mb-2 italic tracking-widest">Costo Unitario</span>
-                                <input type="number" id="costPerHour" class="bg-transparent font-black text-5xl text-violet-700 outline-none italic text-center leading-none">
-                            </div>
                         </div>
                         <div>
-                            <label class="text-[10px] font-black uppercase text-slate-600 ml-4 block mb-4 italic tracking-widest">Disponibilidad de Cupos</label>
+                            <label class="text-[10px] font-black uppercase text-slate-600 ml-4 block mb-6 italic tracking-widest">Disponibilidad de Cupos por Horario</label>
                             <div id="court-hours-list" class="grid grid-cols-3 sm:grid-cols-5 gap-4"></div>
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer flex flex-col sm:flex-row justify-between items-center gap-8 bg-slate-50">
+                <div class="modal-footer flex flex-col sm:flex-row justify-between items-center gap-10 bg-slate-900 text-white p-12">
                     <div class="text-left leading-none">
-                        <span class="text-[10px] font-black text-slate-500 uppercase tracking-widest block mb-2 italic font-black">Total Liquidación</span>
-                        <p id="booking-total" class="text-6xl font-black text-violet-800 italic tracking-tighter leading-none">$0</p>
+                        <span class="text-[11px] font-black text-violet-400 uppercase tracking-widest block mb-2 italic font-black leading-none">Total a Cobrar</span>
+                        <p id="booking-total" class="text-7xl font-black italic tracking-tighter leading-none text-white">$0</p>
                     </div>
                     <div class="flex gap-4 w-full sm:w-auto">
-                        <button type="button" onclick="window.closeModals()" class="flex-1 px-8 py-6 font-black text-slate-500 uppercase text-[10px] tracking-widest">Cancelar</button>
-                        <button type="submit" class="flex-2 bg-violet-600 text-white px-16 py-6 rounded-[2.5rem] font-black uppercase shadow-2xl active:scale-95 transition-all text-xs border-b-8 border-violet-950 italic">Confirmar Turno</button>
+                        <button type="button" onclick="window.closeModals()" class="flex-1 px-10 py-7 font-black text-slate-400 hover:text-white transition-colors uppercase text-[10px] tracking-widest">Cancelar</button>
+                        <button type="submit" class="flex-2 bg-violet-600 text-white px-20 py-7 rounded-[3rem] font-black uppercase shadow-2xl active:scale-95 transition-all text-sm border-b-8 border-violet-800 italic tracking-widest">Confirmar Salto</button>
                     </div>
                 </div>
                 <input type="checkbox" id="rentGrill" class="hidden"><input type="number" id="grillCost" class="hidden">
@@ -337,122 +359,139 @@
         </div>
     </div>
 
-    <!-- MODAL VENTAS REDISEÑADO (NUEVO VISUAL PREMIUM) -->
+    <!-- MODAL VENTAS REDISEÑADO (PRIORIDAD AL PEDIDO) -->
     <div id="sale-modal" class="modal">
-        <div class="modal-content max-w-5xl">
-            <div class="modal-header flex justify-between items-center text-left bg-slate-900 text-white border-none p-10">
+        <div class="modal-content max-w-6xl">
+            <div class="modal-header flex justify-between items-center text-left bg-slate-900 text-white border-none p-10 leading-none">
                 <div>
-                    <h3 class="text-4xl font-black text-orange-400 uppercase italic tracking-tighter leading-none">Caja Registradora</h3>
-                    <p class="text-[10px] text-slate-400 font-bold uppercase mt-1 tracking-[0.4em] italic">Venta Multiproducto AeroJump</p>
+                    <h3 class="text-4xl font-black text-orange-500 uppercase italic tracking-tighter leading-none">Caja de Kiosco</h3>
+                    <p class="text-[10px] text-slate-500 font-bold uppercase mt-2 tracking-[0.4em] italic font-black">Control de Mercadería AeroJump</p>
                 </div>
-                <button onclick="window.closeModals()" class="p-3 text-slate-500 hover:text-white transition-all"><svg class="w-12 h-12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M6 18L18 6M6 6l12 12"></path></svg></button>
+                <button onclick="window.closeModals()" class="p-4 text-slate-600 hover:text-white transition-all active:scale-90 leading-none"><svg class="w-12 h-12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="4"><path d="M6 18L18 6M6 6l12 12"></path></svg></button>
             </div>
 
-            <div class="bg-white border-b-4 border-slate-100 px-10 py-6">
-                <input type="text" id="sale-catalog-filter" class="w-full p-6 bg-slate-50 rounded-[2.5rem] font-black text-2xl border-2 border-slate-200 outline-none focus:border-violet-500 shadow-inner italic transition-all placeholder:text-slate-300" placeholder="🔍 Buscar artículo...">
+            <!-- Cabecera de búsqueda y métodos compacta -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-0 border-b-4 border-slate-100 bg-white">
+                <div class="lg:col-span-8 p-6 lg:p-8 bg-white flex items-center">
+                    <div class="relative w-full">
+                        <input type="text" id="sale-catalog-filter" class="w-full p-5 bg-slate-50 rounded-[2rem] font-black text-2xl border-2 border-slate-200 outline-none focus:border-violet-500 shadow-inner italic transition-all placeholder:text-slate-300" placeholder="🔍 Buscar Producto...">
+                    </div>
+                </div>
+                <div class="lg:col-span-4 p-6 lg:p-8 bg-slate-50 flex items-center justify-center gap-6 border-l-2">
+                    <label class="flex items-center gap-3 cursor-pointer group">
+                        <input type="radio" name="salePaymentMethod" value="efectivo" class="w-6 h-6 accent-orange-600 shadow-xl" checked>
+                        <span class="font-black text-[10px] uppercase tracking-widest text-slate-700 italic group-hover:text-orange-600 transition-colors">Efectivo 💵</span>
+                    </label>
+                    <label class="flex items-center gap-3 cursor-pointer group">
+                        <input type="radio" name="salePaymentMethod" value="mercadopago" class="w-6 h-6 accent-violet-600 shadow-xl">
+                        <span class="font-black text-[10px] uppercase tracking-widest text-slate-700 italic group-hover:text-violet-600 transition-colors">M.Pago 📱</span>
+                    </label>
+                </div>
             </div>
 
-            <div class="modal-body custom-scrollbar bg-slate-50 p-8">
-                <div id="sale-catalog-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <!-- Tarjetas inyectadas por JS -->
+            <!-- Grilla Principal -->
+            <div class="modal-body custom-scrollbar bg-slate-50 p-6 lg:p-10">
+                <div id="sale-catalog-grid" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
+                    <!-- Tarjetas de Productos -->
                 </div>
             </div>
             
-            <div class="modal-footer bg-slate-900 text-white p-12">
+            <div class="modal-footer bg-slate-950 text-white p-10 lg:p-14">
                 <div class="flex flex-col lg:flex-row justify-between items-center w-full gap-12">
-                    <div class="flex flex-col gap-6 w-full lg:w-auto text-left">
-                        <label class="text-[11px] font-black uppercase tracking-[0.3em] text-violet-400 italic font-black">Medio de Cobro</label>
-                        <div class="flex gap-6">
-                            <label class="flex-1 lg:w-56 flex items-center justify-center gap-4 bg-slate-800 p-6 rounded-[2rem] border-4 border-transparent has-[:checked]:border-orange-500 has-[:checked]:bg-slate-700 transition-all cursor-pointer group">
-                                <input type="radio" name="salePaymentMethod" value="efectivo" class="hidden" checked>
-                                <span class="font-black text-xs uppercase tracking-widest italic group-hover:text-orange-400">Efectivo 💵</span>
-                            </label>
-                            <label class="flex-1 lg:w-56 flex items-center justify-center gap-4 bg-slate-800 p-6 rounded-[2rem] border-4 border-transparent has-[:checked]:border-violet-500 has-[:checked]:bg-slate-700 transition-all cursor-pointer group">
-                                <input type="radio" name="salePaymentMethod" value="mercadopago" class="hidden">
-                                <span class="font-black text-xs uppercase tracking-widest italic group-hover:text-violet-400">M.Pago 📱</span>
-                            </label>
+                    <div class="text-left leading-none">
+                        <span class="text-[12px] font-black text-violet-400 uppercase tracking-widest block mb-2 italic leading-none font-black">Monto Total Pedido</span>
+                        <div class="flex items-baseline">
+                            <span class="text-4xl font-black text-violet-300 mr-2 italic">$</span>
+                            <span id="sale-total-display" class="text-[8rem] font-black italic tracking-tighter text-white leading-none">0</span>
                         </div>
                     </div>
                     
-                    <div class="text-right flex flex-col items-center lg:items-end leading-none">
-                        <span class="text-[12px] font-black text-violet-400 uppercase tracking-widest block mb-2 italic font-black">Subtotal General</span>
-                        <span id="sale-total-display" class="text-9xl font-black italic tracking-tighter text-white leading-none">$0</span>
-                    </div>
-                    
-                    <button id="confirm-sale-btn" class="w-full lg:w-80 bg-orange-500 text-white py-10 rounded-[3rem] font-black uppercase shadow-2xl disabled:opacity-10 transition-all active:scale-95 italic text-lg border-b-8 border-orange-800" disabled>Cerrar Caja</button>
+                    <button id="confirm-sale-btn" class="w-full lg:w-96 bg-orange-500 text-white py-12 rounded-[3.5rem] font-black uppercase shadow-2xl disabled:opacity-5 transition-all active:scale-95 italic text-2xl border-b-[12px] border-orange-800 tracking-tighter leading-none" disabled>Finalizar Venta AeroJump</button>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- MODAL REPOSICIÓN -->
-    <div id="restock-modal" class="modal"><div class="modal-content max-w-sm p-12 text-center border-4 border-violet-100">
-        <h3 class="text-3xl font-black text-violet-700 mb-10 uppercase italic tracking-tighter">📦 Reponer</h3>
-        <form id="restock-form" class="space-y-8 text-left">
-            <input type="hidden" id="restock-prod-id">
-            <div class="p-6 bg-slate-50 rounded-3xl border-2 border-slate-100 text-center mb-6">
-                <h4 id="restock-name" class="font-black text-slate-900 text-2xl uppercase italic leading-none mb-2"></h4>
-                <p class="text-[10px] font-black text-slate-500 uppercase italic">Stock Actual: <span id="restock-current-stock" class="text-violet-700 font-black"></span></p>
+    <div id="restock-modal" class="modal"><div class="modal-content max-w-sm">
+        <div class="modal-header text-left bg-violet-700 text-white border-none p-8 leading-none">
+            <h3 class="text-2xl font-black uppercase italic tracking-tighter">📦 Reponer Stock</h3>
+        </div>
+        <div class="modal-body custom-scrollbar p-10">
+            <form id="restock-form" class="space-y-10 text-left">
+                <input type="hidden" id="restock-prod-id">
+                <div class="p-8 bg-slate-50 rounded-[2.5rem] border-2 border-slate-100 text-center shadow-inner">
+                    <h4 id="restock-name" class="font-black text-slate-950 text-3xl uppercase italic leading-tight mb-3"></h4>
+                    <p class="text-[10px] font-black text-slate-500 uppercase italic leading-none">Saldo Actual: <span id="restock-current-stock" class="text-violet-700 font-black"></span> un.</p>
+                </div>
+                <div class="space-y-8">
+                    <div>
+                        <label class="text-[10px] font-black uppercase text-slate-500 italic ml-4 mb-2 block tracking-widest font-black">Unidades Ingresadas</label>
+                        <input type="number" id="restock-qty" class="w-full p-6 bg-slate-50 rounded-3xl font-black text-5xl text-center border-2 border-slate-100 focus:ring-8 focus:ring-violet-50 outline-none transition-all leading-none italic" required>
+                    </div>
+                    <div>
+                        <label class="text-[10px] font-black uppercase text-slate-500 italic ml-4 mb-2 block tracking-widest font-black">Costo Lote Completo ($)</label>
+                        <input type="number" id="restock-batch-cost" class="w-full p-6 bg-violet-50 rounded-3xl font-black text-5xl text-violet-800 text-center border-2 border-violet-100 outline-none focus:ring-8 focus:ring-violet-50 transition-all leading-none italic" required step="0.01">
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer p-10">
+            <div class="flex gap-4">
+                <button type="button" onclick="window.closeModals()" class="flex-1 py-6 font-black text-slate-400 uppercase text-[10px] tracking-widest italic">Cerrar</button>
+                <button type="submit" form="restock-form" class="flex-2 bg-violet-700 text-white px-10 py-7 rounded-[2.5rem] font-black shadow-2xl active:scale-95 transition-all border-b-8 border-violet-950 italic text-xs tracking-widest">Confirmar Ingreso</button>
             </div>
-            <div>
-                <label class="text-[10px] font-black uppercase text-slate-600 italic ml-4">Unidades Ingresadas</label>
-                <input type="number" id="restock-qty" class="w-full p-6 bg-slate-50 rounded-3xl font-black text-4xl text-center border-2 border-slate-100 focus:ring-8 focus:ring-violet-50 outline-none" required>
-            </div>
-            <div>
-                <label class="text-[10px] font-black uppercase text-slate-600 italic ml-4">Costo Total Lote ($)</label>
-                <input type="number" id="restock-batch-cost" class="w-full p-6 bg-violet-50 rounded-3xl font-black text-4xl text-violet-800 text-center border-2 border-violet-100 outline-none" required step="0.01">
-            </div>
-            <button type="submit" class="w-full bg-violet-700 text-white py-6 rounded-3xl font-black uppercase shadow-xl active:scale-95 border-b-8 border-violet-950 italic">Confirmar Ingreso</button>
-        </form>
+        </div>
     </div></div>
 
     <!-- MODAL EDITAR PRODUCTO -->
     <div id="edit-product-modal" class="modal"><div class="modal-content max-w-sm p-12 text-left border-4 border-slate-100">
-        <h3 class="text-3xl font-black text-slate-900 mb-10 uppercase italic leading-none">Editar Ficha</h3>
-        <form id="edit-product-form" class="space-y-6">
+        <h3 class="text-3xl font-black text-slate-900 mb-10 uppercase italic leading-none tracking-tighter">Editar Ficha</h3>
+        <form id="edit-product-form" class="space-y-8">
             <input type="hidden" id="edit-prod-id">
             <div>
-                <label class="text-[10px] font-black uppercase text-slate-600 ml-2 italic">Nombre del Producto</label>
-                <input type="text" id="edit-prod-name" class="w-full p-5 bg-slate-50 rounded-2xl font-black italic outline-none border-2 border-slate-100" required>
+                <label class="text-[10px] font-black uppercase text-slate-600 ml-4 italic mb-2 block tracking-widest font-black">Nombre Comercial</label>
+                <input type="text" id="edit-prod-name" class="w-full p-6 bg-slate-50 rounded-[2rem] font-black text-2xl italic outline-none border-2 border-slate-100 focus:ring-8 focus:ring-violet-50 transition-all" required>
             </div>
-            <div class="grid grid-cols-2 gap-4">
+            <div class="grid grid-cols-2 gap-6 leading-none">
                 <div>
-                    <label class="text-[10px] font-black uppercase text-slate-600 ml-2 italic">Costo Unidad ($)</label>
-                    <input type="number" id="edit-prod-cost" class="w-full p-4 bg-slate-50 rounded-2xl font-bold border-2 border-slate-100" required step="0.01">
+                    <label class="text-[10px] font-black uppercase text-slate-600 ml-4 italic mb-2 block font-black">Costo Unidad ($)</label>
+                    <input type="number" id="edit-prod-cost" class="w-full p-5 bg-slate-50 rounded-[1.5rem] font-black text-xl border-2 border-slate-100 leading-none" required step="0.01">
                 </div>
                 <div>
-                    <label class="text-[10px] font-black uppercase text-slate-600 ml-2 italic">Precio Venta ($)</label>
-                    <input type="number" id="edit-prod-price" class="w-full p-4 bg-violet-50 rounded-2xl font-black text-violet-700 border-2 border-violet-200" required step="0.01">
+                    <label class="text-[10px] font-black uppercase text-slate-600 ml-4 italic mb-2 block font-black">Precio Venta ($)</label>
+                    <input type="number" id="edit-prod-price" class="w-full p-5 bg-violet-50 rounded-[1.5rem] font-black text-xl text-violet-700 border-2 border-violet-200 leading-none" required step="0.01">
                 </div>
             </div>
             <div>
-                <label class="text-[10px] font-black uppercase text-slate-600 ml-2 italic">Stock en Estantería</label>
-                <input type="number" id="edit-prod-stock" class="w-full p-5 bg-slate-50 rounded-2xl font-black border-2 border-slate-100" required>
+                <label class="text-[10px] font-black uppercase text-slate-600 ml-4 italic mb-2 block tracking-widest font-black">Stock en Estantería</label>
+                <input type="number" id="edit-prod-stock" class="w-full p-6 bg-slate-50 rounded-[2rem] font-black text-4xl border-2 border-slate-100 text-center leading-none italic" required>
             </div>
-            <button type="submit" class="w-full bg-slate-900 text-white py-6 rounded-3xl font-black shadow-2xl uppercase italic active:scale-95 border-b-8 border-black">Guardar Ficha</button>
+            <button type="submit" class="w-full bg-slate-950 text-white py-8 rounded-[3rem] font-black shadow-2xl uppercase italic active:scale-95 border-b-8 border-black text-sm tracking-widest mt-6">Guardar Ficha</button>
         </form>
     </div></div>
 
-    <!-- OTROS MODALES -->
+    <!-- MODAL OPCIONES DÍA -->
     <div id="options-modal" class="modal"><div class="modal-content max-w-sm p-10 text-center border-4 border-violet-100">
-        <h3 class="text-3xl font-black mb-10 text-slate-900 uppercase italic tracking-tighter">Turnos del Día</h3>
-        <div id="daily-bookings-list" class="space-y-4 mb-10 text-left custom-scrollbar max-h-72 overflow-y-auto italic pr-2"></div>
-        <button id="add-new-booking-btn" class="w-full bg-violet-700 text-white py-7 rounded-3xl font-black shadow-xl uppercase text-xs active:scale-95 border-b-8 border-violet-950 italic">+ AGREGAR TURNO</button>
-        <button onclick="window.closeModals()" class="mt-6 text-slate-400 font-black uppercase text-[10px] tracking-widest hover:text-slate-700 transition-colors italic">Volver</button>
+        <h3 class="text-3xl font-black mb-10 text-slate-900 uppercase italic tracking-tighter leading-none">Turnos del Día</h3>
+        <div id="daily-bookings-list" class="space-y-4 mb-10 text-left custom-scrollbar max-h-[25rem] overflow-y-auto italic pr-2"></div>
+        <button id="add-new-booking-btn" class="w-full bg-violet-700 text-white py-7 rounded-[2rem] font-black shadow-xl uppercase text-xs active:scale-95 border-b-8 border-violet-950 italic tracking-widest">+ AGREGAR TURNO</button>
+        <button onclick="window.closeModals()" class="mt-6 text-slate-400 font-black uppercase text-[10px] tracking-widest hover:text-slate-800 transition-colors italic leading-none">Volver</button>
     </div></div>
 
+    <!-- OVERLAY CARGA -->
     <div id="message-overlay" class="modal bg-white/98 backdrop-blur-xl">
-        <div class="flex flex-col items-center justify-center min-h-screen text-center p-10">
-            <svg width="150" height="150" viewBox="0 0 100 100" class="mb-10">
-                <path d="M10 80 Q 50 80 90 80" stroke="#7c3aed" stroke-width="10" fill="none" stroke-linecap="round" class="trampoline-line"/>
-                <g class="jumping-child"><circle cx="50" cy="30" r="14" fill="#f97316"/><line x1="50" y1="44" x2="50" y2="75" stroke="#0f172a" stroke-width="7" stroke-linecap="round"/></g>
+        <div class="flex flex-col items-center justify-center min-h-screen text-center p-10 leading-none">
+            <svg width="160" height="160" viewBox="0 0 100 100" class="mb-12 shadow-2xl rounded-full">
+                <path d="M10 80 Q 50 80 90 80" stroke="#7c3aed" stroke-width="12" fill="none" stroke-linecap="round" class="trampoline-line"/>
+                <g class="jumping-child"><circle cx="50" cy="30" r="15" fill="#f97316"/><line x1="50" y1="45" x2="50" y2="78" stroke="#0f172a" stroke-width="8" stroke-linecap="round"/></g>
             </svg>
-            <p id="message-text" class="text-4xl font-black text-slate-900 uppercase italic tracking-tighter leading-none"></p>
+            <p id="message-text" class="text-5xl font-black text-slate-950 uppercase italic tracking-tighter leading-none"></p>
         </div>
     </div>
 
     <!-- ============================================= -->
-    <!-- LÓGICA DE LA APLICACIÓN                     -->
+    <!-- LÓGICA CORE v2026                            -->
     <!-- ============================================= -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
@@ -487,12 +526,12 @@
         const monthNames = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
         let currentMonthDate = new Date();
 
-        // ELEMENTOS DOM
+        // ELEMENTOS DOM GLOBALES
         const calendarGrid = document.getElementById('calendar-grid');
         const currentMonthYearEl = document.getElementById('current-month-year');
         const courtHoursList = document.getElementById('court-hours-list');
 
-        // --- AUTH & INIT ---
+        // --- AUTH CONTROL ---
         onAuthStateChanged(auth, async (u) => {
             if (u) {
                 user = u;
@@ -514,8 +553,9 @@
             syncProducts();
         }
 
+        // --- CONFIGURACIÓN DE NAVEGACIÓN (BOTONES ARREGLADOS) ---
         function setupAppListeners() {
-            // Hamburguesa Arreglada
+            // Hamburguesa
             document.getElementById('menu-btn').onclick = () => {
                 document.getElementById('main-menu').classList.toggle('is-open');
                 document.getElementById('menu-overlay').classList.toggle('hidden');
@@ -525,7 +565,7 @@
                 document.getElementById('menu-overlay').classList.add('hidden');
             };
 
-            // Venta Header Arreglado
+            // Botón Venta Header
             document.getElementById('header-sale-btn').onclick = () => {
                 cartItems = {};
                 document.getElementById('sale-catalog-filter').value = '';
@@ -533,13 +573,18 @@
                 document.getElementById('sale-modal').classList.add('is-open');
             };
 
-            // Botones Menú Arreglados
+            // Botones Menú Lateral (Cierre corregido)
             document.querySelectorAll('.menu-item').forEach(btn => {
                 btn.onclick = (e) => {
                     const targetView = e.currentTarget.dataset.view;
                     document.querySelectorAll('.view-container').forEach(v => v.classList.add('is-hidden'));
-                    document.getElementById(`${targetView}-view`).classList.remove('is-hidden');
+                    const target = document.getElementById(`${targetView}-view`);
+                    if(target) target.classList.remove('is-hidden');
+                    
                     if(targetView === 'caja') loadCajaData();
+                    if(targetView === 'stats') loadStatsData();
+                    if(targetView === 'configuracion') loadConfigDataIntoForm();
+                    
                     document.getElementById('main-menu').classList.remove('is-open');
                     document.getElementById('menu-overlay').classList.add('hidden');
                 };
@@ -561,7 +606,11 @@
             const occupancy = getOccupancyForDay(dateStr);
             const currentBooking = allMonthBookings.find(b => b.id === editingId);
             const selectedHours = currentBooking ? currentBooking.courtHours : [];
-            if (currentBooking) { occupancy[currentBooking.courtHours[0]] -= parseInt(currentBooking.peopleCount); }
+            
+            if (currentBooking) {
+                const myCount = parseInt(currentBooking.peopleCount) || 0;
+                selectedHours.forEach(h => { if(occupancy[h] !== undefined) occupancy[h] -= myCount; });
+            }
             
             if(!courtHoursList) return;
             courtHoursList.innerHTML = '';
@@ -571,13 +620,13 @@
                 const btn = document.createElement('button');
                 btn.type = "button";
                 btn.className = `time-slot ${isFull ? 'disabled' : ''} ${selectedHours.includes(h) ? 'selected' : ''}`;
-                btn.innerHTML = `<span class="font-black text-lg">${h}:00</span><span class="capacity-info ${available < 5 ? 'text-red-700' : 'text-slate-500'}">${available} libres</span>`;
+                btn.innerHTML = `<span class="font-black text-xl leading-none italic">${h}:00</span><span class="capacity-info ${available < 5 ? 'text-red-700' : 'text-slate-500'}">${available} libres</span>`;
                 if (!isFull) { btn.onclick = () => { btn.classList.toggle('selected'); updateBookingPrice(); }; }
                 courtHoursList.appendChild(btn);
             });
         }
 
-        // --- CATALOGO VENTA (REDiseñado Visual) ---
+        // --- CATALOGO VENTA (VISUAL PREMIUM) ---
         function renderSaleCatalog(filter = "") {
             const container = document.getElementById('sale-catalog-grid');
             if(!container) return;
@@ -590,15 +639,15 @@
                 card.className = 'product-sale-card';
                 card.innerHTML = `
                     <div class="text-left mb-6 leading-none">
-                        <p class="font-black text-sm uppercase text-slate-900 leading-tight mb-2 italic">${p.name}</p>
-                        <span class="text-[9px] font-black px-2 py-1 bg-violet-100 text-violet-800 rounded-lg uppercase tracking-widest leading-none">Stock: ${p.stock} un.</span>
+                        <p class="font-black text-sm uppercase text-slate-950 leading-tight mb-2 italic">${p.name}</p>
+                        <span class="text-[9px] font-black px-3 py-1.5 bg-violet-100 text-violet-800 rounded-xl uppercase tracking-widest leading-none shadow-inner">Stock: ${p.stock} un.</span>
                     </div>
-                    <div class="flex justify-between items-center bg-slate-900 p-3 rounded-2xl shadow-xl">
-                        <strong class="text-2xl font-black text-white italic tracking-tighter leading-none ml-2">$${p.salePrice}</strong>
+                    <div class="flex justify-between items-center bg-slate-950 p-3 rounded-[1.5rem] shadow-2xl border-2 border-slate-900 transition-all hover:bg-black">
+                        <strong class="text-3xl font-black text-white italic tracking-tighter leading-none ml-2">$${p.salePrice}</strong>
                         <div class="flex items-center gap-3">
-                            <button onclick="window.updateCatalogQty('${p.id}', -1)" class="w-12 h-12 bg-white/10 rounded-xl font-black text-white hover:bg-red-500 transition-all text-xl">-</button>
-                            <span class="w-8 text-center font-black text-2xl italic ${qty > 0 ? 'text-orange-400' : 'text-white/20'}">${qty}</span>
-                            <button onclick="window.updateCatalogQty('${p.id}', 1)" class="w-12 h-12 bg-white/10 rounded-xl font-black text-white hover:bg-green-600 transition-all text-xl" ${qty >= p.stock ? 'disabled' : ''}>+</button>
+                            <button onclick="window.updateCatalogQty('${p.id}', -1)" class="w-12 h-12 bg-white/10 rounded-2xl font-black text-white hover:bg-red-600 transition-all text-2xl active:scale-90">-</button>
+                            <span class="w-8 text-center font-black text-3xl italic ${qty > 0 ? 'text-orange-400' : 'text-white/20'}">${qty}</span>
+                            <button onclick="window.updateCatalogQty('${p.id}', 1)" class="w-12 h-12 bg-white/10 rounded-2xl font-black text-white hover:bg-green-600 transition-all text-2xl active:scale-90" ${qty >= p.stock ? 'disabled' : ''}>+</button>
                         </div>
                     </div>
                 `;
@@ -624,13 +673,15 @@
                 const p = allProducts.find(x => x.id === id);
                 if(p) total += (p.salePrice * cartItems[id]);
             });
-            document.getElementById('sale-total-display').textContent = `$${total.toLocaleString()}`;
+            document.getElementById('sale-total-display').textContent = `${total.toLocaleString()}`;
             document.getElementById('confirm-sale-btn').disabled = total <= 0;
         }
 
         document.getElementById('confirm-sale-btn').onclick = async () => {
             const btn = document.getElementById('confirm-sale-btn');
-            const method = document.querySelector('input[name="salePaymentMethod"]:checked').value;
+            const methodEl = document.querySelector('input[name="salePaymentMethod"]:checked');
+            if(!methodEl) return alert("Selecciona método de pago");
+            const method = methodEl.value;
             btn.disabled = true;
             try {
                 const batch = writeBatch(db);
@@ -645,12 +696,12 @@
                     batch.update(getPublicDoc("products", id), { stock: p.stock - qty });
                 }
                 await batch.commit();
-                showMessage("Cobro finalizado AeroJump!");
+                showMessage("Cobro finalizado con éxito AeroJump!");
                 setTimeout(() => { hideMessage(); window.closeModals(); }, 1500);
             } catch (err) { alert(err.message); btn.disabled = false; }
         };
 
-        // --- LÓGICA CALENDARIO ---
+        // --- CALENDARIO & SYNC ---
         function syncBookings() {
             const monthYear = `${currentMonthDate.getFullYear()}-${String(currentMonthDate.getMonth() + 1).padStart(2, '0')}`;
             onSnapshot(query(getPublicCollection("bookings"), where("monthYear", "==", monthYear)), (snap) => {
@@ -671,37 +722,38 @@
                 const bks = allMonthBookings.filter(b => b.day === ds);
                 const cell = document.createElement('div');
                 cell.className = 'day-cell p-4 flex flex-col justify-between text-left';
-                cell.innerHTML = `<span class="font-black italic text-slate-900 text-2xl tracking-tighter">${i}</span>`;
+                cell.innerHTML = `<span class="font-black italic text-slate-950 text-2xl tracking-tighter leading-none">${i}</span>`;
                 if (bks.length > 0) {
                     const badge = document.createElement('div');
-                    badge.className = `booking-count ${bks.some(b => b.type === 'event') ? 'event' : ''} mt-1`;
+                    badge.className = `booking-count ${bks.some(b => b.type === 'event') ? 'event' : ''} mt-1 leading-none`;
                     badge.textContent = bks.length;
                     cell.appendChild(badge);
                 }
-                cell.onclick = () => { if(bks.length > 0) showOptionsModal(ds, bks); else showBookingModal(ds); };
+                cell.onclick = () => { if(bks.length > 0) showOptionsModal(ds, bks); else window.showBookingModal(ds); };
                 calendarGrid.appendChild(cell);
             }
         }
 
         function showOptionsModal(ds, bks) {
             const list = document.getElementById('daily-bookings-list');
+            if(!list) return;
             list.innerHTML = '';
             bks.forEach(b => {
                 const it = document.createElement('div');
                 it.className = 'p-6 bg-slate-50 rounded-3xl mb-4 flex justify-between items-center border-2 border-slate-100 transition-all hover:bg-white shadow-sm';
-                it.innerHTML = `<div><p class="font-black text-sm uppercase leading-none mb-2 text-slate-900">${b.teamName}</p><p class="text-[9px] font-black text-slate-500 italic tracking-widest">${b.courtHours.join(', ')}hs</p></div>`;
+                it.innerHTML = `<div><p class="font-black text-sm uppercase leading-none mb-2 text-slate-900">${b.teamName}</p><p class="text-[10px] font-black text-slate-400 italic tracking-widest">${b.courtHours.join(', ')}hs | ${b.peopleCount} pers.</p></div>`;
                 const del = document.createElement('button');
-                del.className = 'bg-orange-100 text-orange-700 px-4 py-3 rounded-2xl font-black text-[10px] uppercase hover:bg-orange-600 hover:text-white transition-all';
-                del.textContent = 'Baja';
-                del.onclick = async () => { if(confirm("¿Anular este turno?")) { await deleteDoc(getPublicDoc("bookings", b.id)); window.closeModals(); } };
+                del.className = 'bg-orange-100 text-orange-700 px-5 py-3 rounded-2xl font-black text-[10px] uppercase hover:bg-orange-600 hover:text-white transition-all italic leading-none';
+                del.textContent = 'Anular';
+                del.onclick = async () => { if(confirm("¿Confirmas la baja definitiva?")) { await deleteDoc(getPublicDoc("bookings", b.id)); window.closeModals(); } };
                 it.appendChild(del);
                 list.appendChild(it);
             });
-            document.getElementById('add-new-booking-btn').onclick = () => { window.closeModals(); showBookingModal(ds); };
+            document.getElementById('add-new-booking-btn').onclick = () => { window.closeModals(); window.showBookingModal(ds); };
             document.getElementById('options-modal').classList.add('is-open');
         }
 
-        // --- PRODUCTOS ---
+        // --- PRODUCTOS & INVENTARIO ---
         function syncProducts() {
             onSnapshot(getPublicCollection("products"), (snap) => {
                 allProducts = snap.docs.map(d => ({ id: d.id, ...d.data() }));
@@ -720,22 +772,22 @@
                 card.innerHTML = `
                     <div class="flex justify-between items-start leading-none relative z-10">
                         <div class="text-left">
-                            <h4 class="font-black italic uppercase text-slate-900 text-2xl mb-2 tracking-tighter leading-tight">${p.name}</h4>
-                            <span class="text-[10px] font-black uppercase text-violet-600 bg-violet-50 px-3 py-1.5 rounded-xl border border-violet-100 leading-none">En Stock: ${p.stock} un.</span>
+                            <h4 class="font-black italic uppercase text-slate-950 text-2xl mb-2 tracking-tighter leading-tight">${p.name}</h4>
+                            <span class="text-[10px] font-black uppercase text-violet-700 bg-violet-100 px-3 py-1.5 rounded-xl border-2 border-violet-200 leading-none shadow-inner">En Stock: ${p.stock} un.</span>
                         </div>
-                        <strong class="text-4xl font-black text-slate-900 italic tracking-tighter leading-none">$${p.salePrice}</strong>
+                        <strong class="text-5xl font-black text-slate-950 italic tracking-tighter leading-none">$${p.salePrice}</strong>
                     </div>
                     <div class="grid grid-cols-2 gap-3 relative z-10">
-                        <button onclick="window.openEditProduct('${p.id}')" class="bg-slate-100 text-slate-600 py-4 rounded-2xl font-black text-[10px] uppercase hover:bg-slate-900 hover:text-white transition-all italic tracking-widest">Ficha</button>
-                        <button onclick="window.openRestock('${p.id}')" class="bg-violet-50 text-violet-700 py-4 rounded-2xl font-black text-[10px] uppercase hover:bg-violet-700 hover:text-white transition-all italic tracking-widest">Reponer</button>
-                        <button onclick="window.deleteProduct('${p.id}')" class="col-span-2 bg-orange-50 text-orange-600 py-4 rounded-2xl font-black text-[10px] uppercase hover:bg-orange-600 hover:text-white transition-all italic tracking-widest">Eliminar</button>
+                        <button onclick="window.openEditProduct('${p.id}')" class="bg-slate-100 text-slate-700 py-4 rounded-2xl font-black text-[10px] uppercase hover:bg-slate-900 hover:text-white transition-all italic tracking-widest border-2 border-slate-200">Ficha</button>
+                        <button onclick="window.openRestock('${p.id}')" class="bg-violet-100 text-violet-700 py-4 rounded-2xl font-black text-[10px] uppercase hover:bg-violet-700 hover:text-white transition-all italic tracking-widest border-2 border-violet-200">Reponer</button>
+                        <button onclick="window.deleteProduct('${p.id}')" class="col-span-2 bg-orange-100 text-orange-700 py-4 rounded-2xl font-black text-[10px] uppercase hover:bg-orange-600 hover:text-white transition-all italic tracking-widest border-2 border-orange-200 shadow-xl">Eliminar Ficha</button>
                     </div>
                 `;
                 list.appendChild(card);
             });
         }
 
-        // --- UTILS ---
+        // --- SETTINGS ---
         async function loadSettings() {
             try {
                 const d = await getDoc(getPublicDoc("app_settings", "prices"));
@@ -743,6 +795,11 @@
             } catch(e) {}
         }
 
+        function loadConfigDataIntoForm() {
+            document.getElementById('config-court1-price').value = appSettings.court1Price;
+        }
+
+        // --- GLOBAL ACTIONS ---
         window.closeModals = () => { document.querySelectorAll('.modal').forEach(m => m.classList.remove('is-open')); };
         window.adjustJumpers = (val) => {
             const input = document.getElementById('peopleCount');
@@ -753,7 +810,19 @@
             updateBookingPrice();
         };
 
-        // --- PRODUCT ACTIONS ---
+        window.showBookingModal = async (dateStr, booking = null) => {
+            const form = document.getElementById('booking-form');
+            form.reset();
+            document.getElementById('booking-date').value = dateStr;
+            document.getElementById('booking-id').value = booking ? booking.id : '';
+            document.getElementById('teamName').value = booking ? booking.teamName : '';
+            document.getElementById('peopleCount').value = booking ? booking.peopleCount : 1;
+            document.getElementById('costPerHour').value = appSettings.court1Price;
+            renderTimeSlots(dateStr, booking?.id);
+            updateBookingPrice();
+            document.getElementById('booking-modal').classList.add('is-open');
+        };
+
         window.openEditProduct = (id) => {
             const p = allProducts.find(x => x.id === id);
             document.getElementById('edit-prod-id').value = id;
@@ -770,6 +839,51 @@
             document.getElementById('restock-name').textContent = p.name;
             document.getElementById('restock-current-stock').textContent = p.stock;
             document.getElementById('restock-modal').classList.add('is-open');
+        };
+
+        window.prevMonth = () => { currentMonthDate.setMonth(currentMonthDate.getMonth() - 1); syncBookings(); };
+        window.nextMonth = () => { currentMonthDate.setMonth(currentMonthDate.getMonth() + 1); syncBookings(); };
+        window.deleteProduct = async (id) => { if(confirm("¿Eliminar ficha AeroJump?")) await deleteDoc(getPublicDoc("products", id)); };
+
+        // --- SUBMITS ---
+        document.getElementById('booking-form').onsubmit = async (e) => {
+            e.preventDefault();
+            const btn = e.target.querySelector('button[type="submit"]');
+            btn.disabled = true;
+            const selected = Array.from(document.getElementById('court-hours-list').querySelectorAll('.time-slot.selected')).map(el => parseInt(el.querySelector('span').textContent));
+            if (selected.length === 0) { btn.disabled = false; return alert("Selecciona Horarios"); }
+            
+            const data = {
+                teamName: document.getElementById('teamName').value.trim(),
+                day: document.getElementById('booking-date').value,
+                monthYear: document.getElementById('booking-date').value.substring(0, 7),
+                peopleCount: parseInt(document.getElementById('peopleCount').value),
+                costPerHour: parseFloat(document.getElementById('costPerHour').value),
+                courtHours: selected,
+                totalPrice: parseFloat(document.getElementById('booking-total').textContent.replace('$','').replace('.','').replace(',','')),
+                timestamp: Timestamp.now(), adminEmail: user.email, type: 'court'
+            };
+            try {
+                const id = document.getElementById('booking-id').value;
+                if (id) await updateDoc(getPublicDoc("bookings", id), data);
+                else await addDoc(getPublicCollection("bookings"), data);
+                window.closeModals();
+            } catch (err) { alert(err.message); } finally { btn.disabled = false; }
+        };
+
+        document.getElementById('product-form').onsubmit = async (e) => {
+            e.preventDefault();
+            const data = {
+                name: document.getElementById('prod-name').value.trim(),
+                stock: parseInt(document.getElementById('prod-stock').value),
+                salePrice: parseFloat(document.getElementById('prod-suggested-price').textContent.replace('$','')),
+                unitCost: parseFloat(document.getElementById('prod-unit-cost').value),
+                createdAt: Timestamp.now()
+            };
+            try {
+                await addDoc(getPublicCollection("products"), data);
+                e.target.reset(); document.getElementById('product-form-container').classList.add('is-hidden');
+            } catch(e) { alert(e.message); }
         };
 
         document.getElementById('edit-product-form').onsubmit = async (e) => {
@@ -790,8 +904,8 @@
             const id = document.getElementById('restock-prod-id').value;
             const addQ = parseInt(document.getElementById('restock-qty').value);
             const bCost = parseFloat(document.getElementById('restock-batch-cost').value);
-            const nUnit = bCost / addQ;
             const p = allProducts.find(x => x.id === id);
+            const nUnit = bCost / addQ;
             await updateDoc(getPublicDoc("products", id), {
                 stock: p.stock + addQ,
                 unitCost: nUnit,
@@ -800,92 +914,60 @@
             window.closeModals();
         };
 
-        window.deleteProduct = async (id) => { if(confirm("¿Borrar ficha de inventario?")) await deleteDoc(getPublicDoc("products", id)); };
-
-        // --- SUBMITS ---
-        document.getElementById('booking-form').onsubmit = async (e) => {
-            e.preventDefault();
-            const selected = Array.from(document.getElementById('court-hours-list').querySelectorAll('.time-slot.selected')).map(el => parseInt(el.querySelector('span').textContent));
-            if (selected.length === 0) return alert("Selecciona horario");
-            const data = {
-                teamName: document.getElementById('teamName').value.trim(),
-                day: document.getElementById('booking-date').value,
-                monthYear: document.getElementById('booking-date').value.substring(0, 7),
-                peopleCount: parseInt(document.getElementById('peopleCount').value),
-                costPerHour: parseFloat(document.getElementById('costPerHour').value),
-                courtHours: selected,
-                totalPrice: parseFloat(document.getElementById('booking-total').textContent.replace('$','').replace('.','').replace(',','')),
-                timestamp: Timestamp.now(), adminEmail: user.email,
-                type: 'court'
-            };
-            const id = document.getElementById('booking-id').value;
-            if (id) await updateDoc(getPublicDoc("bookings", id), data);
-            else await addDoc(getPublicCollection("bookings"), data);
-            window.closeModals();
-        };
-
-        document.getElementById('product-form').onsubmit = async (e) => {
-            e.preventDefault();
-            const data = {
-                name: document.getElementById('prod-name').value.trim(),
-                stock: parseInt(document.getElementById('prod-stock').value),
-                salePrice: parseFloat(document.getElementById('prod-suggested-price').textContent.replace('$','')),
-                unitCost: parseFloat(document.getElementById('prod-unit-cost').value),
-                createdAt: Timestamp.now()
-            };
-            await addDoc(getPublicCollection("products"), data);
-            e.target.reset(); document.getElementById('product-form-container').classList.add('is-hidden');
-        };
-
         window.calculateProductPrices = () => {
             const cost = parseFloat(document.getElementById('prod-batch-cost').value) || 0;
             const qty = parseInt(document.getElementById('prod-batch-qty').value) || 1;
-            const margin = parseFloat(document.getElementById('prod-profit-pct').value) || 40;
             const unit = cost / qty;
+            const margin = parseFloat(document.getElementById('prod-profit-pct').value || 40);
             const sugg = Math.ceil(unit * (1 + (margin / 100)));
             document.getElementById('prod-suggested-price').textContent = `$${sugg}`;
             document.getElementById('prod-unit-cost').value = unit;
         };
-        document.getElementById('prod-batch-cost').oninput = window.calculateProductPrices;
-        document.getElementById('prod-batch-qty').oninput = window.calculateProductPrices;
-        document.getElementById('prod-profit-pct').oninput = window.calculateProductPrices;
 
         document.getElementById('config-form').onsubmit = async (e) => {
             e.preventDefault();
             const val = parseFloat(document.getElementById('config-court1-price').value);
             await setDoc(getPublicDoc("app_settings", "prices"), { court1Price: val }, { merge: true });
             appSettings.court1Price = val;
-            showMessage("Tarifas AeroJump actualizadas!"); setTimeout(hideMessage, 1500);
+            showMessage("Tarifas actualizadas!"); setTimeout(hideMessage, 1500);
         };
 
-        document.getElementById('add-product-btn').onclick = () => document.getElementById('product-form-container').classList.toggle('is-hidden');
-        document.getElementById('cancel-product-btn').onclick = () => document.getElementById('product-form-container').classList.add('is-hidden');
-        document.getElementById('login-form').onsubmit = (e) => { e.preventDefault(); signInWithEmailAndPassword(auth, document.getElementById('login-email').value, document.getElementById('login-password').value); };
-        document.getElementById('logout-btn').onclick = () => signOut(auth);
-
         function loadCajaData() {
-            onSnapshot(query(collection(db, "sales"), orderBy("timestamp", "desc")), (snap) => {
+            onSnapshot(query(getPublicCollection("sales"), orderBy("timestamp", "desc")), (snap) => {
                 const list = document.getElementById('caja-daily-list');
                 if(!list) return;
                 list.innerHTML = ''; let total = 0;
                 snap.forEach(d => {
                     const s = d.data(); total += s.total || 0;
-                    list.innerHTML += `<div class="bg-white p-6 rounded-[2.5rem] shadow-sm border-2 border-slate-100 flex justify-between items-center transition-all hover:scale-[1.01]">
-                        <div class="text-left leading-none"><p class="font-black text-sm uppercase text-slate-900 leading-none mb-2">${s.name} (x${s.qty})</p><p class="text-[9px] font-black text-slate-500 uppercase tracking-widest">${s.day} | ${s.paymentMethod || 'Efectivo'}</p></div>
+                    list.innerHTML += `<div class="bg-white p-6 rounded-3xl shadow-sm border-2 border-slate-100 flex justify-between items-center hover:bg-slate-50 transition-all">
+                        <div class="text-left leading-none"><p class="font-black text-sm uppercase text-slate-900 mb-2">${s.name} (x${s.qty})</p><p class="text-[9px] font-black text-slate-500 uppercase tracking-widest">${s.day} | ${s.paymentMethod || 'Efectivo'}</p></div>
                         <strong class="text-orange-600 font-black italic text-2xl tracking-tighter">$${(s.total || 0).toLocaleString()}</strong>
                     </div>`;
                 });
                 document.getElementById('caja-total-combined').textContent = `$${total.toLocaleString()}`;
             });
         }
-        
-        window.prevMonth = () => { currentMonthDate.setMonth(currentMonthDate.getMonth() - 1); syncBookings(); };
-        window.nextMonth = () => { currentMonthDate.setMonth(currentMonthDate.getMonth() + 1); syncBookings(); };
-        
+
+        function loadStatsData() {
+            const statsList = document.getElementById('stats-list');
+            if(!statsList) return;
+            const rank = {};
+            allMonthBookings.forEach(b => { if(!rank[b.teamName]) rank[b.teamName] = 0; rank[b.teamName]++; });
+            statsList.innerHTML = Object.entries(rank).sort((a,b)=>b[1]-a[1]).map(([name, count]) => `
+                <div class="bg-white p-5 rounded-2xl flex justify-between items-center shadow-sm border-2 border-slate-50 italic uppercase font-black">
+                    <div><span class="text-slate-900">${name}</span><p class="text-[9px] text-slate-400 mt-1">${count} reservas este mes</p></div>
+                    <span class="text-violet-700 text-xl">#${count}</span>
+                </div>
+            `).join('');
+        }
+
         function showMessage(msg, isE = false) { const t = document.getElementById('message-text'); if(t) t.textContent = msg; document.getElementById('message-overlay').classList.add('is-open'); }
         function hideMessage() { document.getElementById('message-overlay').classList.remove('is-open'); }
-        
         document.getElementById('sale-catalog-filter').oninput = (e) => renderSaleCatalog(e.target.value);
+        document.getElementById('login-form').onsubmit = (e) => { e.preventDefault(); signInWithEmailAndPassword(auth, document.getElementById('login-email').value, document.getElementById('login-password').value); };
+        document.getElementById('logout-btn').onclick = () => signOut(auth);
+        document.getElementById('add-product-btn').onclick = () => document.getElementById('product-form-container').classList.toggle('is-hidden');
+        document.getElementById('cancel-product-btn').onclick = () => document.getElementById('product-form-container').classList.add('is-hidden');
 
     </script>
 </body>
