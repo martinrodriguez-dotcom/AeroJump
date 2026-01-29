@@ -1,14 +1,13 @@
 /**
  * AeroJump Gualeguaychú - Firebase Service Initializer
- * This module handles the connection to Firebase services and 
- * exports common database path helpers to ensure Rule 1 compliance.
+ * Este módulo centraliza la conexión y los helpers de rutas de base de datos.
  */
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
 import { getAuth } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 import { getFirestore, collection, doc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-// Hardcoded configuration for AeroJump Project
+// Configuración oficial del proyecto AeroJump
 const firebaseConfig = {
     apiKey: "AIzaSyBz0V2ieSXehafKWRNQprb951NVN5FvBD4",
     authDomain: "aerojump-841fb.firebaseapp.com",
@@ -18,19 +17,26 @@ const firebaseConfig = {
     appId: "1:68080726646:web:a830613a1278871d416557"
 };
 
-// Initialize Firebase
+// Inicialización de servicios
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-// Global Identifier for the Artifact (Rule 1 Compliance)
+// Identificador global para cumplir con la Regla 1 de seguridad
 const appIdGlobal = "aerojump-gchu";
 
 /**
- * Firestore Path Helpers
- * These ensure all queries point to /artifacts/aerojump-gchu/public/data/...
+ * Helpers de Rutas de Firestore
+ * Garantizan que todas las consultas apunten a /artifacts/aerojump-gchu/public/data/...
+ * @param {string} name - Nombre de la colección (bookings, products, sales, etc.)
  */
-const getPublicCollection = (name) => collection(db, 'artifacts', appIdGlobal, 'public', 'data', name);
-const getPublicDoc = (name, id) => doc(db, 'artifacts', appIdGlobal, 'public', 'data', name, id);
+export const getPublicCollection = (name) => collection(db, 'artifacts', appIdGlobal, 'public', 'data', name);
 
-export { auth, db, getPublicCollection, getPublicDoc };
+/**
+ * Helper para documentos específicos
+ * @param {string} name - Colección
+ * @param {string} id - ID del documento
+ */
+export const getPublicDoc = (name, id) => doc(db, 'artifacts', appIdGlobal, 'public', 'data', name, id);
+
+export { auth, db };
