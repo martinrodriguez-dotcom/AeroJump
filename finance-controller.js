@@ -1,6 +1,6 @@
 /**
  * AeroJump Gualeguaychú - Finance Controller Module
- * Gestiona los arqueos de caja, el balance neto y las estadísticas de clientes.
+ * Gestiona el arqueo de caja unificado y las estadísticas de fidelidad.
  */
 
 import { 
@@ -9,19 +9,20 @@ import {
 import { getPublicCollection } from "./firebase-config.js";
 import { showMessage, hideMessage } from "./ui-controller.js";
 
-// Referencias DOM
+// --- REFERENCIAS DOM ---
 const cajaTotalCombined = document.getElementById('caja-total-combined');
 const cajaDailyList = document.getElementById('caja-daily-list');
 const statsList = document.getElementById('stats-list');
 
 /**
- * Carga y procesa todos los movimientos de dinero para el arqueo.
+ * Carga y procesa todos los movimientos para el arqueo de caja.
+ * Cruza datos de la colección 'sales' y 'bookings'.
  */
 export async function loadCajaData() {
-    showMessage("Calculando balance...");
+    showMessage("Calculando arqueo...");
     
     try {
-        // Consultamos ventas y reservas (Regla 2: Sin filtros complejos para evitar errores de índice)
+        // Obtenemos los datos (Regla 2: Sin filtros complejos para evitar errores de índice)
         const qSales = query(getPublicCollection("sales"), orderBy("timestamp", "desc"));
         const qBookings = query(getPublicCollection("bookings"), orderBy("timestamp", "desc"));
 
@@ -33,7 +34,7 @@ export async function loadCajaData() {
         let totalGeneral = 0;
         const dailySummary = {};
 
-        // 1. Procesar Ventas de Kiosco
+        // 1. Procesar ingresos por Kiosco
         salesSnap.forEach(doc => {
             const data = doc.data();
             const monto = parseFloat(data.total) || 0;
@@ -45,7 +46,7 @@ export async function loadCajaData() {
             dailySummary[data.day].sales += monto;
         });
 
-        // 2. Procesar Cobros de Reservas
+        // 2. Procesar ingresos por Saltos/Eventos
         bookingsSnap.forEach(doc => {
             const data = doc.data();
             const monto = parseFloat(data.totalPrice) || 0;
@@ -57,32 +58,35 @@ export async function loadCajaData() {
             dailySummary[data.day].bookings += monto;
         });
 
-        // Actualizar el Total Gigante en pantalla
+        // Actualizamos el total destacado en la UI
         if (cajaTotalCombined) {
             cajaTotalCombined.textContent = `$${totalGeneral.toLocaleString('es-AR')}`;
         }
 
-        renderCajaList(dailySummary);
+        renderCajaSummary(dailySummary);
         hideMessage();
+        
     } catch (error) {
-        console.error("Error en arqueo:", error);
-        showMessage("Error al cargar finanzas", true);
+        console.error("AeroJump Finance Error:", error);
+        showMessage("Error al procesar arqueo", true);
     }
 }
 
 /**
  * Renderiza la lista de balances diarios con diseño de alto contraste.
  */
-function renderCajaList(summary) {
+function renderCajaSummary(summary) {
     if (!cajaDailyList) return;
     cajaDailyList.innerHTML = '';
 
-    // Ordenar por fecha descendente
+    // Ordenamos los días de forma descendente (más reciente arriba)
     const sortedDays = Object.keys(summary).sort((a, b) => b.localeCompare(a));
 
     if (sortedDays.length === 0) {
         cajaDailyList.innerHTML = `
-            <p class="text-center py-10 text-slate-400 font-black uppercase italic">No hay movimientos registrados</p>
+            <div class="py-10 text-center opacity-20 italic uppercase font-black">
+                Sin movimientos registrados
+            </div>
         `;
         return;
     }
@@ -93,18 +97,20 @@ function renderCajaList(summary) {
         const totalDia = data.bookings + data.sales;
         
         const item = document.createElement('div');
-        item.className = 'bg-white p-6 rounded-[2.5rem] shadow-sm border-2 border-slate-100 flex justify-between items-center mb-4 italic transition-all hover:border-violet-300';
+        // Estilo armónico: fondo blanco, borde suave, acento en violeta
+        item.className = 'bg-white p-6 rounded-[2rem] border-2 border-slate-100 flex justify-between items-center mb-4 transition-all hover:border-violet-300 shadow-sm';
+        
         item.innerHTML = `
             <div class="text-left leading-none">
-                <p class="font-black text-2xl text-slate-900 mb-2">${d}/${m}/${y}</p>
-                <div class="flex gap-3">
-                    <span class="text-[9px] font-black px-2 py-1 bg-violet-50 text-violet-700 rounded-lg uppercase">Saltos: $${data.bookings.toLocaleString()}</span>
-                    <span class="text-[9px] font-black px-2 py-1 bg-orange-50 text-orange-700 rounded-lg uppercase">Kiosco: $${data.sales.toLocaleString()}</span>
+                <p class="font-black text-xl text-slate-900 mb-2 italic">${d}/${m}/${y}</p>
+                <div class="flex gap-2">
+                    <span class="text-[8px] font-black px-2 py-1 bg-violet-50 text-violet-700 rounded-lg uppercase">Saltos: $${data.bookings.toLocaleString()}</span>
+                    <span class="text-[8px] font-black px-2 py-1 bg-orange-50 text-orange-700 rounded-lg uppercase">Kiosco: $${data.sales.toLocaleString()}</span>
                 </div>
             </div>
             <div class="text-right">
-                <p class="text-[8px] font-black text-slate-400 uppercase tracking-widest mb-1">Total Día</p>
-                <strong class="text-3xl font-black text-slate-900 tracking-tighter">
+                <p class="text-[8px] font-black text-slate-400 uppercase tracking-widest mb-1 italic">Total Neto</p>
+                <strong class="text-2xl font-black text-slate-900 tracking-tighter">
                     $${totalDia.toLocaleString()}
                 </strong>
             </div>
@@ -114,7 +120,7 @@ function renderCajaList(summary) {
 }
 
 /**
- * Genera el ranking de mejores clientes basado en cantidad de reservas.
+ * Genera el ranking de mejores clientes basado en volumen de reservas.
  */
 export async function loadStatsData() {
     if (!statsList) return;
@@ -125,40 +131,38 @@ export async function loadStatsData() {
         
         const ranking = {};
         snap.forEach(doc => {
-            const team = doc.data().teamName;
-            if (team) {
-                ranking[team] = (ranking[team] || 0) + 1;
+            const name = doc.data().teamName;
+            if (name) {
+                ranking[name] = (ranking[name] || 0) + 1;
             }
         });
 
-        // Convertir objeto a array, ordenar por saltos y tomar los 10 mejores
+        // Convertimos a array y ordenamos por cantidad de saltos
         const sorted = Object.entries(ranking)
             .sort((a, b) => b[1] - a[1])
-            .slice(0, 10);
+            .slice(0, 10); // Top 10
 
         if (sorted.length === 0) {
-            statsList.innerHTML = '<p class="text-center text-slate-400 font-black uppercase italic py-10">Sin datos de clientes</p>';
+            statsList.innerHTML = '<p class="py-10 text-center opacity-30 font-black italic">Sin datos acumulados</p>';
             return;
         }
 
-        statsList.innerHTML = sorted.map(([name, count], index) => `
-            <div class="bg-white p-7 rounded-[3rem] shadow-md border-2 border-slate-100 flex justify-between items-center mb-5 italic font-black uppercase relative overflow-hidden group">
-                <div class="absolute top-0 left-0 w-2 h-full bg-violet-500"></div>
-                <div class="text-left">
-                    <div class="flex items-center gap-3">
-                        <span class="text-violet-600 text-sm">#${index + 1}</span>
-                        <span class="text-slate-900 text-2xl tracking-tighter">${name}</span>
+        statsList.innerHTML = sorted.map(([name, count], idx) => `
+            <div class="bg-white p-6 rounded-[2.5rem] border-2 border-slate-100 flex justify-between items-center mb-4 italic font-black uppercase shadow-sm">
+                <div class="flex items-center gap-4">
+                    <span class="w-8 h-8 flex items-center justify-center bg-violet-600 text-white rounded-full text-xs">#${idx + 1}</span>
+                    <div class="text-left">
+                        <p class="text-xl text-slate-900 tracking-tighter">${name}</p>
+                        <p class="text-[9px] text-slate-400 tracking-widest leading-none">Cliente Destacado AeroJump</p>
                     </div>
-                    <p class="text-[10px] text-slate-400 mt-1 tracking-widest leading-none">Miembro distinguido AeroJump</p>
                 </div>
-                <div class="text-right">
-                    <span class="bg-violet-950 text-white px-6 py-3 rounded-2xl shadow-xl italic font-black text-xl">
-                        ${count} Saltos
-                    </span>
+                <div class="bg-slate-900 text-white px-5 py-2 rounded-2xl shadow-lg">
+                    <span class="text-lg">${count}</span> <small class="text-[9px]">Saltos</small>
                 </div>
             </div>
         `).join('');
+        
     } catch (error) {
-        console.error("Error en estadísticas:", error);
+        console.error("Stats Error:", error);
     }
 }
