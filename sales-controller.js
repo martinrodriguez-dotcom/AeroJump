@@ -1,14 +1,14 @@
 /**
  * AeroJump Gualeguaychú - Sales Controller Module
- * Gestiona el carrito de compras, el catálogo visual de ventas,
- * el cálculo de totales y el procesamiento de cobros.
+ * Gestiona el carrito de compras, el catálogo visual del POS y
+ * el procesamiento de cobros con actualización masiva de stock.
  */
 
 import { 
-    doc, collection, writeBatch, Timestamp 
+    writeBatch, Timestamp 
 } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-import { db, getPublicCollection, getPublicDoc, auth } from "./firebase-config.js";
-import { showMessage, hideMessage, openModal, closeModals } from "./ui-controller.js";
+import { auth, db, getPublicCollection, getPublicDoc } from "./firebase-config.js";
+import { showMessage, hideMessage, closeModals } from "./ui-controller.js";
 import { getProductList } from "./kiosco-controller.js";
 
 // --- ESTADO INTERNO DEL CARRITO ---
@@ -21,18 +21,18 @@ const confirmSaleBtn = document.getElementById('confirm-sale-btn');
 const saleCatalogFilter = document.getElementById('sale-catalog-filter');
 
 /**
- * Abre el punto de venta y reinicia el estado.
+ * Abre el punto de venta y reinicia el estado del pedido actual.
  */
 export function openSaleModal() {
-    cartItems = {};
+    cartItems = {}; // Limpiar carrito anterior
     if (saleCatalogFilter) saleCatalogFilter.value = '';
     renderSaleCatalog();
-    openModal('sale-modal');
+    // El modal se abre desde el main.js llamando a openModal('sale-modal')
 }
 
 /**
- * Renderiza la grilla visual de productos para la venta.
- * @param {string} filter - Texto de búsqueda.
+ * Renderiza la grilla de productos optimizada para el punto de venta.
+ * @param {string} filter - Texto para búsqueda dinámica.
  */
 export function renderSaleCatalog(filter = "") {
     if (!saleCatalogGrid) return;
@@ -45,8 +45,8 @@ export function renderSaleCatalog(filter = "") {
 
     if (filtered.length === 0) {
         saleCatalogGrid.innerHTML = `
-            <div class="col-span-full py-20 text-center">
-                <p class="text-2xl font-black text-slate-300 uppercase italic">No se encontraron productos</p>
+            <div class="col-span-full py-20 text-center opacity-30">
+                <p class="text-xl font-black uppercase italic">Sin productos en catálogo</p>
             </div>
         `;
         return;
@@ -55,60 +55,60 @@ export function renderSaleCatalog(filter = "") {
     filtered.forEach(p => {
         const qty = cartItems[p.id] || 0;
         const card = document.createElement('div');
-        card.className = 'product-sale-card';
+        card.className = 'product-sale-card'; // Estilo definido en style.css
+        
         card.innerHTML = `
-            <div class="text-left mb-6 leading-none">
-                <p class="font-black text-sm uppercase text-slate-950 leading-tight mb-2 italic">${p.name}</p>
-                <span class="text-[10px] font-black px-3 py-1.5 bg-violet-100 text-violet-800 rounded-xl uppercase leading-none shadow-inner italic border-2 border-violet-200">Stock: ${p.stock} un.</span>
-            </div>
-            <div class="flex justify-between items-center bg-slate-950 p-3 rounded-[1.5rem] shadow-2xl">
-                <strong class="text-3xl font-black text-white italic tracking-tighter leading-none ml-2">$${p.salePrice}</strong>
-                <div class="flex items-center gap-2">
-                    <button class="btn-minus w-10 h-10 bg-white/10 rounded-2xl font-black text-white hover:bg-red-600 transition-all text-2xl active:scale-90">-</button>
-                    <span class="qty-display w-8 text-center font-black text-3xl italic ${qty > 0 ? 'text-orange-400' : 'text-white/20'}">${qty}</span>
-                    <button class="btn-plus w-10 h-10 bg-white/10 rounded-2xl font-black text-white hover:bg-green-600 transition-all text-2xl active:scale-90" ${qty >= p.stock ? 'disabled' : ''}>+</button>
+            <div class="text-left mb-4 leading-none">
+                <p class="font-black text-xs uppercase text-slate-900 leading-tight mb-1 italic">${p.name}</p>
+                <div class="flex justify-between items-center">
+                    <span class="text-[8px] font-black px-2 py-0.5 bg-slate-100 text-slate-500 rounded uppercase">Stock: ${p.stock}</span>
+                    <strong class="text-lg font-black text-violet-700 italic tracking-tighter">$${p.salePrice}</strong>
                 </div>
+            </div>
+            
+            <div class="flex items-center justify-between bg-slate-900 p-2 rounded-xl border-2 border-slate-800">
+                <button class="btn-minus w-8 h-8 flex items-center justify-center bg-white/10 text-white rounded-lg font-black hover:bg-red-600 transition-all">-</button>
+                <span class="qty-val font-black text-xl italic ${qty > 0 ? 'text-orange-400' : 'text-white/20'}">${qty}</span>
+                <button class="btn-plus w-8 h-8 flex items-center justify-center bg-white/10 text-white rounded-lg font-black hover:bg-green-600 transition-all" ${qty >= p.stock ? 'disabled opacity-20' : ''}>+</button>
             </div>
         `;
 
-        // Listeners de botones
-        card.querySelector('.btn-minus').onclick = () => updateCartQty(p.id, -1);
-        card.querySelector('.btn-plus').onclick = () => updateCartQty(p.id, 1);
+        // Vinculación de eventos a los botones de la tarjeta
+        card.querySelector('.btn-minus').onclick = () => updateCartQuantity(p.id, -1);
+        card.querySelector('.btn-plus').onclick = () => updateCartQuantity(p.id, 1);
 
         saleCatalogGrid.appendChild(card);
     });
     
-    calculateSaleTotal();
+    updateVisualTotal();
 }
 
 /**
- * Actualiza la cantidad de un producto en el carrito.
+ * Actualiza la cantidad de un artículo en el carrito.
  */
-function updateCartQty(id, delta) {
+function updateCartQuantity(id, delta) {
     const allProducts = getProductList();
     const product = allProducts.find(p => p.id === id);
     if (!product) return;
 
-    let currentQty = cartItems[id] || 0;
-    currentQty += delta;
+    let current = cartItems[id] || 0;
+    current += delta;
 
-    if (currentQty <= 0) {
+    if (current <= 0) {
         delete cartItems[id];
-    } else if (currentQty > product.stock) {
-        currentQty = product.stock;
-        showMessage("Límite de stock alcanzado", true);
-        setTimeout(hideMessage, 1000);
+    } else if (current > product.stock) {
+        current = product.stock;
     } else {
-        cartItems[id] = currentQty;
+        cartItems[id] = current;
     }
 
     renderSaleCatalog(saleCatalogFilter?.value || "");
 }
 
 /**
- * Calcula el total acumulado y habilita/deshabilita el botón de cobro.
+ * Calcula el total del pedido y actualiza la UI del pie de página.
  */
-function calculateSaleTotal() {
+function updateVisualTotal() {
     let total = 0;
     const allProducts = getProductList();
 
@@ -123,23 +123,26 @@ function calculateSaleTotal() {
         saleTotalDisplay.textContent = total.toLocaleString('es-AR');
     }
 
+    // El botón de cobro solo se activa si hay dinero a cobrar
     if (confirmSaleBtn) {
         confirmSaleBtn.disabled = total <= 0;
     }
 }
 
 /**
- * Procesa la venta final.
+ * Procesa el cobro final, guarda el ticket y descuenta stock.
  */
 export async function handleConfirmSale() {
-    const total = parseFloat(saleTotalDisplay.textContent.replace(/\./g, ''));
+    const totalRaw = saleTotalDisplay.textContent.replace(/\./g, '');
+    const total = parseFloat(totalRaw);
+    
     if (total <= 0) return;
 
     const methodEl = document.querySelector('input[name="salePaymentMethod"]:checked');
     const paymentMethod = methodEl ? methodEl.value : 'efectivo';
 
     confirmSaleBtn.disabled = true;
-    showMessage("Procesando cobro...");
+    showMessage("Liquidando Venta...");
 
     try {
         const batch = writeBatch(db);
@@ -151,16 +154,14 @@ export async function handleConfirmSale() {
         for (const id of Object.keys(cartItems)) {
             const product = allProducts.find(p => p.id === id);
             const qty = cartItems[id];
-            const itemTotal = product.salePrice * qty;
 
-            // 1. Registrar el ticket de venta
-            const saleRef = doc(collection(db, 'artifacts', 'aerojump-gchu', 'public', 'data', 'sales'));
+            // 1. Registro de la venta individual
+            const saleRef = getPublicDoc("sales", `${Date.now()}_${id}`);
             batch.set(saleRef, {
-                productId: id,
                 name: product.name,
                 qty: qty,
                 unitPrice: product.salePrice,
-                total: itemTotal,
+                total: product.salePrice * qty,
                 paymentMethod: paymentMethod,
                 day: dayStr,
                 monthYear: monthYear,
@@ -168,34 +169,28 @@ export async function handleConfirmSale() {
                 adminEmail: auth.currentUser.email
             });
 
-            // 2. Actualizar el stock del producto
+            // 2. Descuento automático de stock
             const productRef = getPublicDoc("products", id);
             batch.update(productRef, {
                 stock: product.stock - qty
             });
         }
 
+        // Ejecución atómica de todas las operaciones
         await batch.commit();
         
-        showMessage("¡Venta exitosa!");
+        showMessage("¡Venta Cerrada!");
         setTimeout(() => {
             hideMessage();
             closeModals();
         }, 1500);
 
     } catch (error) {
-        console.error("Error en transacción de venta:", error);
-        showMessage("Fallo al procesar la venta", true);
+        console.error("AeroJump POS Error:", error);
+        showMessage("Error al procesar cobro", true);
         confirmSaleBtn.disabled = false;
     }
 }
 
-/**
- * Filtro dinámico del catálogo.
- */
-if (saleCatalogFilter) {
-    saleCatalogFilter.oninput = (e) => renderSaleCatalog(e.target.value);
-}
-
-// Globalización para que el index.html pueda llamar a renderSaleCatalog cuando el stock cambie
+// Globalización para que el buscador del HTML funcione directamente
 window.renderSaleCatalog = renderSaleCatalog;
