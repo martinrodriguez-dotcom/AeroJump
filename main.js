@@ -6,7 +6,7 @@
 // 1. Importación de módulos controladores
 import { auth, getPublicDoc } from "./firebase-config.js";
 import { getDoc, setDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-import { initUI, showView, toggleMenu, closeModals, showMessage, hideMessage } from "./ui-controller.js";
+import { initUI, showView, toggleMenu, closeModals, showMessage, hideMessage, openModal } from "./ui-controller.js";
 import { initAuthListener, handleLogin, handleRegister, handleLogout } from "./auth-controller.js";
 import { syncBookings, handleSaveBooking, handleSaveEvent, prevMonth, nextMonth, updateBookingTotal } from "./booking-controller.js";
 import { syncProducts, handleSaveProduct, handleConfirmEditProduct, handleConfirmRestock, calculateProductPrices } from "./kiosco-controller.js";
@@ -15,54 +15,33 @@ import { loadCajaData, loadStatsData } from "./finance-controller.js";
 
 // 2. Inicialización cuando el DOM está listo
 document.addEventListener('DOMContentLoaded', () => {
-    // Iniciar listeners básicos de UI (clics fuera de modales, etc.)
     initUI();
     
-    // Iniciar el Vigilante de Autenticación
-    // Pasamos una función que se ejecuta SOLO cuando el usuario se loguea con éxito
     initAuthListener(async (user) => {
         console.log("AeroJump: Sistema operativo para", user.email);
-        
-        // Cargar ajustes globales (precios)
         await loadGlobalSettings();
-        
-        // Iniciar sincronización en tiempo real de datos
         syncBookings();
         syncProducts();
-        
-        // Mostrar la vista principal por defecto
         showView('calendar');
     });
 
-    // Vincular todos los eventos de la interfaz
     attachGlobalEventListeners();
 });
 
-/**
- * Carga las tarifas maestras desde la base de datos
- */
 async function loadGlobalSettings() {
     try {
         const snap = await getDoc(getPublicDoc("app_settings", "prices"));
         if (snap.exists()) {
             window.appSettings = snap.data();
         } else {
-            // Valores por defecto si no existen en DB
-            window.appSettings = { 
-                court1Price: 5000, 
-                eventPrice: 15000 
-            };
+            window.appSettings = { court1Price: 5000, eventPrice: 15000 };
         }
     } catch (e) {
         console.error("Error cargando configuración:", e);
     }
 }
 
-/**
- * Conecta los IDs del HTML con las funciones de los controladores
- */
 function attachGlobalEventListeners() {
-    
     // --- AUTENTICACIÓN ---
     const loginForm = document.getElementById('login-form');
     if (loginForm) {
@@ -91,13 +70,10 @@ function attachGlobalEventListeners() {
     document.getElementById('menu-btn').onclick = toggleMenu;
     document.getElementById('menu-overlay').onclick = toggleMenu;
 
-    // Botones del Menú Lateral
     document.querySelectorAll('.menu-item').forEach(btn => {
         btn.onclick = () => {
             const target = btn.dataset.view;
             showView(target);
-            
-            // Cargas específicas según la vista
             if (target === 'caja') loadCajaData();
             if (target === 'stats') loadStatsData();
             if (target === 'configuracion') {
@@ -116,7 +92,6 @@ function attachGlobalEventListeners() {
     document.getElementById('prev-month-btn').onclick = prevMonth;
     document.getElementById('next-month-btn').onclick = nextMonth;
     
-    // El input de personas actualiza el total en tiempo real
     const peopleInput = document.getElementById('peopleCount');
     if (peopleInput) peopleInput.oninput = () => window.adjustJumpers(0);
 
@@ -132,7 +107,6 @@ function attachGlobalEventListeners() {
     const productForm = document.getElementById('product-form');
     if (productForm) productForm.onsubmit = handleSaveProduct;
 
-    // Escuchadores para cálculos de precios automáticos
     ['prod-batch-cost', 'prod-batch-qty', 'prod-profit-pct'].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.oninput = calculateProductPrices;
@@ -144,19 +118,24 @@ function attachGlobalEventListeners() {
     const restockForm = document.getElementById('restock-form');
     if (restockForm) restockForm.onsubmit = handleConfirmRestock;
 
-    // --- VENTAS (POS) ---
-    document.getElementById('header-sale-btn').onclick = openSaleModal;
+    // --- VENTAS (POS) - CORRECCIÓN AQUÍ ---
+    const saleBtn = document.getElementById('header-sale-btn');
+    if (saleBtn) {
+        saleBtn.onclick = () => {
+            openSaleModal(); // Prepara el carrito
+            openModal('sale-modal'); // Muestra la ventana
+        };
+    }
     
     const confirmSaleBtn = document.getElementById('confirm-sale-btn');
     if (confirmSaleBtn) confirmSaleBtn.onclick = handleConfirmSale;
 
-    // --- CONFIGURACIÓN DE TARIFAS ---
+    // --- CONFIGURACIÓN ---
     const configForm = document.getElementById('config-form');
     if (configForm) {
         configForm.onsubmit = async (e) => {
             e.preventDefault();
             const newPrice = parseFloat(document.getElementById('config-court1-price').value);
-            
             showMessage("Actualizando tarifas...");
             try {
                 await setDoc(getPublicDoc("app_settings", "prices"), { court1Price: newPrice }, { merge: true });
@@ -170,5 +149,4 @@ function attachGlobalEventListeners() {
     }
 }
 
-// Globalización de funciones de cierre para que los botones "X" del HTML funcionen
 window.closeModals = closeModals;
