@@ -1,24 +1,39 @@
 {
-  "name": "AeroJump Gualeguaychú",
+  "name": "AeroJump Gualeguaychú - Gestión v2026",
   "short_name": "AeroJump",
-  "description": "Sistema de Gestión de Saltos y Eventos para AeroJump Gualeguaychú",
-  "start_url": "/index.html",
+  "description": "Sistema Profesional de Gestión de Saltos, Eventos y Kiosco para AeroJump Gualeguaychú.",
+  "start_url": "index.html",
   "display": "standalone",
-  "background_color": "#f8fafc",
+  "background_color": "#f1f5f9",
   "theme_color": "#7c3aed",
   "orientation": "portrait",
   "icons": [
     {
-      "src": "icon-192x192.png",
+      "src": "icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "icon-512x512.png",
+      "src": "icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
+    }
+  ],
+  "categories": ["business", "productivity"],
+  "shortcuts": [
+    {
+      "name": "Nueva Venta",
+      "short_name": "Venta",
+      "url": "index.html?action=new-sale",
+      "description": "Abrir caja de cobro rápidamente"
+    },
+    {
+      "name": "Ver Agenda",
+      "short_name": "Agenda",
+      "url": "index.html?view=calendar",
+      "description": "Consultar turnos del día"
     }
   ]
 }
