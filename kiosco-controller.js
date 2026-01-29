@@ -4,9 +4,9 @@
  */
 
 import { 
-    onSnapshot, addDoc, updateDoc, deleteDoc, Timestamp, collection 
+    onSnapshot, addDoc, updateDoc, deleteDoc, Timestamp 
 } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-import { db, getPublicCollection, getPublicDoc, auth } from "./firebase-config.js";
+import { auth, getPublicCollection, getPublicDoc } from "./firebase-config.js";
 import { showMessage, hideMessage, openModal, closeModals } from "./ui-controller.js";
 
 // --- ESTADO INTERNO ---
@@ -23,22 +23,21 @@ const prodUnitCostHidden = document.getElementById('prod-unit-cost');
 export function syncProducts() {
     onSnapshot(getPublicCollection("products"), (snapshot) => {
         allProducts = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        renderInventory();
+        renderProducts();
         
         // Si el modal de ventas está abierto, actualizamos su catálogo también
-        // Esto se comunicará con el sales-controller más adelante
         if (typeof window.renderSaleCatalog === 'function') {
             window.renderSaleCatalog(document.getElementById('sale-catalog-filter')?.value || "");
         }
     }, (error) => {
-        console.error("Error en sincronización de stock:", error);
+        console.error("Error en sincronización de stock AeroJump:", error);
     });
 }
 
 /**
- * Renderiza las tarjetas de inventario con botones de acción (Ficha, Reponer, Borrar).
+ * Renderiza las tarjetas de inventario con un diseño compacto y profesional.
  */
-export function renderInventory(filter = "") {
+export function renderProducts(filter = "") {
     if (!productList) return;
     productList.innerHTML = '';
 
@@ -48,23 +47,26 @@ export function renderInventory(filter = "") {
 
     filtered.forEach(p => {
         const card = document.createElement('div');
-        card.className = 'inventory-card flex flex-col gap-6 text-left relative overflow-hidden group';
+        // Usamos la clase de diseño armonico definida en el CSS
+        card.className = 'bg-white p-6 rounded-[2rem] border-2 border-slate-100 flex flex-col gap-4 shadow-sm hover:shadow-md transition-all text-left';
+        
         card.innerHTML = `
-            <div class="flex justify-between items-start leading-none relative z-10">
-                <div class="text-left">
-                    <h4 class="font-black italic uppercase text-slate-950 text-2xl mb-2 tracking-tighter leading-tight">${p.name}</h4>
-                    <span class="text-[11px] font-black uppercase text-violet-700 bg-violet-100 px-3 py-1.5 rounded-xl border-2 border-violet-200 leading-none shadow-inner">Stock: ${p.stock} un.</span>
+            <div class="flex justify-between items-start leading-none">
+                <div class="flex-grow pr-2">
+                    <h4 class="font-black italic uppercase text-slate-900 text-lg leading-tight mb-1">${p.name}</h4>
+                    <span class="text-[9px] font-black uppercase text-violet-600 bg-violet-50 px-2 py-1 rounded-lg">Stock: ${p.stock} un.</span>
                 </div>
-                <strong class="text-5xl font-black text-slate-950 italic tracking-tighter leading-none">$${p.salePrice}</strong>
+                <strong class="text-3xl font-black text-slate-900 italic tracking-tighter leading-none">$${p.salePrice}</strong>
             </div>
-            <div class="grid grid-cols-2 gap-3 relative z-10">
-                <button class="btn-edit bg-slate-100 text-slate-700 py-4 rounded-2xl font-black text-[10px] uppercase hover:bg-slate-950 hover:text-white transition-all italic tracking-widest border-2 border-slate-200 leading-none">Ficha</button>
-                <button class="btn-restock bg-violet-100 text-violet-700 py-4 rounded-2xl font-black text-[10px] uppercase hover:bg-violet-700 hover:text-white transition-all italic tracking-widest border-2 border-violet-200 leading-none">Reponer</button>
-                <button class="btn-delete col-span-2 bg-orange-100 text-orange-700 py-4 rounded-2xl font-black text-[10px] uppercase hover:bg-orange-600 hover:text-white transition-all italic tracking-widest border-2 border-orange-200 shadow-xl leading-none">Borrar Producto</button>
+            
+            <div class="grid grid-cols-2 gap-2 mt-2">
+                <button class="btn-restock p-3 bg-slate-50 hover:bg-violet-600 hover:text-white rounded-xl font-black text-[9px] uppercase transition-all italic border border-slate-200">Reposición</button>
+                <button class="btn-edit p-3 bg-slate-50 hover:bg-slate-900 hover:text-white rounded-xl font-black text-[9px] uppercase transition-all italic border border-slate-200">Ficha</button>
+                <button class="btn-delete col-span-2 p-3 bg-orange-50 hover:bg-orange-600 hover:text-white text-orange-700 rounded-xl font-black text-[9px] uppercase transition-all italic border border-orange-100">Eliminar de Sistema</button>
             </div>
         `;
 
-        // Asignación de eventos manual para evitar "null" o errores de scope
+        // Asignación de eventos manual para evitar errores de scope
         card.querySelector('.btn-edit').onclick = () => openEditModal(p);
         card.querySelector('.btn-restock').onclick = () => openRestockModal(p);
         card.querySelector('.btn-delete').onclick = () => deleteProduct(p.id);
@@ -91,7 +93,7 @@ export function calculateProductPrices() {
 /**
  * Guarda un nuevo producto.
  */
-export async function saveProduct(event) {
+export async function handleSaveProduct(event) {
     event.preventDefault();
     const btn = event.target.querySelector('button[type="submit"]');
     btn.disabled = true;
@@ -109,10 +111,10 @@ export async function saveProduct(event) {
         await addDoc(getPublicCollection("products"), data);
         event.target.reset();
         document.getElementById('product-form-container').classList.add('is-hidden');
-        showMessage("Producto registrado.");
+        showMessage("Producto Cargado!");
         setTimeout(hideMessage, 1500);
     } catch (e) {
-        alert("Error al crear producto: " + e.message);
+        alert("Error al cargar ficha: " + e.message);
     } finally {
         btn.disabled = false;
     }
@@ -140,9 +142,9 @@ function openRestockModal(product) {
 }
 
 /**
- * Confirmación de cambios
+ * Confirmación de cambios manuales en la ficha
  */
-export async function handleEditProduct(event) {
+export async function handleConfirmEditProduct(event) {
     event.preventDefault();
     const id = document.getElementById('edit-prod-id').value;
     const data = {
@@ -155,12 +157,15 @@ export async function handleEditProduct(event) {
     try {
         await updateDoc(getPublicDoc("products", id), data);
         closeModals();
-        showMessage("Ficha actualizada.");
+        showMessage("Cambios guardados!");
         setTimeout(hideMessage, 1500);
     } catch (e) { alert(e.message); }
 }
 
-export async function handleRestock(event) {
+/**
+ * Procesa la reposición de stock (Cálculo automático de nuevo costo)
+ */
+export async function handleConfirmRestock(event) {
     event.preventDefault();
     const id = document.getElementById('restock-prod-id').value;
     const addQty = parseInt(document.getElementById('restock-qty').value);
@@ -170,7 +175,8 @@ export async function handleRestock(event) {
     if (!product) return;
 
     const newUnitCost = batchCost / addQty;
-    const newSalePrice = Math.ceil(newUnitCost * 1.4); // Margen 40% auto en repo
+    // Mantenemos margen del 40% por defecto en repo rápida
+    const newSalePrice = Math.ceil(newUnitCost * 1.4); 
 
     try {
         await updateDoc(getPublicDoc("products", id), {
@@ -179,16 +185,16 @@ export async function handleRestock(event) {
             salePrice: newSalePrice
         });
         closeModals();
-        showMessage("Stock actualizado!");
+        showMessage("Stock Repuesto!");
         setTimeout(hideMessage, 1500);
     } catch (e) { alert(e.message); }
 }
 
 async function deleteProduct(id) {
-    if (confirm("¿Eliminar este producto del inventario AeroJump?")) {
+    if (confirm("¿Confirmas la baja definitiva del artículo?")) {
         try {
             await deleteDoc(getPublicDoc("products", id));
-            showMessage("Producto eliminado.");
+            showMessage("Baja completada.");
             setTimeout(hideMessage, 1500);
         } catch (e) { alert(e.message); }
     }
@@ -196,3 +202,8 @@ async function deleteProduct(id) {
 
 // Facilitar acceso a datos para otros módulos
 export const getProductList = () => allProducts;
+
+// Globalización para botones internos
+window.openRestock = (id) => { const p = allProducts.find(x => x.id === id); openRestockModal(p); };
+window.openEditProduct = (id) => { const p = allProducts.find(x => x.id === id); openEditModal(p); };
+window.deleteProduct = deleteProduct;
