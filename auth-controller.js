@@ -1,6 +1,7 @@
 /**
  * AeroJump Gualeguaychú - Auth Controller Module
- * Gestiona el acceso de administradores y la persistencia de la sesión.
+ * Gestiona el acceso de administradores, la seguridad de la sesión 
+ * y el bloqueo/desbloqueo del panel principal.
  */
 
 import { 
@@ -12,41 +13,47 @@ import {
     browserLocalPersistence 
 } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 import { auth } from "./firebase-config.js";
-import { showMessage } from "./ui-controller.js";
+import { showMessage, hideMessage } from "./ui-controller.js";
 
-// Referencias a los contenedores principales de acceso
+// Referencias a los contenedores de acceso para control de visibilidad
 const loginView = document.getElementById('login-view');
 const registerView = document.getElementById('register-view');
 const appContainer = document.getElementById('app-container');
 const userEmailDisplay = document.getElementById('user-email-display');
 
 /**
- * Inicializa el vigilante de estado de autenticación.
- * @param {Function} onUserAuthenticated - Función a ejecutar cuando el usuario entra (ej: cargar datos).
+ * Inicializa el observador de estado de autenticación.
+ * Este es el corazón de la seguridad: decide qué se muestra y qué no.
+ * @param {Function} onAuthenticated - Función a ejecutar cuando el acceso es exitoso (carga de datos).
  */
-export function initAuthListener(onUserAuthenticated) {
-    // Aseguramos que la sesión se mantenga abierta al recargar la página
+export function initAuthListener(onAuthenticated) {
+    // Aseguramos que la sesión no se cierre al refrescar la página
     setPersistence(auth, browserLocalPersistence);
 
     onAuthStateChanged(auth, (user) => {
         if (user) {
-            console.log("AeroJump: Administrador detectado ->", user.email);
+            console.log("AeroJump Auth: Sesión activa para", user.email);
             
-            // UI: Mostrar App, ocultar Login
-            if (loginView) loginView.classList.add('is-hidden');
-            if (registerView) registerView.classList.add('is-hidden');
+            // 1. Desbloqueamos el panel principal (App)
             if (appContainer) appContainer.classList.remove('is-hidden');
             
-            // Mostrar email en el menú
+            // 2. Ocultamos las pantallas de acceso (Login/Registro)
+            if (loginView) loginView.classList.add('is-hidden');
+            if (registerView) registerView.classList.add('is-hidden');
+            
+            // 3. Mostramos el email en la barra lateral
             if (userEmailDisplay) userEmailDisplay.textContent = user.email;
             
-            // Ejecutar callback de carga de datos
-            if (onUserAuthenticated) onUserAuthenticated(user);
-        } else {
-            console.log("AeroJump: No hay sesión activa.");
+            // 4. Ejecutamos la carga de datos del sistema
+            if (onAuthenticated) onAuthenticated(user);
             
-            // UI: Ocultar App, mostrar Login
+        } else {
+            console.log("AeroJump Auth: No hay usuario autenticado.");
+            
+            // 1. Bloqueamos el panel principal (App) por seguridad
             if (appContainer) appContainer.classList.add('is-hidden');
+            
+            // 2. Forzamos la vista de Login
             if (loginView) loginView.classList.remove('is-hidden');
             if (userEmailDisplay) userEmailDisplay.textContent = "";
         }
@@ -54,45 +61,52 @@ export function initAuthListener(onUserAuthenticated) {
 }
 
 /**
- * Procesa el intento de login.
+ * Procesa el formulario de ingreso.
  */
 export async function handleLogin(email, password) {
+    showMessage("Validando credenciales...");
     try {
         await signInWithEmailAndPassword(auth, email, password);
+        hideMessage();
     } catch (error) {
         console.error("Error en Login:", error.code);
-        let mensajeError = "Acceso denegado. Verifique sus credenciales.";
+        let errorMsg = "Acceso denegado.";
         
         if (error.code === 'auth/invalid-credential') {
-            mensajeError = "Email o contraseña incorrectos.";
+            errorMsg = "Email o contraseña incorrectos.";
         } else if (error.code === 'auth/user-not-found') {
-            mensajeError = "El usuario no existe.";
+            errorMsg = "El usuario no existe.";
         }
         
-        showMessage(mensajeError, true);
+        showMessage(errorMsg, true);
+        setTimeout(hideMessage, 2000);
     }
 }
 
 /**
- * Procesa el registro de un nuevo administrador.
+ * Registra un nuevo administrador en el sistema.
  */
 export async function handleRegister(email, password) {
+    showMessage("Creando cuenta admin...");
     try {
         await createUserWithEmailAndPassword(auth, email, password);
-        showMessage("Cuenta admin creada con éxito.");
+        showMessage("Cuenta creada con éxito.");
+        setTimeout(hideMessage, 1500);
     } catch (error) {
         console.error("Error en Registro:", error);
-        showMessage("Error al crear cuenta: " + error.message, true);
+        showMessage("Error: " + error.message, true);
+        setTimeout(hideMessage, 3000);
     }
 }
 
 /**
- * Cierra la sesión de forma segura.
+ * Cierra la sesión y limpia el estado visual.
  */
 export async function handleLogout() {
     try {
         await signOut(auth);
+        console.log("AeroJump Auth: Sesión cerrada.");
     } catch (error) {
-        showMessage("Error al intentar salir del sistema.", true);
+        showMessage("Error al cerrar sesión.", true);
     }
 }
