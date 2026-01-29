@@ -1,44 +1,45 @@
 /**
  * AeroJump Gualeguaychú - Sales Controller Module
- * Gestiona el carrito de compras, el catálogo visual del POS y
- * el procesamiento de cobros con actualización masiva de stock.
+ * Motor del Punto de Venta (POS). Gestiona el carrito, cálculos de total
+ * y el cierre de ventas con actualización de stock en tiempo real.
  */
 
 import { 
     writeBatch, Timestamp 
 } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-import { auth, db, getPublicCollection, getPublicDoc } from "./firebase-config.js";
+import { auth, db, getPublicDoc } from "./firebase-config.js";
 import { showMessage, hideMessage, closeModals } from "./ui-controller.js";
 import { getProductList } from "./kiosco-controller.js";
 
-// --- ESTADO INTERNO DEL CARRITO ---
-let cartItems = {}; // Estructura: { productId: quantity }
+// --- ESTADO INTERNO DEL PEDIDO ---
+let cartItems = {}; // Estructura: { productId: { quantity, price, name } }
 
-// --- REFERENCIAS DOM ---
+// --- REFERENCIAS AL DOM ---
 const saleCatalogGrid = document.getElementById('sale-catalog-grid');
 const saleTotalDisplay = document.getElementById('sale-total-display');
 const confirmSaleBtn = document.getElementById('confirm-sale-btn');
 const saleCatalogFilter = document.getElementById('sale-catalog-filter');
 
 /**
- * Abre el punto de venta y reinicia el estado del pedido actual.
+ * Inicia una nueva sesión de venta y limpia el carrito anterior.
  */
 export function openSaleModal() {
-    cartItems = {}; // Limpiar carrito anterior
+    cartItems = {}; 
     if (saleCatalogFilter) saleCatalogFilter.value = '';
     renderSaleCatalog();
-    // El modal se abre desde el main.js llamando a openModal('sale-modal')
+    updateVisualTotal();
+    // El modal se abre desde main.js llamando a openModal('sale-modal')
 }
 
 /**
- * Renderiza la grilla de productos optimizada para el punto de venta.
- * @param {string} filter - Texto para búsqueda dinámica.
+ * Dibuja el catálogo de productos con sus controles de cantidad.
+ * @param {string} filter - Texto para búsqueda dinámica de productos.
  */
 export function renderSaleCatalog(filter = "") {
     if (!saleCatalogGrid) return;
     saleCatalogGrid.innerHTML = '';
     
-    const allProducts = getProductList();
+    const allProducts = getProductList(); // Obtenemos productos del kiosco-controller
     const filtered = allProducts.filter(p => 
         p.name.toLowerCase().includes(filter.toLowerCase())
     );
@@ -46,14 +47,14 @@ export function renderSaleCatalog(filter = "") {
     if (filtered.length === 0) {
         saleCatalogGrid.innerHTML = `
             <div class="col-span-full py-20 text-center opacity-30">
-                <p class="text-xl font-black uppercase italic">Sin productos en catálogo</p>
+                <p class="text-xl font-black uppercase italic">Sin productos en inventario</p>
             </div>
         `;
         return;
     }
 
     filtered.forEach(p => {
-        const qty = cartItems[p.id] || 0;
+        const itemInCart = cartItems[p.id] || { quantity: 0 };
         const card = document.createElement('div');
         card.className = 'product-sale-card'; // Estilo definido en style.css
         
@@ -67,101 +68,114 @@ export function renderSaleCatalog(filter = "") {
             </div>
             
             <div class="flex items-center justify-between bg-slate-900 p-2 rounded-xl border-2 border-slate-800">
-                <button class="btn-minus w-8 h-8 flex items-center justify-center bg-white/10 text-white rounded-lg font-black hover:bg-red-600 transition-all">-</button>
-                <span class="qty-val font-black text-xl italic ${qty > 0 ? 'text-orange-400' : 'text-white/20'}">${qty}</span>
-                <button class="btn-plus w-8 h-8 flex items-center justify-center bg-white/10 text-white rounded-lg font-black hover:bg-green-600 transition-all" ${qty >= p.stock ? 'disabled opacity-20' : ''}>+</button>
+                <button class="qty-btn-minus w-8 h-8 flex items-center justify-center bg-white/10 text-white rounded-lg font-black hover:bg-red-600 transition-all">-</button>
+                <input type="number" class="qty-input w-12 text-center bg-transparent font-black text-xl italic text-orange-400 outline-none" value="${itemInCart.quantity}" min="0" max="${p.stock}">
+                <button class="qty-btn-plus w-8 h-8 flex items-center justify-center bg-white/10 text-white rounded-lg font-black hover:bg-green-600 transition-all" ${itemInCart.quantity >= p.stock ? 'disabled opacity-20' : ''}>+</button>
             </div>
         `;
 
-        // Vinculación de eventos a los botones de la tarjeta
-        card.querySelector('.btn-minus').onclick = () => updateCartQuantity(p.id, -1);
-        card.querySelector('.btn-plus').onclick = () => updateCartQuantity(p.id, 1);
+        // Lógica de botones y entrada manual
+        const input = card.querySelector('.qty-input');
+        
+        card.querySelector('.qty-btn-minus').onclick = () => updateCartQuantity(p, -1);
+        card.querySelector('.qty-btn-plus').onclick = () => updateCartQuantity(p, 1);
+        
+        input.onchange = (e) => {
+            let val = parseInt(e.target.value) || 0;
+            if (val < 0) val = 0;
+            if (val > p.stock) {
+                val = p.stock;
+                showMessage("Límite de stock alcanzado", true);
+                setTimeout(hideMessage, 1500);
+            }
+            setCartQuantity(p, val);
+        };
 
         saleCatalogGrid.appendChild(card);
     });
+}
+
+/**
+ * Modifica la cantidad de un ítem en el carrito (Suma/Resta).
+ */
+function updateCartQuantity(product, delta) {
+    let currentQty = cartItems[product.id]?.quantity || 0;
+    let newQty = currentQty + delta;
     
+    if (newQty < 0) newQty = 0;
+    if (newQty > product.stock) newQty = product.stock;
+    
+    setCartQuantity(product, newQty);
+}
+
+/**
+ * Establece una cantidad fija para un ítem.
+ */
+function setCartQuantity(product, qty) {
+    if (qty === 0) {
+        delete cartItems[product.id];
+    } else {
+        cartItems[product.id] = {
+            id: product.id,
+            name: product.name,
+            price: product.salePrice,
+            quantity: qty,
+            stockMax: product.stock
+        };
+    }
+    
+    renderSaleCatalog(saleCatalogFilter?.value || "");
     updateVisualTotal();
 }
 
 /**
- * Actualiza la cantidad de un artículo en el carrito.
- */
-function updateCartQuantity(id, delta) {
-    const allProducts = getProductList();
-    const product = allProducts.find(p => p.id === id);
-    if (!product) return;
-
-    let current = cartItems[id] || 0;
-    current += delta;
-
-    if (current <= 0) {
-        delete cartItems[id];
-    } else if (current > product.stock) {
-        current = product.stock;
-    } else {
-        cartItems[id] = current;
-    }
-
-    renderSaleCatalog(saleCatalogFilter?.value || "");
-}
-
-/**
- * Calcula el total del pedido y actualiza la UI del pie de página.
+ * Calcula el importe total y habilita/deshabilita el botón de cobro.
  */
 function updateVisualTotal() {
     let total = 0;
-    const allProducts = getProductList();
-
-    Object.keys(cartItems).forEach(id => {
-        const product = allProducts.find(p => p.id === id);
-        if (product) {
-            total += (product.salePrice * cartItems[id]);
-        }
+    Object.values(cartItems).forEach(item => {
+        total += (item.price * item.quantity);
     });
 
     if (saleTotalDisplay) {
         saleTotalDisplay.textContent = total.toLocaleString('es-AR');
     }
 
-    // El botón de cobro solo se activa si hay dinero a cobrar
     if (confirmSaleBtn) {
         confirmSaleBtn.disabled = total <= 0;
     }
 }
 
 /**
- * Procesa el cobro final, guarda el ticket y descuenta stock.
+ * Procesa el cobro definitivo, guarda tickets y actualiza stock.
  */
 export async function handleConfirmSale() {
-    const totalRaw = saleTotalDisplay.textContent.replace(/\./g, '');
-    const total = parseFloat(totalRaw);
-    
+    const total = parseFloat(saleTotalDisplay.textContent.replace(/\./g, ''));
     if (total <= 0) return;
 
+    // Obtener medio de pago
     const methodEl = document.querySelector('input[name="salePaymentMethod"]:checked');
     const paymentMethod = methodEl ? methodEl.value : 'efectivo';
 
     confirmSaleBtn.disabled = true;
-    showMessage("Liquidando Venta...");
+    showMessage("Cerrando Venta...");
 
     try {
         const batch = writeBatch(db);
-        const allProducts = getProductList();
         const now = new Date();
         const dayStr = now.toISOString().split('T')[0];
         const monthYear = dayStr.substring(0, 7);
 
-        for (const id of Object.keys(cartItems)) {
-            const product = allProducts.find(p => p.id === id);
-            const qty = cartItems[id];
-
-            // 1. Registro de la venta individual
-            const saleRef = getPublicDoc("sales", `${Date.now()}_${id}`);
+        // Procesar cada ítem del carrito
+        for (const item of Object.values(cartItems)) {
+            // 1. Crear el ticket de venta
+            const saleRef = getPublicDoc("sales", `${Date.now()}_${item.id}`);
             batch.set(saleRef, {
-                name: product.name,
-                qty: qty,
-                unitPrice: product.salePrice,
-                total: product.salePrice * qty,
+                productId: item.id,
+                name: item.name,
+                qty: item.quantity,
+                unitPrice: item.price,
+                total: item.price * item.quantity,
                 paymentMethod: paymentMethod,
                 day: dayStr,
                 monthYear: monthYear,
@@ -169,28 +183,28 @@ export async function handleConfirmSale() {
                 adminEmail: auth.currentUser.email
             });
 
-            // 2. Descuento automático de stock
-            const productRef = getPublicDoc("products", id);
+            // 2. Descontar del stock real del producto
+            const productRef = getPublicDoc("products", item.id);
             batch.update(productRef, {
-                stock: product.stock - qty
+                stock: item.stockMax - item.quantity
             });
         }
 
-        // Ejecución atómica de todas las operaciones
+        // Ejecución atómica de todas las transacciones
         await batch.commit();
         
-        showMessage("¡Venta Cerrada!");
+        showMessage("¡Venta Exitosa!");
         setTimeout(() => {
             hideMessage();
             closeModals();
         }, 1500);
 
     } catch (error) {
-        console.error("AeroJump POS Error:", error);
-        showMessage("Error al procesar cobro", true);
+        console.error("Error en Transacción AeroJump:", error);
+        showMessage("Error al procesar venta", true);
         confirmSaleBtn.disabled = false;
     }
 }
 
-// Globalización para que el buscador del HTML funcione directamente
+// Vinculación para que el buscador funcione inmediatamente
 window.renderSaleCatalog = renderSaleCatalog;
