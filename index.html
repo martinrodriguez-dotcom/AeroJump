@@ -15,15 +15,14 @@
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#7c3aed">
     
-    <!-- Vinculación de Estilos (Siguiente Paso) -->
     <link rel="stylesheet" href="style.css">
 </head>
 <body class="bg-slate-100 font-sans antialiased text-slate-900 overflow-x-hidden">
 
     <!-- ============================================= -->
-    <!-- 1. CAPA DE AUTENTICACIÓN (LOGIN)             -->
+    <!-- 1. CAPA DE AUTENTICACIÓN (BLOQUEADA INICIO)  -->
     <!-- ============================================= -->
-    <section id="login-view" class="min-h-screen flex items-center justify-center p-6 bg-slate-900">
+    <section id="login-view" class="min-h-screen flex items-center justify-center p-6 bg-slate-950">
         <div class="bg-white w-full max-w-sm p-10 rounded-[2.5rem] shadow-2xl text-center border-b-[10px] border-violet-600">
             <div class="inline-flex items-center justify-center w-16 h-16 bg-violet-100 text-violet-600 rounded-3xl mb-6">
                 <span class="text-3xl">🚀</span>
@@ -32,29 +31,29 @@
             <p class="text-slate-400 font-bold text-[10px] uppercase tracking-widest mb-10 italic">Management System</p>
             
             <form id="login-form" class="space-y-3">
-                <input type="email" placeholder="Usuario" class="w-full px-6 py-4 bg-slate-50 border-2 border-slate-100 rounded-2xl font-bold focus:border-violet-600 outline-none transition-all" required>
+                <input type="email" placeholder="Usuario / Email" class="w-full px-6 py-4 bg-slate-50 border-2 border-slate-100 rounded-2xl font-bold focus:border-violet-600 outline-none transition-all" required>
                 <input type="password" placeholder="Contraseña" class="w-full px-6 py-4 bg-slate-50 border-2 border-slate-100 rounded-2xl font-bold focus:border-violet-600 outline-none transition-all" required>
-                <button type="submit" class="w-full py-5 bg-violet-600 hover:bg-violet-700 text-white rounded-2xl font-black uppercase tracking-widest shadow-xl active:scale-95 transition-all mt-4 text-xs italic">Ingresar</button>
+                <button type="submit" class="w-full py-5 bg-violet-600 hover:bg-violet-700 text-white rounded-2xl font-black uppercase tracking-widest shadow-xl active:scale-95 transition-all mt-4 text-xs italic">Ingresar al Panel</button>
             </form>
-            <button id="show-register" class="mt-8 text-[10px] text-slate-400 font-bold uppercase hover:text-violet-600 transition-colors italic">Solicitar Registro Admin</button>
+            <button id="show-register" class="mt-8 text-[10px] text-slate-400 font-bold uppercase hover:text-violet-600 transition-colors italic">Crear Cuenta Admin</button>
         </div>
     </section>
 
     <!-- Capa Registro (Oculta) -->
-    <section id="register-view" class="is-hidden min-h-screen flex items-center justify-center p-6 bg-slate-900">
-        <div class="bg-white w-full max-w-sm p-10 rounded-[2.5rem] shadow-2xl text-center border-b-[10px] border-violet-600">
-            <h2 class="text-2xl font-black text-slate-900 uppercase italic mb-8">Nueva Cuenta</h2>
+    <section id="register-view" class="is-hidden min-h-screen flex items-center justify-center p-6 bg-slate-950">
+        <div class="bg-white w-full max-w-sm p-10 rounded-[2.5rem] shadow-2xl text-center">
+            <h2 class="text-2xl font-black text-slate-900 uppercase italic mb-8">Nuevo Administrador</h2>
             <form id="register-form" class="space-y-4">
-                <input type="email" placeholder="Email" class="w-full px-6 py-4 bg-slate-50 border-2 border-slate-100 rounded-2xl font-bold outline-none focus:border-violet-600" required>
-                <input type="password" placeholder="Contraseña (6+)" class="w-full px-6 py-4 bg-slate-50 border-2 border-slate-100 rounded-2xl font-bold outline-none focus:border-violet-600" required>
-                <button type="submit" class="w-full py-4 bg-violet-600 text-white rounded-2xl font-black uppercase shadow-xl text-xs italic">Registrar</button>
+                <input type="email" placeholder="Email Administrativo" class="w-full px-6 py-4 bg-slate-50 border-2 border-slate-100 rounded-2xl font-bold outline-none focus:border-violet-600" required>
+                <input type="password" placeholder="Contraseña (6+ caracteres)" class="w-full px-6 py-4 bg-slate-50 border-2 border-slate-100 rounded-2xl font-bold outline-none focus:border-violet-600" required>
+                <button type="submit" class="w-full py-4 bg-violet-600 text-white rounded-2xl font-black uppercase shadow-xl text-xs italic">Registrar Acceso</button>
             </form>
-            <button id="show-login" class="mt-6 text-[10px] text-slate-400 font-bold uppercase italic">Volver al login</button>
+            <button id="show-login" class="mt-6 text-[10px] text-slate-400 font-bold uppercase italic">Ya tengo cuenta</button>
         </div>
     </section>
 
     <!-- ============================================= -->
-    <!-- 2. CONTENEDOR PRINCIPAL (BLOQUEADO INICIO)   -->
+    <!-- 2. CONTENEDOR PRINCIPAL                      -->
     <!-- ============================================= -->
     <div id="app-container" class="is-hidden min-h-screen flex flex-col">
         
@@ -67,10 +66,10 @@
                     </button>
                     <div class="leading-none text-left">
                         <h1 class="text-xl font-black text-slate-900 uppercase italic tracking-tighter">AeroJump</h1>
-                        <span class="text-[8px] font-black text-violet-600 uppercase tracking-[0.3em]">v2026 Admin</span>
+                        <span class="text-[8px] font-black text-violet-600 uppercase tracking-[0.3em]">Gestión Profesional</span>
                     </div>
                 </div>
-                <button id="header-sale-btn" class="bg-orange-600 text-white px-6 py-2.5 rounded-xl font-black shadow-lg uppercase text-[10px] active:scale-90 transition-all border-b-4 border-orange-800 italic">Venta Kiosco</button>
+                <button id="header-sale-btn" class="bg-orange-600 hover:bg-orange-700 text-white px-8 py-3 rounded-xl font-black shadow-lg uppercase text-[10px] active:scale-90 transition-all border-b-4 border-orange-900 italic">Venta Kiosco</button>
             </div>
         </header>
 
@@ -81,70 +80,69 @@
                 <button id="logout-btn" class="text-[10px] font-black text-slate-400 uppercase hover:text-red-600 transition-colors flex items-center gap-2 italic">Cerrar Sesión 🔒</button>
             </div>
             <div class="px-4 space-y-2 text-left">
-                <button class="menu-item flex items-center gap-4 w-full p-4 rounded-xl font-black text-slate-700 hover:bg-violet-50 hover:text-violet-700 transition-all text-[11px] uppercase italic tracking-widest border-2 border-transparent hover:border-violet-100" data-view="calendar">🗓️ Agenda Saltos</button>
-                <button class="menu-item flex items-center gap-4 w-full p-4 rounded-xl font-black text-slate-700 hover:bg-violet-50 hover:text-violet-700 transition-all text-[11px] uppercase italic tracking-widest border-2 border-transparent hover:border-violet-100" data-view="productos">🥤 Stock Kiosco</button>
-                <button class="menu-item flex items-center gap-4 w-full p-4 rounded-xl font-black text-slate-700 hover:bg-violet-50 hover:text-violet-700 transition-all text-[11px] uppercase italic tracking-widest border-2 border-transparent hover:border-violet-100" data-view="caja">💰 Arqueo Caja</button>
-                <button class="menu-item flex items-center gap-4 w-full p-4 rounded-xl font-black text-slate-700 hover:bg-violet-50 hover:text-violet-700 transition-all text-[11px] uppercase italic tracking-widest border-2 border-transparent hover:border-violet-100" data-view="stats">📊 Estadísticas</button>
-                <button class="menu-item flex items-center gap-4 w-full p-4 rounded-xl font-black text-slate-700 hover:bg-violet-50 hover:text-violet-700 transition-all text-[11px] uppercase italic tracking-widest border-2 border-transparent hover:border-violet-100" data-view="configuracion">⚙️ Tarifas</button>
+                <button class="menu-item flex items-center gap-4 w-full p-4 rounded-xl font-black text-slate-700 hover:bg-violet-50 hover:text-violet-700 transition-all text-[11px] uppercase italic tracking-widest" data-view="calendar">🗓️ Agenda Saltos</button>
+                <button class="menu-item flex items-center gap-4 w-full p-4 rounded-xl font-black text-slate-700 hover:bg-violet-50 hover:text-violet-700 transition-all text-[11px] uppercase italic tracking-widest" data-view="productos">🥤 Stock Kiosco</button>
+                <button class="menu-item flex items-center gap-4 w-full p-4 rounded-xl font-black text-slate-700 hover:bg-violet-50 hover:text-violet-700 transition-all text-[11px] uppercase italic tracking-widest" data-view="caja">💰 Arqueo Caja</button>
+                <button class="menu-item flex items-center gap-4 w-full p-4 rounded-xl font-black text-slate-700 hover:bg-violet-50 hover:text-violet-700 transition-all text-[11px] uppercase italic tracking-widest" data-view="stats">📊 Estadísticas</button>
+                <button class="menu-item flex items-center gap-4 w-full p-4 rounded-xl font-black text-slate-700 hover:bg-violet-50 hover:text-violet-700 transition-all text-[11px] uppercase italic tracking-widest" data-view="configuracion">⚙️ Tarifas</button>
             </div>
         </nav>
         <div id="menu-overlay" class="fixed inset-0 bg-slate-900/60 z-50 hidden backdrop-blur-sm"></div>
 
         <!-- Contenido Central -->
-        <main class="flex-grow pt-24 pb-12 px-4 max-w-7xl mx-auto w-full">
+        <main class="flex-grow pt-24 pb-12 px-4 max-w-7xl mx-auto w-full text-left">
             
-            <!-- Vista: Agenda -->
+            <!-- Vista: Calendario -->
             <div id="calendar-view" class="view-container">
-                <div class="bg-white p-6 rounded-[2rem] shadow-xl mb-8 border-2 border-slate-200 flex justify-between items-center">
-                    <button id="prev-month-btn" class="p-3 text-slate-400 font-black hover:text-violet-700 text-xl">◀</button>
-                    <h2 id="current-month-year" class="text-xl font-black text-slate-900 uppercase italic tracking-tighter">Cargando Mes...</h2>
-                    <button id="next-month-btn" class="p-3 text-slate-400 font-black hover:text-violet-700 text-xl">▶</button>
+                <div class="bg-white p-6 rounded-[2rem] shadow-sm border-2 border-slate-200 mb-8 flex justify-between items-center">
+                    <button id="prev-month-btn" class="p-3 text-slate-400 font-black hover:text-violet-700 text-xl transition-all">◀</button>
+                    <h2 id="current-month-year" class="text-xl font-black text-slate-900 uppercase italic tracking-tighter"></h2>
+                    <button id="next-month-btn" class="p-3 text-slate-400 font-black hover:text-violet-700 text-xl transition-all">▶</button>
                 </div>
                 <div id="calendar-grid" class="grid grid-cols-7 gap-3"></div>
             </div>
 
-            <!-- Vista: Productos -->
+            <!-- Vista: Stock / Kiosco -->
             <div id="productos-view" class="view-container is-hidden">
-                <div class="flex justify-between items-center mb-10 text-left">
+                <div class="flex justify-between items-center mb-10">
                     <div>
-                        <h2 class="text-4xl font-black italic uppercase text-slate-900 leading-none">Inventario</h2>
-                        <p class="text-slate-500 font-bold text-[10px] uppercase italic mt-1">Control de Stock Kiosco</p>
+                        <h2 class="text-4xl font-black italic uppercase text-slate-900">Inventario</h2>
+                        <p class="text-slate-500 font-bold text-[10px] uppercase italic">Control de Mercadería Kiosco</p>
                     </div>
                     <button id="add-product-btn" class="bg-violet-600 text-white px-6 py-4 rounded-xl font-black shadow-lg text-[10px] uppercase border-b-4 border-violet-800 italic">+ Nuevo Artículo</button>
                 </div>
                 
-                <!-- Formulario Producto -->
-                <div id="product-form-container" class="bg-white p-8 rounded-[2.5rem] shadow-2xl mb-12 is-hidden border-2 border-violet-100 text-left">
-                    <h3 class="text-xl font-black text-violet-900 mb-8 uppercase italic leading-none">✨ Registro de Producto</h3>
-                    <form id="product-form" class="grid grid-cols-1 md:grid-cols-3 gap-6 text-sm">
-                        <div class="md:col-span-2">
-                            <label class="text-[10px] font-black uppercase text-slate-400 ml-4 mb-1 block">Nombre del Producto</label>
-                            <input type="text" id="prod-name" placeholder="Ej: Bebida 500ml" class="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-xl font-bold outline-none focus:border-violet-600" required>
+                <div id="product-form-container" class="bg-white p-8 rounded-[2.5rem] shadow-2xl mb-12 is-hidden border-2 border-violet-100">
+                    <h3 class="text-xl font-black text-violet-900 mb-8 uppercase italic">✨ Alta de Producto</h3>
+                    <form id="product-form" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="md:col-span-2 text-left">
+                            <label class="text-[10px] font-black uppercase text-slate-400 ml-4 mb-1">Nombre Comercial</label>
+                            <input type="text" id="prod-name" placeholder="Bebida, Snack, etc." class="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-xl font-bold outline-none focus:border-violet-600" required>
                         </div>
-                        <div>
-                            <label class="text-[10px] font-black uppercase text-slate-400 ml-4 mb-1 block">Stock Inicial</label>
+                        <div class="text-left">
+                            <label class="text-[10px] font-black uppercase text-slate-400 ml-4 mb-1">Stock Inicial</label>
                             <input type="number" id="prod-stock" class="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-xl font-bold outline-none text-center" required min="0">
                         </div>
-                        <div>
-                            <label class="text-[10px] font-black uppercase text-slate-400 ml-4 mb-1 block">Costo de Bulto ($)</label>
-                            <input type="number" id="prod-batch-cost" class="w-full p-4 bg-violet-50 border-2 border-violet-100 rounded-xl font-bold text-violet-700 outline-none" required step="0.01">
+                        <div class="text-left">
+                            <label class="text-[10px] font-black uppercase text-slate-400 ml-4 mb-1">Costo Bulto ($)</label>
+                            <input type="number" id="prod-batch-cost" class="w-full p-4 bg-violet-50 border-2 border-violet-100 rounded-xl font-bold text-violet-700" required step="0.01">
                         </div>
-                        <div>
-                            <label class="text-[10px] font-black uppercase text-slate-400 ml-4 mb-1 block">Unidades x Bulto</label>
+                        <div class="text-left">
+                            <label class="text-[10px] font-black uppercase text-slate-400 ml-4 mb-1">Unidades x Bulto</label>
                             <input type="number" id="prod-batch-qty" class="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-xl font-bold outline-none text-center" required min="1" value="1">
                         </div>
-                        <div>
-                            <label class="text-[10px] font-black uppercase text-slate-400 ml-4 mb-1 block">Margen (%)</label>
+                        <div class="text-left">
+                            <label class="text-[10px] font-black uppercase text-slate-400 ml-4 mb-1">Margen %</label>
                             <input type="number" id="prod-profit-pct" class="w-full p-4 bg-orange-50 border-2 border-orange-100 rounded-xl font-bold outline-none text-center" value="40">
                         </div>
                         <div class="md:col-span-3 p-8 bg-slate-900 rounded-[2rem] flex justify-between items-center shadow-xl border-t-[8px] border-violet-500">
                             <div class="text-left">
-                                <span class="text-[10px] font-bold text-green-400 uppercase block mb-1 italic">Precio Venta</span>
-                                <span id="prod-suggested-price" class="text-5xl font-black text-white italic tracking-tighter">$0</span>
+                                <span class="text-[10px] font-bold text-green-400 uppercase block mb-1 italic">Venta Sugerida</span>
+                                <span id="prod-suggested-price" class="text-5xl font-black text-white italic tracking-tighter leading-none">$0</span>
                             </div>
                             <div class="flex gap-4">
                                 <button type="button" id="cancel-product-btn" class="text-slate-400 font-black uppercase text-[10px] italic">Cancelar</button>
-                                <button type="submit" class="bg-green-600 text-white px-10 py-4 rounded-xl font-black uppercase text-xs shadow-xl active:scale-95 border-b-4 border-green-900">Cargar</button>
+                                <button type="submit" class="bg-green-600 text-white px-10 py-4 rounded-xl font-black uppercase text-xs border-b-4 border-green-900">Confirmar</button>
                             </div>
                         </div>
                         <input type="hidden" id="prod-unit-cost">
@@ -153,33 +151,33 @@
                 <div id="product-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 text-left"></div>
             </div>
 
-            <!-- Vista: Finanzas -->
+            <!-- Vista: Caja (Finanzas) -->
             <div id="caja-view" class="view-container is-hidden">
-                <h2 class="text-5xl font-black mb-12 text-center uppercase italic text-slate-900 tracking-tighter">Caja AeroJump</h2>
+                <h2 class="text-5xl font-black mb-12 text-center uppercase italic text-slate-900">Arqueo AeroJump</h2>
                 <div class="bg-slate-950 p-12 rounded-[3.5rem] text-white mb-10 shadow-2xl text-center border-t-[14px] border-violet-600 relative overflow-hidden">
-                    <p class="text-[11px] font-black text-violet-400 uppercase mb-3 tracking-[0.4em] italic leading-none">Cierre Total del Sistema</p>
+                    <p class="text-[11px] font-black text-violet-400 uppercase mb-3 tracking-[0.4em] italic leading-none">Recaudación Total Unificada</p>
                     <p id="caja-total-combined" class="text-[6rem] font-black italic tracking-tighter text-white leading-none">$0</p>
                 </div>
-                <div id="caja-daily-list" class="space-y-4 text-left"></div>
+                <div id="caja-daily-list" class="space-y-4"></div>
             </div>
 
-            <!-- Vista: Tarifas -->
+            <!-- Vista: Configuración -->
             <div id="configuracion-view" class="view-container is-hidden max-w-md mx-auto">
                 <div class="bg-white p-12 rounded-[4rem] shadow-2xl border-4 border-slate-100 text-left">
-                    <h2 class="text-2xl font-black mb-8 uppercase italic text-center text-slate-900">Configuración</h2>
+                    <h2 class="text-2xl font-black mb-8 uppercase italic text-center text-slate-900">Tarifas Maestro</h2>
                     <form id="config-form" class="space-y-8">
-                        <div>
-                            <label class="block text-[11px] font-black text-slate-500 uppercase mb-2 ml-4 italic tracking-widest leading-none">Costo Salto 1 Hora ($)</label>
+                        <div class="text-left">
+                            <label class="block text-[11px] font-black text-slate-500 uppercase mb-2 ml-4 italic tracking-widest">Salto 1 Hora ($)</label>
                             <input type="number" id="config-court1-price" class="w-full p-6 bg-slate-50 rounded-[2rem] font-black text-4xl text-violet-700 outline-none border-2 border-slate-100 focus:ring-8 focus:ring-violet-50 transition-all text-center">
                         </div>
-                        <button type="submit" class="w-full bg-slate-950 text-white py-6 rounded-[2.5rem] font-black uppercase italic border-b-8 border-black active:scale-95 shadow-xl tracking-widest text-xs">Actualizar Tarifas</button>
+                        <button type="submit" class="w-full bg-slate-950 text-white py-6 rounded-[2.5rem] font-black uppercase italic border-b-8 border-black active:scale-95 text-xs tracking-widest">Guardar Cambios</button>
                     </form>
                 </div>
             </div>
 
             <!-- Vista: Stats -->
             <div id="stats-view" class="view-container is-hidden">
-                <h2 class="text-4xl font-black mb-12 uppercase italic text-slate-900 tracking-tighter leading-none text-left">Rankings</h2>
+                <h2 class="text-4xl font-black mb-12 uppercase italic text-slate-900 tracking-tighter text-left">Rankings de Fidelidad</h2>
                 <div id="stats-list" class="space-y-4"></div>
             </div>
         </main>
@@ -189,25 +187,25 @@
     <!-- 3. SISTEMA DE MODALES (VENTANAS EXTRA)       -->
     <!-- ============================================= -->
 
-    <!-- MODAL RESERVA (SALTO NORMAL) -->
+    <!-- MODAL RESERVA SALTO -->
     <div id="booking-modal" class="modal">
         <div class="modal-content max-w-3xl">
             <div class="modal-header text-left bg-slate-900 text-white p-8">
-                <h3 id="booking-modal-title" class="text-3xl font-black uppercase italic tracking-tighter leading-none">Nueva Reserva</h3>
-                <p class="text-[9px] text-violet-400 font-bold uppercase mt-1 tracking-widest leading-none">AeroJump Gualeguaychú</p>
+                <h3 id="booking-modal-title" class="text-3xl font-black uppercase italic tracking-tighter leading-none">Reservar Salto</h3>
+                <p class="text-[9px] text-violet-400 font-bold uppercase mt-1 italic">Control de Cupos AeroJump</p>
             </div>
             <form id="booking-form" class="flex flex-col overflow-hidden text-left">
                 <div class="modal-body custom-scrollbar p-10 bg-white">
                     <input type="hidden" id="booking-id"><input type="hidden" id="booking-date">
                     <div class="space-y-10">
                         <div>
-                            <label class="text-[11px] font-black uppercase text-slate-600 ml-4 italic tracking-widest block mb-2 leading-none">Responsable / Cliente</label>
-                            <input type="text" id="teamName" class="w-full p-6 bg-slate-50 rounded-[2rem] font-black text-3xl italic outline-none focus:ring-8 focus:ring-violet-50 border-2 border-slate-200 transition-all shadow-inner" required placeholder="Nombre..." autocomplete="off">
+                            <label class="text-[11px] font-black uppercase text-slate-600 ml-4 italic tracking-widest block mb-2">Nombre del Cliente</label>
+                            <input type="text" id="teamName" class="w-full p-6 bg-slate-50 rounded-[2rem] font-black text-3xl italic outline-none focus:ring-8 focus:ring-violet-50 border-2 border-slate-200 transition-all shadow-inner" required placeholder="Responsable..." autocomplete="off">
                             <div id="teamName-suggestions" class="absolute z-50 bg-white shadow-2xl rounded-2xl is-hidden w-full max-w-md border-2 border-slate-200 mt-2"></div>
                         </div>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 text-left">
                             <div class="p-8 bg-slate-100 rounded-[3rem] border-2 border-slate-200 text-center relative overflow-hidden leading-none">
-                                <label class="text-[11px] font-black uppercase text-slate-700 block mb-5 italic tracking-widest leading-none">Cantidad Personas</label>
+                                <label class="text-[11px] font-black uppercase text-slate-700 block mb-5 italic font-black">Cantidad de Personas</label>
                                 <div class="flex items-center justify-center gap-10">
                                     <button type="button" onclick="window.adjustJumpers(-1)" class="w-16 h-16 bg-white border-2 border-slate-300 rounded-2xl font-black shadow-lg text-3xl active:scale-90 transition-all">-</button>
                                     <input type="number" id="peopleCount" class="w-20 text-center font-black text-5xl bg-transparent outline-none italic text-slate-900" value="1" min="1" max="30">
@@ -215,182 +213,126 @@
                                 </div>
                             </div>
                             <div class="p-8 bg-violet-50 rounded-[3rem] border-2 border-violet-100 flex flex-col justify-center text-center">
-                                <span class="text-[11px] font-black text-violet-500 uppercase mb-2 italic tracking-widest font-black leading-none">Tarifa x Hora</span>
-                                <input type="number" id="costPerHour" class="bg-transparent font-black text-5xl text-violet-700 outline-none italic text-center leading-none tracking-tighter">
+                                <span class="text-[11px] font-black text-violet-500 uppercase mb-2 italic">Tarifa Base por Hora</span>
+                                <input type="number" id="costPerHour" class="bg-transparent font-black text-5xl text-violet-700 outline-none italic text-center tracking-tighter">
                             </div>
                         </div>
                         <div>
-                            <label class="text-[11px] font-black uppercase text-slate-700 ml-4 block mb-6 italic tracking-widest font-black leading-none uppercase">Horarios Disponibles (Max. 30)</label>
+                            <label class="text-[11px] font-black uppercase text-slate-700 ml-4 block mb-6 italic font-black">Horarios del Día (Capacidad: 30)</label>
                             <div id="court-hours-list" class="grid grid-cols-2 sm:grid-cols-5 gap-4"></div>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer flex flex-col sm:flex-row justify-between items-center gap-8 bg-slate-900 text-white p-10">
                     <div class="text-left leading-none">
-                        <span class="text-[11px] font-black text-violet-400 uppercase tracking-widest block mb-2 italic font-black">Total Salto</span>
+                        <span class="text-[11px] font-black text-violet-400 uppercase block mb-2 italic font-black">Importe Final</span>
                         <p id="booking-total" class="text-6xl font-black italic tracking-tighter leading-none text-white">$0</p>
                     </div>
                     <div class="flex gap-4 w-full sm:w-auto">
-                        <button type="button" onclick="window.closeModals()" class="flex-1 px-8 py-5 font-black text-slate-400 hover:text-white transition-colors uppercase text-[10px] tracking-widest italic">Cerrar</button>
-                        <button type="submit" class="flex-2 bg-violet-600 text-white px-16 py-6 rounded-[2rem] font-black uppercase shadow-2xl active:scale-95 transition-all text-[11px] border-b-8 border-violet-800 italic">Confirmar Turno</button>
-                    </div>
-                </div>
-                <input type="checkbox" id="rentGrill" class="hidden"><input type="number" id="grillCost" class="hidden">
-            </form>
-        </div>
-    </div>
-
-    <!-- MODAL RESERVA (EVENTOS / CUMPLES) -->
-    <div id="event-modal" class="modal">
-        <div class="modal-content max-w-3xl">
-            <div class="modal-header text-left bg-orange-600 text-white p-8">
-                <h3 id="event-modal-title" class="text-3xl font-black uppercase italic tracking-tighter leading-none">Evento Exclusivo</h3>
-                <p class="text-[9px] text-orange-200 font-bold uppercase mt-1 tracking-widest leading-none">Reserva día completo o franja exclusiva</p>
-            </div>
-            <form id="event-form" class="flex flex-col overflow-hidden text-left bg-white">
-                <div class="modal-body custom-scrollbar p-10">
-                    <input type="hidden" id="event-booking-id"><input type="hidden" id="event-date">
-                    <div class="space-y-10">
-                        <div>
-                            <label class="text-[11px] font-black uppercase text-slate-600 ml-4 italic tracking-widest block mb-2 leading-none">Descripción del Evento</label>
-                            <input type="text" id="eventName" placeholder="Ej: Cumpleaños de Lucas" class="w-full p-6 bg-slate-50 rounded-[2rem] font-black text-2xl italic border-2 border-slate-100 outline-none focus:border-orange-600 transition-all" required>
-                        </div>
-                        <div class="grid grid-cols-2 gap-6 leading-none">
-                            <div>
-                                <label class="text-[11px] font-black text-slate-600 uppercase ml-4 mb-1 italic block leading-none">Responsable</label>
-                                <input type="text" id="contactPerson" class="w-full p-5 bg-slate-50 border-2 border-slate-100 rounded-2xl font-bold outline-none focus:border-orange-600">
-                            </div>
-                            <div>
-                                <label class="text-[11px] font-black text-slate-600 uppercase ml-4 mb-1 italic block leading-none">Celular</label>
-                                <input type="tel" id="contactPhone" class="w-full p-5 bg-slate-50 border-2 border-slate-100 rounded-2xl font-bold outline-none focus:border-orange-600">
-                            </div>
-                        </div>
-                        <div>
-                            <label class="text-[11px] font-black uppercase text-slate-700 ml-4 block mb-6 italic font-black leading-none">Seleccionar Horas del Evento</label>
-                            <div id="event-hours-list" class="grid grid-cols-2 sm:grid-cols-5 gap-4"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer flex justify-between items-center bg-slate-950 text-white p-10">
-                    <div class="text-left leading-none">
-                        <span class="text-[11px] font-black text-orange-400 uppercase tracking-widest block mb-2 italic">Precio Evento</span>
-                        <p id="event-total" class="text-6xl font-black italic tracking-tighter text-white">$0</p>
-                    </div>
-                    <div class="flex gap-4">
-                        <button type="button" onclick="window.closeModals()" class="font-black text-slate-500 uppercase text-[10px] italic">Cancelar</button>
-                        <button type="submit" class="bg-orange-500 text-white px-16 py-6 rounded-[2rem] font-black uppercase shadow-2xl active:scale-95 transition-all text-[11px] border-b-8 border-orange-700 italic tracking-widest">Confirmar Evento</button>
+                        <button type="button" onclick="window.closeModals()" class="flex-1 px-8 py-5 font-black text-slate-400 hover:text-white transition-colors uppercase text-[10px] italic">Cancelar</button>
+                        <button type="submit" class="flex-2 bg-violet-600 text-white px-16 py-6 rounded-[2rem] font-black uppercase shadow-2xl active:scale-95 transition-all text-[11px] border-b-8 border-violet-800 italic">Confirmar Reserva</button>
                     </div>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- MODAL VENTAS POS (CATÁLOGO OPTIMIZADO) -->
+    <!-- MODAL VENTAS POS (REDISEÑADO) -->
     <div id="sale-modal" class="modal">
         <div class="modal-content">
             <!-- Header Compacto -->
             <div class="modal-header flex justify-between items-center text-left bg-slate-950 text-white p-6 leading-none">
                 <div>
                     <h3 class="text-2xl font-black text-orange-500 uppercase italic tracking-tighter leading-none">Caja AeroJump</h3>
-                    <p class="text-[8px] text-slate-500 font-bold uppercase tracking-widest italic leading-none font-black">Estación de Cobro Multiproducto</p>
+                    <p class="text-[8px] text-slate-500 font-bold uppercase tracking-widest italic font-black leading-none">Ticket de Venta Multiproducto</p>
                 </div>
                 <button onclick="window.closeModals()" class="p-3 text-slate-600 hover:text-white transition-all active:scale-90 leading-none">
                     <svg class="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="4"><path d="M6 18L18 6M6 6l12 12"></path></svg>
                 </button>
             </div>
 
-            <!-- Búsqueda y Métodos muy compactos -->
-            <div class="flex flex-col md:flex-row border-b-2 border-slate-100 bg-white leading-none">
-                <div class="flex-grow p-4 md:p-6 bg-white flex items-center leading-none">
-                    <input type="text" id="sale-catalog-filter" class="w-full p-4 bg-slate-50 rounded-2xl font-bold text-xl border-2 border-slate-200 outline-none focus:border-violet-500 italic transition-all placeholder:text-slate-300 leading-none" placeholder="🔍 Filtrar Catálogo...">
-                </div>
-                <div class="p-4 md:p-6 bg-slate-50 flex items-center justify-center gap-6 border-l-2 leading-none">
-                    <label class="flex items-center gap-3 cursor-pointer group">
+            <!-- Filtro e Indicaciones -->
+            <div class="bg-white border-b-2 border-slate-100 p-6 flex flex-col md:flex-row gap-6 items-center">
+                <input type="text" id="sale-catalog-filter" class="flex-grow w-full p-4 bg-slate-50 rounded-2xl font-bold text-xl border-2 border-slate-200 outline-none focus:border-violet-500 italic transition-all" placeholder="🔍 Buscar Producto...">
+                <div class="flex gap-4 items-center">
+                    <span class="text-[10px] font-black text-slate-400 uppercase italic">Medio de Cobro:</span>
+                    <label class="flex items-center gap-2 cursor-pointer group">
                         <input type="radio" name="salePaymentMethod" value="efectivo" class="w-6 h-6 accent-orange-600 shadow-xl" checked>
-                        <span class="font-black text-[10px] uppercase tracking-widest text-slate-900 italic leading-none group-hover:text-orange-600 transition-colors font-black">Efectivo 💵</span>
+                        <span class="font-black text-[11px] uppercase text-slate-900 group-hover:text-orange-600 italic leading-none">Efectivo 💵</span>
                     </label>
-                    <label class="flex items-center gap-3 cursor-pointer group">
+                    <label class="flex items-center gap-2 cursor-pointer group">
                         <input type="radio" name="salePaymentMethod" value="mercadopago" class="w-6 h-6 accent-violet-600 shadow-xl">
-                        <span class="font-black text-[10px] uppercase tracking-widest text-slate-900 italic leading-none group-hover:text-violet-600 transition-colors font-black">M.Pago 📱</span>
+                        <span class="font-black text-[11px] uppercase text-slate-900 group-hover:text-violet-600 italic leading-none">M.Pago 📱</span>
                     </label>
                 </div>
             </div>
 
-            <!-- Catálogo (Prioridad 80% de ventana) -->
+            <!-- Cuerpo del POS: Grilla de productos (Progresiva) -->
             <div class="modal-body custom-scrollbar bg-slate-100 p-6 md:p-10 leading-none">
-                <div id="sale-catalog-grid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 leading-none">
-                    <!-- Productos Inyectados -->
+                <div id="sale-catalog-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 leading-none">
+                    <!-- Productos Inyectados aquí -->
                 </div>
             </div>
             
-            <!-- Pie de Pedido compacto -->
+            <!-- Pie de Pedido con el Total Gigante y el Resumen de cierre -->
             <div class="modal-footer bg-slate-950 text-white p-8 leading-none">
                 <div class="flex flex-col lg:flex-row justify-between items-center w-full gap-8 leading-none">
-                    <div class="text-left leading-none flex flex-col md:items-start items-center font-black">
-                        <span class="text-[11px] font-black text-violet-400 uppercase tracking-widest block mb-2 italic font-black leading-none uppercase tracking-[0.2em]">Importe Neto</span>
+                    <div class="text-left leading-none flex flex-col md:items-start items-center">
+                        <span class="text-[11px] font-black text-violet-400 uppercase block mb-2 italic font-black leading-none">Total Neto del Pedido</span>
                         <div class="flex items-baseline leading-none font-black">
                             <span class="text-4xl font-black text-violet-300 mr-2 italic leading-none">$</span>
                             <span id="sale-total-display" class="text-8xl font-black italic tracking-tighter text-white leading-none">0</span>
                         </div>
                     </div>
-                    <button id="confirm-sale-btn" class="w-full lg:w-80 bg-orange-500 text-white py-10 rounded-[3rem] font-black uppercase shadow-2xl disabled:opacity-5 transition-all active:scale-95 italic text-xl border-b-[10px] border-orange-800 leading-none tracking-tighter font-black uppercase" disabled>Cobrar Pedido</button>
+                    <button id="confirm-sale-btn" class="w-full lg:w-96 bg-orange-500 text-white py-10 rounded-[3rem] font-black uppercase shadow-2xl disabled:opacity-5 transition-all active:scale-95 italic text-2xl border-b-[10px] border-orange-800 leading-none tracking-tighter" disabled>Confirmar y Cerrar Venta</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Modales Secundarios (Reposición, Edición, Opciones) -->
+    <!-- Modales Secundarios -->
     <div id="restock-modal" class="modal"><div class="modal-content max-w-sm">
-        <div class="modal-header bg-violet-700 text-white border-none p-6 leading-none text-left">
-            <h3 class="text-2xl font-black uppercase italic tracking-tighter leading-none">📦 Stock</h3>
+        <div class="modal-header bg-violet-700 text-white p-6 leading-none text-left">
+            <h3 class="text-xl font-black uppercase italic tracking-tighter leading-none">📦 Stock</h3>
         </div>
-        <div class="modal-body custom-scrollbar p-10 bg-white">
-            <form id="restock-form" class="space-y-10 text-left leading-none">
+        <div class="modal-body p-8 bg-white text-left">
+            <form id="restock-form" class="space-y-8">
                 <input type="hidden" id="restock-prod-id">
-                <div class="p-8 bg-slate-100 rounded-[3rem] border-2 border-slate-200 text-center shadow-inner leading-none">
-                    <h4 id="restock-name" class="font-black text-slate-950 text-3xl uppercase italic leading-tight mb-3"></h4>
-                    <p class="text-[10px] font-black text-slate-500 uppercase italic leading-none">Saldo Actual: <span id="restock-current-stock" class="text-violet-700 font-black"></span> un.</p>
-                </div>
-                <div class="space-y-8 leading-none">
-                    <div class="leading-none">
-                        <label class="text-[11px] font-black uppercase text-slate-600 italic ml-4 mb-2 block tracking-widest font-black leading-none">Unidades Ingresadas</label>
-                        <input type="number" id="restock-qty" class="w-full p-6 bg-slate-50 rounded-3xl font-black text-5xl text-center border-2 border-slate-200 focus:ring-8 focus:ring-violet-100 outline-none transition-all leading-none italic shadow-inner" required>
+                <h4 id="restock-name" class="font-black text-slate-900 text-2xl uppercase italic"></h4>
+                <div class="space-y-6">
+                    <div>
+                        <label class="text-[10px] font-black uppercase text-slate-400 italic mb-1 block">Unidades a Ingresar</label>
+                        <input type="number" id="restock-qty" class="w-full p-4 bg-slate-50 rounded-xl font-black text-3xl text-center border-2 border-slate-200 outline-none" required>
                     </div>
-                    <div class="leading-none">
-                        <label class="text-[11px] font-black uppercase text-slate-600 italic ml-4 mb-2 block tracking-widest font-black leading-none">Costo Lote ($)</label>
-                        <input type="number" id="restock-batch-cost" class="w-full p-6 bg-violet-50 rounded-3xl font-black text-5xl text-violet-800 text-center border-2 border-violet-100 focus:ring-8 focus:ring-violet-100 outline-none transition-all leading-none italic shadow-inner" required step="0.01">
+                    <div>
+                        <label class="text-[10px] font-black uppercase text-slate-400 italic mb-1 block">Costo Total ($)</label>
+                        <input type="number" id="restock-batch-cost" class="w-full p-4 bg-violet-50 rounded-xl font-black text-3xl text-violet-800 text-center border-2 border-violet-100 outline-none shadow-inner" required step="0.01">
                     </div>
                 </div>
+                <button type="submit" class="w-full bg-violet-700 text-white py-6 rounded-2xl font-black uppercase shadow-xl active:scale-95 transition-all border-b-8 border-violet-950 italic text-xs mt-4">Confirmar Ingreso</button>
             </form>
-        </div>
-        <div class="modal-footer p-10 bg-slate-50 flex flex-col gap-3 leading-none">
-            <button type="submit" form="restock-form" class="w-full bg-violet-700 text-white py-8 rounded-[3rem] font-black shadow-2xl active:scale-95 transition-all border-b-8 border-violet-950 italic text-sm tracking-widest font-black uppercase">Actualizar Stock</button>
-            <button type="button" onclick="window.closeModals()" class="w-full text-slate-400 font-black uppercase text-[10px] italic py-2 tracking-widest">Cancelar</button>
         </div>
     </div></div>
 
     <div id="options-modal" class="modal"><div class="modal-content max-w-sm p-10 text-center border-4 border-violet-100 shadow-3xl leading-none">
         <h3 class="text-3xl font-black mb-10 text-slate-900 uppercase italic leading-none tracking-tighter">Turnos del Día</h3>
         <div id="daily-bookings-list" class="space-y-4 mb-10 text-left custom-scrollbar max-h-[30rem] overflow-y-auto italic pr-2 leading-none"></div>
-        <div class="flex flex-col gap-3">
-            <button id="add-new-booking-btn" class="w-full bg-violet-600 text-white py-6 rounded-[2rem] font-black shadow-xl uppercase text-xs active:scale-95 border-b-8 border-violet-950 italic tracking-widest font-black leading-none">+ Nuevo Salto</button>
-            <button id="add-new-event-btn" class="w-full bg-orange-500 text-white py-6 rounded-[2rem] font-black shadow-xl uppercase text-xs active:scale-95 border-b-8 border-orange-800 italic tracking-widest leading-none">+ Nuevo Evento</button>
-        </div>
+        <button id="add-new-booking-btn" class="w-full bg-violet-700 text-white py-8 rounded-[2.5rem] font-black shadow-2xl uppercase text-[10px] active:scale-95 border-b-8 border-violet-950 italic tracking-widest leading-none font-black uppercase tracking-widest">+ AGREGAR TURNO</button>
         <button onclick="window.closeModals()" class="mt-8 text-slate-400 font-black uppercase text-[10px] tracking-widest hover:text-slate-950 transition-all italic leading-none">Cerrar</button>
     </div></div>
 
-    <!-- Overlay Mensajes -->
+    <!-- Overlay Mensajes AeroJump -->
     <div id="message-overlay" class="modal bg-white/98 backdrop-blur-3xl">
         <div class="flex flex-col items-center justify-center min-h-screen text-center p-12 leading-none">
             <svg width="180" height="180" viewBox="0 0 100 100" class="mb-14 shadow-2xl rounded-full bg-white p-4 border-8 border-violet-50">
                 <path d="M10 80 Q 50 80 90 80" stroke="#7c3aed" stroke-width="12" fill="none" stroke-linecap="round" class="trampoline-line"/>
                 <g class="jumping-child"><circle cx="50" cy="30" r="16" fill="#f97316"/><line x1="50" y1="46" x2="50" y2="80" stroke="#0f172a" stroke-width="9" stroke-linecap="round"/></g>
             </svg>
-            <p id="message-text" class="text-6xl font-black text-slate-950 uppercase italic tracking-tighter leading-none"></p>
+            <p id="message-text" class="text-5xl font-black text-slate-950 uppercase italic tracking-tighter leading-none"></p>
         </div>
     </div>
 
-    <!-- Scripts Modulares -->
+    <!-- Lógica Principal Modular -->
     <script type="module" src="main.js"></script>
 
 </body>
