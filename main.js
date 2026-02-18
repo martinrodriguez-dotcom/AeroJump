@@ -1,8 +1,8 @@
 /**
  * AeroJump Gualeguaychú - Sistema v2026
  * MAIN ORCHESTRATOR MODULE
- * * Este archivo es el núcleo que conecta el esqueleto HTML con los controladores.
- * Expone las funciones al objeto global 'window' para que los eventos onclick funcionen.
+ * centraliza la lógica de todos los módulos y los expone
+ * al alcance global (window) para que el esqueleto HTML funcione correctamente.
  */
 
 import { auth } from "./firebase-config.js";
@@ -48,38 +48,48 @@ import {
 import { 
     openSaleModal, 
     handleConfirmSale, 
-    renderSaleCatalog,
-    updCatalogQty 
+    renderSaleCatalog 
 } from "./sales-controller.js";
 
-// --- 2. CONFIGURACIÓN INICIAL AL CARGAR EL DOM ---
+import { 
+    syncWaivers, 
+    openWaiverModal, 
+    handleSaveWaiver, 
+    clearSignature, 
+    renderWaiverList,
+    downloadWaiver
+} from "./waiver-controller.js";
+
+// --- 2. CONFIGURACIÓN AL CARGAR EL DOM ---
 document.addEventListener('DOMContentLoaded', () => {
 
     /**
      * VINCULACIÓN GLOBAL (Solución definitiva a window.showView is not a function)
-     * Al usar type="module", debemos asignar las funciones a 'window' explícitamente.
+     * Exponemos las funciones necesarias para que los eventos 'onclick' del HTML funcionen.
      */
 
-    // Navegación de Vistas y Menú Lateral
+    // Navegación y Menú Lateral
     window.showView = (viewId) => {
         showView(viewId);
-        // Carga de datos pesados solo cuando el usuario entra a la sección
+        // Carga de datos pesados solo cuando el usuario entra a la sección específica
         if (viewId === 'caja') loadCajaData();
         if (viewId === 'stats') loadStatsData();
-        // Cerrar menú automáticamente después de elegir una opción
+        if (viewId === 'firmas') renderWaiverList();
+        
+        // Cerramos el menú automáticamente al navegar
         window.toggleMenu(false);
     };
 
     window.toggleMenu = (force) => {
         const menu = document.getElementById('main-menu');
         const overlay = document.getElementById('menu-overlay');
-        const isClosed = menu.classList.contains('-translate-x-full');
-        const shouldOpen = force !== undefined ? force : isClosed;
+        const isCurrentlyClosed = menu.classList.contains('-translate-x-full');
+        const shouldOpen = force !== undefined ? force : isCurrentlyClosed;
 
         if (shouldOpen) {
             menu.classList.remove('-translate-x-full');
             overlay.classList.remove('hidden');
-            menu.classList.add('is-open'); // Para el soporte de style.css
+            menu.classList.add('is-open');
         } else {
             menu.classList.add('-translate-x-full');
             overlay.classList.add('hidden');
@@ -87,7 +97,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    // Funciones Base de Interfaz
+    // Funciones Base de UI
     window.openModal = openModal;
     window.closeModals = closeModals;
 
@@ -110,42 +120,48 @@ document.addEventListener('DOMContentLoaded', () => {
     window.openSaleModal = openSaleModal;
     window.handleConfirmSale = handleConfirmSale;
     window.renderSaleCatalog = renderSaleCatalog;
-    window.updCatalogQty = updCatalogQty;
 
-    // Lógica de Finanzas, Gastos y Auditoría
+    // Lógica Financiera y Auditoría
+    window.openDailyAudit = openDailyAudit;
     window.openExpenseModal = openExpenseModal;
     window.handleConfirmExpense = handleConfirmExpense;
-    window.openDailyAudit = openDailyAudit;
 
-    // --- 3. MONITOR DE AUTENTICACIÓN (FIREBASE) ---
+    // Lógica de Firmas Digitales (Exención de Responsabilidad)
+    window.openWaiverModal = openWaiverModal;
+    window.clearSignature = clearSignature;
+    window.renderWaiverList = renderWaiverList;
+    window.downloadWaiver = downloadWaiver;
+
+    // --- 3. MONITOR DE SESIÓN (FIREBASE AUTH) ---
     onAuthStateChanged(auth, (user) => {
         const appContainer = document.getElementById('app-container');
         const loginView = document.getElementById('login-view');
-        const userDisplay = document.getElementById('user-email-display');
+        const userEmailLabel = document.getElementById('user-email-display');
 
         if (user) {
-            // Usuario Autenticado
+            // Usuario autenticado: Mostramos el Panel de Control
             appContainer.classList.remove('is-hidden');
             loginView.classList.add('is-hidden');
-            if (userDisplay) userDisplay.textContent = user.email;
+            if (userEmailLabel) userEmailLabel.textContent = user.email;
             
-            // Iniciar sincronización de datos en tiempo real
+            // Inicializamos la sincronización de todas las colecciones en tiempo real
             syncBookings();
             syncProducts();
+            syncWaivers();
             
-            // Entrar por defecto a la Agenda
+            // Cargamos la vista de Agenda por defecto
             window.showView('calendar');
         } else {
-            // Sin Sesión
+            // Sin sesión activa: Bloqueamos y mostramos Login
             appContainer.classList.add('is-hidden');
             loginView.classList.remove('is-hidden');
-            if (userDisplay) userDisplay.textContent = "";
+            if (userEmailLabel) userEmailLabel.textContent = "";
         }
     });
 
-    // --- 4. GESTIÓN DE FORMULARIOS ---
+    // --- 4. GESTIÓN DE FORMULARIOS Y LISTENERS ---
 
-    // Formulario de Inicio de Sesión
+    // Login Form
     const loginForm = document.getElementById('login-form');
     if (loginForm) {
         loginForm.onsubmit = async (e) => {
@@ -155,12 +171,13 @@ document.addEventListener('DOMContentLoaded', () => {
             try { 
                 await signInWithEmailAndPassword(auth, email, pass); 
             } catch(err) { 
-                alert("ACCESO DENEGADO: Usuario o Contraseña incorrectos."); 
+                console.error("Login Error:", err);
+                alert("DATOS INCORRECTOS: Verifica tu usuario y contraseña."); 
             }
         };
     }
 
-    // Botón de Cerrar Sesión
+    // Botón Salir
     const logoutBtn = document.getElementById('logout-btn');
     if (logoutBtn) {
         logoutBtn.onclick = () => {
@@ -168,40 +185,45 @@ document.addEventListener('DOMContentLoaded', () => {
         };
     }
 
-    // Formulario de Nuevo Producto (Inventario)
+    // Formulario de Nuevo Producto
     const productForm = document.getElementById('product-form');
     if (productForm) {
         productForm.onsubmit = handleSaveProduct;
     }
 
-    // Formulario de Nueva Reserva (Agenda)
+    // Formulario de Nueva Reserva
     const bookingForm = document.getElementById('booking-form');
     if (bookingForm) {
         bookingForm.onsubmit = handleSaveBooking;
     }
+
+    // Formulario de Firma Digital
+    const waiverForm = document.getElementById('waiver-form');
+    if (waiverForm) {
+        waiverForm.onsubmit = handleSaveWaiver;
+    }
     
-    // Formulario de Configuración (Precios base)
+    // Configuración de Tarifas
     const configForm = document.getElementById('config-form');
     if (configForm) {
         configForm.onsubmit = (e) => {
             e.preventDefault();
-            // Aquí se pueden implementar los updates a settings si fuera necesario
             showMessage("TARIFAS ACTUALIZADAS EN NUBE! ✅");
         };
     }
 
-    // --- 5. LISTENERS DE CÁLCULO DINÁMICO ---
+    // --- 5. ESCUCHAS DE CÁLCULO DINÁMICO ---
     
-    // Cálculo de precios en inventario mientras el admin escribe
-    const inputIds = ['prod-batch-cost', 'prod-batch-qty', 'prod-profit-pct'];
-    inputIds.forEach(id => {
+    // Cálculo de márgenes en inventario mientras el admin escribe
+    const inventoryInputs = ['prod-batch-cost', 'prod-batch-qty', 'prod-profit-pct'];
+    inventoryInputs.forEach(id => {
         const el = document.getElementById(id);
         if (el) el.addEventListener('input', calculateProductPrices);
     });
 
-    // Listener para actualizar total de reserva al cambiar precio manual
+    // Actualización de total de reserva al cambiar precio manual
     const priceInput = document.getElementById('costPerHour');
     if (priceInput) {
-        priceInput.addEventListener('input', updateBookingTotal);
+        priceInput.addEventListener('input', () => window.updateBookingVisualTotal());
     }
 });
