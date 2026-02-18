@@ -1,210 +1,213 @@
 /**
  * AeroJump Gualeguaychú - Sales Controller Module
- * Motor del Punto de Venta (POS). Gestiona el carrito, cálculos de total
- * y el cierre de ventas con actualización de stock en tiempo real.
+ * Motor del Punto de Venta (POS). Gestiona el carrito, ticket detallado
+ * y cierre de ventas con actualización atómica de stock.
  */
 
 import { 
     writeBatch, Timestamp 
 } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 import { auth, db, getPublicDoc } from "./firebase-config.js";
-import { showMessage, hideMessage, closeModals } from "./ui-controller.js";
+import { showMessage, hideMessage, closeModals, openModal } from "./ui-controller.js";
 import { getProductList } from "./kiosco-controller.js";
 
-// --- ESTADO INTERNO DEL PEDIDO ---
-let cartItems = {}; // Estructura: { productId: { quantity, price, name } }
-
-// --- REFERENCIAS AL DOM ---
-const saleCatalogGrid = document.getElementById('sale-catalog-grid');
-const saleTotalDisplay = document.getElementById('sale-total-display');
-const confirmSaleBtn = document.getElementById('confirm-sale-btn');
-const saleCatalogFilter = document.getElementById('sale-catalog-filter');
+// --- ESTADO INTERNO ---
+let saleCart = []; // Array de objetos { id, name, salePrice, qty, stockMax }
 
 /**
- * Inicia una nueva sesión de venta y limpia el carrito anterior.
+ * Abre el Punto de Venta y resetea el estado.
  */
 export function openSaleModal() {
-    cartItems = {}; 
-    if (saleCatalogFilter) saleCatalogFilter.value = '';
+    saleCart = [];
+    const filterInput = document.getElementById('sale-catalog-filter');
+    if (filterInput) filterInput.value = '';
+    
     renderSaleCatalog();
-    updateVisualTotal();
-    // El modal se abre desde main.js llamando a openModal('sale-modal')
+    renderSaleCart();
+    openModal('sale-modal');
 }
 
 /**
- * Dibuja el catálogo de productos con sus controles de cantidad.
- * @param {string} filter - Texto para búsqueda dinámica de productos.
+ * Renderiza el catálogo de productos (Lado Izquierdo).
  */
 export function renderSaleCatalog(filter = "") {
-    if (!saleCatalogGrid) return;
-    saleCatalogGrid.innerHTML = '';
+    const list = document.getElementById('sale-catalog-list');
+    if (!list) return;
+    list.innerHTML = '';
     
-    const allProducts = getProductList(); // Obtenemos productos del kiosco-controller
-    const filtered = allProducts.filter(p => 
-        p.name.toLowerCase().includes(filter.toLowerCase())
-    );
+    const allProducts = getProductList();
+    const filtered = allProducts.filter(p => p.name.toLowerCase().includes(filter.toLowerCase()));
 
     if (filtered.length === 0) {
-        saleCatalogGrid.innerHTML = `
-            <div class="col-span-full py-20 text-center opacity-30">
-                <p class="text-xl font-black uppercase italic">Sin productos en inventario</p>
-            </div>
-        `;
+        list.innerHTML = `<div class="py-20 text-center opacity-20 font-black uppercase italic">Sin productos</div>`;
         return;
     }
 
     filtered.forEach(p => {
-        const itemInCart = cartItems[p.id] || { quantity: 0 };
-        const card = document.createElement('div');
-        card.className = 'product-sale-card'; // Estilo definido en style.css
+        const itemInCart = saleCart.find(i => i.id === p.id);
+        const currentQty = itemInCart ? itemInCart.qty : 0;
+
+        const row = document.createElement('div');
+        // Clase definida en style.css para el look Bento
+        row.className = 'pos-item-list bg-white border-2 border-slate-100 shadow-sm';
         
-        card.innerHTML = `
-            <div class="text-left mb-4 leading-none">
-                <p class="font-black text-xs uppercase text-slate-900 leading-tight mb-1 italic">${p.name}</p>
-                <div class="flex justify-between items-center">
-                    <span class="text-[8px] font-black px-2 py-0.5 bg-slate-100 text-slate-500 rounded uppercase">Stock: ${p.stock}</span>
-                    <strong class="text-lg font-black text-violet-700 italic tracking-tighter">$${p.salePrice}</strong>
+        row.innerHTML = `
+            <div class="flex-grow text-left leading-none">
+                <p class="text-lg font-black uppercase italic text-slate-900 mb-1">${p.name}</p>
+                <div class="flex items-center gap-2">
+                    <span class="text-[9px] font-black uppercase bg-slate-100 px-2 py-1 rounded text-slate-500">Stock: ${p.stock}</span>
+                    <strong class="text-xl font-black text-violet-600 font-mono">$${p.salePrice}</strong>
                 </div>
             </div>
-            
-            <div class="flex items-center justify-between bg-slate-900 p-2 rounded-xl border-2 border-slate-800">
-                <button class="qty-btn-minus w-8 h-8 flex items-center justify-center bg-white/10 text-white rounded-lg font-black hover:bg-red-600 transition-all">-</button>
-                <input type="number" class="qty-input w-12 text-center bg-transparent font-black text-xl italic text-orange-400 outline-none" value="${itemInCart.quantity}" min="0" max="${p.stock}">
-                <button class="qty-btn-plus w-8 h-8 flex items-center justify-center bg-white/10 text-white rounded-lg font-black hover:bg-green-600 transition-all" ${itemInCart.quantity >= p.stock ? 'disabled opacity-20' : ''}>+</button>
+            <div class="flex items-center gap-4 bg-slate-50 p-2 rounded-2xl border border-slate-100">
+                <button class="w-10 h-10 bg-white border-2 border-slate-200 rounded-xl font-black text-xl hover:bg-red-500 hover:text-white transition-all active:scale-90" onclick="window.updCatalogQty('${p.id}', -1)">-</button>
+                <span class="font-black text-2xl font-mono w-8 text-center">${currentQty}</span>
+                <button class="w-10 h-10 bg-white border-2 border-slate-200 rounded-xl font-black text-xl hover:bg-green-500 hover:text-white transition-all active:scale-90" onclick="window.updCatalogQty('${p.id}', 1)">+</button>
             </div>
         `;
-
-        // Lógica de botones y entrada manual
-        const input = card.querySelector('.qty-input');
-        
-        card.querySelector('.qty-btn-minus').onclick = () => updateCartQuantity(p, -1);
-        card.querySelector('.qty-btn-plus').onclick = () => updateCartQuantity(p, 1);
-        
-        input.onchange = (e) => {
-            let val = parseInt(e.target.value) || 0;
-            if (val < 0) val = 0;
-            if (val > p.stock) {
-                val = p.stock;
-                showMessage("Límite de stock alcanzado", true);
-                setTimeout(hideMessage, 1500);
-            }
-            setCartQuantity(p, val);
-        };
-
-        saleCatalogGrid.appendChild(card);
+        list.appendChild(row);
     });
 }
 
 /**
- * Modifica la cantidad de un ítem en el carrito (Suma/Resta).
+ * Actualiza las cantidades del carrito (Exportada para main.js).
  */
-function updateCartQuantity(product, delta) {
-    let currentQty = cartItems[product.id]?.quantity || 0;
-    let newQty = currentQty + delta;
-    
-    if (newQty < 0) newQty = 0;
-    if (newQty > product.stock) newQty = product.stock;
-    
-    setCartQuantity(product, newQty);
-}
+export function updCatalogQty(productId, delta) {
+    const allProducts = getProductList();
+    const product = allProducts.find(p => p.id === productId);
+    if (!product) return;
 
-/**
- * Establece una cantidad fija para un ítem.
- */
-function setCartQuantity(product, qty) {
-    if (qty === 0) {
-        delete cartItems[product.id];
+    const existingIndex = saleCart.findIndex(i => i.id === productId);
+
+    if (existingIndex > -1) {
+        saleCart[existingIndex].qty += delta;
+        if (saleCart[existingIndex].qty <= 0) {
+            saleCart.splice(existingIndex, 1);
+        } else if (saleCart[existingIndex].qty > product.stock) {
+            saleCart[existingIndex].qty = product.stock;
+            showMessage("Stock máximo alcanzado", true);
+        }
     } else {
-        cartItems[product.id] = {
-            id: product.id,
-            name: product.name,
-            price: product.salePrice,
-            quantity: qty,
-            stockMax: product.stock
-        };
+        if (delta > 0) {
+            if (product.stock > 0) {
+                saleCart.push({
+                    id: product.id,
+                    name: product.name,
+                    salePrice: product.salePrice,
+                    qty: 1,
+                    stockMax: product.stock
+                });
+            } else {
+                showMessage("Sin stock disponible", true);
+            }
+        }
     }
-    
-    renderSaleCatalog(saleCatalogFilter?.value || "");
-    updateVisualTotal();
+
+    renderSaleCatalog(document.getElementById('sale-catalog-filter')?.value || "");
+    renderSaleCart();
 }
 
 /**
- * Calcula el importe total y habilita/deshabilita el botón de cobro.
+ * Renderiza el ticket de venta (Lado Derecho).
  */
-function updateVisualTotal() {
+function renderSaleCart() {
+    const list = document.getElementById('sale-cart-list');
+    const display = document.getElementById('sale-total-display');
+    const btn = document.getElementById('confirm-sale-btn');
+    const emptyMsg = document.getElementById('empty-cart-msg');
+
+    if (!list || !display || !btn) return;
+
+    list.innerHTML = '';
     let total = 0;
-    Object.values(cartItems).forEach(item => {
-        total += (item.price * item.quantity);
+
+    if (saleCart.length === 0) {
+        emptyMsg.classList.remove('is-hidden');
+        display.textContent = "0";
+        btn.disabled = true;
+        return;
+    }
+
+    emptyMsg.classList.add('is-hidden');
+    
+    saleCart.forEach(item => {
+        const subtotal = item.salePrice * item.qty;
+        total += subtotal;
+
+        const row = document.createElement('div');
+        row.className = 'bg-white p-4 rounded-2xl border-2 border-slate-100 flex justify-between items-center mb-3 italic font-black shadow-sm';
+        row.innerHTML = `
+            <div class="text-left">
+                <p class="text-xs uppercase text-slate-400">ITEM</p>
+                <p class="text-sm uppercase">${item.name} x${item.qty}</p>
+            </div>
+            <p class="text-lg font-mono">$${subtotal.toLocaleString('es-AR')}</p>
+        `;
+        list.appendChild(row);
     });
 
-    if (saleTotalDisplay) {
-        saleTotalDisplay.textContent = total.toLocaleString('es-AR');
-    }
-
-    if (confirmSaleBtn) {
-        confirmSaleBtn.disabled = total <= 0;
-    }
+    display.textContent = total.toLocaleString('es-AR');
+    btn.disabled = false;
 }
 
 /**
- * Procesa el cobro definitivo, guarda tickets y actualiza stock.
+ * Cierre de venta atómico.
  */
 export async function handleConfirmSale() {
-    const total = parseFloat(saleTotalDisplay.textContent.replace(/\./g, ''));
-    if (total <= 0) return;
+    if (saleCart.length === 0) return;
 
-    // Obtener medio de pago
-    const methodEl = document.querySelector('input[name="salePaymentMethod"]:checked');
-    const paymentMethod = methodEl ? methodEl.value : 'efectivo';
-
-    confirmSaleBtn.disabled = true;
-    showMessage("Cerrando Venta...");
+    const confirmBtn = document.getElementById('confirm-sale-btn');
+    confirmBtn.disabled = true;
+    showMessage("Procesando cobro...");
 
     try {
         const batch = writeBatch(db);
         const now = new Date();
-        const dayStr = now.toISOString().split('T')[0];
-        const monthYear = dayStr.substring(0, 7);
+        const day = now.toISOString().split('T')[0];
 
-        // Procesar cada ítem del carrito
-        for (const item of Object.values(cartItems)) {
-            // 1. Crear el ticket de venta
+        saleCart.forEach(item => {
+            // 1. Registro de venta
             const saleRef = getPublicDoc("sales", `${Date.now()}_${item.id}`);
             batch.set(saleRef, {
                 productId: item.id,
                 name: item.name,
-                qty: item.quantity,
-                unitPrice: item.price,
-                total: item.price * item.quantity,
-                paymentMethod: paymentMethod,
-                day: dayStr,
-                monthYear: monthYear,
+                qty: item.qty,
+                price: item.salePrice,
+                total: item.salePrice * item.qty,
+                day: day,
                 timestamp: Timestamp.now(),
-                adminEmail: auth.currentUser.email
+                adminEmail: auth.currentUser?.email || "admin@aerojump.com"
             });
 
-            // 2. Descontar del stock real del producto
+            // 2. Descuento de stock
             const productRef = getPublicDoc("products", item.id);
             batch.update(productRef, {
-                stock: item.stockMax - item.quantity
+                stock: item.stockMax - item.qty
             });
-        }
+        });
 
-        // Ejecución atómica de todas las transacciones
         await batch.commit();
         
-        showMessage("¡Venta Exitosa!");
+        showMessage("VENTA EXITOSA! 🚀");
         setTimeout(() => {
             hideMessage();
             closeModals();
         }, 1500);
 
     } catch (error) {
-        console.error("Error en Transacción AeroJump:", error);
-        showMessage("Error al procesar venta", true);
-        confirmSaleBtn.disabled = false;
+        console.error("Error POS AeroJump:", error);
+        showMessage("Error al cobrar", true);
+        confirmBtn.disabled = false;
     }
 }
 
-// Vinculación para que el buscador funcione inmediatamente
+// Escuchar el filtro de búsqueda
+document.addEventListener('input', (e) => {
+    if (e.target.id === 'sale-catalog-filter') {
+        renderSaleCatalog(e.target.value);
+    }
+});
+
+// Vincular a window para que los onclick del catálogo funcionen
+window.updCatalogQty = updCatalogQty;
 window.renderSaleCatalog = renderSaleCatalog;
