@@ -1,7 +1,7 @@
 /**
  * AeroJump Gualeguaychú - Sales Controller Module
- * Motor del Punto de Venta (POS). Gestiona el carrito, ticket detallado
- * y cierre de ventas con actualización atómica de stock.
+ * Motor del Punto de Venta (POS). Gestiona el catálogo en lista, 
+ * el carrito y cierre de ventas con actualización de stock.
  */
 
 import { 
@@ -12,7 +12,7 @@ import { showMessage, hideMessage, closeModals, openModal } from "./ui-controlle
 import { getProductList } from "./kiosco-controller.js";
 
 // --- ESTADO INTERNO ---
-let saleCart = []; // Array de objetos { id, name, salePrice, qty, stockMax }
+let saleCart = []; 
 
 /**
  * Abre el Punto de Venta y resetea el estado.
@@ -28,41 +28,66 @@ export function openSaleModal() {
 }
 
 /**
- * Renderiza el catálogo de productos (Lado Izquierdo).
+ * Renderiza el catálogo de productos en FILAS (Lista moderna).
  */
 export function renderSaleCatalog(filter = "") {
     const list = document.getElementById('sale-catalog-list');
     if (!list) return;
     list.innerHTML = '';
     
+    // Obtenemos lista y ORDENAMOS ALFABÉTICAMENTE
     const allProducts = getProductList();
-    const filtered = allProducts.filter(p => p.name.toLowerCase().includes(filter.toLowerCase()));
+    const sortedProducts = [...allProducts].sort((a, b) => a.name.localeCompare(b.name));
+    
+    const filtered = sortedProducts.filter(p => p.name.toLowerCase().includes(filter.toLowerCase()));
 
     if (filtered.length === 0) {
-        list.innerHTML = `<div class="py-20 text-center opacity-20 font-black uppercase italic">Sin productos</div>`;
+        list.innerHTML = `<div class="py-20 text-center opacity-20 font-black uppercase italic">Sin coincidencias</div>`;
         return;
     }
+
+    // Cabecera de la lista (Opcional, pero ayuda a la claridad)
+    const header = document.createElement('div');
+    header.className = 'hidden md:flex px-6 py-3 border-b border-slate-100 text-[10px] font-black uppercase text-slate-400 italic';
+    header.innerHTML = `
+        <div class="flex-grow">Producto</div>
+        <div class="w-24 text-center">Stock</div>
+        <div class="w-24 text-center">Precio</div>
+        <div class="w-32 text-right">Cantidad</div>
+    `;
+    list.appendChild(header);
 
     filtered.forEach(p => {
         const itemInCart = saleCart.find(i => i.id === p.id);
         const currentQty = itemInCart ? itemInCart.qty : 0;
 
         const row = document.createElement('div');
-        // Clase definida en style.css para el look Bento
-        row.className = 'pos-item-list bg-white border-2 border-slate-100 shadow-sm';
+        // Clase optimizada en style.css para formato lista
+        row.className = 'pos-item-row bg-white hover:bg-slate-50 transition-all border-b border-slate-100 px-6 py-4 flex flex-col md:flex-row items-center gap-4';
         
         row.innerHTML = `
-            <div class="flex-grow text-left leading-none">
-                <p class="text-lg font-black uppercase italic text-slate-900 mb-1">${p.name}</p>
-                <div class="flex items-center gap-2">
-                    <span class="text-[9px] font-black uppercase bg-slate-100 px-2 py-1 rounded text-slate-500">Stock: ${p.stock}</span>
-                    <strong class="text-xl font-black text-violet-600 font-mono">$${p.salePrice}</strong>
-                </div>
+            <!-- Columna 1: Nombre -->
+            <div class="flex-grow text-left leading-none w-full md:w-auto">
+                <p class="text-sm font-black uppercase italic text-slate-900">${p.name}</p>
             </div>
-            <div class="flex items-center gap-4 bg-slate-50 p-2 rounded-2xl border border-slate-100">
-                <button class="w-10 h-10 bg-white border-2 border-slate-200 rounded-xl font-black text-xl hover:bg-red-500 hover:text-white transition-all active:scale-90" onclick="window.updCatalogQty('${p.id}', -1)">-</button>
-                <span class="font-black text-2xl font-mono w-8 text-center">${currentQty}</span>
-                <button class="w-10 h-10 bg-white border-2 border-slate-200 rounded-xl font-black text-xl hover:bg-green-500 hover:text-white transition-all active:scale-90" onclick="window.updCatalogQty('${p.id}', 1)">+</button>
+
+            <div class="flex items-center justify-between w-full md:w-auto gap-8">
+                <!-- Columna 2: Stock -->
+                <div class="w-16 text-center">
+                    <span class="text-[9px] font-black uppercase ${p.stock < 5 ? 'text-red-500 bg-red-50' : 'text-slate-400 bg-slate-100'} px-2 py-1 rounded-lg">${p.stock} un</span>
+                </div>
+
+                <!-- Columna 3: Precio -->
+                <div class="w-20 text-center">
+                    <strong class="text-lg font-black text-slate-900 font-mono tracking-tighter">$${p.salePrice}</strong>
+                </div>
+
+                <!-- Columna 4: Selector +/- -->
+                <div class="w-32 flex items-center justify-end gap-3">
+                    <button class="w-8 h-8 bg-slate-100 hover:bg-black hover:text-white rounded-lg font-black text-lg transition-all active:scale-90" onclick="window.updCatalogQty('${p.id}', -1)">-</button>
+                    <span class="font-black text-xl font-mono w-6 text-center ${currentQty > 0 ? 'text-violet-600' : 'text-slate-300'}">${currentQty}</span>
+                    <button class="w-8 h-8 bg-slate-100 hover:bg-black hover:text-white rounded-lg font-black text-lg transition-all active:scale-90" onclick="window.updCatalogQty('${p.id}', 1)">+</button>
+                </div>
             </div>
         `;
         list.appendChild(row);
@@ -70,7 +95,7 @@ export function renderSaleCatalog(filter = "") {
 }
 
 /**
- * Actualiza las cantidades del carrito (Exportada para main.js).
+ * Actualiza las cantidades del carrito.
  */
 export function updCatalogQty(productId, delta) {
     const allProducts = getProductList();
@@ -98,17 +123,18 @@ export function updCatalogQty(productId, delta) {
                     stockMax: product.stock
                 });
             } else {
-                showMessage("Sin stock disponible", true);
+                showMessage("Sin stock", true);
             }
         }
     }
 
+    // Refrescamos solo los valores visuales para no perder el scroll
     renderSaleCatalog(document.getElementById('sale-catalog-filter')?.value || "");
     renderSaleCart();
 }
 
 /**
- * Renderiza el ticket de venta (Lado Derecho).
+ * Renderiza el ticket de venta (Derecha).
  */
 function renderSaleCart() {
     const list = document.getElementById('sale-cart-list');
@@ -135,13 +161,13 @@ function renderSaleCart() {
         total += subtotal;
 
         const row = document.createElement('div');
-        row.className = 'bg-white p-4 rounded-2xl border-2 border-slate-100 flex justify-between items-center mb-3 italic font-black shadow-sm';
+        row.className = 'bg-slate-50 p-4 rounded-2xl border border-slate-100 flex justify-between items-center mb-2 italic font-black text-xs';
         row.innerHTML = `
             <div class="text-left">
-                <p class="text-xs uppercase text-slate-400">ITEM</p>
-                <p class="text-sm uppercase">${item.name} x${item.qty}</p>
+                <p class="uppercase text-slate-400 text-[8px]">ITEM</p>
+                <p class="uppercase">${item.name} x${item.qty}</p>
             </div>
-            <p class="text-lg font-mono">$${subtotal.toLocaleString('es-AR')}</p>
+            <p class="text-sm font-mono">$${subtotal.toLocaleString('es-AR')}</p>
         `;
         list.appendChild(row);
     });
@@ -158,7 +184,7 @@ export async function handleConfirmSale() {
 
     const confirmBtn = document.getElementById('confirm-sale-btn');
     confirmBtn.disabled = true;
-    showMessage("Procesando cobro...");
+    showMessage("Cobrando...");
 
     try {
         const batch = writeBatch(db);
@@ -166,7 +192,6 @@ export async function handleConfirmSale() {
         const day = now.toISOString().split('T')[0];
 
         saleCart.forEach(item => {
-            // 1. Registro de venta
             const saleRef = getPublicDoc("sales", `${Date.now()}_${item.id}`);
             batch.set(saleRef, {
                 productId: item.id,
@@ -179,7 +204,6 @@ export async function handleConfirmSale() {
                 adminEmail: auth.currentUser?.email || "admin@aerojump.com"
             });
 
-            // 2. Descuento de stock
             const productRef = getPublicDoc("products", item.id);
             batch.update(productRef, {
                 stock: item.stockMax - item.qty
@@ -188,26 +212,19 @@ export async function handleConfirmSale() {
 
         await batch.commit();
         
-        showMessage("VENTA EXITOSA! 🚀");
+        showMessage("COBRO EXITOSO! 🚀");
         setTimeout(() => {
             hideMessage();
             closeModals();
         }, 1500);
 
     } catch (error) {
-        console.error("Error POS AeroJump:", error);
+        console.error("Error POS:", error);
         showMessage("Error al cobrar", true);
         confirmBtn.disabled = false;
     }
 }
 
-// Escuchar el filtro de búsqueda
-document.addEventListener('input', (e) => {
-    if (e.target.id === 'sale-catalog-filter') {
-        renderSaleCatalog(e.target.value);
-    }
-});
-
-// Vincular a window para que los onclick del catálogo funcionen
+// Vincular a window
 window.updCatalogQty = updCatalogQty;
 window.renderSaleCatalog = renderSaleCatalog;
