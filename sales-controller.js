@@ -1,7 +1,7 @@
 /**
  * AeroJump Gualeguaychú - Sales Controller Module
- * Motor del Punto de Venta (POS). Gestiona el catálogo en lista, 
- * el carrito y cierre de ventas con actualización de stock.
+ * Motor del Punto de Venta (POS). Gestiona el catálogo en lista alfabética, 
+ * el ticket en tiempo real y el cobro con múltiples medios de pago.
  */
 
 import { 
@@ -12,48 +12,54 @@ import { showMessage, hideMessage, closeModals, openModal } from "./ui-controlle
 import { getProductList } from "./kiosco-controller.js";
 
 // --- ESTADO INTERNO ---
-let saleCart = []; 
+let saleCart = []; // Array de { id, name, price, qty, stockMax }
 
 /**
- * Abre el Punto de Venta y resetea el estado.
+ * Abre el Punto de Venta y limpia sesiones anteriores.
  */
 export function openSaleModal() {
     saleCart = [];
     const filterInput = document.getElementById('sale-catalog-filter');
     if (filterInput) filterInput.value = '';
     
+    // Resetear medio de pago a efectivo por defecto
+    const payMethod = document.getElementById('sale-payment-method');
+    if (payMethod) payMethod.value = 'efectivo';
+
     renderSaleCatalog();
     renderSaleCart();
     openModal('sale-modal');
 }
 
 /**
- * Renderiza el catálogo de productos en FILAS (Lista moderna).
+ * Renderiza el catálogo en formato de filas ordenadas alfabéticamente.
  */
 export function renderSaleCatalog(filter = "") {
     const list = document.getElementById('sale-catalog-list');
     if (!list) return;
     list.innerHTML = '';
     
-    // Obtenemos lista y ORDENAMOS ALFABÉTICAMENTE
     const allProducts = getProductList();
-    const sortedProducts = [...allProducts].sort((a, b) => a.name.localeCompare(b.name));
     
-    const filtered = sortedProducts.filter(p => p.name.toLowerCase().includes(filter.toLowerCase()));
+    // 1. Orden Alfabético estricto
+    const sorted = [...allProducts].sort((a, b) => a.name.localeCompare(b.name));
+    
+    // 2. Filtrado por búsqueda
+    const filtered = sorted.filter(p => p.name.toLowerCase().includes(filter.toLowerCase()));
 
     if (filtered.length === 0) {
-        list.innerHTML = `<div class="py-20 text-center opacity-20 font-black uppercase italic">Sin coincidencias</div>`;
+        list.innerHTML = `<div class="py-20 text-center opacity-20 font-black uppercase italic">No se encontraron productos</div>`;
         return;
     }
 
-    // Cabecera de la lista (Opcional, pero ayuda a la claridad)
+    // Cabecera de columnas (Visible solo en desktop para guía)
     const header = document.createElement('div');
-    header.className = 'hidden md:flex px-6 py-3 border-b border-slate-100 text-[10px] font-black uppercase text-slate-400 italic';
+    header.className = 'hidden md:flex px-6 py-2 border-b border-slate-100 text-[9px] font-black uppercase text-slate-400 italic bg-slate-50';
     header.innerHTML = `
         <div class="flex-grow">Producto</div>
         <div class="w-24 text-center">Stock</div>
         <div class="w-24 text-center">Precio</div>
-        <div class="w-32 text-right">Cantidad</div>
+        <div class="w-32 text-right">Cant. Venta</div>
     `;
     list.appendChild(header);
 
@@ -62,31 +68,33 @@ export function renderSaleCatalog(filter = "") {
         const currentQty = itemInCart ? itemInCart.qty : 0;
 
         const row = document.createElement('div');
-        // Clase optimizada en style.css para formato lista
-        row.className = 'pos-item-row bg-white hover:bg-slate-50 transition-all border-b border-slate-100 px-6 py-4 flex flex-col md:flex-row items-center gap-4';
+        row.className = 'pos-item-row px-6 py-4 flex flex-col md:flex-row items-center gap-4 bg-white hover:bg-slate-50 transition-all';
         
         row.innerHTML = `
-            <!-- Columna 1: Nombre -->
+            <!-- Columna Nombre -->
             <div class="flex-grow text-left leading-none w-full md:w-auto">
                 <p class="text-sm font-black uppercase italic text-slate-900">${p.name}</p>
             </div>
 
+            <!-- Datos y Controles -->
             <div class="flex items-center justify-between w-full md:w-auto gap-8">
-                <!-- Columna 2: Stock -->
+                <!-- Columna Stock -->
                 <div class="w-16 text-center">
-                    <span class="text-[9px] font-black uppercase ${p.stock < 5 ? 'text-red-500 bg-red-50' : 'text-slate-400 bg-slate-100'} px-2 py-1 rounded-lg">${p.stock} un</span>
+                    <span class="text-[9px] font-black uppercase ${p.stock < 5 ? 'text-red-500 bg-red-50' : 'text-slate-400 bg-slate-100'} px-2 py-1 rounded-lg">
+                        ${p.stock} un.
+                    </span>
                 </div>
 
-                <!-- Columna 3: Precio -->
+                <!-- Columna Precio -->
                 <div class="w-20 text-center">
                     <strong class="text-lg font-black text-slate-900 font-mono tracking-tighter">$${p.salePrice}</strong>
                 </div>
 
-                <!-- Columna 4: Selector +/- -->
+                <!-- Columna Selector +/- -->
                 <div class="w-32 flex items-center justify-end gap-3">
-                    <button class="w-8 h-8 bg-slate-100 hover:bg-black hover:text-white rounded-lg font-black text-lg transition-all active:scale-90" onclick="window.updCatalogQty('${p.id}', -1)">-</button>
-                    <span class="font-black text-xl font-mono w-6 text-center ${currentQty > 0 ? 'text-violet-600' : 'text-slate-300'}">${currentQty}</span>
-                    <button class="w-8 h-8 bg-slate-100 hover:bg-black hover:text-white rounded-lg font-black text-lg transition-all active:scale-90" onclick="window.updCatalogQty('${p.id}', 1)">+</button>
+                    <button class="w-9 h-9 bg-slate-100 hover:bg-black hover:text-white rounded-xl font-black text-xl transition-all active:scale-90" onclick="window.updCatalogQty('${p.id}', -1)">-</button>
+                    <span class="font-black text-xl font-mono w-6 text-center ${currentQty > 0 ? 'text-violet-600' : 'text-slate-200'}">${currentQty}</span>
+                    <button class="w-9 h-9 bg-slate-100 hover:bg-black hover:text-white rounded-xl font-black text-xl transition-all active:scale-90" onclick="window.updCatalogQty('${p.id}', 1)">+</button>
                 </div>
             </div>
         `;
@@ -95,7 +103,7 @@ export function renderSaleCatalog(filter = "") {
 }
 
 /**
- * Actualiza las cantidades del carrito.
+ * Gestiona las cantidades del carrito (Sincronizado con el Ticket).
  */
 export function updCatalogQty(productId, delta) {
     const allProducts = getProductList();
@@ -106,11 +114,13 @@ export function updCatalogQty(productId, delta) {
 
     if (existingIndex > -1) {
         saleCart[existingIndex].qty += delta;
+        
+        // Reglas de límites
         if (saleCart[existingIndex].qty <= 0) {
             saleCart.splice(existingIndex, 1);
         } else if (saleCart[existingIndex].qty > product.stock) {
             saleCart[existingIndex].qty = product.stock;
-            showMessage("Stock máximo alcanzado", true);
+            showMessage("Límite de stock alcanzado", true);
         }
     } else {
         if (delta > 0) {
@@ -118,113 +128,122 @@ export function updCatalogQty(productId, delta) {
                 saleCart.push({
                     id: product.id,
                     name: product.name,
-                    salePrice: product.salePrice,
+                    price: product.salePrice,
                     qty: 1,
                     stockMax: product.stock
                 });
             } else {
-                showMessage("Sin stock", true);
+                showMessage("Sin unidades disponibles", true);
             }
         }
     }
 
-    // Refrescamos solo los valores visuales para no perder el scroll
+    // Actualizar visuales inmediatamente
     renderSaleCatalog(document.getElementById('sale-catalog-filter')?.value || "");
     renderSaleCart();
 }
 
 /**
- * Renderiza el ticket de venta (Derecha).
+ * Dibuja el ticket de la derecha y calcula el total final.
  */
 function renderSaleCart() {
     const list = document.getElementById('sale-cart-list');
     const display = document.getElementById('sale-total-display');
-    const btn = document.getElementById('confirm-sale-btn');
+    const confirmBtn = document.getElementById('confirm-sale-btn');
     const emptyMsg = document.getElementById('empty-cart-msg');
 
-    if (!list || !display || !btn) return;
+    if (!list || !display) return;
 
     list.innerHTML = '';
     let total = 0;
 
     if (saleCart.length === 0) {
-        emptyMsg.classList.remove('is-hidden');
-        display.textContent = "0";
-        btn.disabled = true;
+        if (emptyMsg) emptyMsg.classList.remove('is-hidden');
+        display.textContent = "$0";
+        confirmBtn.disabled = true;
         return;
     }
 
-    emptyMsg.classList.add('is-hidden');
+    if (emptyMsg) emptyMsg.classList.add('is-hidden');
     
     saleCart.forEach(item => {
-        const subtotal = item.salePrice * item.qty;
+        const subtotal = item.price * item.qty;
         total += subtotal;
 
-        const row = document.createElement('div');
-        row.className = 'bg-slate-50 p-4 rounded-2xl border border-slate-100 flex justify-between items-center mb-2 italic font-black text-xs';
-        row.innerHTML = `
-            <div class="text-left">
-                <p class="uppercase text-slate-400 text-[8px]">ITEM</p>
-                <p class="uppercase">${item.name} x${item.qty}</p>
+        const ticketItem = document.createElement('div');
+        ticketItem.className = 'bg-white p-3 rounded-xl border border-slate-100 flex justify-between items-center mb-2 shadow-sm italic';
+        ticketItem.innerHTML = `
+            <div class="text-left leading-tight">
+                <p class="text-[10px] font-black uppercase text-slate-800">${item.name}</p>
+                <p class="text-[9px] text-slate-400 font-bold">CANT: ${item.qty} x $${item.price}</p>
             </div>
-            <p class="text-sm font-mono">$${subtotal.toLocaleString('es-AR')}</p>
+            <span class="font-black text-sm font-mono text-violet-600">$${subtotal.toLocaleString('es-AR')}</span>
         `;
-        list.appendChild(row);
+        list.appendChild(ticketItem);
     });
 
-    display.textContent = total.toLocaleString('es-AR');
-    btn.disabled = false;
+    display.textContent = `$${total.toLocaleString('es-AR')}`;
+    confirmBtn.disabled = false;
 }
 
 /**
- * Cierre de venta atómico.
+ * Procesa el cobro atómico: registra venta y descuenta stock.
  */
 export async function handleConfirmSale() {
     if (saleCart.length === 0) return;
 
     const confirmBtn = document.getElementById('confirm-sale-btn');
+    const paymentMethod = document.getElementById('sale-payment-method').value;
+    
     confirmBtn.disabled = true;
-    showMessage("Cobrando...");
+    showMessage("PROCESANDO COBRO...");
 
     try {
         const batch = writeBatch(db);
         const now = new Date();
-        const day = now.toISOString().split('T')[0];
+        const dayStr = now.toISOString().split('T')[0];
+        const monthYear = dayStr.substring(0, 7);
 
         saleCart.forEach(item => {
+            // 1. Registro de la venta
             const saleRef = getPublicDoc("sales", `${Date.now()}_${item.id}`);
             batch.set(saleRef, {
                 productId: item.id,
                 name: item.name,
                 qty: item.qty,
-                price: item.salePrice,
-                total: item.salePrice * item.qty,
-                day: day,
+                unitPrice: item.price,
+                total: item.price * item.qty,
+                paymentMethod: paymentMethod,
+                day: dayStr,
+                monthYear: monthYear,
                 timestamp: Timestamp.now(),
                 adminEmail: auth.currentUser?.email || "admin@aerojump.com"
             });
 
+            // 2. Descuento del stock real del producto
             const productRef = getPublicDoc("products", item.id);
             batch.update(productRef, {
                 stock: item.stockMax - item.qty
             });
         });
 
+        // Ejecutar todas las operaciones juntas
         await batch.commit();
         
-        showMessage("COBRO EXITOSO! 🚀");
+        showMessage("¡COBRO EXITOSO! ✅");
         setTimeout(() => {
             hideMessage();
             closeModals();
         }, 1500);
 
     } catch (error) {
-        console.error("Error POS:", error);
-        showMessage("Error al cobrar", true);
+        console.error("Error POS AeroJump:", error);
+        showMessage("Error al procesar", true);
         confirmBtn.disabled = false;
     }
 }
 
-// Vincular a window
+// Vinculación para que el buscador y los botones funcionen desde el HTML
 window.updCatalogQty = updCatalogQty;
+window.handleConfirmSale = handleConfirmSale;
 window.renderSaleCatalog = renderSaleCatalog;
