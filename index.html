@@ -3,226 +3,217 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>AeroJump Gchu - Sistema v2026</title>
+    <title>AeroJump Gualeguaychú - Sistema v2026</title>
     
-    <!-- Favicon Guard -->
+    <!-- Bloqueo de error de favicon -->
     <link rel="icon" href="data:,">
     
-    <!-- Fuentes del Manual -->
+    <!-- Google Fonts del Manual Oficial -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;900&family=JetBrains+Mono:wght@500;800&display=swap" rel="stylesheet">
     
-    <!-- Tailwind para utilidades -->
+    <!-- Tailwind CSS para utilidades de grillas y espaciado -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- Estilos Premium Brutalist con Fix de Scroll -->
+    <!-- Único archivo de estilos (Formato y Diseño Moderno) -->
     <link rel="stylesheet" href="style.css">
 </head>
 <body class="custom-scrollbar">
 
-    <!-- 1. SECCIÓN DE ACCESO -->
+    <!-- 1. VISTA DE ACCESO (LOGIN / REGISTRO) -->
     <section id="login-view" class="min-h-screen flex items-center justify-center p-4 bg-black">
         <div class="bento-card w-full max-w-sm text-center leading-none">
-            <h2 class="text-5xl font-black text-black uppercase italic mb-1 leading-none">AeroJump</h2>
-            <p class="text-black font-bold text-[10px] uppercase tracking-widest mb-10 border-b-4 border-black pb-2 font-mono leading-none">PANEL DE CONTROL</p>
+            <h2 class="text-5xl font-black text-black uppercase italic mb-1">AeroJump</h2>
+            <p class="text-black font-bold text-[10px] uppercase tracking-widest mb-10 border-b-4 border-black pb-2 font-mono">PANEL DE CONTROL</p>
             <form id="login-form" class="space-y-6">
-                <div class="text-left leading-none">
-                    <label class="text-xs font-black uppercase mb-1 ml-1 underline">Usuario:</label>
-                    <input type="email" id="login-email" placeholder="email@aerojump.com" required>
-                </div>
-                <div class="text-left leading-none">
-                    <label class="text-xs font-black uppercase mb-1 ml-1 underline">Clave:</label>
-                    <input type="password" id="login-password" placeholder="••••••••" required>
-                </div>
-                <button type="submit" class="w-full bg-[#6D28D9] text-white btn-premium text-2xl italic leading-none py-6">INGRESAR</button>
+                <div class="text-left"><label class="text-xs font-black uppercase underline ml-1">Email:</label><input type="email" id="login-email" required></div>
+                <div class="text-left"><label class="text-xs font-black uppercase underline ml-1">Clave:</label><input type="password" id="login-password" required></div>
+                <button type="submit" class="w-full bg-violet-primary btn-premium text-2xl italic py-6">INGRESAR</button>
             </form>
-            <button id="show-register-btn" class="mt-8 text-xs font-bold uppercase underline decoration-2 leading-none">Registrar Nuevo Acceso</button>
+            <button id="show-register-btn" class="mt-8 text-xs font-bold uppercase underline">Crear acceso administrador</button>
         </div>
     </section>
 
-    <section id="register-view" class="is-hidden min-h-screen flex items-center justify-center p-4 bg-black text-center leading-none">
-        <div class="bento-card w-full max-w-sm">
-            <h2 class="text-2xl font-black mb-8 uppercase italic underline decoration-4">NUEVO ADMIN</h2>
-            <form id="register-form" class="space-y-4 text-left">
+    <section id="register-view" class="is-hidden min-h-screen flex items-center justify-center p-4 bg-black">
+        <div class="bento-card w-full max-w-sm text-center">
+            <h2 class="text-2xl font-black mb-8 uppercase underline decoration-4">NUEVO ADMIN</h2>
+            <form id="register-form" class="space-y-4">
                 <input type="email" id="reg-email" placeholder="EMAIL" required>
-                <input type="password" id="reg-password" placeholder="PASSWORD" required>
-                <button type="submit" class="w-full bg-[#FB923C] text-white btn-premium text-xl italic leading-none">REGISTRAR</button>
+                <input type="password" id="reg-password" placeholder="PASSWORD (6+)" required>
+                <button type="submit" class="w-full bg-orange-primary btn-premium text-xl italic">REGISTRAR</button>
             </form>
-            <button id="show-login-btn" class="mt-6 text-xs font-black uppercase underline decoration-2">VOLVER</button>
+            <button id="show-login-btn" class="mt-6 text-xs font-black uppercase underline">VOLVER</button>
         </div>
     </section>
 
-    <!-- 2. CONTENEDOR PRINCIPAL -->
-    <div id="app-container" class="is-hidden h-screen flex flex-col overflow-hidden">
+    <!-- 2. CONTENEDOR MAESTRO DE LA APLICACIÓN -->
+    <div id="app-container" class="is-hidden min-h-screen flex flex-col leading-none">
         
-        <!-- HEADER -->
-        <header class="flex-shrink-0 bg-white px-4 py-4 flex justify-between items-center z-50 border-b-4 border-black">
-            <div class="flex items-center gap-3">
-                <button id="menu-btn" class="p-3 bg-black text-white rounded-2xl active:scale-90 shadow-none">
-                    <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="4"><path d="M4 6h16M4 12h16M4 18h16" /></svg>
+        <!-- CABECERA FIJA -->
+        <header class="fixed top-0 left-0 right-0 bg-white px-6 py-4 flex justify-between items-center z-50 border-b-4 border-black">
+            <div class="flex items-center gap-4">
+                <button id="menu-btn" class="p-3 bg-black text-white rounded-2xl active:scale-90">
+                    <svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="4"><path d="M4 6h16M4 12h16M4 18h16" /></svg>
                 </button>
                 <div class="leading-none text-left">
-                    <h1 class="text-2xl font-black text-black uppercase italic tracking-tighter leading-none">AeroJump</h1>
-                    <span class="text-[9px] font-black text-[#6D28D9] uppercase tracking-widest leading-none font-mono">GUALEGUAYCHÚ</span>
+                    <h1 class="text-2xl font-black uppercase italic tracking-tighter">AeroJump</h1>
+                    <span class="text-[9px] font-black text-[#6D28D9] uppercase font-mono">Gualeguaychú</span>
                 </div>
             </div>
-            <button id="header-sale-btn" class="bg-[#FB923C] text-white px-5 py-3 btn-premium text-[11px] leading-none shadow-[4px_4px_0px_0px_#000]">VENTA KIOSCO</button>
+            <button id="header-sale-btn" class="bg-orange-primary btn-premium text-[11px] shadow-[4px_4px_0px_0px_#000]">VENTA KIOSCO</button>
         </header>
 
-        <!-- APP CONTENT (Sidebar + Main) -->
-        <div class="flex flex-grow overflow-hidden relative">
-            <!-- MENU LATERAL -->
-            <nav id="main-menu" class="fixed lg:relative top-0 left-0 h-full w-72 bg-white transform -translate-x-full lg:translate-x-0 transition-transform duration-300 shadow-none border-r-4 border-black z-[1100] flex flex-col">
-                <div class="p-8 border-b-4 border-black bg-slate-100 text-center">
-                    <p id="user-email-display" class="font-black text-black truncate text-sm mb-6 underline decoration-2 italic font-mono leading-none"></p>
-                    <button id="logout-btn" class="text-xs font-black text-red-700 uppercase border-4 border-red-700 px-4 py-3 italic w-full text-center rounded-xl leading-none">SALIR 🔒</button>
-                </div>
-                <div class="flex-grow overflow-y-auto p-3 space-y-4 custom-scrollbar">
-                    <button class="menu-item flex items-center gap-4 w-full p-5 bento-card hover:bg-slate-50 transition-all text-sm uppercase italic border-2 shadow-none" data-view="calendar">🗓️ AGENDA</button>
-                    <button class="menu-item flex items-center gap-4 w-full p-5 bento-card hover:bg-slate-50 transition-all text-sm uppercase italic border-2 shadow-none" data-view="productos">🥤 STOCK</button>
-                    <button class="menu-item flex items-center gap-4 w-full p-5 bento-card hover:bg-slate-50 transition-all text-sm uppercase italic border-2 shadow-none" data-view="caja">💰 FINANZAS</button>
-                    <button class="menu-item flex items-center gap-4 w-full p-5 bento-card hover:bg-slate-50 transition-all text-sm uppercase italic border-2 shadow-none" data-view="stats">📊 RANKINGS</button>
-                    <button class="menu-item flex items-center gap-4 w-full p-5 bento-card hover:bg-slate-50 transition-all text-sm uppercase italic border-2 shadow-none" data-view="config">⚙️ TARIFAS</button>
-                </div>
-            </nav>
-            <div id="menu-overlay" class="fixed inset-0 bg-black/95 z-[1000] hidden lg:hidden"></div>
+        <!-- BARRA LATERAL (SIDEBAR) -->
+        <nav id="main-menu" class="fixed top-0 left-0 h-screen w-72 bg-white transform -translate-x-full z-[1100] border-r-4 border-black flex flex-col">
+            <div class="p-8 border-b-4 border-black bg-slate-100 text-center">
+                <p id="user-email-display" class="font-black text-xs mb-6 underline font-mono italic truncate"></p>
+                <button id="logout-btn" class="text-xs font-black text-red-700 border-4 border-red-700 px-4 py-3 italic w-full rounded-2xl">SALIR 🔒</button>
+            </div>
+            <div class="p-4 space-y-4 overflow-y-auto custom-scrollbar">
+                <button class="menu-item w-full p-5 bento-card text-left text-sm uppercase italic shadow-none border-2" data-view="calendar">🗓️ AGENDA SALTOS</button>
+                <button class="menu-item w-full p-5 bento-card text-left text-sm uppercase italic shadow-none border-2" data-view="productos">🥤 STOCK KIOSCO</button>
+                <button class="menu-item w-full p-5 bento-card text-left text-sm uppercase italic shadow-none border-2" data-view="caja">💰 ARQUEO CAJA</button>
+                <button class="menu-item w-full p-5 bento-card text-left text-sm uppercase italic shadow-none border-2" data-view="stats">📊 RANKINGS</button>
+                <button class="menu-item w-full p-5 bento-card text-left text-sm uppercase italic shadow-none border-2" data-view="config">⚙️ CONFIGURACIÓN</button>
+            </div>
+        </nav>
+        <div id="menu-overlay" class="fixed inset-0 bg-black/90 z-[1000] hidden"></div>
 
-            <!-- MAIN VIEWPORT -->
-            <main class="flex-grow overflow-y-auto p-4 lg:p-8 custom-scrollbar bg-[#F0F2F5]">
-                
-                <!-- VISTA: AGENDA -->
-                <div id="calendar-view" class="view-container">
-                    <div class="bento-card mb-8 flex justify-between items-center leading-none">
-                        <button id="prev-month-btn" class="p-4 bg-slate-100 border-4 border-black rounded-2xl font-black active:scale-95">◀</button>
-                        <h2 id="current-month-year" class="text-2xl font-black text-black uppercase underline decoration-6 leading-none"></h2>
-                        <button id="next-month-btn" class="p-4 bg-slate-100 border-4 border-black rounded-2xl font-black active:scale-95">▶</button>
-                    </div>
-                    <div class="grid grid-cols-7 gap-2 mb-2">
-                        <div class="calendar-header-day">Lun</div><div class="calendar-header-day">Mar</div><div class="calendar-header-day">Mie</div><div class="calendar-header-day">Jue</div><div class="calendar-header-day">Vie</div><div class="calendar-header-day">Sab</div><div class="calendar-header-day">Dom</div>
-                    </div>
-                    <div id="calendar-grid" class="grid grid-cols-7 gap-2 sm:gap-4"></div>
+        <!-- ÁREA DE CONTENIDO (MAIN VIEWPORT) -->
+        <main class="flex-grow pt-28 pb-12 px-4 max-w-7xl mx-auto w-full">
+            
+            <!-- VISTA: AGENDA / CALENDARIO -->
+            <div id="calendar-view" class="view-container">
+                <div class="bento-card mb-8 flex justify-between items-center">
+                    <button id="prev-month-btn" class="p-4 bg-slate-100 border-4 border-black rounded-2xl font-black">◀</button>
+                    <h2 id="current-month-year" class="text-3xl font-black uppercase underline decoration-8"></h2>
+                    <button id="next-month-btn" class="p-4 bg-slate-100 border-4 border-black rounded-2xl font-black">▶</button>
                 </div>
+                <div class="grid grid-cols-7 gap-1 sm:gap-4 mb-2">
+                    <div class="calendar-header-day">Lun</div><div class="calendar-header-day">Mar</div><div class="calendar-header-day">Mie</div><div class="calendar-header-day">Jue</div><div class="calendar-header-day">Vie</div><div class="calendar-header-day">Sab</div><div class="calendar-header-day">Dom</div>
+                </div>
+                <div id="calendar-grid" class="grid grid-cols-7 gap-1 sm:gap-4"></div>
+            </div>
 
-                <!-- VISTA: PRODUCTOS -->
-                <div id="productos-view" class="view-container is-hidden">
-                    <div class="flex justify-between items-center mb-10 leading-none">
-                        <h2 class="text-5xl font-black italic uppercase underline decoration-8">STOCK</h2>
-                        <button id="add-product-btn" class="bg-[#6D28D9] text-white px-10 py-6 btn-premium text-lg italic">+ CARGAR</button>
-                    </div>
-                    <div id="product-form-container" class="bento-card mb-12 is-hidden">
-                        <form id="product-form" class="grid grid-cols-1 md:grid-cols-4 gap-6 text-left leading-none">
-                            <div class="md:col-span-2"><label class="text-xs font-black uppercase underline mb-2 block">Nombre:</label><input type="text" id="prod-name" required></div>
-                            <div><label class="text-xs font-black uppercase underline mb-2 block">Stock:</label><input type="number" id="prod-stock" required min="0"></div>
-                            <div><label class="text-xs font-black uppercase underline mb-2 block">Costo Bulto:</label><input type="number" id="prod-batch-cost" required step="0.01"></div>
-                            <div><label class="text-xs font-black uppercase underline mb-2 block">Unid x Bulto:</label><input type="number" id="prod-batch-qty" required min="1" value="1"></div>
-                            <div class="md:col-span-2 p-10 bg-black text-white border-4 border-[#6D28D9] rounded-[32px] flex justify-between items-center shadow-[8px_8px_0px_0px_#000]">
-                                <div><span class="text-sm font-black text-violet-400 italic">Sugerido:</span><p id="prod-suggested-price" class="text-5xl font-black italic font-mono mt-2">$0</p></div>
-                                <div><label class="text-xs font-black text-orange-400 block mb-2 underline">PRECIO REAL ($)</label><input type="number" id="prod-real-price" required class="text-black text-center font-mono font-black text-6xl w-full"></div>
-                            </div>
-                            <div class="md:col-span-2 flex items-center justify-end gap-8 pt-6"><button type="button" id="cancel-product-btn" class="font-black uppercase text-sm underline decoration-4">ANULAR</button><button type="submit" class="bg-[#22C55E] text-white px-16 py-8 btn-premium text-3xl italic shadow-none font-bold">CONFIRMAR</button></div>
-                        </form>
-                    </div>
-                    <div id="product-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 text-left font-bold"></div>
+            <!-- VISTA: INVENTARIO / STOCK -->
+            <div id="productos-view" class="view-container is-hidden">
+                <div class="flex flex-col sm:flex-row justify-between items-start gap-4 mb-10 text-left">
+                    <h2 class="text-5xl font-black italic uppercase underline decoration-8">INVENTARIO</h2>
+                    <button id="add-product-btn" class="bg-violet-primary btn-premium text-lg italic">+ CARGAR</button>
                 </div>
+                <div id="product-form-container" class="bento-card mb-12 is-hidden">
+                    <form id="product-form" class="grid grid-cols-1 md:grid-cols-4 gap-6 text-left">
+                        <div class="md:col-span-2"><label class="text-xs font-black uppercase underline mb-2 block">Nombre:</label><input type="text" id="prod-name" required></div>
+                        <div><label class="text-xs font-black uppercase underline mb-2 block">Stock:</label><input type="number" id="prod-stock" required min="0"></div>
+                        <div><label class="text-xs font-black uppercase underline mb-2 block">Costo Bulto:</label><input type="number" id="prod-batch-cost" required step="0.01"></div>
+                        <div><label class="text-xs font-black uppercase underline mb-2 block">Unid x Bulto:</label><input type="number" id="prod-batch-qty" required min="1" value="1"></div>
+                        <input type="hidden" id="prod-profit-pct" value="40">
+                        <div class="md:col-span-2 p-10 bg-black text-white border-4 border-[#6D28D9] rounded-[40px] flex justify-between items-center">
+                            <div><span class="text-sm font-black text-violet-400 italic">Sugerido:</span><p id="prod-suggested-price" class="text-5xl font-black font-mono mt-2">$0</p></div>
+                            <div><label class="text-xs font-black text-orange-400 block mb-2 underline">PRECIO REAL ($)</label><input type="number" id="prod-real-price" required class="text-black text-center font-mono font-black text-6xl w-full"></div>
+                        </div>
+                        <div class="md:col-span-2 flex items-center justify-end gap-8 pt-6">
+                            <button type="button" id="cancel-product-btn" class="font-black uppercase text-sm underline decoration-4">ANULAR</button>
+                            <button type="submit" class="bg-green-primary btn-premium text-3xl italic">GUARDAR</button>
+                        </div>
+                    </form>
+                </div>
+                <div id="product-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"></div>
+            </div>
 
-                <!-- VISTA: FINANZAS -->
-                <div id="caja-view" class="view-container is-hidden">
-                    <div class="flex justify-between items-center mb-12">
-                        <h2 class="text-5xl font-black italic uppercase underline decoration-8">CAJA</h2>
-                        <button id="btn-open-expense" class="bg-[#EF4444] text-white px-10 py-6 btn-premium text-lg italic shadow-none">💸 ANOTAR GASTO</button>
-                    </div>
-                    <div id="caja-total-combined" class="text-[120px] font-black font-mono mb-12 text-center tracking-tighter leading-none"></div>
-                    <div id="caja-daily-list" class="space-y-6 max-w-5xl mx-auto"></div>
+            <!-- VISTA: FINANZAS / CAJA -->
+            <div id="caja-view" class="view-container is-hidden">
+                <div class="flex flex-col gap-6 mb-12 text-left">
+                    <h2 class="text-5xl font-black italic uppercase underline decoration-8">ARQUEO CAJA</h2>
+                    <button id="add-expense-btn" class="bg-red-primary btn-premium text-lg italic w-full">💸 ANOTAR GASTO</button>
                 </div>
+                <div id="caja-total-combined" class="text-[120px] font-black font-mono mb-12 text-center tracking-tighter leading-none"></div>
+                <div id="caja-daily-list" class="space-y-6 max-w-5xl mx-auto"></div>
+            </div>
 
-                <!-- VISTA: RANKINGS -->
-                <div id="stats-view" class="view-container is-hidden">
-                    <h2 class="text-4xl font-black mb-12 uppercase italic underline decoration-8">FIDELIDAD</h2>
-                    <div id="stats-list" class="space-y-6 max-w-3xl mx-auto"></div>
-                </div>
+            <!-- VISTA: RANKINGS -->
+            <div id="stats-view" class="view-container is-hidden text-left leading-none">
+                <h2 class="text-4xl font-black mb-12 uppercase italic underline decoration-8">FIDELIDAD</h2>
+                <div id="stats-list" class="space-y-6 max-w-3xl mx-auto"></div>
+            </div>
 
-                <!-- VISTA: CONFIGURACIÓN -->
-                <div id="config-view" class="view-container is-hidden max-w-md mx-auto">
-                    <div class="bento-card text-center leading-none">
-                        <h2 class="text-3xl font-black mb-10 uppercase italic underline decoration-8 leading-none font-bold">TARIFAS</h2>
-                        <form id="config-form" class="space-y-12">
-                            <div><label class="text-sm font-black uppercase block mb-6 underline text-center font-bold">VALOR 1 HORA SALTO ($):</label><input type="number" id="config-court1-price" class="text-center font-mono font-black text-[100px] p-8 bg-slate-50 w-full leading-none"></div>
-                            <div><label class="text-sm font-black uppercase block mb-6 underline text-center font-bold">EVENTO EXCL. ($):</label><input type="number" id="config-event-price" class="text-center font-mono font-black text-[100px] p-8 bg-slate-50 w-full leading-none"></div>
-                            <button type="submit" class="w-full py-10 bg-black text-white btn-premium text-4xl italic shadow-none font-bold">ACTUALIZAR</button>
-                        </form>
-                    </div>
+            <!-- VISTA: CONFIGURACIÓN -->
+            <div id="config-view" class="view-container is-hidden max-w-md mx-auto text-left">
+                <div class="bento-card text-center leading-none">
+                    <h2 class="text-3xl font-black mb-10 uppercase italic underline decoration-8">TARIFAS</h2>
+                    <form id="config-form" class="space-y-12">
+                        <div><label class="text-sm font-black uppercase block mb-6 underline text-center">VALOR 1 HORA SALTO ($):</label><input type="number" id="config-court1-price" class="text-center font-mono font-black text-[100px] p-8 bg-slate-50 w-full leading-none"></div>
+                        <button type="submit" class="w-full py-10 bg-black text-white btn-premium text-4xl italic">ACTUALIZAR</button>
+                    </form>
                 </div>
-            </main>
-        </div>
+            </div>
+        </main>
     </div>
 
-    <!-- MODALES DE SISTEMA -->
-    
-    <!-- MODAL VENTA POS -->
+    <!-- 3. SISTEMA DE MODALES -->
+
+    <!-- MODAL VENTA POS (CATÁLOGO + TICKET) -->
     <div id="sale-modal" class="modal">
         <div class="modal-content">
-            <div class="modal-header bg-black text-white">
-                <div class="flex justify-between items-center leading-none">
-                    <div class="text-left"><h3 class="text-4xl font-black text-[#FB923C] uppercase italic leading-none font-bold">CAJA POS</h3><p class="text-sm font-black uppercase mt-1 leading-none font-mono">Kiosco AeroJump</p></div>
-                    <button onclick="window.closeModals()" class="p-4 bg-white text-black font-black text-3xl border-4 border-black">X</button>
-                </div>
+            <div class="modal-header bg-black text-white flex justify-between items-center">
+                <div class="text-left"><h3 class="text-4xl font-black text-[#FB923C] uppercase italic leading-none">CAJA POS</h3><p class="text-xs font-black uppercase mt-2 font-mono">Punto de Venta</p></div>
+                <button onclick="window.closeModals()" class="p-4 bg-white text-black font-black text-2xl border-4 border-black">X</button>
             </div>
             <div class="flex-grow flex flex-col md:flex-row overflow-hidden bg-slate-400">
                 <div class="flex flex-col border-r-4 border-black overflow-hidden bg-slate-200 flex-1">
-                    <div class="p-6 bg-white border-b-8 border-black leading-none"><input type="text" id="sale-catalog-filter" class="font-black text-2xl p-6 italic border-4 border-black w-full" placeholder="🔍 BUSCAR PRODUCTO..."></div>
-                    <div class="modal-body custom-scrollbar p-6 leading-none"><div id="sale-catalog-list" class="flex flex-col gap-4"></div></div>
+                    <div class="p-6 bg-white border-b-8 border-black"><input type="text" id="sale-catalog-filter" class="font-black text-2xl p-6 italic border-4 border-black w-full" placeholder="🔍 BUSCAR ARTÍCULO..."></div>
+                    <div class="modal-body custom-scrollbar p-6"><div id="sale-catalog-list" class="flex flex-col gap-4"></div></div>
                 </div>
-                <div class="flex flex-col bg-white border-t-[14px] lg:border-t-0 lg:border-l-8 border-black w-full lg:w-[480px] flex-shrink-0">
-                    <div class="p-8 border-b-8 border-black bg-slate-100 leading-none text-center font-bold"><h4 class="text-xl font-black uppercase underline decoration-6">RESUMEN</h4></div>
-                    <div class="flex-grow overflow-hidden flex flex-col p-4 leading-none min-h-[300px]">
-                        <div id="empty-cart-msg" class="flex-grow flex items-center justify-center py-20 text-4xl font-black text-black/20 uppercase underline decoration-8">VACÍO</div>
-                        <div id="sale-cart-list" class="flex-grow overflow-y-auto space-y-6 custom-scrollbar pr-4"></div>
+                <div class="flex flex-col bg-white border-t-[14px] lg:border-t-0 lg:border-l-8 border-black w-full lg:w-[450px] flex-shrink-0">
+                    <div class="p-8 border-b-8 border-black bg-slate-100 text-center"><h4 class="text-xl font-black uppercase underline decoration-6">TICKET ACTUAL</h4></div>
+                    <div class="flex-grow overflow-hidden flex flex-col p-4 min-h-[300px]">
+                        <div id="empty-cart-msg" class="flex-grow flex items-center justify-center py-20 text-4xl font-black text-black/20 uppercase underline">VACÍO</div>
+                        <div id="sale-cart-list" class="flex-grow overflow-y-auto space-y-6 custom-scrollbar pr-2"></div>
                     </div>
                     <div class="p-10 bg-black text-white border-t-[20px] border-[#FB923C]">
-                        <div class="flex justify-between items-center mb-10"><span class="text-sm font-black text-[#FB923C] uppercase italic">TOTAL:</span><p id="sale-total-display" class="text-[120px] font-mono font-black italic tracking-tighter leading-none">0</p></div>
-                        <button id="confirm-sale-btn" class="w-full py-10 bg-[#FB923C] text-white btn-premium text-5xl italic shadow-none font-bold" disabled onclick="window.handleConfirmSale()">COBRAR</button>
+                        <div class="flex justify-between items-center mb-10"><span class="text-sm font-black text-orange-400 uppercase italic">TOTAL:</span><p id="sale-total-display" class="text-[110px] font-mono font-black italic tracking-tighter leading-none">0</p></div>
+                        <button id="confirm-sale-btn" class="w-full py-10 bg-orange-primary btn-premium text-5xl italic shadow-none" disabled onclick="window.handleConfirmSale()">COBRAR</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- OTROS MODALES (Vacíos, los controladores inyectan contenido o simplemente se abren) -->
+    <!-- MODAL RESERVA TURNO (BENTO) -->
     <div id="booking-modal" class="modal">
-        <!-- El contenido se maneja desde booking-controller.js -->
-        <div class="modal-content max-w-4xl">
+        <div class="modal-content max-w-4xl border-8 border-black">
             <div class="modal-header bg-black text-white text-left leading-none">
                 <h3 id="booking-modal-title" class="text-4xl font-black uppercase italic underline decoration-8">RESERVA</h3>
-                <p id="booking-type-label" class="text-sm text-[#FB923C] font-black uppercase mt-3 italic font-mono"></p>
+                <p id="booking-type-label" class="text-sm text-[#FB923C] font-black uppercase mt-4 italic font-mono"></p>
             </div>
-            <form id="booking-form" class="modal-body space-y-12 bg-white p-8 text-left leading-none font-bold">
+            <form id="booking-form" class="modal-body space-y-12 bg-white p-12 text-left">
                 <input type="hidden" id="booking-id"><input type="hidden" id="booking-date"><input type="hidden" id="booking-type">
-                <div class="leading-none font-bold"><label class="text-2xl font-black uppercase block mb-4 underline decoration-6 font-bold italic">RESPONSABLE:</label><input type="text" id="teamName" required placeholder="..." class="font-black text-5xl italic w-full border-8 border-black shadow-inner"></div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-10 leading-none">
-                    <div class="p-10 bg-slate-100 border-[8px] border-black text-center rounded-[40px] leading-none">
-                        <label class="text-sm font-black uppercase block mb-10 underline italic">CANT. PERSONAS:</label>
+                <div><label class="text-2xl font-black uppercase block mb-4 underline decoration-6 italic">RESPONSABLE:</label><input type="text" id="teamName" required placeholder="..." class="font-black text-5xl italic w-full border-8 border-black shadow-inner"></div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                    <div class="p-12 bg-slate-100 border-[8px] border-black text-center rounded-[40px]">
+                        <label class="text-sm font-black uppercase block mb-10 underline italic font-bold">PERSONAS:</label>
                         <div class="flex items-center justify-center gap-12 leading-none">
                             <button type="button" onclick="window.adjustJumpers(-1)" class="w-28 h-28 bg-white border-8 border-black text-7xl font-black active:bg-slate-400">-</button>
                             <input type="number" id="peopleCount" class="w-28 text-center font-black font-mono text-[110px] bg-transparent leading-none" value="1" min="1" max="30">
                             <button type="button" onclick="window.adjustJumpers(1)" class="w-28 h-28 bg-white border-8 border-black text-7xl font-black active:bg-slate-400">+</button>
                         </div>
                     </div>
-                    <div class="p-10 bg-slate-100 border-[8px] border-black text-center flex flex-col justify-center rounded-[40px] leading-none">
+                    <div class="p-12 bg-slate-100 border-[8px] border-black text-center flex flex-col justify-center rounded-[40px]">
                         <span class="text-sm font-black uppercase block mb-8 underline italic font-bold">COSTO ($):</span>
-                        <input type="number" id="costPerHour" class="text-center font-mono font-black text-[110px] bg-transparent w-full leading-none">
+                        <input type="number" id="costPerHour" class="text-center font-mono font-black text-[110px] bg-transparent w-full leading-none" oninput="window.updateBookingVisualTotal()">
                     </div>
                 </div>
-                <div class="leading-none"><label class="text-2xl font-black uppercase block mb-12 underline italic decoration-8 font-bold">HORARIOS:</label><div id="court-hours-list" class="grid grid-cols-2 md:grid-cols-5 gap-6 leading-none font-mono"></div></div>
+                <div><label class="text-2xl font-black uppercase block mb-12 underline italic decoration-8 font-bold">HORARIOS (CUPO 30):</label><div id="court-hours-list" class="grid grid-cols-2 md:grid-cols-5 gap-6 leading-none font-mono"></div></div>
             </form>
             <div class="modal-footer p-12 bg-black text-white border-t-[20px] border-[#6D28D9] flex flex-col sm:flex-row items-center justify-between gap-12 leading-none">
-                <div class="text-left leading-none font-bold"><span class="text-xs font-black text-violet-400 uppercase italic mb-4 block underline font-bold leading-none italic">TOTAL:</span><p id="booking-total" class="text-[120px] font-mono font-black italic tracking-tighter leading-none font-bold">$0</p></div>
-                <div class="flex gap-8"><button type="button" onclick="window.closeModals()" class="font-black text-slate-400 text-3xl uppercase underline decoration-8 p-6 font-bold leading-none">X</button><button type="submit" form="booking-form" class="bg-[#6D28D9] text-white px-24 py-12 btn-premium text-5xl italic shadow-none leading-none font-bold">CONFIRMAR</button></div>
+                <div class="text-left font-bold leading-none"><span class="text-xs font-black text-violet-400 uppercase italic mb-4 block underline font-bold">TOTAL:</span><p id="booking-total" class="text-[120px] font-mono font-black italic tracking-tighter leading-none">$0</p></div>
+                <div class="flex gap-8"><button type="button" onclick="window.closeModals()" class="font-black text-slate-400 text-3xl uppercase underline decoration-8 p-6 font-bold">X</button><button type="submit" form="booking-form" class="bg-violet-primary btn-premium text-5xl italic shadow-none">CONFIRMAR</button></div>
             </div>
         </div>
     </div>
 
-    <!-- GASTO, REPOSICIÓN, EDITAR PRODUCTO, OPCIONES DÍA Y TIPO TURNO -->
+    <!-- MODALES PEQUEÑOS -->
     <div id="expense-modal" class="modal"></div>
     <div id="caja-detail-modal" class="modal"></div>
     <div id="options-modal" class="modal"></div>
@@ -230,7 +221,10 @@
     <div id="restock-modal" class="modal"></div>
     <div id="edit-product-modal" class="modal"></div>
 
-    <!-- CARGA DE LÓGICA MODULAR CENTRAL -->
+    <!-- MENSAJES OVERLAY -->
+    <div id="message-overlay" class="modal bg-black"><div class="flex flex-col items-center justify-center min-h-screen text-center p-12 leading-none font-bold"><div class="jumping-child text-[150px] mb-20 leading-none">🚀</div><p id="message-text" class="text-[80px] font-black text-white uppercase italic tracking-tighter leading-none font-bold"></p></div></div>
+
+    <!-- CARGA DE LÓGICA MODULAR CENTRAL (main.js) -->
     <script type="module" src="main.js"></script>
 </body>
 </html>
