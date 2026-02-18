@@ -1,31 +1,34 @@
 /* ============================================= */
-/* 1. VARIABLES - PALETA ORIGINAL AEROJUMP      */
+/* 1. VARIABLES - PALETA AEROJUMP VIBRANTE      */
 /* ============================================= */
 :root {
-    /* Fondo Profundo */
     --bg-deep: #0a0c10;
     --bg-surface: #161b22;
     --bg-card: rgba(23, 28, 36, 0.7);
-    --glass-border: rgba(255, 255, 255, 0.08);
+    --glass-border: rgba(255, 255, 255, 0.1);
     
-    /* Colores Originales Restaurados */
-    --violet: #7c3aed;        /* Violeta original */
+    /* Gamas de Violeta */
+    --violet: #7c3aed;
+    --violet-hover: #6d28d9;
     --violet-glow: rgba(124, 58, 237, 0.3);
-    --orange: #f97316;        /* Naranja original */
+    
+    /* Gamas de Naranja */
+    --orange: #f97316;
+    --orange-hover: #ea580c;
     --orange-glow: rgba(249, 115, 22, 0.3);
-    --red: #ef4444;           /* Rojo original */
-    --green: #22c55e;         /* Verde original */
+    
+    --red: #ef4444;
+    --green: #22c55e;
     
     --text-main: #f0f6fc;
     --text-muted: #8b949e;
     
     --radius-xl: 24px;
-    --radius-md: 14px;
-    --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    --radius-md: 12px;
 }
 
 /* ============================================= */
-/* 2. RESET Y ESTRUCTURA (FIX DE CLICS)         */
+/* 2. RESET Y SCROLL INTERNO                    */
 /* ============================================= */
 * {
     margin: 0;
@@ -38,7 +41,7 @@ body {
     font-family: 'Outfit', sans-serif;
     background-color: var(--bg-deep);
     color: var(--text-main);
-    line-height: 1.4;
+    line-height: 1.3;
     overflow: hidden; 
     height: 100vh;
     width: 100vw;
@@ -46,21 +49,8 @@ body {
 
 .font-mono { font-family: 'JetBrains Mono', monospace; }
 
-/* Evitar que elementos ocultos bloqueen clics */
-.is-hidden { 
-    display: none !important; 
-    pointer-events: none;
-}
-
-/* ============================================= */
-/* 3. SCROLLBAR ESTILO MODERNO                  */
-/* ============================================= */
 .custom-scrollbar::-webkit-scrollbar {
     width: 6px;
-    height: 6px;
-}
-.custom-scrollbar::-webkit-scrollbar-track {
-    background: transparent;
 }
 .custom-scrollbar::-webkit-scrollbar-thumb {
     background: #30363d;
@@ -71,76 +61,51 @@ body {
 }
 
 /* ============================================= */
-/* 4. COMPONENTES BENTO (TARJETAS)              */
+/* 3. COMPONENTES BENTO Y BOTONES               */
 /* ============================================= */
 .bento-card {
     background: var(--bg-card);
     backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
     border: 1px solid var(--glass-border);
     border-radius: var(--radius-xl);
-    padding: 1.5rem;
-    transition: var(--transition);
+    padding: 1.25rem;
+    transition: all 0.2s ease;
 }
 
-.bento-card:hover {
-    border-color: rgba(255, 255, 255, 0.15);
-    transform: translateY(-2px);
-    box-shadow: 0 10px 40px rgba(0,0,0,0.4);
-}
-
-/* ============================================= */
-/* 5. BOTONES PREMIUM                           */
-/* ============================================= */
 .btn-premium {
     background: var(--bg-surface);
     color: var(--text-main);
     border: 1px solid var(--glass-border);
     border-radius: var(--radius-md);
-    font-weight: 800;
+    font-weight: 700;
     text-transform: uppercase;
-    padding: 0.8rem 1.5rem;
+    padding: 0.7rem 1.2rem;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    transition: var(--transition);
+    transition: all 0.2s;
     letter-spacing: 0.5px;
+    font-size: 0.85rem;
 }
 
-.btn-premium:hover {
-    border-color: var(--text-muted);
-    background: #1c2128;
-}
+.btn-premium:active { transform: scale(0.96); }
 
-.btn-premium:active {
-    transform: scale(0.96);
-}
-
-/* Aplicación de Paleta Original con Brillo */
-.bg-\[\#6D28D9\], .bg-violet-700 { 
+/* Aplicación de Colores Originales */
+.bg-violet-primary {
     background: linear-gradient(135deg, var(--violet), #5b21b6) !important;
-    box-shadow: 0 4px 15px var(--violet-glow);
+    box-shadow: 0 4px 12px var(--violet-glow);
     border: none !important;
-    color: white !important;
 }
 
-.bg-\[\#FB923C\], .bg-orange-600 { 
+.bg-orange-primary {
     background: linear-gradient(135deg, var(--orange), #c2410c) !important;
-    box-shadow: 0 4px 15px var(--orange-glow);
+    box-shadow: 0 4px 12px var(--orange-glow);
     border: none !important;
-    color: white !important;
-}
-
-.bg-\[\#EF4444\], .bg-red-700 { 
-    background: linear-gradient(135deg, var(--red), #991b1b) !important;
-    box-shadow: 0 4px 15px rgba(239, 68, 68, 0.2);
-    border: none !important;
-    color: white !important;
 }
 
 /* ============================================= */
-/* 6. MODALES (FIX DE BLOQUEO)                  */
+/* 4. MODALES COMPACTOS (FIX DE PANTALLA)       */
 /* ============================================= */
 .modal {
     display: none;
@@ -148,147 +113,100 @@ body {
     inset: 0;
     background: rgba(0, 0, 0, 0.85);
     backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
     z-index: 2000;
     align-items: center;
     justify-content: center;
     padding: 1rem;
-    pointer-events: auto;
 }
 
-.modal.is-open {
-    display: flex;
-}
+.modal.is-open { display: flex; }
 
 .modal-content {
     background: var(--bg-surface);
     border: 1px solid var(--glass-border);
     border-radius: var(--radius-xl);
     width: 100%;
-    max-height: 96vh;
+    max-width: 800px;
+    max-height: 90vh; /* No excede el alto de pantalla */
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    position: relative;
 }
 
 .modal-header {
-    padding: 1.5rem;
+    padding: 1.25rem;
     border-bottom: 1px solid var(--glass-border);
-    background: rgba(255,255,255,0.02);
     flex-shrink: 0;
 }
 
 .modal-body {
     flex: 1;
     overflow-y: auto;
-    padding: 1.5rem;
+    padding: 1.25rem;
     -webkit-overflow-scrolling: touch;
 }
 
 .modal-footer {
-    padding: 1.25rem;
+    padding: 1rem;
     border-top: 1px solid var(--glass-border);
-    background: rgba(255,255,255,0.02);
     flex-shrink: 0;
 }
 
 /* ============================================= */
-/* 7. CALENDARIO DINÁMICO                       */
+/* 5. INPUTS Y FORMULARIOS COMPACTOS            */
 /* ============================================= */
-.calendar-header-day {
-    color: var(--text-muted);
-    font-size: 0.7rem;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
-    text-align: center;
+input, select {
+    background: rgba(0, 0, 0, 0.2) !important;
+    border: 1px solid var(--glass-border) !important;
+    border-radius: var(--radius-md) !important;
+    padding: 0.6rem 0.9rem !important;
+    color: var(--text-main) !important;
+    font-size: 1rem !important;
+    width: 100%;
 }
 
+input:focus { border-color: var(--violet) !important; }
+
+/* ============================================= */
+/* 6. CALENDARIO Y LISTAS                       */
+/* ============================================= */
 .day-cell {
     background: rgba(255, 255, 255, 0.03);
     border: 1px solid var(--glass-border);
-    border-radius: 16px;
-    transition: var(--transition);
+    border-radius: 14px;
     aspect-ratio: 1/1;
-    position: relative;
-    cursor: pointer;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    padding: 0.5rem;
+    padding: 0.4rem;
+    cursor: pointer;
+    transition: 0.2s;
 }
 
-.day-cell:hover {
-    background: rgba(255, 255, 255, 0.08);
-    border-color: var(--violet);
-    transform: scale(1.04);
-    z-index: 10;
-}
+.day-cell:hover { border-color: var(--violet); background: rgba(124, 58, 237, 0.1); }
 
-.day-cell.opacity-10 {
-    opacity: 0.1;
-    pointer-events: none;
-}
-
-/* ============================================= */
-/* 8. POS (LISTA DE VENTAS)                     */
-/* ============================================= */
 .pos-item-list {
     background: rgba(255, 255, 255, 0.02);
     border: 1px solid var(--glass-border);
-    border-radius: 18px;
-    padding: 1rem 1.25rem;
-    margin-bottom: 0.75rem;
-    transition: var(--transition);
-}
-
-.pos-item-list:hover {
-    background: rgba(255, 255, 255, 0.05);
-    border-color: var(--orange);
+    border-radius: 16px;
+    padding: 0.8rem 1rem;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
 /* ============================================= */
-/* 9. NAVEGACIÓN Y HEADER                       */
+/* 7. ADAPTACIÓN NOTEBOOK (1366x768)           */
 /* ============================================= */
-header {
-    background: rgba(13, 17, 23, 0.7) !important;
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border-bottom: 1px solid var(--glass-border) !important;
-}
-
-#main-menu {
-    background: var(--bg-surface);
-    border-right: 1px solid var(--glass-border);
-    box-shadow: 20px 0 50px rgba(0,0,0,0.5);
-}
-
-/* ============================================= */
-/* 10. ANIMACIONES                              */
-/* ============================================= */
-@keyframes jump {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-15px); filter: drop-shadow(0 10px 10px var(--violet-glow)); }
-}
-
-.jumping-child {
-    animation: jump 1.2s ease-in-out infinite;
-    display: inline-block;
-}
-
-/* ============================================= */
-/* 11. ADAPTACIÓN NOTEBOOK & CELULAR           */
-/* ============================================= */
-@media (max-height: 800px) {
-    .modal-content { max-height: 98vh; }
-    .text-\[120px\] { font-size: 5rem !important; }
-    .text-\[100px\] { font-size: 4rem !important; }
-    .bento-card { padding: 1.2rem; }
+@media (max-height: 780px) {
+    .text-\[120px\], .text-\[100px\], .text-\[110px\] { font-size: 3.5rem !important; }
+    .bento-card { padding: 1rem; }
+    h2 { font-size: 1.5rem !important; }
+    .modal-body { padding: 1rem; }
+    .space-y-12 > * + * { margin-top: 1.5rem !important; }
 }
 
 @media (max-width: 640px) {
-    .modal { padding: 0; }
-    .modal-content { border-radius: 0; height: 100vh; }
-    .day-cell { border-radius: 8px; }
+    .modal-content { border-radius: 0; height: 100vh; max-height: 100vh; }
 }
