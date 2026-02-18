@@ -1,152 +1,131 @@
 /**
- * AeroJump Gualeguaychú - Main Entry Point
- * El "pegamento" modular que une la lógica con la interfaz de usuario.
+ * AeroJump Gualeguaychú - Sistema v2026
+ * MAIN MODULE (main.js)
+ * * Este es el "cerebro" que une el esqueleto (index.html) con el diseño (style.css).
+ * Importa la lógica de cada controlador y la vincula a los eventos del DOM.
  */
 
-// 1. Importación de módulos controladores
-import { auth, getPublicDoc } from "./firebase-config.js";
-import { getDoc, setDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-import { initUI, showView, toggleMenu, closeModals, showMessage, hideMessage, openModal } from "./ui-controller.js";
-import { initAuthListener, handleLogin, handleRegister, handleLogout } from "./auth-controller.js";
-import { syncBookings, handleSaveBooking, handleSaveEvent, prevMonth, nextMonth, updateBookingTotal } from "./booking-controller.js";
-import { syncProducts, handleSaveProduct, handleConfirmEditProduct, handleConfirmRestock, calculateProductPrices } from "./kiosco-controller.js";
-import { openSaleModal, handleConfirmSale } from "./sales-controller.js";
-import { loadCajaData, loadStatsData } from "./finance-controller.js";
+import { auth } from "./firebase-config.js";
+import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 
-// 2. Inicialización cuando el DOM está listo
+// Importación de Controladores (Asegúrate de que estos archivos existan)
+import { showView, openModal, closeModals, showMessage } from "./ui-controller.js";
+import { initAuthListener, handleLogin } from "./auth-controller.js";
+import { syncBookings, prevMonth, nextMonth, handleSaveBooking, adjustJumpers, updateBookingTotal } from "./booking-controller.js";
+import { syncProducts, handleSaveProduct, calculateProductPrices, handleConfirmRestock, handleConfirmEditProduct } from "./kiosco-controller.js";
+import { loadCajaData, loadStatsData } from "./finance-controller.js";
+// import { openSaleModal, handleConfirmSale } from "./sales-controller.js"; // Descomentar al tener sales-controller listo
+
 document.addEventListener('DOMContentLoaded', () => {
-    initUI();
-    
-    initAuthListener(async (user) => {
-        console.log("AeroJump: Sistema operativo para", user.email);
-        await loadGlobalSettings();
+
+    // --- 1. INICIALIZACIÓN DE SEGURIDAD ---
+    initAuthListener((user) => {
+        // Al detectar usuario, sincronizamos datos y mostramos la agenda por defecto
         syncBookings();
         syncProducts();
         showView('calendar');
     });
 
-    attachGlobalEventListeners();
-});
-
-async function loadGlobalSettings() {
-    try {
-        const snap = await getDoc(getPublicDoc("app_settings", "prices"));
-        if (snap.exists()) {
-            window.appSettings = snap.data();
-        } else {
-            window.appSettings = { court1Price: 5000, eventPrice: 15000 };
-        }
-    } catch (e) {
-        console.error("Error cargando configuración:", e);
-    }
-}
-
-function attachGlobalEventListeners() {
-    // --- AUTENTICACIÓN ---
-    const loginForm = document.getElementById('login-form');
-    if (loginForm) {
-        loginForm.onsubmit = (e) => {
-            e.preventDefault();
-            const email = e.target.querySelector('input[type="email"]').value;
-            const pass = e.target.querySelector('input[type="password"]').value;
-            handleLogin(email, pass);
+    // --- 2. VINCULACIÓN DE EVENTOS DEL MENÚ Y NAVEGACIÓN ---
+    const menuBtn = document.getElementById('menu-btn');
+    if (menuBtn) {
+        menuBtn.onclick = () => {
+            const menu = document.getElementById('main-menu');
+            const overlay = document.getElementById('menu-overlay');
+            menu.classList.toggle('is-open');
+            overlay.classList.toggle('hidden');
         };
     }
 
-    const registerForm = document.getElementById('register-form');
-    if (registerForm) {
-        registerForm.onsubmit = (e) => {
-            e.preventDefault();
-            const email = e.target.querySelector('input[type="email"]').value;
-            const pass = e.target.querySelector('input[type="password"]').value;
-            handleRegister(email, pass);
+    const menuOverlay = document.getElementById('menu-overlay');
+    if (menuOverlay) {
+        menuOverlay.onclick = () => {
+            document.getElementById('main-menu').classList.remove('is-open');
+            menuOverlay.classList.add('hidden');
         };
     }
 
     const logoutBtn = document.getElementById('logout-btn');
-    if (logoutBtn) logoutBtn.onclick = handleLogout;
+    if (logoutBtn) {
+        logoutBtn.onclick = () => signOut(auth);
+    }
 
-    // --- NAVEGACIÓN ---
-    document.getElementById('menu-btn').onclick = toggleMenu;
-    document.getElementById('menu-overlay').onclick = toggleMenu;
-
+    // Navegación entre vistas (Bento Cards del Sidebar)
     document.querySelectorAll('.menu-item').forEach(btn => {
         btn.onclick = () => {
-            const target = btn.dataset.view;
-            showView(target);
-            if (target === 'caja') loadCajaData();
-            if (target === 'stats') loadStatsData();
-            if (target === 'configuracion') {
-                document.getElementById('config-court1-price').value = window.appSettings.court1Price;
-            }
+            const viewId = btn.dataset.view;
+            showView(viewId);
+            
+            // Cargas bajo demanda para no saturar Firebase
+            if (viewId === 'caja') loadCajaData();
+            if (viewId === 'stats') loadStatsData();
         };
     });
 
-    // --- AGENDA Y RESERVAS ---
+    // --- 3. GESTIÓN DE FORMULARIOS ---
+    
+    // Login
+    const loginForm = document.getElementById('login-form');
+    if (loginForm) {
+        loginForm.onsubmit = (e) => {
+            e.preventDefault();
+            handleLogin(
+                document.getElementById('login-email').value,
+                document.getElementById('login-password').value
+            );
+        };
+    }
+
+    // Reserva (El formulario con estilo Bento e Inventario)
     const bookingForm = document.getElementById('booking-form');
-    if (bookingForm) bookingForm.onsubmit = handleSaveBooking;
+    if (bookingForm) {
+        bookingForm.onsubmit = (e) => handleSaveBooking(e);
+    }
 
-    const eventForm = document.getElementById('event-form');
-    if (eventForm) eventForm.onsubmit = handleSaveEvent;
-    
-    document.getElementById('prev-month-btn').onclick = prevMonth;
-    document.getElementById('next-month-btn').onclick = nextMonth;
-    
-    const peopleInput = document.getElementById('peopleCount');
-    if (peopleInput) peopleInput.oninput = () => window.adjustJumpers(0);
-
-    // --- INVENTARIO (KIOSCO) ---
-    document.getElementById('add-product-btn').onclick = () => {
-        document.getElementById('product-form-container').classList.toggle('is-hidden');
-    };
-
-    document.getElementById('cancel-product-btn').onclick = () => {
-        document.getElementById('product-form-container').classList.add('is-hidden');
-    };
-
+    // Carga de Productos
     const productForm = document.getElementById('product-form');
-    if (productForm) productForm.onsubmit = handleSaveProduct;
+    if (productForm) {
+        productForm.onsubmit = (e) => handleSaveProduct(e);
+    }
 
+    // --- 4. ACCIONES DE COMPONENTES ---
+
+    // Calendario: Navegación de meses
+    const btnPrev = document.getElementById('prev-month-btn');
+    if (btnPrev) btnPrev.onclick = () => prevMonth();
+
+    const btnNext = document.getElementById('next-month-btn');
+    if (btnNext) btnNext.onclick = () => nextMonth();
+
+    // Inventario: Abrir formulario y calcular precios
+    const addProductBtn = document.getElementById('add-product-btn');
+    if (addProductBtn) {
+        addProductBtn.onclick = () => {
+            document.getElementById('product-form-container').classList.toggle('is-hidden');
+            calculateProductPrices();
+        };
+    }
+
+    // Listeners para el cálculo automático de ganancia en productos
     ['prod-batch-cost', 'prod-batch-qty', 'prod-profit-pct'].forEach(id => {
         const el = document.getElementById(id);
-        if (el) el.oninput = calculateProductPrices;
+        if (el) el.addEventListener('input', calculateProductPrices);
     });
 
-    const editProdForm = document.getElementById('edit-product-form');
-    if (editProdForm) editProdForm.onsubmit = handleConfirmEditProduct;
+    // --- 5. GLOBALIZACIÓN (SOPORTE PARA ONCLICK EN INDEX.HTML) ---
+    /**
+     * Dado que este script es un MODULO, sus funciones son privadas.
+     * Para que los botones del index.html funcionen (onclick="window.closeModals()"),
+     * debemos exponer las funciones necesarias al objeto global window.
+     */
+    window.showView = showView;
+    window.closeModals = closeModals;
+    window.openModal = openModal;
+    window.adjustJumpers = adjustJumpers;
+    window.updateBookingVisualTotal = updateBookingTotal;
+    window.handleConfirmRestock = handleConfirmRestock;
+    window.handleConfirmEditProduct = handleConfirmEditProduct;
+    // window.handleConfirmSale = handleConfirmSale; // Activar al tener el controlador de ventas
+    // window.openSaleModal = openSaleModal;         // Activar al tener el controlador de ventas
 
-    const restockForm = document.getElementById('restock-form');
-    if (restockForm) restockForm.onsubmit = handleConfirmRestock;
-
-    // --- VENTAS (POS) - CORRECCIÓN AQUÍ ---
-    const saleBtn = document.getElementById('header-sale-btn');
-    if (saleBtn) {
-        saleBtn.onclick = () => {
-            openSaleModal(); // Prepara el carrito
-            openModal('sale-modal'); // Muestra la ventana
-        };
-    }
-    
-    const confirmSaleBtn = document.getElementById('confirm-sale-btn');
-    if (confirmSaleBtn) confirmSaleBtn.onclick = handleConfirmSale;
-
-    // --- CONFIGURACIÓN ---
-    const configForm = document.getElementById('config-form');
-    if (configForm) {
-        configForm.onsubmit = async (e) => {
-            e.preventDefault();
-            const newPrice = parseFloat(document.getElementById('config-court1-price').value);
-            showMessage("Actualizando tarifas...");
-            try {
-                await setDoc(getPublicDoc("app_settings", "prices"), { court1Price: newPrice }, { merge: true });
-                window.appSettings.court1Price = newPrice;
-                showMessage("Tarifas actualizadas!");
-                setTimeout(hideMessage, 1500);
-            } catch (err) {
-                showMessage("Error al guardar", true);
-            }
-        };
-    }
-}
-
-window.closeModals = closeModals;
+});
