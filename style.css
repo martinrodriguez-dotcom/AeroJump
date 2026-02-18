@@ -1,19 +1,33 @@
 /* ============================================= */
-/* 1. VARIABLES Y CONFIGURACIÓN BASE            */
+/* 1. VARIABLES DE IDENTIDAD Y DISEÑO           */
 /* ============================================= */
 :root {
+    /* Paleta Principal */
     --bg: #F0F2F5;
     --black: #000000;
     --white: #FFFFFF;
     --violet: #6D28D9;
+    --violet-light: #F3E8FF;
     --orange: #FB923C;
+    --orange-light: #FFF7ED;
     --red: #EF4444;
+    --red-light: #FEF2F2;
     --green: #22C55E;
+    --slate-100: #F1F5F9;
+    --slate-200: #E2E8F0;
+    --slate-400: #94A3B8;
+    
+    /* Tokens de Estructura Brutalista */
     --border-width: 4px;
     --shadow-offset: 8px;
+    --radius-lg: 28px;
+    --radius-md: 18px;
+    --radius-sm: 12px;
 }
 
-/* Reset de alto contraste */
+/* ============================================= */
+/* 2. RESET Y CONFIGURACIÓN BASE                */
+/* ============================================= */
 * {
     margin: 0;
     padding: 0;
@@ -21,37 +35,74 @@
     -webkit-tap-highlight-color: transparent;
 }
 
-body {
-    font-family: 'Outfit', sans-serif;
+html, body {
+    height: 100%;
+    width: 100%;
     background-color: var(--bg);
     color: var(--black);
-    line-height: 1.2;
+    font-family: 'Outfit', sans-serif;
     font-weight: 700;
+    line-height: 1.2;
+    overflow: hidden; /* Evita scroll doble con el contenedor principal */
 }
 
-.font-mono { font-family: 'JetBrains Mono', monospace; font-weight: 500; }
-.is-hidden { display: none !important; }
+.font-mono { 
+    font-family: 'JetBrains Mono', monospace; 
+    font-weight: 600; 
+}
+
+.is-hidden { 
+    display: none !important; 
+}
 
 /* ============================================= */
-/* 2. COMPONENTES BENTO (TARJETAS Y BOTONES)    */
+/* 3. SCROLLBAR PROFESIONAL                     */
 /* ============================================= */
+.custom-scrollbar::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
 
-/* Bento Cards con Sombra de Bloque Sólida */
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: var(--black);
+    border-radius: 10px;
+    border: 3px solid var(--bg);
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: var(--violet);
+}
+
+/* ============================================= */
+/* 4. COMPONENTES BENTO (TARJETAS)              */
+/* ============================================= */
 .bento-card {
     background: var(--white);
     border: var(--border-width) solid var(--black);
-    border-radius: 24px;
+    border-radius: var(--radius-lg);
     box-shadow: var(--shadow-offset) var(--shadow-offset) 0px 0px var(--black);
     padding: 1.5rem;
-    transition: all 0.1s ease;
+    transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    position: relative;
 }
 
-/* Premium Buttons con Efecto Mecánico */
+.bento-card:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 10px 10px 0px 0px var(--black);
+}
+
+/* ============================================= */
+/* 5. BOTONES PREMIUM                           */
+/* ============================================= */
 .btn-premium {
     background: var(--white);
     border: var(--border-width) solid var(--black);
-    border-radius: 16px;
-    box-shadow: 6px 6px 0px 0px var(--black);
+    border-radius: var(--radius-md);
+    box-shadow: 5px 5px 0px 0px var(--black);
     font-weight: 900;
     text-transform: uppercase;
     padding: 1rem 1.5rem;
@@ -59,178 +110,250 @@ body {
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    transition: all 0.1s;
+    transition: all 0.1s ease;
     letter-spacing: 0.5px;
+    gap: 0.5rem;
 }
 
 .btn-premium:active {
-    transform: translate(2px, 2px);
+    transform: translate(3px, 3px);
     box-shadow: 0px 0px 0px 0px var(--black);
 }
 
 .btn-premium:disabled {
-    opacity: 0.5;
+    background: var(--slate-200);
+    color: var(--slate-400);
     cursor: not-allowed;
+    box-shadow: none;
     transform: none;
-    box-shadow: 2px 2px 0px 0px var(--black);
 }
 
-/* Inputs y Selects */
-input, select {
+/* ============================================= */
+/* 6. FORMULARIOS E INPUTS                      */
+/* ============================================= */
+input, select, textarea {
     border: var(--border-width) solid var(--black) !important;
-    border-radius: 16px !important;
-    padding: 0.8rem !important;
-    font-size: 1.2rem !important;
+    border-radius: var(--radius-md) !important;
+    padding: 0.8rem 1.2rem !important;
+    font-size: 1.1rem !important;
     font-weight: 700 !important;
     background: var(--white) !important;
     color: var(--black) !important;
+    width: 100%;
+    transition: background 0.2s;
 }
 
 input:focus {
-    background: #F3E8FF !important;
+    background: var(--violet-light) !important;
     outline: none;
     border-color: var(--violet) !important;
 }
 
 /* ============================================= */
-/* 3. SISTEMA DE MODALES Y SCROLL               */
+/* 7. SISTEMA DE MODALES (FIX NOTEBOOKS)        */
 /* ============================================= */
-
-/* Scrollbar Estilo AeroJump */
-.custom-scrollbar::-webkit-scrollbar {
-    width: 10px;
-}
-.custom-scrollbar::-webkit-scrollbar-track {
-    background: transparent;
-}
-.custom-scrollbar::-webkit-scrollbar-thumb {
-    background: var(--black);
-    border-radius: 10px;
-    border: 2px solid var(--white);
+.modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.85);
+    z-index: 2000;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
 }
 
-/* Estructura de Modales Inteligentes */
+.modal.is-open {
+    display: flex;
+}
+
 .modal-content {
     background: var(--white);
+    width: 100%;
+    height: auto;
+    max-height: 95vh;
+    max-width: 900px;
     border: var(--border-width) solid var(--black);
+    border-radius: var(--radius-lg);
     display: flex;
     flex-direction: column;
+    overflow: hidden; /* Importante para fijar cabecera/pie */
+    animation: modalPop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-/* La clave para pantallas 1366x768 */
+@keyframes modalPop {
+    from { opacity: 0; transform: scale(0.9) translateY(20px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
 .modal-header {
-    border-bottom: var(--border-width) solid var(--black);
-    padding: 1.25rem;
     flex-shrink: 0;
-    background: white;
+    padding: 1.5rem;
+    border-bottom: var(--border-width) solid var(--black);
+    background: var(--white);
+    z-index: 10;
 }
 
 .modal-body {
     flex: 1;
     overflow-y: auto;
     padding: 1.5rem;
-    -webkit-overflow-scrolling: touch;
-    background: #f8fafc;
+    background: var(--slate-100);
 }
 
 .modal-footer {
-    border-top: var(--border-width) solid var(--black);
-    padding: 1.25rem;
     flex-shrink: 0;
-    background: white;
+    padding: 1.25rem;
+    border-top: var(--border-width) solid var(--black);
+    background: var(--white);
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
 }
 
 /* ============================================= */
-/* 4. CALENDARIO Y POS                          */
+/* 8. CALENDARIO Y AGENDA                       */
 /* ============================================= */
-
 .calendar-header-day {
     text-align: center;
     font-weight: 900;
     text-transform: uppercase;
-    font-size: 0.75rem;
+    font-size: 0.8rem;
     color: var(--violet);
-    padding-bottom: 8px;
+    padding-bottom: 10px;
 }
 
 .day-cell {
     aspect-ratio: 1/1;
-    border: 2px solid var(--black);
+    border: 3px solid var(--black);
     background: var(--white);
-    border-radius: 14px;
+    border-radius: 16px;
     cursor: pointer;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    padding: 0.4rem;
-    transition: all 0.1s;
+    padding: 0.5rem;
+    transition: all 0.15s ease;
 }
 
-.day-cell:hover {
-    background: #F3E8FF;
-    transform: scale(1.03);
-    z-index: 10;
+.day-cell:hover:not(.opacity-10) {
+    background: var(--violet-light);
+    transform: scale(1.05);
+    z-index: 5;
+    box-shadow: 4px 4px 0px 0px var(--black);
 }
 
-/* Items de Venta en Lista */
+.booking-badges-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2px;
+    justify-content: flex-end;
+}
+
+.booking-badge {
+    background: var(--black);
+    color: var(--white);
+    font-size: 0.65rem;
+    font-weight: 900;
+    padding: 2px 5px;
+    border-radius: 6px;
+}
+
+.booking-badge.event {
+    background: var(--orange);
+}
+
+/* ============================================= */
+/* 9. PUNTO DE VENTA (POS)                      */
+/* ============================================= */
+.pos-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    height: 100%;
+}
+
+@media (min-width: 1024px) {
+    .pos-grid {
+        grid-template-columns: 1fr 420px;
+    }
+}
+
 .pos-item-list {
     background: var(--white);
     border: 3px solid var(--black);
-    border-radius: 16px;
-    padding: 1.2rem;
+    border-radius: 20px;
+    padding: 1.25rem;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 0.8rem;
-    box-shadow: 4px 4px 0px 0px var(--black);
+    margin-bottom: 1rem;
+    box-shadow: 6px 6px 0px 0px var(--black);
     transition: transform 0.1s;
 }
 
 .pos-item-list:active {
     transform: translate(2px, 2px);
-    box-shadow: 0px 0px 0px 0px var(--black);
+    box-shadow: 2px 2px 0px 0px var(--black);
 }
 
 /* ============================================= */
-/* 5. RESPONSIVE Y AJUSTES DE ALTURA            */
+/* 10. ANIMACIONES Y ESTADOS ESPECIALES         */
 /* ============================================= */
+@keyframes jump {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-15px); }
+}
 
-/* Ajuste para Notebooks Viejas (768px de alto) */
+.jumping-child {
+    animation: jump 0.8s ease-in-out infinite;
+    display: inline-block;
+}
+
+/* ============================================= */
+/* 11. ADAPTACIÓN NOTEBOOK (1366x768)           */
+/* ============================================= */
 @media (max-height: 800px) {
+    :root {
+        --shadow-offset: 5px;
+    }
+    
     .modal-content {
-        max-height: 98vh !important;
+        max-height: 98vh;
     }
-    .btn-premium {
-        padding: 0.6rem 1rem;
-        font-size: 0.9rem;
+    
+    .modal-header, .modal-footer {
+        padding: 0.75rem 1rem;
     }
-    input, select {
-        padding: 0.5rem !important;
-    }
+    
     .bento-card {
         padding: 1rem;
     }
-}
 
-/* Ajustes para Celulares */
-@media (max-width: 768px) {
-    .pos-grid {
-        grid-template-columns: 1fr;
+    h2 { font-size: 1.8rem !important; }
+    
+    .btn-premium {
+        padding: 0.6rem 1.2rem;
+        font-size: 0.9rem;
     }
-    .modal-content {
-        border-radius: 0;
-        border: none;
-    }
-    .day-cell span {
-        font-size: 0.8rem;
+    
+    input, select {
+        padding: 0.5rem 1rem !important;
+        font-size: 1rem !important;
     }
 }
 
-/* Animación de Salto */
-@keyframes jump {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-12px); }
-}
-.jumping-child {
-    animation: jump 0.8s ease-in-out infinite;
+/* ============================================= */
+/* 12. ADAPTACIÓN MÓVIL                         */
+/* ============================================= */
+@media (max-width: 640px) {
+    .modal { padding: 0; }
+    .modal-content { 
+        height: 100vh; 
+        max-height: 100vh; 
+        border-radius: 0; 
+        border-left: none; 
+        border-right: none; 
+    }
+    .day-cell span { font-size: 0.9rem; }
+    .pos-grid { overflow-y: auto; }
 }
