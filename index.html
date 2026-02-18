@@ -5,674 +5,304 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>AeroJump Gchu - Sistema v2026</title>
     
+    <!-- Favicon para evitar error 404 en consola -->
     <link rel="icon" href="data:,">
     
-    <!-- Google Fonts -->
+    <!-- Google Fonts del Manual Oficial -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;900&family=JetBrains+Mono:wght@500;800&display=swap" rel="stylesheet">
     
+    <!-- Framework de Utilidades CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <style>
-        :root {
-            --bg: #F0F2F5;
-            --black: #000000;
-            --white: #FFFFFF;
-            --violet: #6D28D9;
-            --orange: #FB923C;
-            --red: #EF4444;
-            --green: #22C55E;
-            --border-width: 4px;
-            --shadow-offset: 8px;
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        
-        body { 
-            font-family: 'Outfit', sans-serif; 
-            background-color: var(--bg); 
-            color: var(--black); 
-            line-height: 1.2;
-            font-weight: 700;
-        }
-
-        .font-mono { font-family: 'JetBrains Mono', monospace; font-weight: 500; }
-        .is-hidden { display: none !important; }
-
-        /* BENTO CARDS */
-        .bento-card {
-            background: var(--white);
-            border: var(--border-width) solid var(--black);
-            border-radius: 24px;
-            box-shadow: var(--shadow-offset) var(--shadow-offset) 0px 0px var(--black);
-            padding: 1.2rem;
-            transition: all 0.1s;
-        }
-
-        /* PREMIUM BUTTONS */
-        .btn-premium {
-            background: var(--white);
-            border: var(--border-width) solid var(--black);
-            border-radius: 16px;
-            box-shadow: 6px 6px 0px 0px var(--black);
-            font-weight: 900;
-            text-transform: uppercase;
-            padding: 0.8rem 1.2rem;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.1s;
-        }
-        .btn-premium:active {
-            transform: translate(2px, 2px);
-            box-shadow: 0px 0px 0px 0px var(--black);
-        }
-
-        /* INPUTS */
-        input, select {
-            border: var(--border-width) solid var(--black) !important;
-            border-radius: 16px !important;
-            padding: 0.75rem !important;
-            font-size: 1.1rem !important;
-            font-weight: 700 !important;
-            background: var(--white) !important;
-            color: var(--black) !important;
-        }
-
-        /* MODALES ESTRUCTURADOS */
-        .modal { 
-            display: none; 
-            position: fixed; 
-            inset: 0; 
-            background: var(--black); 
-            z-index: 2000; 
-            align-items: center;
-            justify-content: center;
-        }
-        .modal.is-open { display: flex; }
-        .modal-content { 
-            background: var(--white); 
-            width: 100%; 
-            height: 100%; 
-            max-width: 900px;
-            display: flex;
-            flex-direction: column;
-            border: var(--border-width) solid var(--black);
-        }
-        @media (min-width: 768px) {
-            .modal { background: rgba(0,0,0,0.85); padding: 1.5rem; }
-            .modal-content { height: auto; max-height: 94vh; border-radius: 24px; }
-        }
-
-        .modal-header { border-bottom: var(--border-width) solid var(--black); padding: 1rem; flex-shrink: 0; background: #fff; }
-        .modal-body { flex: 1; overflow-y: auto; padding: 1.25rem; -webkit-overflow-scrolling: touch; background: #f8fafc; }
-        .modal-footer { border-top: var(--border-width) solid var(--black); padding: 1rem; flex-shrink: 0; background: #fff; }
-
-        /* CALENDARIO */
-        .calendar-header-day { text-align: center; font-weight: 900; font-size: 0.7rem; color: var(--violet); text-transform: uppercase; }
-        .day-cell { 
-            aspect-ratio: 1/1; 
-            border: 2px solid var(--black); 
-            background: var(--white); 
-            border-radius: 14px;
-            cursor: pointer; 
-            display: flex; 
-            flex-direction: column; 
-            justify-content: space-between; 
-            padding: 0.3rem;
-            transition: all 0.1s;
-        }
-        .day-cell:hover { background: #F3E8FF; }
-        .booking-badge { 
-            background: var(--black); color: var(--white); 
-            font-size: 0.6rem; font-weight: 900; 
-            padding: 1px 3px; border-radius: 4px; 
-        }
-        .booking-badge.event { background: var(--orange); }
-
-        /* POS LIST VIEW */
-        .pos-item-list {
-            background: var(--white);
-            border: 3px solid var(--black);
-            border-radius: 16px;
-            padding: 1rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 0.75rem;
-            box-shadow: 4px 4px 0px 0px var(--black);
-        }
-
-        .custom-scrollbar::-webkit-scrollbar { width: 10px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: var(--black); border: 2px solid var(--white); }
-
-        @keyframes jump { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
-        .jumping-child { animation: jump 0.8s ease-in-out infinite; display: inline-block; }
-    </style>
+    <!-- Archivo de Estilos Premium Modern Brutalist -->
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <!-- 1. LOGIN -->
+    <!-- 1. SECCIÓN DE ACCESO (LOGIN / REGISTRO) -->
     <section id="login-view" class="min-h-screen flex items-center justify-center p-4 bg-black">
         <div class="bento-card w-full max-w-sm text-center leading-none">
-            <h2 class="text-5xl font-black uppercase italic mb-1">AeroJump</h2>
-            <p class="font-bold text-[10px] tracking-widest mb-10 border-b-4 border-black pb-2 font-mono">PANEL DE CONTROL</p>
+            <h2 class="text-5xl font-black text-black uppercase italic mb-1 leading-none">AeroJump</h2>
+            <p class="text-black font-bold text-[10px] uppercase tracking-widest mb-10 border-b-4 border-black pb-2 font-mono leading-none">PANEL DE CONTROL</p>
             <form id="login-form" class="space-y-6">
-                <input type="email" placeholder="EMAIL" required>
-                <input type="password" placeholder="PASSWORD" required>
-                <button type="submit" class="w-full bg-[#6D28D9] text-white btn-premium text-2xl italic py-6">INGRESAR</button>
+                <div class="text-left leading-none">
+                    <label class="text-xs font-black uppercase mb-1 ml-1 underline">Usuario Administrador:</label>
+                    <input type="email" id="login-email" placeholder="email@aerojump.com" required>
+                </div>
+                <div class="text-left leading-none">
+                    <label class="text-xs font-black uppercase mb-1 ml-1 underline">Clave de Acceso:</label>
+                    <input type="password" id="login-password" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="w-full bg-[#6D28D9] text-white btn-premium text-2xl italic leading-none py-6">INGRESAR</button>
             </form>
-            <button id="show-register" class="mt-8 text-xs font-bold uppercase underline">Crear Cuenta</button>
+            <button id="show-register-btn" class="mt-8 text-xs font-bold uppercase underline decoration-2 leading-none">Registrar Nuevo Administrador</button>
         </div>
     </section>
 
-    <!-- 2. REGISTRO -->
-    <section id="register-view" class="is-hidden min-h-screen flex items-center justify-center p-4 bg-black">
-        <div class="bento-card w-full max-w-sm text-center">
-            <h2 class="text-2xl font-black mb-8 uppercase underline decoration-4">NUEVO ADMIN</h2>
-            <form id="register-form" class="space-y-4">
-                <input type="email" placeholder="EMAIL" required>
-                <input type="password" placeholder="PASSWORD" required>
-                <button type="submit" class="w-full bg-[#FB923C] text-white btn-premium text-xl italic">REGISTRAR</button>
+    <!-- VISTA REGISTRO (OCULTA POR DEFECTO) -->
+    <section id="register-view" class="is-hidden min-h-screen flex items-center justify-center p-4 bg-black text-center leading-none">
+        <div class="bento-card w-full max-w-sm">
+            <h2 class="text-2xl font-black mb-8 uppercase italic underline decoration-4">NUEVO ADMIN</h2>
+            <form id="register-form" class="space-y-4 text-left">
+                <input type="email" id="reg-email" placeholder="EMAIL" required>
+                <input type="password" id="reg-password" placeholder="PASSWORD (Mín. 6 caracteres)" required>
+                <button type="submit" class="w-full bg-[#FB923C] text-white btn-premium text-xl italic leading-none">REGISTRAR</button>
             </form>
-            <button id="show-login" class="mt-6 text-xs font-bold uppercase underline">VOLVER</button>
+            <button id="show-login-btn" class="mt-6 text-xs font-black uppercase underline decoration-2">VOLVER</button>
         </div>
     </section>
 
-    <!-- 3. APP CONTAINER -->
+    <!-- 2. CONTENEDOR PRINCIPAL DE LA APP -->
     <div id="app-container" class="is-hidden min-h-screen flex flex-col text-left leading-none">
+        
+        <!-- HEADER FIJO -->
         <header class="fixed top-0 left-0 right-0 bg-white px-4 py-4 flex justify-between items-center z-50 border-b-4 border-black">
             <div class="flex items-center gap-3">
-                <button id="menu-btn" class="p-3 bg-black text-white rounded-2xl active:scale-90"><svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="4"><path d="M4 6h16M4 12h16M4 18h16" /></svg></button>
-                <div class="leading-none">
-                    <h1 class="text-xl font-black uppercase italic tracking-tighter">AeroJump</h1>
-                    <span class="text-[9px] font-black text-[#6D28D9] tracking-widest uppercase font-mono">Gualeguaychú</span>
+                <button id="menu-btn" class="p-3 bg-black text-white rounded-2xl active:scale-90 shadow-none">
+                    <svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="4"><path d="M4 6h16M4 12h16M4 18h16" /></svg>
+                </button>
+                <div class="leading-none text-left">
+                    <h1 class="text-2xl font-black text-black uppercase italic tracking-tighter leading-none">AeroJump</h1>
+                    <span class="text-[9px] font-black text-[#6D28D9] uppercase tracking-widest leading-none font-mono">GUALEGUAYCHÚ</span>
                 </div>
             </div>
-            <button id="header-sale-btn" class="bg-[#FB923C] text-white px-4 py-2 btn-premium text-[11px] shadow-[4px_4px_0px_0px_#000]">VENTA KIOSCO</button>
+            <button id="header-sale-btn" class="bg-[#FB923C] text-white px-5 py-3 btn-premium text-[11px] leading-none shadow-[4px_4px_0px_0px_#000]">VENTA KIOSCO</button>
         </header>
 
-        <nav id="main-menu" class="fixed top-0 left-0 h-screen w-72 bg-white transform -translate-x-full shadow-none border-r-4 border-black z-[1100]">
-            <div class="p-8 border-b-4 border-black bg-slate-100 text-center">
-                <p id="user-email-display" class="font-black truncate text-xs mb-6 underline font-mono italic"></p>
-                <button id="logout-btn" class="text-xs font-black text-red-700 border-4 border-red-700 px-4 py-2 italic w-full">CERRAR SESIÓN</button>
+        <!-- MENÚ LATERAL (SIDEBAR) -->
+        <nav id="main-menu" class="fixed top-0 left-0 h-screen w-72 bg-white transform -translate-x-full shadow-none border-r-4 border-black z-[1100] leading-none">
+            <div class="p-8 border-b-4 border-black bg-slate-100">
+                <p id="user-email-display" class="font-black text-black truncate text-sm mb-6 underline decoration-2 italic font-mono leading-none text-center"></p>
+                <button id="logout-btn" class="text-xs font-black text-red-700 uppercase border-4 border-red-700 px-4 py-3 italic w-full text-center rounded-xl leading-none">CERRAR SESIÓN 🔒</button>
             </div>
             <div class="px-3 py-6 space-y-4">
-                <button class="menu-item flex items-center gap-4 w-full p-5 bento-card hover:bg-[#F3E8FF] transition-all text-sm uppercase italic border-2 shadow-none" data-view="calendar">🗓️ AGENDA</button>
-                <button class="menu-item flex items-center gap-4 w-full p-5 bento-card hover:bg-[#FFF7ED] transition-all text-sm uppercase italic border-2 shadow-none" data-view="productos">🥤 STOCK</button>
-                <button class="menu-item flex items-center gap-4 w-full p-5 bento-card hover:bg-[#F0FDF4] transition-all text-sm uppercase italic border-2 shadow-none" data-view="caja">💰 FINANZAS</button>
-                <button class="menu-item flex items-center gap-4 w-full p-5 bento-card hover:bg-slate-50 transition-all text-sm uppercase italic border-2 shadow-none" data-view="stats">📊 RANKINGS</button>
-                <button class="menu-item flex items-center gap-4 w-full p-5 bento-card hover:bg-slate-50 transition-all text-sm uppercase italic border-2 shadow-none" data-view="config">⚙️ TARIFAS</button>
+                <button class="menu-item flex items-center gap-4 w-full p-5 bento-card hover:bg-[#F3E8FF] transition-all text-sm uppercase italic shadow-none border-2" data-view="calendar">🗓️ AGENDA SALTOS</button>
+                <button class="menu-item flex items-center gap-4 w-full p-5 bento-card hover:bg-[#FFF7ED] transition-all text-sm uppercase italic shadow-none border-2" data-view="productos">🥤 STOCK KIOSCO</button>
+                <button class="menu-item flex items-center gap-4 w-full p-5 bento-card hover:bg-[#F0FDF4] transition-all text-sm uppercase italic shadow-none border-2" data-view="caja">💰 ARQUEO CAJA</button>
+                <button class="menu-item flex items-center gap-4 w-full p-5 bento-card hover:bg-slate-50 transition-all text-sm uppercase italic shadow-none border-2" data-view="stats">📊 RANKINGS</button>
+                <button class="menu-item flex items-center gap-4 w-full p-5 bento-card hover:bg-slate-50 transition-all text-sm uppercase italic shadow-none border-2" data-view="config">⚙️ TARIFAS</button>
             </div>
         </nav>
         <div id="menu-overlay" class="fixed inset-0 bg-black/95 z-[1000] hidden"></div>
 
-        <main class="flex-grow pt-28 pb-12 px-4 max-w-7xl mx-auto w-full">
-            <!-- CALENDARIO -->
+        <!-- ÁREA DE CONTENIDO DINÁMICO -->
+        <main class="flex-grow pt-28 pb-12 px-4 max-w-7xl mx-auto w-full leading-none">
+            
+            <!-- VISTA: AGENDA (CALENDARIO) -->
             <div id="calendar-view" class="view-container">
-                <div class="bento-card mb-6 flex justify-between items-center">
-                    <button id="prev-month-btn" class="p-3 bg-slate-100 border-4 border-black rounded-2xl active:scale-90">◀</button>
-                    <h2 id="current-month-year" class="text-xl font-black uppercase underline decoration-6"></h2>
-                    <button id="next-month-btn" class="p-3 bg-slate-100 border-4 border-black rounded-2xl active:scale-90">▶</button>
+                <div class="bento-card mb-8 flex justify-between items-center leading-none">
+                    <button id="prev-month-btn" class="p-4 bg-slate-100 border-4 border-black rounded-2xl font-black active:scale-90 leading-none">◀</button>
+                    <h2 id="current-month-year" class="text-xl font-black text-black uppercase underline decoration-6 leading-none font-bold"></h2>
+                    <button id="next-month-btn" class="p-4 bg-slate-100 border-4 border-black rounded-2xl font-black active:scale-90 leading-none">▶</button>
                 </div>
+                <!-- Cabecera de días de la semana -->
                 <div class="grid grid-cols-7 gap-1 sm:gap-3 mb-2">
-                    <div class="calendar-header-day">L</div><div class="calendar-header-day">M</div><div class="calendar-header-day">M</div><div class="calendar-header-day">J</div><div class="calendar-header-day">V</div><div class="calendar-header-day">S</div><div class="calendar-header-day">D</div>
+                    <div class="calendar-header-day">Lun</div><div class="calendar-header-day">Mar</div><div class="calendar-header-day">Mie</div><div class="calendar-header-day">Jue</div><div class="calendar-header-day">Vie</div><div class="calendar-header-day">Sab</div><div class="calendar-header-day">Dom</div>
                 </div>
                 <div id="calendar-grid" class="grid grid-cols-7 gap-1 sm:gap-3"></div>
             </div>
 
-            <!-- PRODUCTOS -->
+            <!-- VISTA: STOCK / INVENTARIO -->
             <div id="productos-view" class="view-container is-hidden">
-                <div class="flex flex-col sm:flex-row justify-between items-start gap-4 mb-8">
-                    <h2 class="text-4xl font-black italic uppercase underline decoration-8">INVENTARIO</h2>
-                    <button id="add-product-btn" class="bg-[#6D28D9] text-white px-8 py-4 btn-premium text-sm">+ CARGAR</button>
+                <div class="flex flex-col sm:flex-row justify-between items-start gap-4 mb-10 leading-none text-left">
+                    <h2 class="text-5xl font-black italic uppercase underline decoration-8 leading-none">INVENTARIO</h2>
+                    <button id="add-product-btn" class="bg-[#6D28D9] text-white px-10 py-6 btn-premium text-lg italic w-full sm:w-auto leading-none font-bold">+ CARGAR ARTÍCULO</button>
                 </div>
-                <div id="product-form-container" class="bento-card mb-10 is-hidden">
-                    <form id="product-form" class="grid grid-cols-1 md:grid-cols-4 gap-6 text-left leading-none">
-                        <div class="md:col-span-2"><label class="text-[10px] font-black uppercase mb-1 block">Nombre:</label><input type="text" id="prod-name" required></div>
-                        <div><label class="text-[10px] font-black uppercase mb-1 block">Stock:</label><input type="number" id="prod-stock" required min="0" class="font-mono"></div>
-                        <div><label class="text-[10px] font-black uppercase mb-1 block">Ganancia %:</label><input type="number" id="prod-profit-pct" value="40" class="font-mono"></div>
-                        <div><label class="text-[10px] font-black uppercase mb-1 block">Costo Bulto:</label><input type="number" id="prod-batch-cost" required step="0.01" class="font-mono"></div>
-                        <div><label class="text-[10px] font-black uppercase mb-1 block">Unid x Bulto:</label><input type="number" id="prod-batch-qty" required min="1" value="1" class="font-mono"></div>
-                        <div class="md:col-span-2 p-8 bg-black text-white border-4 border-[#6D28D9] rounded-[32px] flex justify-between items-center">
-                            <div><span class="text-xs font-black text-violet-400 italic">Sugerido:</span><p id="prod-suggested-price" class="text-4xl font-black font-mono">$0</p></div>
-                            <div><label class="text-xs font-black text-orange-400 block mb-1">REAL:</label><input type="number" id="prod-real-price" required class="text-black text-center font-mono font-black text-4xl w-40"></div>
+
+                <!-- Formulario Oculto de Carga -->
+                <div id="product-form-container" class="bento-card mb-12 is-hidden">
+                    <h3 class="text-xl font-black mb-8 uppercase italic underline decoration-4 leading-none">✨ Alta de Mercadería</h3>
+                    <form id="product-form" class="grid grid-cols-1 md:grid-cols-4 gap-8 text-left leading-none">
+                        <div class="md:col-span-2 leading-none"><label class="text-xs font-black uppercase underline mb-2 block leading-none">Nombre:</label><input type="text" id="prod-name" required></div>
+                        <div class="leading-none"><label class="text-xs font-black uppercase underline mb-2 block leading-none">Stock:</label><input type="number" id="prod-stock" required min="0" class="text-center font-mono"></div>
+                        <div class="leading-none"><label class="text-xs font-black uppercase underline mb-2 block leading-none">Ganancia %:</label><input type="number" id="prod-profit-pct" value="40" class="text-center font-mono"></div>
+                        <div class="leading-none"><label class="text-xs font-black uppercase underline mb-2 block leading-none">Costo Bulto:</label><input type="number" id="prod-batch-cost" required step="0.01" class="font-mono"></div>
+                        <div class="leading-none"><label class="text-xs font-black uppercase underline mb-2 block leading-none">Unid x Bulto:</label><input type="number" id="prod-batch-qty" required min="1" value="1" class="text-center font-mono"></div>
+                        
+                        <div class="md:col-span-2 p-10 bg-black text-white border-4 border-[#6D28D9] rounded-[32px] flex flex-col items-center justify-between gap-6 leading-none shadow-[8px_8px_0px_0px_#000]">
+                            <div class="text-center leading-none"><span class="text-sm font-black text-violet-400 uppercase italic leading-none">Sugerido:</span><p id="prod-suggested-price" class="text-5xl font-black italic font-mono mt-2">$0</p></div>
+                            <div class="w-full text-center leading-none">
+                                <label class="text-xs font-black text-orange-400 block mb-2 underline decoration-2">PRECIO REAL VENTA ($)</label>
+                                <input type="number" id="prod-real-price" required class="text-black text-center font-mono font-black text-6xl w-full leading-none">
+                                <input type="hidden" id="prod-unit-cost">
+                            </div>
                         </div>
-                        <div class="md:col-span-2 flex items-center justify-between pt-4"><button type="button" id="cancel-product-btn" class="font-black uppercase text-xs underline">Anular</button><button type="submit" class="bg-[#22C55E] text-white px-10 py-4 btn-premium text-xl">GUARDAR</button></div>
+                        <div class="md:col-span-2 flex items-center justify-end gap-8 pt-6 leading-none"><button type="button" id="cancel-product-btn" class="font-black uppercase text-sm underline decoration-4 leading-none font-bold">ANULAR</button><button type="submit" class="bg-[#22C55E] text-white px-16 py-8 btn-premium text-3xl italic leading-none shadow-none font-bold">CONFIRMAR</button></div>
                     </form>
                 </div>
-                <div id="product-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+                <div id="product-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 text-left leading-none font-bold"></div>
             </div>
 
-            <!-- CAJA -->
+            <!-- VISTA: FINANZAS / ARQUEO -->
             <div id="caja-view" class="view-container is-hidden">
-                <div class="flex flex-col gap-6 mb-12">
-                    <h2 class="text-4xl font-black italic uppercase underline decoration-8">ARQUEO CAJA</h2>
-                    <button onclick="document.getElementById('expense-modal').classList.add('is-open')" class="bg-[#EF4444] text-white px-10 py-6 btn-premium text-lg italic w-full">💸 ANOTAR GASTO</button>
+                <div class="flex flex-col gap-6 mb-12 leading-none text-left">
+                    <h2 class="text-5xl font-black italic uppercase underline decoration-8 leading-none">ARQUEO DE CAJA</h2>
+                    <button id="btn-open-expense" class="bg-[#EF4444] text-white px-10 py-6 btn-premium text-lg italic w-full leading-none shadow-none font-bold">💸 ANOTAR GASTO</button>
                 </div>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
-                    <div class="bento-card flex flex-col justify-center"><p class="text-xs font-black uppercase opacity-60 mb-2">Ingresos (+)</p><p id="caja-total-in" class="text-4xl font-mono font-black text-[#22C55E] leading-none">$0</p></div>
-                    <div class="bento-card flex flex-col justify-center"><p class="text-xs font-black uppercase opacity-60 mb-2">Gastos (-)</p><p id="caja-total-out" class="text-4xl font-mono font-black text-[#EF4444] leading-none">$0</p></div>
-                    <div class="bento-card bg-black text-white border-[#6D28D9] border-8 flex flex-col justify-center"><p class="text-xs font-black uppercase text-violet-400 italic mb-4">NETO CAJA</p><p id="caja-total-net" class="text-5xl font-mono font-black leading-none">$0</p></div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16 leading-none">
+                    <div class="bento-card leading-none flex flex-col justify-center"><p class="text-sm font-black uppercase opacity-60 mb-3 leading-none italic font-bold">Ingresos (+)</p><p id="caja-total-in" class="text-5xl font-mono font-black text-[#22C55E] leading-none">$0</p></div>
+                    <div class="bento-card leading-none flex flex-col justify-center"><p class="text-sm font-black uppercase opacity-60 mb-3 leading-none italic font-bold">Gastos (-)</p><p id="caja-total-out" class="text-5xl font-mono font-black text-[#EF4444] leading-none">$0</p></div>
+                    <div class="bento-card bg-black text-white border-[#6D28D9] border-8 leading-none flex flex-col justify-center shadow-none"><p class="text-sm font-black uppercase text-violet-400 italic mb-4">CAJA NETO REAL</p><p id="caja-total-net" class="text-6xl font-mono font-black leading-none">$0</p></div>
                 </div>
-                <h3 class="text-2xl font-black uppercase mb-8 border-b-8 border-black pb-4 underline decoration-8">HISTORIAL MOVIMIENTOS:</h3>
-                <div id="caja-daily-list" class="space-y-4 max-w-4xl mx-auto"></div>
+
+                <h3 class="text-2xl font-black uppercase mb-10 border-b-8 border-black pb-4 underline decoration-8 leading-none font-bold">HISTORIAL DE MOVIMIENTOS:</h3>
+                <div id="caja-daily-list" class="space-y-6 max-w-5xl mx-auto leading-none font-bold"></div>
             </div>
 
-            <!-- TARIFAS -->
-            <div id="config-view" class="view-container is-hidden max-w-md mx-auto">
-                <div class="bento-card text-center leading-none">
-                    <h2 class="text-2xl font-black mb-10 uppercase italic underline decoration-8">TARIFAS</h2>
-                    <form id="config-form" class="space-y-10">
-                        <div class="text-left"><label class="text-xs font-black uppercase underline block mb-3">1 HORA DE SALTO ($):</label><input type="number" id="config-court1-price" class="text-center font-mono font-black text-6xl p-6 bg-slate-50 w-full" value="5000"></div>
-                        <div class="text-left"><label class="text-xs font-black uppercase underline block mb-3">EVENTO 2 HORAS ($):</label><input type="number" id="config-event-price" class="text-center font-mono font-black text-6xl p-6 bg-slate-50 w-full" value="15000"></div>
-                        <button type="submit" class="w-full py-8 bg-black text-white btn-premium text-3xl shadow-none">ACTUALIZAR</button>
+            <!-- VISTA: RANKINGS -->
+            <div id="stats-view" class="view-container is-hidden text-left leading-none font-bold">
+                <h2 class="text-4xl font-black mb-12 uppercase italic underline decoration-8 leading-none font-bold">FIDELIDAD</h2>
+                <div id="stats-list" class="space-y-6 max-w-3xl mx-auto font-bold leading-none"></div>
+            </div>
+            
+            <!-- VISTA: CONFIGURACIÓN -->
+            <div id="config-view" class="view-container is-hidden max-w-md mx-auto text-left leading-none font-bold">
+                <div class="bento-card text-center leading-none font-bold">
+                    <h2 class="text-3xl font-black mb-12 uppercase italic underline decoration-8 leading-none font-bold">TARIFAS</h2>
+                    <form id="config-form" class="space-y-12 leading-none">
+                        <div><label class="text-sm font-black uppercase block mb-6 underline decoration-4 leading-none text-center font-bold">VALOR 1 HORA SALTO ($):</label><input type="number" id="config-court1-price" class="text-center font-mono font-black text-[100px] p-8 bg-slate-50 w-full leading-none"></div>
+                        <div><label class="text-sm font-black uppercase block mb-6 underline decoration-4 leading-none text-center font-bold">EVENTO EXCL. ($):</label><input type="number" id="config-event-price" class="text-center font-mono font-black text-[100px] p-8 bg-slate-50 w-full leading-none"></div>
+                        <button type="submit" class="w-full py-10 bg-black text-white btn-premium text-4xl italic shadow-none leading-none font-bold">ACTUALIZAR</button>
                     </form>
                 </div>
             </div>
-
-            <div id="stats-view" class="view-container is-hidden text-left"><h2 class="text-4xl font-black mb-12 uppercase italic underline decoration-8">RANKING CLIENTES</h2><div id="stats-list" class="space-y-4 max-w-3xl mx-auto"></div></div>
         </main>
     </div>
 
-    <!-- MODAL VENTA POS (EN LISTA) -->
+    <!-- 3. MODALES DE SISTEMA -->
+
+    <!-- VENTA POS (CATÁLOGO EN LISTA) -->
     <div id="sale-modal" class="modal">
         <div class="modal-content">
             <div class="modal-header bg-black text-white leading-none">
                 <div class="flex justify-between items-center leading-none">
-                    <div class="text-left leading-none"><h3 class="text-4xl font-black text-[#FB923C] uppercase italic">VENTA POS</h3><p class="text-[8px] font-black uppercase mt-1 font-mono tracking-widest">AeroJump Kiosco</p></div>
-                    <button onclick="window.closeModals()" class="p-4 bg-white text-black font-black text-3xl border-4 border-black">X</button>
+                    <div class="text-left leading-none"><h3 class="text-4xl font-black text-[#FB923C] uppercase italic leading-none font-bold">CAJA POS</h3><p class="text-xs font-black uppercase mt-2 font-mono leading-none tracking-widest">Punto de Venta Detallado</p></div>
+                    <button onclick="window.closeModals()" class="p-4 bg-white text-black font-black text-2xl border-4 border-black leading-none font-bold">X</button>
                 </div>
             </div>
-            <div class="flex-grow pos-grid overflow-hidden bg-slate-400">
-                <div class="flex flex-col border-r-4 border-black overflow-hidden bg-slate-200 flex-1">
-                    <div class="p-6 bg-white border-b-8 border-black leading-none"><input type="text" id="sale-catalog-filter" class="font-black text-2xl p-6 italic border-4 border-black w-full" placeholder="🔍 BUSCAR PRODUCTO..."></div>
-                    <div class="modal-body custom-scrollbar p-6"><div id="sale-catalog-list" class="flex flex-col gap-4"></div></div>
+            <div class="flex-grow flex flex-col md:flex-row overflow-hidden leading-none bg-slate-400">
+                <!-- Catálogo Izquierda -->
+                <div class="flex flex-col border-r-4 border-black overflow-hidden bg-slate-200 flex-1 leading-none">
+                    <div class="p-6 bg-white border-b-8 border-black leading-none"><input type="text" id="sale-catalog-filter" class="font-black text-2xl p-6 italic border-4 border-black w-full" placeholder="🔍 BUSCAR ARTÍCULO..."></div>
+                    <div class="modal-body custom-scrollbar p-6 leading-none"><div id="sale-catalog-list" class="flex flex-col gap-4"></div></div>
                 </div>
-                <div class="flex flex-col bg-white border-t-[14px] lg:border-t-0 lg:border-l-8 border-black w-full lg:w-[450px] flex-shrink-0">
-                    <div class="p-8 border-b-8 border-black bg-slate-100 leading-none text-center"><h4 class="text-xl font-black uppercase underline decoration-6">TICKET ACTUAL</h4></div>
-                    <div class="flex-grow overflow-hidden flex flex-col p-4 min-h-[250px]">
-                        <div id="empty-cart-msg" class="flex-grow flex items-center justify-center py-20 text-3xl font-black text-black/20 uppercase underline">VACÍO</div>
-                        <div id="sale-cart-list" class="flex-grow overflow-y-auto space-y-4 custom-scrollbar pr-2 leading-none"></div>
+                <!-- Ticket Derecha -->
+                <div class="flex flex-col bg-white border-t-[14px] lg:border-t-0 lg:border-l-8 border-black w-full lg:w-[480px] flex-shrink-0 leading-none">
+                    <div class="p-8 border-b-8 border-black bg-slate-100 leading-none text-center font-bold"><h4 class="text-xl font-black uppercase underline decoration-6 leading-none font-bold">RESUMEN TICKET</h4></div>
+                    <div class="flex-grow overflow-hidden flex flex-col p-4 leading-none min-h-[300px]">
+                        <div id="empty-cart-msg" class="flex-grow flex items-center justify-center py-20 text-4xl font-black text-black/20 uppercase italic underline decoration-8 leading-none font-bold">VACÍO</div>
+                        <div id="sale-cart-list" class="flex-grow overflow-y-auto space-y-6 custom-scrollbar pr-2 leading-none"></div>
                     </div>
-                    <div class="p-10 bg-black text-white border-t-[20px] border-[#FB923C] flex-shrink-0">
-                        <div class="flex justify-between items-center mb-8"><span class="text-sm font-black text-[#FB923C] uppercase italic">TOTAL:</span><p id="sale-total-display" class="text-[80px] font-mono font-black italic tracking-tighter leading-none">0</p></div>
-                        <button id="confirm-sale-btn" class="w-full py-10 bg-[#FB923C] text-white btn-premium text-5xl italic shadow-none font-bold" disabled>COBRAR</button>
+                    <div class="p-10 bg-black text-white border-t-[20px] border-[#FB923C] flex-shrink-0 leading-none">
+                        <div class="flex justify-between items-center mb-10 leading-none font-bold"><span class="text-sm font-black text-[#FB923C] uppercase italic leading-none font-bold">A COBRAR:</span><p id="sale-total-display" class="text-[120px] font-mono font-black italic tracking-tighter leading-none font-bold">0</p></div>
+                        <button id="confirm-sale-btn" class="w-full py-10 bg-[#FB923C] text-white btn-premium text-5xl italic shadow-none leading-none font-bold" disabled onclick="window.handleConfirmSale()">COBRAR</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- MODAL RESERVA UNIFICADA -->
+    <!-- RESERVA TURNO (UNIFICADA) -->
     <div id="booking-modal" class="modal">
-        <div class="modal-content max-w-4xl">
-            <div class="modal-header bg-black text-white text-left leading-none"><h3 id="booking-modal-title" class="text-4xl font-black uppercase italic underline decoration-8 font-bold">RESERVA</h3><p id="booking-type-label" class="text-sm text-[#FB923C] font-black uppercase mt-4 italic font-mono"></p></div>
-            <form id="booking-form" class="modal-body space-y-12 bg-white p-12 leading-none text-left">
+        <div class="modal-content max-w-4xl border-8 border-black">
+            <div class="modal-header bg-black text-white text-left leading-none">
+                <h3 id="booking-modal-title" class="text-4xl font-black uppercase italic underline decoration-8 leading-none font-bold font-bold">RESERVA</h3>
+                <p id="booking-type-label" class="text-sm text-[#FB923C] font-black uppercase mt-4 leading-none italic font-mono"></p>
+            </div>
+            <form id="booking-form" class="modal-body space-y-12 bg-white p-8 leading-none text-left font-bold">
                 <input type="hidden" id="booking-id"><input type="hidden" id="booking-date"><input type="hidden" id="booking-type">
-                <div class="leading-none"><label class="text-2xl font-black uppercase block mb-4 underline decoration-6 font-bold italic">RESPONSABLE:</label><input type="text" id="teamName" required placeholder="..." class="font-black text-5xl italic w-full border-8 border-black shadow-inner"></div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
-                    <div class="p-10 bg-slate-100 border-[8px] border-black text-center rounded-[40px]">
-                        <label class="text-sm font-black uppercase block mb-10 underline italic font-bold">PERSONAS:</label>
+                <div class="leading-none font-bold"><label class="text-2xl font-black uppercase block mb-4 underline decoration-6 leading-none font-bold italic">RESPONSABLE:</label><input type="text" id="teamName" required placeholder="..." class="font-black text-5xl italic w-full border-8 border-black shadow-inner leading-none"></div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-10 leading-none font-bold">
+                    <div class="p-10 bg-slate-100 border-[8px] border-black text-center rounded-[40px] leading-none">
+                        <label class="text-sm font-black uppercase block mb-10 underline italic leading-none font-bold">CANTIDAD PERSONAS:</label>
                         <div class="flex items-center justify-center gap-12 leading-none">
-                            <button type="button" onclick="window.adjustJumpers(-1)" class="w-28 h-28 bg-white border-8 border-black text-7xl font-black active:bg-slate-400">-</button>
+                            <button type="button" onclick="window.adjustJumpers(-1)" class="w-28 h-28 bg-white border-8 border-black text-7xl font-black active:bg-slate-400 leading-none">-</button>
                             <input type="number" id="peopleCount" class="w-28 text-center font-black font-mono text-[110px] bg-transparent leading-none" value="1" min="1" max="30">
                             <button type="button" onclick="window.adjustJumpers(1)" class="w-28 h-28 bg-white border-8 border-black text-7xl font-black active:bg-slate-400">+</button>
                         </div>
                     </div>
-                    <div class="p-10 bg-slate-100 border-[8px] border-black text-center flex flex-col justify-center rounded-[40px]">
-                        <span class="text-sm font-black uppercase block mb-8 underline italic font-bold">COSTO ($):</span>
+                    <div class="p-10 bg-slate-100 border-[8px] border-black text-center flex flex-col justify-center rounded-[40px] leading-none font-bold">
+                        <span class="text-sm font-black uppercase block mb-8 underline italic leading-none font-bold">COSTO TURNO ($):</span>
                         <input type="number" id="costPerHour" class="text-center font-mono font-black text-[110px] bg-transparent w-full leading-none">
                     </div>
                 </div>
-                <div class="leading-none"><label class="text-2xl font-black uppercase block mb-12 underline italic decoration-8 font-bold">HORARIOS (Cupo 30):</label><div id="court-hours-list" class="grid grid-cols-2 md:grid-cols-5 gap-6 font-mono leading-none"></div></div>
+                <div class="leading-none font-bold"><label class="text-2xl font-black uppercase block mb-12 underline italic decoration-8 font-bold font-bold font-bold">HORARIOS DISPONIBLES:</label><div id="court-hours-list" class="grid grid-cols-2 md:grid-cols-5 gap-6 leading-none font-mono"></div></div>
             </form>
-            <div class="modal-footer p-12 bg-black text-white border-t-[20px] border-[#6D28D9] flex flex-col sm:flex-row items-center justify-between gap-12">
-                <div class="text-left leading-none font-bold"><span class="text-xs font-black text-violet-400 uppercase italic mb-4 block underline italic font-bold">TOTAL:</span><p id="booking-total" class="text-[120px] font-mono font-black italic tracking-tighter leading-none">$0</p></div>
-                <div class="flex gap-8"><button type="button" onclick="window.closeModals()" class="font-black text-slate-400 text-3xl uppercase underline p-6 font-bold">X</button><button id="save-booking-btn" class="bg-[#6D28D9] text-white px-24 py-12 btn-premium text-5xl italic shadow-none font-bold">CONFIRMAR</button></div>
+            <div class="modal-footer p-12 bg-black text-white border-t-[20px] border-[#6D28D9] flex flex-col sm:flex-row items-center justify-between gap-12 leading-none font-bold">
+                <div class="text-left leading-none font-bold font-bold font-bold"><span class="text-xs font-black text-violet-400 uppercase italic mb-4 block underline font-bold leading-none font-bold">TOTAL:</span><p id="booking-total" class="text-[120px] font-mono font-black italic tracking-tighter leading-none font-bold font-bold">$0</p></div>
+                <div class="flex gap-8 leading-none font-bold font-bold"><button type="button" onclick="window.closeModals()" class="font-black text-slate-400 text-3xl uppercase underline decoration-8 p-6 leading-none font-bold font-bold">X</button><button type="submit" form="booking-form" class="bg-[#6D28D9] text-white px-24 py-12 btn-premium text-5xl italic shadow-none leading-none font-bold font-bold">CONFIRMAR</button></div>
             </div>
         </div>
     </div>
 
-    <!-- MODAL GASTO -->
-    <div id="expense-modal" class="modal"><div class="modal-content max-w-lg border-8 border-black leading-none">
-        <div class="modal-header bg-[#EF4444] text-white p-10 font-bold"><h3 class="text-4xl font-black uppercase italic underline decoration-8 leading-none text-center font-bold">ANOTAR GASTO 💸</h3></div>
-        <form id="expense-form" class="modal-body space-y-12 bg-white p-12">
-            <div class="leading-none"><label class="text-sm font-black uppercase block mb-4 underline leading-none font-bold">CONCEPTO:</label><input type="text" id="expense-desc" placeholder="..." class="font-black text-4xl italic w-full border-8 border-black leading-none"></div>
-            <div class="leading-none"><label class="text-sm font-black uppercase block mb-4 underline font-bold leading-none">VALOR RETIRADO ($):</label><input type="number" id="expense-value" class="font-black font-mono text-[120px] text-[#EF4444] text-center w-full border-8 border-black bg-red-50 leading-none"></div>
-            <button type="submit" class="w-full bg-[#EF4444] text-white py-12 btn-premium text-5xl italic mt-10 shadow-none leading-none font-bold">GUARDAR</button>
+    <!-- GASTO -->
+    <div id="expense-modal" class="modal"><div class="modal-content max-w-lg border-8 border-black leading-none font-bold">
+        <div class="modal-header bg-[#EF4444] text-white p-10 font-bold font-bold"><h3 class="text-4xl font-black uppercase italic underline decoration-8 leading-none text-center">ANOTAR GASTO 💸</h3></div>
+        <form id="expense-form" class="modal-body space-y-12 bg-white p-12 leading-none font-bold">
+            <div class="leading-none font-bold"><label class="text-sm font-black uppercase block mb-4 underline leading-none font-bold">CONCEPTO:</label><input type="text" id="expense-desc" placeholder="..." class="font-black text-4xl italic w-full border-8 border-black leading-none font-bold"></div>
+            <div class="leading-none font-bold"><label class="text-sm font-black uppercase block mb-4 underline font-bold leading-none font-bold">VALOR RETIRADO ($):</label><input type="number" id="expense-value" class="font-black font-mono text-[120px] text-[#EF4444] text-center w-full border-8 border-black bg-red-50 leading-none"></div>
+            <button type="submit" class="w-full bg-[#EF4444] text-white py-12 btn-premium text-5xl italic mt-10 shadow-none leading-none font-bold font-bold font-bold">GUARDAR</button>
             <button type="button" onclick="window.closeModals()" class="w-full text-sm font-black uppercase mt-12 underline decoration-4 text-center italic font-bold">ANULAR</button>
         </form>
     </div></div>
 
-    <!-- DETALLE CAJA -->
-    <div id="caja-detail-modal" class="modal"><div class="modal-content max-w-3xl h-[95vh] leading-none">
-        <div class="modal-header bg-black text-white p-10 leading-none text-left border-none"><h3 id="caja-detail-date" class="text-6xl font-black uppercase italic underline decoration-8 tracking-tighter leading-none font-bold">FECHA</h3><p class="text-sm font-black uppercase text-[#FB923C] mt-6 font-mono leading-none italic">AUDITORÍA MOVIMIENTOS</p></div>
-        <div class="modal-body custom-scrollbar p-12 bg-slate-100 leading-none"><div id="caja-detail-list" class="space-y-12"></div></div>
-        <div class="modal-footer bg-white p-12 flex justify-center border-t-[14px] border-black leading-none"><button onclick="window.closeModals()" class="text-5xl font-black uppercase underline decoration-12 italic font-bold leading-none">VOLVER</button></div>
+    <!-- DETALLE CAJA (AUDITORÍA) -->
+    <div id="caja-detail-modal" class="modal"><div class="modal-content max-w-3xl h-[95vh] leading-none border-8 border-black">
+        <div class="modal-header bg-black text-white p-10 text-left border-none leading-none font-bold font-bold"><h3 id="caja-detail-date" class="text-6xl font-black uppercase italic underline decoration-8 tracking-tighter leading-none font-bold font-bold">FECHA</h3><p class="text-sm font-black uppercase text-[#FB923C] mt-6 font-mono leading-none italic font-bold font-bold">AUDITORÍA DIARIA MOVIMIENTOS</p></div>
+        <div class="modal-body custom-scrollbar p-12 bg-slate-100 font-bold"><div id="caja-detail-list" class="space-y-12 font-bold"></div></div>
+        <div class="modal-footer bg-white p-12 flex justify-center border-t-[14px] border-black leading-none font-bold font-bold font-bold font-bold font-bold"><button onclick="window.closeModals()" class="text-[40px] font-black uppercase underline decoration-12 italic font-bold">VOLVER</button></div>
+    </div></div>
+
+    <!-- TURNOS DÍA (LISTA) -->
+    <div id="options-modal" class="modal"><div class="modal-content max-w-md p-10 text-center border-12 border-black font-bold">
+        <h3 class="text-5xl font-black mb-16 text-black uppercase italic underline decoration-[12px] leading-none font-bold">TURNOS:</h3>
+        <div id="daily-bookings-list" class="space-y-6 mb-20 text-left custom-scrollbar max-h-[45rem] overflow-y-auto pr-6 border-b-8 border-black font-bold"></div>
+        <button id="add-new-booking-btn" class="w-full bg-[#6D28D9] text-white py-14 btn-premium text-4xl italic leading-none shadow-none font-bold">+ AGREGAR</button>
+        <button onclick="window.closeModals()" class="mt-14 text-sm font-black uppercase underline font-bold text-center italic font-bold">SALIR</button>
+    </div></div>
+
+    <!-- TIPO TURNO (CHOICE) -->
+    <div id="type-modal" class="modal"><div class="modal-content max-w-sm p-16 text-center border-[12px] border-black font-bold">
+        <h3 class="text-5xl font-black mb-20 text-black uppercase italic underline decoration-[12px] leading-none font-bold">ELEGIR:</h3>
+        <div class="flex flex-col gap-12 font-bold">
+            <button id="type-btn-court" class="w-full bg-[#6D28D9] text-white py-24 btn-premium text-4xl italic shadow-none leading-none font-bold">★ SALTO NORMAL</button>
+            <button id="type-btn-event" class="w-full bg-[#FB923C] text-white py-24 btn-premium text-4xl italic shadow-none leading-none font-bold">👑 EVENTO EXCL.</button>
+        </div>
+        <button onclick="window.closeModals()" class="mt-20 text-sm font-black uppercase underline font-bold font-bold">CERRAR</button>
     </div></div>
 
     <!-- REPOSICIÓN STOCK -->
-    <div id="restock-modal" class="modal"><div class="modal-content max-w-sm border-[10px] border-black leading-none shadow-none font-bold">
-        <div class="modal-header bg-black text-white p-10 border-none font-bold"><h3 class="text-3xl font-black uppercase italic underline font-bold leading-none">SUMAR STOCK 📦</h3></div>
-        <form id="restock-form" class="p-12 space-y-12 leading-none bg-white font-bold text-left">
-            <input type="hidden" id="restock-id"><p id="restock-prod-name" class="font-black text-5xl uppercase italic text-black underline decoration-6 border-b-8 border-black pb-4 mb-10 font-bold shadow-none"></p>
-            <div class="leading-none"><label class="text-sm font-black uppercase block mb-4 underline font-bold leading-none">CANTIDAD:</label><input type="number" id="restock-qty" class="w-full p-8 bg-slate-100 border-[6px] border-black font-black font-mono text-[100px] text-center leading-none"></div>
-            <div class="leading-none"><label class="text-sm font-black uppercase block mb-4 underline font-bold leading-none">COSTO BULTO ($):</label><input type="number" id="restock-cost" class="w-full p-8 bg-violet-50 border-[6px] border-black font-black font-mono text-8xl text-violet-700 text-center leading-none" step="0.01"></div>
-            <button type="submit" class="w-full bg-[#6D28D9] text-white py-12 btn-premium text-5xl italic mt-10 leading-none font-bold shadow-none">CONFIRMAR</button>
+    <div id="restock-modal" class="modal"><div class="modal-content max-w-sm border-[10px] border-black font-bold shadow-none">
+        <div class="modal-header bg-black text-white p-10 border-none font-bold font-bold"><h3 class="text-3xl font-black uppercase italic underline font-bold leading-none">REPOSICIÓN 📦</h3></div>
+        <form id="restock-form" class="p-12 space-y-12 leading-none bg-white font-bold text-left font-bold font-bold">
+            <input type="hidden" id="restock-id"><p id="restock-prod-name" class="font-black text-5xl uppercase italic text-black underline decoration-6 leading-tight border-b-8 border-black pb-4 mb-10 font-bold font-bold"></p>
+            <div class="leading-none font-bold font-bold"><label class="text-sm font-black uppercase block mb-4 underline leading-none font-bold">CANTIDAD:</label><input type="number" id="restock-qty" class="w-full p-8 bg-slate-100 border-[6px] border-black font-black font-mono text-[100px] text-center leading-none"></div>
+            <div class="leading-none font-bold font-bold"><label class="text-sm font-black uppercase block mb-4 underline leading-none font-bold">COSTO BULTO:</label><input type="number" id="restock-cost" class="w-full p-8 bg-violet-50 border-[6px] border-black font-black font-mono text-8xl text-violet-700 text-center leading-none font-bold" step="0.01"></div>
+            <button type="submit" class="w-full bg-[#6D28D9] text-white py-12 btn-premium text-5xl italic mt-10 leading-none font-bold">CONFIRMAR</button>
         </form>
     </div></div>
 
-    <!-- EDITAR PRODUCTO -->
-    <div id="edit-product-modal" class="modal"><div class="modal-content max-w-md border-[10px] border-black font-bold">
-        <div class="modal-header bg-black text-white p-10 leading-none font-bold font-bold"><h3 class="text-3xl font-black uppercase italic underline font-bold leading-none">EDITAR PRODUCTO ✍️</h3></div>
-        <form id="edit-product-form" class="p-12 space-y-12 leading-none bg-white text-left font-bold">
+    <!-- EDITAR FICHA -->
+    <div id="edit-product-modal" class="modal"><div class="modal-content max-w-md border-[10px] border-black font-bold font-bold font-bold shadow-none">
+        <div class="modal-header bg-black text-white p-10 font-bold font-bold"><h3 class="text-3xl font-black uppercase italic underline font-bold leading-none font-bold">EDITAR FICHA ✍️</h3></div>
+        <form id="edit-product-form" class="p-12 space-y-12 leading-none bg-white text-left font-bold font-bold font-bold">
             <input type="hidden" id="edit-prod-id">
-            <div class="leading-none"><label class="text-sm font-black uppercase underline block mb-4 font-bold">NOMBRE:</label><input type="text" id="edit-prod-name" required class="w-full border-8 border-black font-black text-4xl italic leading-none"></div>
-            <div class="grid grid-cols-2 gap-8 leading-none">
-                <div class="leading-none"><label class="text-xs font-black uppercase underline block mb-2 font-bold leading-none">STOCK:</label><input type="number" id="edit-prod-stock" class="w-full border-8 border-black font-black font-mono text-6xl text-center leading-none"></div>
-                <div class="leading-none"><label class="text-xs font-black uppercase underline block mb-2 font-bold leading-none">VENTA ($):</label><input type="number" id="edit-prod-sale-price" required class="w-full border-8 border-black font-black font-mono text-6xl text-center bg-violet-50 leading-none"></div>
+            <div class="leading-none font-bold"><label class="text-sm font-black uppercase underline block mb-4 font-bold font-bold">NOMBRE:</label><input type="text" id="edit-prod-name" required class="w-full border-8 border-black font-black text-4xl italic leading-none font-bold"></div>
+            <div class="grid grid-cols-2 gap-8 font-bold">
+                <div class="leading-none font-bold"><label class="text-xs font-black uppercase underline block mb-2 font-bold leading-none font-bold">STOCK:</label><input type="number" id="edit-prod-stock" class="w-full border-8 border-black font-black font-mono text-6xl text-center leading-none font-bold"></div>
+                <div class="leading-none font-bold"><label class="text-xs font-black uppercase underline block mb-2 font-bold leading-none font-bold">VENTA ($):</label><input type="number" id="edit-prod-sale-price" required class="w-full border-8 border-black font-black font-mono text-6xl text-center bg-violet-50 font-bold"></div>
             </div>
-            <button type="submit" class="w-full bg-black text-white py-12 btn-premium text-[40px] italic leading-none mt-10">GUARDAR</button>
+            <button type="submit" class="w-full bg-black text-white py-12 btn-premium text-[40px] italic leading-none mt-10 font-bold">GUARDAR</button>
         </form>
     </div></div>
 
-    <!-- TURNOS DEL DÍA -->
-    <div id="options-modal" class="modal"><div class="modal-content max-w-md p-10 text-center border-[12px] border-black leading-none font-bold">
-        <h3 class="text-5xl font-black mb-12 text-black uppercase italic underline decoration-8 tracking-tighter leading-none font-bold">TURNOS:</h3>
-        <div id="daily-bookings-list" class="space-y-6 mb-20 text-left custom-scrollbar max-h-[45rem] overflow-y-auto italic pr-4 border-b-8 border-black font-bold leading-none"></div>
-        <button id="add-new-booking-btn" class="w-full bg-[#6D28D9] text-white py-12 btn-premium text-4xl italic leading-none shadow-none font-bold">+ AGREGAR</button>
-        <button onclick="window.closeModals()" class="mt-10 text-sm font-black uppercase underline leading-none font-bold text-center">SALIR</button>
-    </div></div>
+    <!-- MENSAJES OVERLAY -->
+    <div id="message-overlay" class="modal bg-black"><div class="flex flex-col items-center justify-center min-h-screen text-center p-12 leading-none font-bold"><div class="jumping-child text-[150px] mb-20 leading-none font-bold">🚀</div><p id="message-text" class="text-[100px] font-black text-white uppercase italic tracking-tighter leading-none font-bold font-bold font-bold"></p></div></div>
 
-    <!-- TIPO DE TURNO -->
-    <div id="type-modal" class="modal"><div class="modal-content max-w-sm p-16 text-center border-[12px] border-black leading-none font-bold">
-        <h3 class="text-5xl font-black mb-20 text-black uppercase italic underline decoration-12 leading-none font-bold">ELEGIR:</h3>
-        <div class="flex flex-col gap-12 leading-none">
-            <button id="type-btn-court" class="w-full bg-[#6D28D9] text-white py-24 btn-premium text-4xl italic shadow-none leading-none font-bold">★ SALTO</button>
-            <button id="type-btn-event" class="w-full bg-[#FB923C] text-white py-24 btn-premium text-4xl italic shadow-none leading-none font-bold">👑 EVENTO</button>
-        </div>
-        <button onclick="window.closeModals()" class="mt-20 text-sm font-black uppercase underline font-bold leading-none">CERRAR</button>
-    </div></div>
-
-    <!-- OVERLAY MENSAJES -->
-    <div id="message-overlay" class="modal bg-black"><div class="flex flex-col items-center justify-center min-h-screen text-center p-12 leading-none font-bold"><div class="jumping-child text-[150px] mb-20 leading-none">🚀</div><p id="message-text" class="text-[100px] font-black text-white uppercase italic tracking-tighter leading-none font-bold"></p></div></div>
-
-    <!-- LÓGICA (MOTOR COMPLETO SIN OMISIONES) -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc, addDoc, updateDoc, deleteDoc, collection, query, where, onSnapshot, getDocs, Timestamp, orderBy, getDoc, writeBatch } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-
-        const firebaseConfig = { apiKey: "AIzaSyBz0V2ieSXehafKWRNQprb951NVN5FvBD4", authDomain: "aerojump-841fb.firebaseapp.com", projectId: "aerojump-841fb", storageBucket: "aerojump-841fb.firebasestorage.app", messagingSenderId: "68080726646", appId: "1:68080726646:web:a830613a1278871d416557" };
-        const appId = "aerojump-gchu";
-        
-        const MAX_CAPACITY = 30;
-        const OPERATING_HOURS = [9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23];
-        const monthNames = ["ENERO", "FEBRERO", "MARZO", "ABRIL", "MAYO", "JUNIO", "JULIO", "AGOSTO", "SEPTIEMBRE", "OCTUBRE", "NOVIEMBRE", "DICIEMBRE"];
-
-        let db, auth, userEmail = null, currentMonthDate = new Date(), allMonthBookings = [], allProducts = [], saleCart = [], appSettings = { court1Price: 5000, eventPrice: 15000, kioskMargin: 40 };
-
-        const app = initializeApp(firebaseConfig);
-        db = getFirestore(app);
-        auth = getAuth(app);
-
-        onAuthStateChanged(auth, async (user) => {
-            if (user) {
-                userEmail = user.email;
-                document.getElementById('user-email-display').textContent = userEmail;
-                document.getElementById('app-container').classList.remove('is-hidden');
-                document.getElementById('login-view').classList.add('is-hidden');
-                await loadAppSettings(); syncBookings(); syncProducts();
-            } else {
-                document.getElementById('app-container').classList.add('is-hidden');
-                document.getElementById('login-view').classList.remove('is-hidden');
-            }
-        });
-
-        // UI HELPERS
-        function closeModals() { document.querySelectorAll('.modal').forEach(m => m.classList.remove('is-open')); }
-        function showMessage(t) { document.getElementById('message-text').textContent = t; document.getElementById('message-overlay').classList.add('is-open'); setTimeout(() => document.getElementById('message-overlay').classList.remove('is-open'), 1800); }
-        async function loadAppSettings() { 
-            const s = await getDoc(doc(db, "artifacts", appId, "public", "data", "app_settings", "prices")); 
-            if(s.exists()) {
-                appSettings = s.data();
-                document.getElementById('config-court1-price').value = appSettings.court1Price;
-                document.getElementById('config-event-price').value = appSettings.eventPrice || 15000;
-            }
-        }
-
-        // ACTIONS CORE
-        document.getElementById('login-form').onsubmit = async (e) => { e.preventDefault(); try { await signInWithEmailAndPassword(auth, document.getElementById('login-email').value, document.getElementById('login-password').value); } catch(err) { alert("DATOS INCORRECTOS"); } };
-        document.getElementById('logout-btn').onclick = () => signOut(auth);
-        document.getElementById('menu-btn').onclick = () => { document.getElementById('main-menu').classList.toggle('is-open'); document.getElementById('menu-overlay').classList.toggle('hidden'); };
-        document.getElementById('menu-overlay').onclick = () => { document.getElementById('main-menu').classList.remove('is-open'); document.getElementById('menu-overlay').classList.add('hidden'); };
-
-        document.querySelectorAll('.menu-item').forEach(btn => btn.onclick = () => {
-            const v = btn.dataset.view;
-            document.querySelectorAll('.view-container').forEach(c => c.classList.add('is-hidden'));
-            document.getElementById(v + '-view').classList.remove('is-hidden');
-            document.getElementById('main-menu').classList.remove('is-open'); document.getElementById('menu-overlay').classList.add('hidden');
-            if(v === 'caja') loadCajaData();
-            if(v === 'stats') loadStatsData();
-        });
-
-        // RESERVAS ENGINE
-        function syncBookings() {
-            const my = `${currentMonthDate.getFullYear()}-${String(currentMonthDate.getMonth() + 1).padStart(2, '0')}`;
-            onSnapshot(query(collection(db, "artifacts", appId, "public", "data", "bookings"), where("monthYear", "==", my)), (snap) => {
-                allMonthBookings = snap.docs.map(d => ({ id: d.id, ...d.data() })); renderCalendar();
-            });
-        }
-
-        function renderCalendar() {
-            const grid = document.getElementById('calendar-grid'); grid.innerHTML = '';
-            const [y, m] = [currentMonthDate.getFullYear(), currentMonthDate.getMonth()];
-            document.getElementById('current-month-year').textContent = `${monthNames[m]} ${y}`;
-            const first = new Date(y, m, 1).getDay();
-            const last = new Date(y, m + 1, 0).getDate();
-            for(let i=1; i<first; i++) grid.appendChild(document.createElement('div')).className = 'day-cell opacity-10';
-            for(let i=1; i<=last; i++) {
-                const ds = `${y}-${String(m + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
-                const bks = allMonthBookings.filter(b => b.day === ds);
-                const cell = document.createElement('div'); cell.className = 'day-cell opacity-10';
-                cell.className = 'day-cell';
-                cell.innerHTML = `<span class="font-black italic text-2xl font-mono leading-none">${i}</span>`;
-                if(bks.length > 0) {
-                    const container = document.createElement('div'); container.className = 'booking-badges-container';
-                    bks.forEach(b => {
-                        const badge = document.createElement('span'); badge.className = `booking-badge ${b.type.includes('EVENTO') ? 'event' : ''}`;
-                        badge.textContent = b.type.includes('EVENTO') ? 'E' : 'S'; container.appendChild(badge);
-                    });
-                    cell.appendChild(container);
-                }
-                cell.onclick = () => bks.length > 0 ? showDayOptions(ds, bks) : openInitialChoice(ds);
-                grid.appendChild(cell);
-            }
-        }
-
-        function openInitialChoice(date) { document.getElementById('type-modal').dataset.date = date; document.getElementById('type-modal').classList.add('is-open'); }
-
-        function showBookingModal(date, type, booking = null) {
-            document.getElementById('booking-form').reset();
-            document.getElementById('booking-date').value = date;
-            document.getElementById('booking-type').value = type;
-            document.getElementById('booking-id').value = booking ? booking.id : '';
-            document.getElementById('booking-type-label').textContent = type;
-            document.getElementById('teamName').value = booking ? booking.teamName : '';
-            document.getElementById('peopleCount').value = booking ? booking.peopleCount : 1;
-            document.getElementById('costPerHour').value = booking ? (booking.unitPrice || booking.totalPrice) : (type.includes('Evento') ? appSettings.eventPrice : appSettings.court1Price);
-            renderTimeSlots(booking ? booking.courtHours : []);
-            updateBookingVisualTotal();
-            document.getElementById('booking-modal').classList.add('is-open');
-        }
-
-        function renderTimeSlots(selected = []) {
-            const list = document.getElementById('court-hours-list'); list.innerHTML = '';
-            const date = document.getElementById('booking-date').value, editingId = document.getElementById('booking-id').value;
-            OPERATING_HOURS.forEach(h => {
-                const occupied = allMonthBookings.filter(b => b.day === date && b.id !== editingId && b.courtHours.includes(h)).reduce((acc, curr) => acc + (curr.peopleCount || 0), 0);
-                const free = MAX_CAPACITY - occupied;
-                const btn = document.createElement('button'); btn.type = "button";
-                btn.className = `time-slot ${free <= 0 ? 'disabled' : ''} ${selected.includes(h) ? 'selected' : ''}`;
-                btn.innerHTML = `<p class="font-black text-2xl font-mono">${h}:00</p><p class="text-[11px] font-black underline uppercase mt-2">${free} DISP.</p>`;
-                if(free > 0) btn.onclick = () => { btn.classList.toggle('selected'); updateBookingVisualTotal(); };
-                list.appendChild(btn);
-            });
-        }
-
-        function updateBookingVisualTotal() {
-            const hrs = document.getElementById('court-hours-list').querySelectorAll('.time-slot.selected').length;
-            const val = parseFloat(document.getElementById('costPerHour').value) || 0;
-            const pc = parseInt(document.getElementById('peopleCount').value) || 1;
-            document.getElementById('booking-total').textContent = `$${(hrs * val * pc).toLocaleString('es-AR')}`;
-        }
-
-        async function handleSaveBooking(e) {
-            e.preventDefault();
-            const hrs = Array.from(document.getElementById('court-hours-list').querySelectorAll('.time-slot.selected')).map(el => parseInt(el.querySelector('p').textContent));
-            if(hrs.length === 0) return alert("ELEGIR HORARIOS");
-            const data = { teamName: document.getElementById('teamName').value.toUpperCase(), peopleCount: parseInt(document.getElementById('peopleCount').value), unitPrice: parseFloat(document.getElementById('costPerHour').value), day: document.getElementById('booking-date').value, monthYear: document.getElementById('booking-date').value.substring(0, 7), courtHours: hrs, type: document.getElementById('booking-type').value, totalPrice: parseFloat(document.getElementById('booking-total').textContent.replace('$','').replace(/\./g,'')), timestamp: Timestamp.now(), adminEmail: userEmail };
-            const id = document.getElementById('booking-id').value;
-            try { const col = collection(db, "artifacts", appId, "public", "data", "bookings"); if(id) await updateDoc(doc(col, id), data); else await addDoc(col, data); closeModals(); showMessage("TURNO OK! ✅"); } catch(err) { alert("ERROR"); }
-        }
-
-        function showDayOptions(date, bks) {
-            const list = document.getElementById('daily-bookings-list'); list.innerHTML = '';
-            bks.forEach(b => {
-                const d = document.createElement('div'); d.className = 'bento-card flex justify-between items-center mb-6 leading-tight font-bold border-4 shadow-none';
-                d.innerHTML = `<div><p class="font-black text-[30px] uppercase italic text-black leading-none underline decoration-4">${b.teamName}</p><p class="text-sm font-black text-[#6D28D9] mt-4 uppercase underline">${b.type} (${b.peopleCount} PERS.)</p></div><div class="flex gap-4 leading-none"><button onclick="window.editBook('${date}', '${b.id}')" class="bg-black text-white font-black text-xs uppercase p-4 border-4 border-black">EDITAR</button><button onclick="window.delBook('${b.id}')" class="text-red-700 font-black text-xs uppercase p-4 border-4 border-red-700">BORRAR</button></div>`;
-                list.appendChild(d);
-            });
-            document.getElementById('options-modal').dataset.date = date; document.getElementById('options-modal').classList.add('is-open');
-        }
-
-        // --- PRODUCTOS ENGINE ---
-        function syncProducts() { onSnapshot(collection(db, "artifacts", appId, "public", "data", "products"), (snap) => { allProducts = snap.docs.map(d => ({ id: d.id, ...d.data() })); renderInventory(); }); }
-        
-        const calculateSuggested = () => {
-            const cost = parseFloat(document.getElementById('prod-batch-cost').value) || 0, qty = parseInt(document.getElementById('prod-batch-qty').value) || 1, margin = parseFloat(document.getElementById('prod-profit-pct').value) || appSettings.kioskMargin;
-            const unit = cost / qty; const suggested = unit * (1 + (margin / 100));
-            document.getElementById('prod-suggested-price').textContent = `$${Math.ceil(suggested)}`;
-        };
-        ['prod-batch-cost', 'prod-batch-qty', 'prod-profit-pct'].forEach(id => { const el = document.getElementById(id); if(el) el.addEventListener('input', calculateSuggested); });
-
-        document.getElementById('product-form').onsubmit = async (e) => {
-            e.preventDefault(); const realPrice = parseFloat(document.getElementById('prod-real-price').value);
-            if(!realPrice || realPrice <= 0) return alert("HAY QUE PONER PRECIO REAL");
-            const cost = parseFloat(document.getElementById('prod-batch-cost').value) || 0, qty = parseInt(document.getElementById('prod-batch-qty').value) || 1;
-            const data = { name: document.getElementById('prod-name').value.toUpperCase(), stock: parseInt(document.getElementById('prod-stock').value), salePrice: realPrice, unitCost: (cost/qty), timestamp: Timestamp.now(), adminEmail: userEmail };
-            try { await addDoc(collection(db, "artifacts", appId, "public", "data", "products"), data); e.target.reset(); document.getElementById('product-form-container').classList.add('is-hidden'); showMessage("GUARDADO! ✅"); } catch(err) { alert("ERROR"); }
-        };
-
-        function renderInventory() {
-            const list = document.getElementById('product-list'); list.innerHTML = '';
-            allProducts.forEach(p => {
-                const d = document.createElement('div'); d.className = 'bento-card flex flex-col gap-8 text-left mb-6 leading-none shadow-none font-bold';
-                d.innerHTML = `<div class="flex justify-between items-start leading-none font-bold"><div><h4 class="font-black text-2xl uppercase italic text-black leading-none mb-3 underline decoration-4 font-bold">${p.name}</h4><span class="text-sm font-black text-[#6D28D9] uppercase border-4 border-[#6D28D9] px-4 py-2 font-bold leading-none">STOCK: ${p.stock}</span></div><strong class="text-7xl font-black italic tracking-tighter text-black leading-none font-mono font-bold">$${p.salePrice}</strong></div>
-                               <div class="grid grid-cols-2 gap-6 leading-none font-bold"><button onclick="window.openRestockModal('${p.id}')" class="bg-black text-white py-6 font-black text-lg uppercase leading-none rounded-2xl active:translate-y-1">REPONER 📦</button><button onclick="window.openEditProductModal('${p.id}')" class="bg-white text-black py-6 font-black text-lg uppercase border-8 border-black leading-none rounded-2xl font-bold active:translate-y-1">FICHA ✍️</button></div><button onclick="window.delProduct('${p.id}')" class="text-red-700 font-black text-xl uppercase underline decoration-6 font-bold mt-4 active:translate-y-1">ELIMINAR</button>`;
-                list.appendChild(d);
-            });
-        }
-
-        // --- VENTAS POS (LIST VIEW) ---
-        function renderSaleCatalog(f = "") {
-            const list = document.getElementById('sale-catalog-list'); list.innerHTML = '';
-            allProducts.filter(p => p.name.toLowerCase().includes(f.toLowerCase())).forEach(p => {
-                const itemInCart = saleCart.find(i => i.id === p.id);
-                const d = document.createElement('div'); d.className = 'pos-item-list font-bold';
-                d.innerHTML = `<div class="flex-grow text-left font-bold leading-none"><p class="text-xl font-black uppercase underline decoration-4 font-bold">${p.name}</p><p class="text-2xl font-black font-mono text-[#FB923C] mt-2">$${p.salePrice}</p></div>
-                    <div class="flex items-center gap-6"><button onclick="window.updCatalogQty('${p.id}', -1)" class="w-16 h-16 bg-white border-4 border-black font-black text-5xl active:bg-red-200">-</button><span class="font-black text-5xl font-mono mx-2">${itemInCart ? itemInCart.qty : 0}</span><button onclick="window.updCatalogQty('${p.id}', 1)" class="w-16 h-16 bg-white border-4 border-black font-black text-5xl active:bg-green-400" ${p.stock <= (itemInCart ? itemInCart.qty : 0) ? 'disabled opacity-20' : ''}>+</button></div>`;
-                list.appendChild(d);
-            });
-        }
-
-        window.updCatalogQty = (id, delta) => {
-            const p = allProducts.find(x => x.id === id); const ex = saleCart.find(i => i.id === id);
-            if(ex) { ex.qty += delta; if(ex.qty <= 0) saleCart = saleCart.filter(i => i.id !== id); if(ex.qty > p.stock) ex.qty = p.stock; }
-            else { if(delta > 0 && p.stock > 0) saleCart.push({...p, qty: 1}); }
-            renderSaleCatalog(document.getElementById('sale-catalog-filter').value); renderSaleCart();
-        };
-
-        function renderSaleCart() {
-            const list = document.getElementById('sale-cart-list'), msg = document.getElementById('empty-cart-msg');
-            list.innerHTML = ''; let total = 0;
-            if(saleCart.length === 0) { msg.classList.remove('is-hidden'); document.getElementById('sale-total-display').textContent = "0"; document.getElementById('confirm-sale-btn').disabled = true; return; }
-            msg.classList.add('is-hidden');
-            saleCart.forEach(item => {
-                const sub = item.salePrice * item.qty; total += sub;
-                const row = document.createElement('div'); row.className = 'bento-card mb-4 leading-none font-bold shadow-none border-4 bg-slate-100 flex justify-between items-center';
-                row.innerHTML = `<div class="text-left leading-none font-bold"><p class="font-black text-lg uppercase underline decoration-2 leading-none font-bold font-bold">${item.name}</p><p class="text-xl font-black text-[#FB923C] mt-2 font-mono leading-none font-bold">$${item.salePrice.toLocaleString()} x ${item.qty}</p></div><strong class="text-2xl font-mono font-bold">$${sub}</strong>`;
-                list.appendChild(row);
-            });
-            document.getElementById('sale-total-display').textContent = total.toLocaleString('es-AR'); document.getElementById('confirm-sale-btn').disabled = false;
-        }
-
-        async function handleConfirmSale() {
-            const batch = writeBatch(db), day = new Date().toISOString().split('T')[0];
-            saleCart.forEach(i => { const saleRef = doc(collection(db, "artifacts", appId, "public", "data", "sales")); batch.set(saleRef, { name: i.name, qty: i.qty, total: i.qty * i.salePrice, paymentMethod: 'efectivo', day, monthYear: day.substring(0,7), timestamp: Timestamp.now(), adminEmail: userEmail }); batch.update(doc(db, "artifacts", appId, "public", "data", "products", i.id), { stock: i.stock - i.qty }); });
-            await batch.commit(); closeModals(); showMessage("VENTA OK! ✅");
-        }
-
-        // --- FINANZAS AUDITORÍA PRO ---
-        document.getElementById('expense-form').onsubmit = async (e) => {
-            e.preventDefault(); const day = new Date().toISOString().split('T')[0];
-            const data = { desc: document.getElementById('expense-desc').value.toUpperCase(), value: parseFloat(document.getElementById('expense-value').value), method: 'efectivo', day, monthYear: day.substring(0,7), timestamp: Timestamp.now(), adminEmail: userEmail };
-            try { await addDoc(collection(db, "artifacts", appId, "public", "data", "expenses"), data); e.target.reset(); closeModals(); showMessage("GASTO OK! 💸"); loadCajaData(); } catch(err) { alert("ERROR"); }
-        };
-
-        async function loadCajaData() {
-            const list = document.getElementById('caja-daily-list'); list.innerHTML = '<p class="text-center py-20 font-black uppercase text-6xl italic underline decoration-12 leading-none font-bold">ESCANEANDO...</p>';
-            const [snSales, snBooks, snExpenses] = await Promise.all([getDocs(collection(db, "artifacts", appId, "public", "data", "sales")), getDocs(collection(db, "artifacts", appId, "public", "data", "bookings")), getDocs(collection(db, "artifacts", appId, "public", "data", "expenses"))]);
-            let totalIn = 0, totalOut = 0; const resumen = {};
-            snSales.forEach(d => { const v = d.data(); totalIn += v.total; if(!resumen[v.day]) resumen[v.day] = { in: 0, out: 0, items: [] }; resumen[v.day].in += v.total; resumen[v.day].items.push({ type: 'VENTA', desc: v.name, val: v.total, method: 'EFECTIVO' }); });
-            snBooks.forEach(d => { const v = d.data(); totalIn += v.totalPrice; if(!resumen[v.day]) resumen[v.day] = { in: 0, out: 0, items: [] }; resumen[v.day].in += v.totalPrice; resumen[v.day].items.push({ type: 'TURNO', desc: `${v.type}: ${v.teamName}`, val: v.totalPrice, method: 'CAJA' }); });
-            snExpenses.forEach(d => { const v = d.data(); totalOut += v.value; if(!resumen[v.day]) resumen[v.day] = { in: 0, out: 0, items: [] }; resumen[v.day].out += v.value; resumen[v.day].items.push({ type: 'GASTO', desc: v.desc, val: v.value, method: v.method || 'EFECTIVO' }); });
-            document.getElementById('caja-total-in').textContent = `$${totalIn.toLocaleString('es-AR')}`; document.getElementById('caja-total-out').textContent = `$${totalOut.toLocaleString('es-AR')}`; document.getElementById('caja-total-net').textContent = `$${(totalIn - totalOut).toLocaleString('es-AR')}`;
-            list.innerHTML = '';
-            Object.keys(resumen).sort((a,b) => b.localeCompare(a)).forEach(day => {
-                const r = resumen[day], d = document.createElement('div'); d.className = 'bento-card flex justify-between items-center cursor-pointer active:bg-slate-200 transition-all mb-8 leading-none shadow-[10px_10px_0px_0px_#000] font-bold';
-                d.innerHTML = `<div><p class="font-black italic text-6xl text-black underline decoration-12 font-bold leading-none">${day}</p><div class="flex gap-10 mt-10 leading-none font-mono font-bold"><span class="text-3xl font-black text-[#22C55E]">+$${r.in.toLocaleString()}</span><span class="text-3xl font-black text-[#EF4444]">-$${r.out.toLocaleString()}</span></div></div><div class="text-right leading-none font-bold"><p class="text-xs font-black uppercase text-black/50 mb-4 italic underline leading-none font-bold">TOTAL NETO</p><strong class="text-7xl font-black italic tracking-tighter leading-none font-mono font-bold font-bold">$${(r.in - r.out).toLocaleString()}</strong></div>`;
-                d.onclick = () => showDayFinanceDetail(day, r.items); list.appendChild(d);
-            });
-        }
-
-        function showDayFinanceDetail(date, items) {
-            document.getElementById('caja-detail-date').textContent = date;
-            const list = document.getElementById('caja-detail-list'); list.innerHTML = '';
-            items.forEach(i => {
-                const d = document.createElement('div'), color = i.type === 'GASTO' ? 'text-[#EF4444]' : 'text-[#22C55E]';
-                d.className = 'bg-white p-12 border-4 border-black rounded-3xl flex justify-between items-center mb-6 leading-tight shadow-none font-bold';
-                d.innerHTML = `<div class="text-left leading-tight font-bold font-bold font-bold"><span class="text-2xl font-black uppercase italic ${i.type === 'GASTO' ? 'text-[#EF4444]' : 'text-[#22C55E]'} underline decoration-8 leading-none font-bold">${i.type}</span><p class="font-black text-[50px] uppercase italic text-black mt-8 leading-none underline decoration-6 font-bold leading-none">${i.desc}</p><p class="text-sm font-black text-black/40 mt-4 uppercase italic leading-none font-bold font-mono font-bold">${i.method.toUpperCase()}</p></div><strong class="text-[80px] font-black italic ${color} leading-none font-bold font-mono leading-none font-bold">${i.type === 'GASTO' ? '-' : '+'}$${i.val.toLocaleString()}</strong>`;
-                list.appendChild(d);
-            });
-            document.getElementById('caja-detail-modal').classList.add('is-open');
-        }
-
-        // GLOBALS EXPORTS
-        window.closeModals = closeModals;
-        window.editBook = (date, id) => { closeModals(); const b = allMonthBookings.find(x => x.id === id); if(b) showBookingModal(date, b.type, b); };
-        window.updSaleQty = (id, d) => { const i = saleCart.find(x => x.id === id); i.qty += d; if(i.qty <= 0) saleCart = saleCart.filter(x => x.id !== id); if(i && i.qty > i.stock) i.qty = i.stock; renderSaleCart(); };
-        window.delBook = async (id) => { if(confirm("ANULAR TURNO?")) { await deleteDoc(doc(db, "artifacts", appId, "public", "data", "bookings", id)); closeModals(); } };
-        window.delProduct = async (id) => { if(confirm("ELIMINAR PRODUCTO?")) await deleteDoc(doc(db, "artifacts", appId, "public", "data", "products", id)); };
-        window.adjustJumpers = (v) => { const i = document.getElementById('peopleCount'); let n = parseInt(i.value) + v; if(n<1)n=1; if(n>30)n=30; i.value = n; updateBookingVisualTotal(); };
-        window.openRestockModal = (id) => { const p = allProducts.find(x => x.id === id); document.getElementById('restock-id').value = p.id; document.getElementById('restock-prod-name').textContent = p.name; document.getElementById('restock-modal').classList.add('is-open'); };
-        window.openEditProductModal = (id) => { const p = allProducts.find(x => x.id === id); document.getElementById('edit-prod-id').value = p.id; document.getElementById('edit-prod-name').value = p.name; document.getElementById('edit-prod-stock').value = p.stock; document.getElementById('edit-prod-sale-price').value = p.salePrice; document.getElementById('edit-product-modal').classList.add('is-open'); };
-        
-        document.getElementById('restock-form').onsubmit = async (e) => { e.preventDefault(); const id = document.getElementById('restock-id').value, addQty = parseInt(document.getElementById('restock-qty').value), cost = parseFloat(document.getElementById('restock-cost').value); const p = allProducts.find(x => x.id === id); try { await updateDoc(doc(db, "artifacts", appId, "public", "data", "products", id), { stock: p.stock + addQty, unitCost: (cost/addQty) }); closeModals(); showMessage("STOCK OK! 📦"); } catch(err) { alert("Error"); } };
-        document.getElementById('edit-product-form').onsubmit = async (e) => { e.preventDefault(); const id = document.getElementById('edit-prod-id').value, data = { name: document.getElementById('edit-prod-name').value.toUpperCase(), stock: parseInt(document.getElementById('edit-prod-stock').value), salePrice: parseFloat(document.getElementById('edit-prod-sale-price').value) }; try { await updateDoc(doc(db, "artifacts", appId, "public", "data", "products", id), data); closeModals(); showMessage("EDITADO! ✅"); } catch(err) { alert("Error"); } };
-        document.getElementById('config-form').onsubmit = async (e) => { 
-            e.preventDefault(); 
-            const d = { court1Price: parseFloat(document.getElementById('config-court1-price').value), eventPrice: parseFloat(document.getElementById('config-event-price').value) }; 
-            try { await setDoc(doc(db, "artifacts", appId, "public", "data", "app_settings", "prices"), d); showMessage("TARIFAS OK! ✅"); } catch(err) { alert("Error"); } 
-        };
-
-        async function loadStatsData() { const snap = await getDocs(collection(db, "artifacts", appId, "public", "data", "bookings")); const rank = {}; snap.forEach(d => { const n = d.data().teamName; if(n) rank[n] = (rank[n] || 0) + 1; }); const sorted = Object.entries(rank).sort((a,b) => b[1] - a[1]).slice(0, 10); document.getElementById('stats-list').innerHTML = sorted.map(([n, c]) => `<div class="bento-card flex justify-between items-center font-black italic text-4xl uppercase mb-10 leading-none underline decoration-[14px] font-bold shadow-none leading-none"><span>${n}</span><span class="bg-black text-white px-10 py-5 font-mono leading-none">${c} SALTOS</span></div>`).join(''); }
-
-        document.getElementById('add-product-btn').onclick = () => { document.getElementById('product-form-container').classList.toggle('is-hidden'); calculateSuggested(); };
-        document.getElementById('cancel-product-btn').onclick = () => document.getElementById('product-form-container').classList.add('is-hidden');
-    </script>
+    <!-- MOTOR LÓGICO CENTRAL (main.js) -->
+    <script type="module" src="main.js"></script>
 </body>
 </html>
