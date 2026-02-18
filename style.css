@@ -1,34 +1,39 @@
 /* ============================================= */
-/* 1. VARIABLES - PALETA AEROJUMP VIBRANTE      */
+/* 1. VARIABLES - PALETA AEROJUMP LIGHT         */
 /* ============================================= */
 :root {
-    --bg-deep: #0a0c10;
-    --bg-surface: #161b22;
-    --bg-card: rgba(23, 28, 36, 0.7);
-    --glass-border: rgba(255, 255, 255, 0.1);
+    /* Fondos Claros y Superficies */
+    --bg-main: #f1f5f9;       /* Gris muy suave de fondo */
+    --bg-card: #ffffff;       /* Blanco puro para tarjetas */
+    --bg-surface: #ffffff;
+    --border-color: #e2e8f0;  /* Bordes sutiles */
     
-    /* Gamas de Violeta */
-    --violet: #7c3aed;
-    --violet-hover: #6d28d9;
-    --violet-glow: rgba(124, 58, 237, 0.3);
+    /* Identidad de Marca (Originales) */
+    --violet: #7c3aed;        
+    --violet-dark: #6d28d9;
+    --violet-glow: rgba(124, 58, 237, 0.15);
     
-    /* Gamas de Naranja */
-    --orange: #f97316;
-    --orange-hover: #ea580c;
-    --orange-glow: rgba(249, 115, 22, 0.3);
+    --orange: #f97316;        
+    --orange-dark: #ea580c;
+    --orange-glow: rgba(249, 115, 22, 0.15);
     
     --red: #ef4444;
     --green: #22c55e;
     
-    --text-main: #f0f6fc;
-    --text-muted: #8b949e;
+    /* Tipografía */
+    --text-main: #0f172a;     /* Azul oscuro/negro para lectura */
+    --text-muted: #64748b;    /* Gris para info secundaria */
     
+    /* Estructura Bento */
     --radius-xl: 24px;
-    --radius-md: 12px;
+    --radius-md: 14px;
+    --border-width: 2px;
+    --shadow-sm: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+    --shadow-bento: 6px 6px 0px 0px #000000;
 }
 
 /* ============================================= */
-/* 2. RESET Y SCROLL INTERNO                    */
+/* 2. RESET Y ESTRUCTURA DE RENDERIZADO         */
 /* ============================================= */
 * {
     margin: 0;
@@ -39,7 +44,7 @@
 
 body {
     font-family: 'Outfit', sans-serif;
-    background-color: var(--bg-deep);
+    background-color: var(--bg-main);
     color: var(--text-main);
     line-height: 1.3;
     overflow: hidden; 
@@ -48,71 +53,86 @@ body {
 }
 
 .font-mono { font-family: 'JetBrains Mono', monospace; }
+.is-hidden { display: none !important; }
 
+/* ============================================= */
+/* 3. SCROLLBARS                                */
+/* ============================================= */
 .custom-scrollbar::-webkit-scrollbar {
-    width: 6px;
+    width: 8px;
+    height: 8px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
 }
 .custom-scrollbar::-webkit-scrollbar-thumb {
-    background: #30363d;
+    background: #cbd5e1;
     border-radius: 10px;
+    border: 2px solid var(--bg-main);
 }
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
     background: var(--violet);
 }
 
 /* ============================================= */
-/* 3. COMPONENTES BENTO Y BOTONES               */
+/* 4. COMPONENTES BENTO (LIGHT MODE)            */
 /* ============================================= */
 .bento-card {
     background: var(--bg-card);
-    backdrop-filter: blur(16px);
-    border: 1px solid var(--glass-border);
+    border: var(--border-width) solid var(--black, #000);
     border-radius: var(--radius-xl);
-    padding: 1.25rem;
+    padding: 1.5rem;
+    box-shadow: var(--shadow-bento);
     transition: all 0.2s ease;
 }
 
+.bento-card:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 8px 8px 0px 0px #000;
+}
+
+/* Botones Premium con Paleta Original */
 .btn-premium {
-    background: var(--bg-surface);
+    background: var(--white, #fff);
     color: var(--text-main);
-    border: 1px solid var(--glass-border);
+    border: var(--border-width) solid var(--black, #000);
     border-radius: var(--radius-md);
-    font-weight: 700;
+    font-weight: 800;
     text-transform: uppercase;
-    padding: 0.7rem 1.2rem;
+    padding: 0.8rem 1.5rem;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    transition: all 0.2s;
-    letter-spacing: 0.5px;
-    font-size: 0.85rem;
+    transition: all 0.15s;
+    box-shadow: 4px 4px 0px 0px #000;
 }
 
-.btn-premium:active { transform: scale(0.96); }
+.btn-premium:active {
+    transform: translate(2px, 2px);
+    box-shadow: 0px 0px 0px 0px #000;
+}
 
-/* Aplicación de Colores Originales */
+/* Clases de Utilidad para la Marca */
 .bg-violet-primary {
-    background: linear-gradient(135deg, var(--violet), #5b21b6) !important;
-    box-shadow: 0 4px 12px var(--violet-glow);
-    border: none !important;
+    background: var(--violet) !important;
+    color: white !important;
 }
 
 .bg-orange-primary {
-    background: linear-gradient(135deg, var(--orange), #c2410c) !important;
-    box-shadow: 0 4px 12px var(--orange-glow);
-    border: none !important;
+    background: var(--orange) !important;
+    color: white !important;
 }
 
 /* ============================================= */
-/* 4. MODALES COMPACTOS (FIX DE PANTALLA)       */
+/* 5. SISTEMA DE MODALES Y SCROLL (NOTEBOOK)    */
 /* ============================================= */
 .modal {
     display: none;
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.85);
-    backdrop-filter: blur(10px);
+    background: rgba(15, 23, 42, 0.8);
+    backdrop-filter: blur(4px);
     z-index: 2000;
     align-items: center;
     justify-content: center;
@@ -123,90 +143,147 @@ body {
 
 .modal-content {
     background: var(--bg-surface);
-    border: 1px solid var(--glass-border);
+    border: var(--border-width) solid var(--black, #000);
     border-radius: var(--radius-xl);
     width: 100%;
-    max-width: 800px;
-    max-height: 90vh; /* No excede el alto de pantalla */
+    max-width: 850px;
+    max-height: 92vh; /* Evita que el formulario sea más alto que la pantalla */
     display: flex;
     flex-direction: column;
     overflow: hidden;
+    box-shadow: 12px 12px 0px 0px rgba(0,0,0,0.2);
 }
 
 .modal-header {
-    padding: 1.25rem;
-    border-bottom: 1px solid var(--glass-border);
+    padding: 1.5rem;
+    border-bottom: var(--border-width) solid var(--black, #000);
+    background: var(--white, #fff);
     flex-shrink: 0;
 }
 
 .modal-body {
     flex: 1;
     overflow-y: auto;
-    padding: 1.25rem;
+    padding: 1.5rem;
+    background: var(--bg-main);
     -webkit-overflow-scrolling: touch;
 }
 
 .modal-footer {
-    padding: 1rem;
-    border-top: 1px solid var(--glass-border);
+    padding: 1.25rem;
+    border-top: var(--border-width) solid var(--black, #000);
+    background: var(--white, #fff);
     flex-shrink: 0;
 }
 
 /* ============================================= */
-/* 5. INPUTS Y FORMULARIOS COMPACTOS            */
+/* 6. INPUTS COMPACTOS                          */
 /* ============================================= */
 input, select {
-    background: rgba(0, 0, 0, 0.2) !important;
-    border: 1px solid var(--glass-border) !important;
+    background: var(--white, #fff) !important;
+    border: var(--border-width) solid var(--black, #000) !important;
     border-radius: var(--radius-md) !important;
-    padding: 0.6rem 0.9rem !important;
+    padding: 0.7rem 1rem !important;
     color: var(--text-main) !important;
+    font-weight: 700 !important;
     font-size: 1rem !important;
     width: 100%;
 }
 
-input:focus { border-color: var(--violet) !important; }
+input:focus {
+    background: var(--violet-light) !important;
+    outline: none;
+}
 
 /* ============================================= */
-/* 6. CALENDARIO Y LISTAS                       */
+/* 7. CALENDARIO Y AGENDA                       */
 /* ============================================= */
+.calendar-header-day {
+    color: var(--violet);
+    font-weight: 900;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    text-align: center;
+    padding-bottom: 8px;
+}
+
 .day-cell {
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid var(--glass-border);
-    border-radius: 14px;
+    background: var(--white);
+    border: 2px solid var(--black);
+    border-radius: 16px;
     aspect-ratio: 1/1;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    padding: 0.4rem;
+    padding: 0.5rem;
     cursor: pointer;
-    transition: 0.2s;
+    transition: all 0.2s;
 }
 
-.day-cell:hover { border-color: var(--violet); background: rgba(124, 58, 237, 0.1); }
+.day-cell:hover {
+    background: var(--violet-light);
+    transform: scale(1.03);
+}
 
+.day-cell.opacity-10 {
+    opacity: 0.2;
+    border-style: dashed;
+    pointer-events: none;
+}
+
+/* ============================================= */
+/* 8. POS (LISTA DE VENTAS)                     */
+/* ============================================= */
 .pos-item-list {
-    background: rgba(255, 255, 255, 0.02);
-    border: 1px solid var(--glass-border);
-    border-radius: 16px;
-    padding: 0.8rem 1rem;
-    margin-bottom: 0.5rem;
+    background: var(--white);
+    border: 2px solid var(--black);
+    border-radius: 18px;
+    padding: 1rem 1.25rem;
+    margin-bottom: 0.75rem;
     display: flex;
     align-items: center;
     justify-content: space-between;
+    box-shadow: 4px 4px 0px 0px rgba(0,0,0,0.1);
+}
+
+.pos-item-list:hover {
+    border-color: var(--orange);
+    transform: translateX(4px);
 }
 
 /* ============================================= */
-/* 7. ADAPTACIÓN NOTEBOOK (1366x768)           */
+/* 9. RESPONSIVE Y NOTEBOOK FIX                 */
 /* ============================================= */
-@media (max-height: 780px) {
-    .text-\[120px\], .text-\[100px\], .text-\[110px\] { font-size: 3.5rem !important; }
-    .bento-card { padding: 1rem; }
-    h2 { font-size: 1.5rem !important; }
+
+/* Ajuste para Notebooks (Alturas menores a 800px) */
+@media (max-height: 800px) {
+    .modal-content { max-height: 96vh; }
+    .modal-header { padding: 1rem; }
     .modal-body { padding: 1rem; }
-    .space-y-12 > * + * { margin-top: 1.5rem !important; }
+    
+    /* Ajuste de textos gigantes */
+    .text-\[120px\], .text-\[100px\], .text-\[110px\] { 
+        font-size: 4rem !important; 
+    }
+    
+    .bento-card { padding: 1rem; }
+    h2 { font-size: 2rem !important; }
 }
 
+/* Celulares */
 @media (max-width: 640px) {
-    .modal-content { border-radius: 0; height: 100vh; max-height: 100vh; }
+    .modal { padding: 0; }
+    .modal-content { border-radius: 0; height: 100vh; border: none; }
+    .bento-card { border-radius: 16px; }
+}
+
+/* Animaciones */
+@keyframes jump {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-12px); }
+}
+
+.jumping-child {
+    animation: jump 1.2s ease-in-out infinite;
+    display: inline-block;
 }
