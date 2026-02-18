@@ -27,7 +27,7 @@
     --font-main: 'Outfit', sans-serif;
     --font-mono: 'JetBrains Mono', monospace;
     
-    /* Tokens de Diseño */
+    /* Tokens de Diseño Bento */
     --radius-xl: 2rem;      
     --radius-lg: 1.25rem;
     --radius-md: 0.75rem;
@@ -35,7 +35,7 @@
 }
 
 /* ============================================= */
-/* 2. ESTRUCTURA MAESTRA Y RESET                */
+/* 2. ESTRUCTURA MAESTRA Y RESET (LÓGICA SCROLL)*/
 /* ============================================= */
 * { 
     margin: 0; 
@@ -52,23 +52,58 @@ body {
     font-weight: 700;
     height: 100vh;
     width: 100vw;
-    overflow: hidden; /* El scroll lo maneja el elemento <main> */
+    overflow: hidden; /* El scroll lo maneja el elemento <main> únicamente */
 }
 
 .font-mono { font-family: var(--font-mono); font-weight: 500; }
-.is-hidden { display: none !important; }
 
-/* Scrollbar Personalizada Premium */
-.custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
-.custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
-.custom-scrollbar::-webkit-scrollbar-thumb:hover { background: var(--violet); }
+/* Control de Visibilidad */
+.is-hidden { 
+    display: none !important; 
+    pointer-events: none;
+    visibility: hidden;
+}
+
+/* Scrollbar Personalizada Premium AeroJump */
+.custom-scrollbar::-webkit-scrollbar { 
+    width: 6px; 
+    height: 6px; 
+}
+.custom-scrollbar::-webkit-scrollbar-thumb { 
+    background: #cbd5e1; 
+    border-radius: 10px; 
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover { 
+    background: var(--violet); 
+}
 
 /* ============================================= */
-/* 3. ELEMENTOS DE MARCA                        */
+/* 3. ELEMENTOS DE MARCA (LOGO Y ESTÉTICA)      */
 /* ============================================= */
-.title-brand { font-size: 2.8rem; font-weight: 900; font-style: italic; letter-spacing: -2px; }
-.subtitle-brand { font-size: 10px; font-weight: 900; letter-spacing: 2px; border-bottom: 3px solid currentColor; display: inline-block; padding-bottom: 4px; }
-.section-title { font-size: 2rem; font-weight: 900; font-style: italic; text-decoration: underline; text-decoration-thickness: 5px; text-underline-offset: 4px; }
+.title-brand { 
+    font-size: 2.8rem; 
+    font-weight: 900; 
+    font-style: italic; 
+    letter-spacing: -2px; 
+}
+
+.subtitle-brand { 
+    font-size: 10px; 
+    font-weight: 900; 
+    letter-spacing: 2px; 
+    border-bottom: 3px solid currentColor; 
+    display: inline-block; 
+    padding-bottom: 4px; 
+}
+
+.section-title { 
+    font-size: 2rem; 
+    font-weight: 900; 
+    font-style: italic; 
+    text-decoration: underline; 
+    text-decoration-thickness: 5px; 
+    text-underline-offset: 4px; 
+}
 
 /* ============================================= */
 /* 4. COMPONENTES BENTO Y BOTONES               */
@@ -98,22 +133,63 @@ body {
 
 .btn-premium:active { transform: scale(0.96); }
 
-.bg-violet-primary { background-color: var(--violet) !important; color: white !important; box-shadow: 0 4px 12px var(--violet-glow); }
-.bg-orange-primary { background-color: var(--orange) !important; color: white !important; box-shadow: 0 4px 12px var(--orange-glow); }
+.bg-violet-primary { 
+    background-color: var(--violet) !important; 
+    color: white !important; 
+    box-shadow: 0 4px 12px var(--violet-glow);
+}
+
+.bg-orange-primary { 
+    background-color: var(--orange) !important; 
+    color: white !important; 
+    box-shadow: 0 4px 12px var(--orange-glow);
+}
 
 /* ============================================= */
-/* 5. NAVEGACIÓN Y MENÚ LATERAL                 */
+/* 5. NAVEGACIÓN Y MENÚ LATERAL (FIX VISIBILITY)*/
 /* ============================================= */
 #main-menu {
+    transform: translateX(-100%);
     transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     box-shadow: 20px 0 50px rgba(0,0,0,0.1);
 }
 
-.user-display { font-size: 0.7rem; font-weight: 900; text-decoration: underline; margin-bottom: 1rem; font-family: var(--font-mono); color: var(--text-muted); }
-.btn-logout-small { font-size: 0.65rem; font-weight: 900; border: 2px solid #ef4444; color: #ef4444; padding: 0.5rem; border-radius: 0.5rem; width: 100%; text-transform: uppercase; cursor: pointer; }
+#main-menu.is-open { 
+    transform: translateX(0) !important; 
+}
+
+.user-display { 
+    font-size: 0.7rem; 
+    font-weight: 900; 
+    text-decoration: underline; 
+    margin-bottom: 1rem; 
+    color: var(--text-muted); 
+}
+
+.btn-logout-small { 
+    font-size: 0.65rem; 
+    font-weight: 900; 
+    border: 2px solid #ef4444; 
+    color: #ef4444; 
+    padding: 0.5rem; 
+    border-radius: 0.5rem; 
+    width: 100%; 
+    text-transform: uppercase; 
+    cursor: pointer; 
+}
+
+.menu-item {
+    transition: all 0.2s;
+    cursor: pointer;
+}
+.menu-item:hover {
+    background: var(--violet-soft);
+    color: var(--violet);
+    transform: translateX(5px);
+}
 
 /* ============================================= */
-/* 6. MODALES (ESTRUCTURA DE CABECERA/PIE FIJOS)*/
+/* 6. MODALES (HEADER/FOOTER FIJOS - NO SCROLL) */
 /* ============================================= */
 .modal {
     display: none;
@@ -122,20 +198,32 @@ body {
     background: rgba(15, 23, 42, 0.8);
     backdrop-filter: blur(10px);
     z-index: 2000;
-    align-items: center; justify-content: center; padding: 1rem;
+    align-items: center; 
+    justify-content: center; 
+    padding: 1rem;
 }
+
 .modal.is-open { display: flex; }
 
 .modal-content {
-    background: white; width: 100%; max-height: 96vh; border-radius: var(--radius-xl);
-    display: flex; flex-direction: column; overflow: hidden;
+    background: white; 
+    width: 100%; 
+    max-height: 96vh; 
+    border-radius: var(--radius-xl); 
+    display: flex; 
+    flex-direction: column; 
+    overflow: hidden; 
     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
 }
+
+.modal-booking-compact { max-width: 700px; }
 
 .modal-header { 
     padding: 1.25rem 1.5rem; 
     border-bottom: 1px solid var(--border-color); 
-    display: flex; justify-content: space-between; align-items: center; 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
     flex-shrink: 0; 
 }
 
@@ -149,31 +237,60 @@ body {
 .modal-footer { 
     padding: 1.25rem 1.5rem; 
     border-top: 1px solid var(--border-color); 
-    display: flex; justify-content: space-between; align-items: center; 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
     flex-shrink: 0; 
     background: white; 
 }
 
 .btn-close-modal { 
-    width: 2.5rem; height: 2.5rem; border-radius: 999px; 
-    background: #f1f5f9; color: #64748b; font-weight: 900; 
-    display: flex; align-items: center; justify-content: center; 
-    cursor: pointer; border: none; transition: 0.2s; 
+    width: 2.5rem; 
+    height: 2.5rem; 
+    border-radius: 999px; 
+    background: #f1f5f9; 
+    color: #64748b; 
+    font-weight: 900; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    cursor: pointer; 
+    border: none; 
+    transition: 0.2s; 
 }
 .btn-close-modal:hover { background: var(--black); color: white; }
 
 /* ============================================= */
 /* 7. LAYOUT POS (CAJA KIOSCO - TOTAL FIJO)     */
 /* ============================================= */
-.pos-layout-container { display: flex; flex-direction: row; flex: 1; overflow: hidden; }
-.pos-catalog-side { flex: 1; border-right: 1px solid var(--border-color); background: white; display: flex; flex-direction: column; }
-.pos-ticket-side { display: flex; flex-direction: column; background: #f8fafc; border-left: 1px solid var(--border-color); }
+.pos-layout-container { 
+    display: flex; 
+    flex-direction: row; 
+    flex: 1; 
+    overflow: hidden; 
+}
+
+.pos-catalog-side { 
+    flex: 1; 
+    border-right: 1px solid var(--border-color); 
+    background: white; 
+    display: flex; 
+    flex-direction: column; 
+}
+
+.pos-ticket-side { 
+    display: flex; 
+    flex-direction: column; 
+    background: #f8fafc; 
+    border-left: 1px solid var(--border-color); 
+}
 
 .pos-checkout-footer { 
     background: white; 
     border-top: 4px solid var(--violet-soft); 
     flex-shrink: 0; 
     box-shadow: 0 -10px 30px rgba(0,0,0,0.05); 
+    padding: 1.5rem;
 }
 
 @media (max-width: 768px) {
@@ -183,40 +300,114 @@ body {
 }
 
 /* ============================================= */
-/* 8. FORMULARIOS (BENTO INNER Y ALTA STOCK)    */
+/* 8. FORMULARIOS (BENTO INNER)                 */
 /* ============================================= */
 .bento-inner-card { 
-    background: white; border: 1px solid var(--border-color); border-radius: var(--radius-lg); 
-    padding: 1rem; box-shadow: var(--shadow-sm); 
+    background: white; 
+    border: 1px solid var(--border-color); 
+    border-radius: var(--radius-lg); 
+    padding: 1rem; 
+    box-shadow: var(--shadow-sm); 
 }
 
-.label-tiny { font-size: 0.65rem; font-weight: 900; text-transform: uppercase; color: var(--text-muted); display: block; margin-bottom: 4px; }
-.input-clean { font-size: 1.2rem !important; font-weight: 900; width: 100%; border: none !important; background: transparent !important; outline: none !important; }
-.input-count, .input-money { font-size: 1.5rem !important; font-family: var(--font-mono); font-weight: 800; border: none !important; background: transparent !important; width: 100%; }
-.select-clean { font-size: 0.8rem !important; font-weight: 800; text-transform: uppercase; background: #f1f5f9 !important; border-radius: 0.5rem !important; padding: 0.5rem !important; border: none !important; }
+.label-tiny { 
+    font-size: 0.65rem; 
+    font-weight: 900; 
+    text-transform: uppercase; 
+    color: var(--text-muted); 
+    display: block; 
+    margin-bottom: 4px; 
+}
 
-/* Corrección para campos de bulto */
-.cost-split-input { display: flex; align-items: center; width: 100%; }
-.cost-split-input input { font-size: 1.1rem !important; }
+.input-clean { 
+    font-size: 1.2rem !important; 
+    font-weight: 900; 
+    width: 100%; 
+    border: none !important; 
+    background: transparent !important; 
+    outline: none !important; 
+}
+
+.input-count, .input-money { 
+    font-size: 1.5rem !important; 
+    font-family: var(--font-mono); 
+    font-weight: 800; 
+    border: none !important; 
+    background: transparent !important; 
+    width: 100%; 
+}
+
+.select-clean { 
+    font-size: 0.8rem !important; 
+    font-weight: 800; 
+    text-transform: uppercase; 
+    background: #f1f5f9 !important; 
+    border-radius: 0.5rem !important; 
+    padding: 0.5rem !important; 
+    border: none !important; 
+}
+
+/* Corrección para campos de bulto en Inventario */
+.cost-split-input { 
+    display: flex; 
+    align-items: center; 
+    width: 100%; 
+}
+.cost-split-input input { 
+    font-size: 1.1rem !important; 
+}
 
 /* ============================================= */
 /* 9. CALENDARIO Y CELDAS                       */
 /* ============================================= */
-.calendar-header-day { color: var(--violet); font-weight: 900; text-transform: uppercase; font-size: 0.7rem; text-align: center; padding-bottom: 8px; }
+.calendar-header-day { 
+    color: var(--violet); 
+    font-weight: 900; 
+    text-transform: uppercase; 
+    font-size: 0.7rem; 
+    text-align: center; 
+    padding-bottom: 8px; 
+}
 
 .day-cell { 
-    background: white; border: 1px solid var(--border-color); border-radius: 1rem; 
-    aspect-ratio: 1/1; display: flex; flex-direction: column; justify-content: space-between; 
-    padding: 0.6rem; cursor: pointer; transition: 0.2s; 
+    background: white; 
+    border: 1px solid var(--border-color); 
+    border-radius: 1rem; 
+    aspect-ratio: 1/1; 
+    display: flex; 
+    flex-direction: column; 
+    justify-content: space-between; 
+    padding: 0.6rem; 
+    cursor: pointer; 
+    transition: 0.2s; 
 }
-.day-cell:hover { border-color: var(--violet); background: var(--violet-soft); transform: scale(1.05); z-index: 10; box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
+.day-cell:hover { 
+    border-color: var(--violet); 
+    background: var(--violet-soft); 
+    transform: scale(1.05); 
+    z-index: 10; 
+    box-shadow: 0 10px 20px rgba(0,0,0,0.05); 
+}
 
 .time-slot { 
-    background: white; border: 1px solid var(--border-color); border-radius: 0.6rem; 
-    padding: 0.5rem 0.25rem; text-align: center; cursor: pointer; transition: 0.15s; font-size: 0.75rem; 
+    background: white; 
+    border: 1px solid var(--border-color); 
+    border-radius: 0.6rem; 
+    padding: 0.5rem 0.25rem; 
+    text-align: center; 
+    cursor: pointer; 
+    transition: 0.15s; 
+    font-size: 0.75rem; 
 }
-.time-slot.selected { background: var(--violet) !important; color: white !important; }
-.time-slot.disabled { opacity: 0.2; cursor: not-allowed; border-style: dashed; }
+.time-slot.selected { 
+    background: var(--violet) !important; 
+    color: white !important; 
+}
+.time-slot.disabled { 
+    opacity: 0.2; 
+    cursor: not-allowed; 
+    border-style: dashed; 
+}
 
 /* ============================================= */
 /* 10. ADAPTACIÓN NOTEBOOK (1366x768)          */
@@ -229,38 +420,78 @@ body {
     .btn-premium { padding: 0.6rem 1.2rem; font-size: 0.8rem; }
     
     .input-clean { font-size: 1.1rem !important; }
-    .input-count, .input-money { font-size: 1.3rem !important; }
+    .input-count, .input-money { font-size: 1.2rem !important; }
     .pos-checkout-footer { padding: 1rem; }
 }
 
 /* ============================================= */
-/* 11. ANIMACIONES Y ESTADOS                    */
+/* 11. ANIMACIONES                              */
 /* ============================================= */
-@keyframes jump { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
-.jumping-child { animation: jump 1.2s ease-in-out infinite; display: inline-block; }
+@keyframes jump { 
+    0%, 100% { transform: translateY(0); } 
+    50% { transform: translateY(-10px); } 
+}
+.jumping-child { 
+    animation: jump 1.2s ease-in-out infinite; 
+    display: inline-block; 
+}
 
+/* ============================================= */
+/* 12. ELEMENTOS DE VISUALIZACIÓN DE DATOS      */
+/* ============================================= */
 .total-big-display { 
-    font-size: 4.5rem; font-weight: 900; font-family: var(--font-mono); 
-    font-style: italic; color: var(--black); letter-spacing: -4px; 
+    font-size: 4.5rem; 
+    font-weight: 900; 
+    font-family: var(--font-mono); 
+    font-style: italic; 
+    color: var(--black); 
+    letter-spacing: -4px; 
 }
 
 .booking-total-display { 
-    font-size: 2rem; font-weight: 900; font-family: var(--font-mono); 
-    font-style: italic; color: var(--black); 
+    font-size: 2rem; 
+    font-weight: 900; 
+    font-family: var(--font-mono); 
+    font-style: italic; 
+    color: var(--black); 
 }
 
 .badge-type { 
-    font-size: 0.6rem; font-weight: 900; text-transform: uppercase; 
-    background: var(--violet-soft); color: var(--violet); padding: 2px 8px; border-radius: 99px; 
+    font-size: 0.6rem; 
+    font-weight: 900; 
+    text-transform: uppercase; 
+    background: var(--violet-soft); 
+    color: var(--violet); 
+    padding: 2px 8px; 
+    border-radius: 99px; 
 }
 
-/* Tarjetas de Agenda Diaria */
 .booking-option-card { 
-    background: white; border: 1px solid var(--border-color); 
-    border-radius: var(--radius-lg); padding: 1rem; 
-    transition: all 0.2s; box-shadow: var(--shadow-sm); 
+    background: white; 
+    border: 1px solid var(--border-color); 
+    border-radius: var(--radius-lg); 
+    padding: 1rem; 
+    transition: all 0.2s; 
+    box-shadow: var(--shadow-sm); 
 }
-.booking-option-card:hover { border-color: var(--violet); transform: translateX(5px); }
+.booking-option-card:hover { 
+    border-color: var(--violet); 
+    transform: translateX(5px); 
+}
+
+.adjust-btn-small {
+    width: 2.2rem; 
+    height: 2.2rem; 
+    border-radius: 0.6rem;
+    border: 1px solid #e2e8f0; 
+    font-weight: 900; 
+    background: white; 
+    cursor: pointer; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center;
+}
+.adjust-btn-small:active { background: var(--black); color: white; }
 
 /* Ajuste Móvil Estricto */
 @media (max-width: 640px) {
@@ -270,10 +501,3 @@ body {
     .modal { padding: 0.25rem; }
     .modal-content { height: 100vh; max-height: 100vh; border-radius: 1rem; }
 }
-
-.adjust-btn-small {
-    width: 2.2rem; height: 2.2rem; border-radius: 0.6rem;
-    border: 1px solid #e2e8f0; font-weight: 900; background: white; cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-}
-.adjust-btn-small:active { background: var(--black); color: white; }
