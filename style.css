@@ -50,7 +50,7 @@ body {
     font-weight: 700;
     height: 100vh;
     width: 100vw;
-    overflow: hidden; /* Evita scroll doble, el scroll es interno */
+    overflow: hidden; 
 }
 
 .font-mono { font-family: var(--font-mono); font-weight: 500; }
@@ -139,7 +139,7 @@ body {
 .btn-logout-small { font-size: 0.65rem; font-weight: 900; border: 2px solid #ef4444; color: #ef4444; padding: 0.5rem; border-radius: 0.5rem; width: 100%; text-transform: uppercase; }
 
 /* ============================================= */
-/* 6. MODALES INTELIGENTES (FIX PANTALLAS BAJAS) */
+/* 6. MODALES INTELIGENTES (HEADER/FOOTER FIJOS) */
 /* ============================================= */
 .modal {
     display: none;
@@ -158,10 +158,10 @@ body {
 .modal-content {
     background: white;
     width: 100%;
-    max-height: 96vh; /* Casi toda la pantalla pero con margen */
+    max-height: 96vh;
     border-radius: var(--radius-xl);
     display: flex;
-    flex-direction: column; /* Estructura vertical */
+    flex-direction: column;
     overflow: hidden;
     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.3);
 }
@@ -174,12 +174,12 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    flex-shrink: 0; /* No se achica */
+    flex-shrink: 0;
 }
 
 .modal-body {
-    flex: 1; /* Ocupa todo el espacio disponible */
-    overflow-y: auto; /* Único lugar con scroll */
+    flex: 1;
+    overflow-y: auto;
     padding: 1.5rem;
     background: #f8fafc;
 }
@@ -190,11 +190,11 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    flex-shrink: 0; /* No se achica */
+    flex-shrink: 0;
     background: white;
 }
 
-/* Botón de Cierre (X) Minimalista */
+/* Botón de Cierre (X) */
 .btn-close-modal {
     width: 2.2rem; height: 2.2rem;
     border-radius: 999px;
@@ -209,7 +209,33 @@ body {
 .btn-close-modal svg { width: 1.2rem; height: 1.2rem; stroke-width: 3; }
 
 /* ============================================= */
-/* 7. FORMULARIOS TIPO FICHA (BENTO INNER)      */
+/* 7. CONFIGURACIÓN POS (PUNTO DE VENTA)        */
+/* ============================================= */
+
+/* Contenedor del Ticket (Lado derecho del POS) */
+.w-full.md\:w-80.flex.flex-col {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+/* La lista del ticket ahora es la única que scrollea en su columna */
+#sale-cart-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1rem;
+}
+
+/* Pie del POS (Total y Confirmar) ahora es FIJO */
+.p-6.bg-white.border-t-2.border-slate-200 {
+    flex-shrink: 0;
+    background: white;
+    z-index: 10;
+    box-shadow: 0 -4px 12px rgba(0,0,0,0.03);
+}
+
+/* ============================================= */
+/* 8. FORMULARIOS TIPO FICHA (BENTO INNER)      */
 /* ============================================= */
 .bento-inner-card {
     background: white;
@@ -225,7 +251,6 @@ body {
     color: var(--text-muted); letter-spacing: 1px; display: block; margin-bottom: 4px;
 }
 
-/* Inputs Limpios */
 .input-clean { 
     font-size: 1.25rem !important; font-weight: 900; width: 100%; 
     border: none !important; background: transparent !important; outline: none !important;
@@ -250,7 +275,7 @@ body {
 .adjust-btn-small:active { background: var(--black); color: white; }
 
 /* ============================================= */
-/* 8. POS Y LISTADOS                            */
+/* 9. LISTADOS Y GRID                           */
 /* ============================================= */
 .pos-item-row {
     border-bottom: 1px solid #f1f5f9;
@@ -260,7 +285,6 @@ body {
 }
 .pos-item-row:hover { background: #f8fafc; }
 
-/* Calendario */
 .calendar-header-day { color: var(--violet); font-weight: 900; text-transform: uppercase; font-size: 0.7rem; text-align: center; padding-bottom: 6px; }
 
 .day-cell {
@@ -270,7 +294,6 @@ body {
 }
 .day-cell:hover { border-color: var(--violet); background: var(--violet-soft); transform: scale(1.03); }
 
-/* Slots Horarios */
 .time-slot {
     background: white; border: 1px solid var(--border-color); border-radius: 0.6rem;
     padding: 0.5rem 0.25rem; text-align: center; cursor: pointer; transition: 0.15s; font-size: 0.7rem;
@@ -279,7 +302,7 @@ body {
 .time-slot.disabled { opacity: 0.3; cursor: not-allowed; border-style: dashed; }
 
 /* ============================================= */
-/* 9. TOTALES Y BADGES                          */
+/* 10. TOTALES Y ADAPTACIÓN NOTEBOOK            */
 /* ============================================= */
 .booking-total-display { 
     font-size: 1.8rem; font-weight: 900; font-family: var(--font-mono); 
@@ -290,9 +313,6 @@ body {
     background: var(--violet-soft); color: var(--violet); padding: 2px 8px; border-radius: 99px; 
 }
 
-/* ============================================= */
-/* 10. ADAPTACIÓN SEGÚN ALTURA (Notebooks)      */
-/* ============================================= */
 @media (max-height: 800px) {
     .modal-content { max-height: 98vh; }
     .title-brand { font-size: 2.2rem; }
@@ -311,22 +331,7 @@ body {
 }
 
 /* ============================================= */
-/* 11. ADAPTACIÓN MÓVIL (Ancho)                 */
-/* ============================================= */
-@media (max-width: 640px) {
-    .modal { padding: 0.25rem; }
-    .modal-content { border-radius: 1.25rem; height: 100vh; max-height: 100vh; }
-    
-    .grid-cols-3 { grid-template-columns: 1fr !important; }
-    .day-cell span { font-size: 0.8rem; }
-    
-    #main-menu { width: 100%; }
-    
-    .booking-total-display { font-size: 1.4rem; }
-}
-
-/* ============================================= */
-/* 12. ANIMACIONES                              */
+/* 11. ANIMACIONES                              */
 /* ============================================= */
 @keyframes jump { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
 .jumping-child { animation: jump 1.2s ease-in-out infinite; display: inline-block; }
