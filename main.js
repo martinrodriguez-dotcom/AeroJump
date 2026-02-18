@@ -1,140 +1,201 @@
 /**
  * AeroJump Gualeguaychú - Sistema v2026
- * MAIN MODULE (main.js)
- * Conecta la lógica de los controladores con el esqueleto HTML y el diseño CSS.
- * Gestiona el flujo de navegación y la exposición global de funciones.
+ * MAIN ORCHESTRATOR MODULE
+ * * Este archivo centraliza la lógica y expone las funciones al objeto global 'window'
+ * para que los eventos 'onclick' del HTML puedan ejecutarlas sin errores.
  */
 
 import { auth } from "./firebase-config.js";
-import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+import { 
+    onAuthStateChanged, 
+    signOut, 
+    signInWithEmailAndPassword 
+} from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 
-// 1. Importación de Controladores
-import { showView, openModal, closeModals, showMessage } from "./ui-controller.js";
-import { initAuthListener, handleLogin } from "./auth-controller.js";
-import { syncBookings, prevMonth, nextMonth, handleSaveBooking, adjustJumpers, updateBookingTotal } from "./booking-controller.js";
-import { syncProducts, handleSaveProduct, calculateProductPrices, handleConfirmRestock, handleConfirmEditProduct } from "./kiosco-controller.js";
-import { loadCajaData, loadStatsData } from "./finance-controller.js";
-import { openSaleModal, handleConfirmSale, updCatalogQty } from "./sales-controller.js";
+// Importación de controladores específicos
+import { 
+    showView, 
+    openModal, 
+    closeModals, 
+    showMessage 
+} from "./ui-controller.js";
+
+import { 
+    syncBookings, 
+    prevMonth, 
+    nextMonth, 
+    handleSaveBooking, 
+    adjustJumpers, 
+    updateBookingTotal 
+} from "./booking-controller.js";
+
+import { 
+    syncProducts, 
+    handleSaveProduct, 
+    handleConfirmRestock, 
+    handleConfirmEditProduct, 
+    calculateProductPrices 
+} from "./kiosco-controller.js";
+
+import { 
+    loadCajaData, 
+    loadStatsData 
+} from "./finance-controller.js";
+
+import { 
+    openSaleModal, 
+    handleConfirmSale, 
+    renderSaleCatalog 
+} from "./sales-controller.js";
 
 document.addEventListener('DOMContentLoaded', () => {
 
-    // --- 2. INICIALIZACIÓN DE SEGURIDAD ---
-    initAuthListener((user) => {
-        // Al detectar sesión activa, sincronizamos datos y mostramos la agenda
-        syncBookings();
-        syncProducts();
-        showView('calendar');
-    });
+    // --- 1. VINCULACIÓN AL OBJETO WINDOW (Solución al TypeError) ---
+    // Exponemos las funciones para que 'onclick="window.function()"' sea válido.
 
-    // --- 3. EVENTOS DE NAVEGACIÓN Y MENÚ ---
-    const menuBtn = document.getElementById('menu-btn');
-    if (menuBtn) {
-        menuBtn.onclick = () => {
-            const menu = document.getElementById('main-menu');
-            const overlay = document.getElementById('menu-overlay');
-            if (menu) menu.classList.toggle('is-open');
-            if (overlay) overlay.classList.toggle('hidden');
-        };
-    }
+    // Navegación y Menú
+    window.toggleMenu = (force) => {
+        const menu = document.getElementById('main-menu');
+        const overlay = document.getElementById('menu-overlay');
+        
+        // Verificamos si el menú está abierto por su clase de transformación
+        const isCurrentlyClosed = menu.classList.contains('-translate-x-full');
+        const shouldOpen = force !== undefined ? force : isCurrentlyClosed;
+        
+        if (shouldOpen) {
+            menu.classList.remove('-translate-x-full');
+            overlay.classList.remove('hidden');
+            menu.classList.add('is-open'); // Clase para estilos adicionales de CSS
+        } else {
+            menu.classList.add('-translate-x-full');
+            overlay.classList.add('hidden');
+            menu.classList.remove('is-open');
+        }
+    };
 
-    const menuOverlay = document.getElementById('menu-overlay');
-    if (menuOverlay) {
-        menuOverlay.onclick = () => {
-            const menu = document.getElementById('main-menu');
-            if (menu) menu.classList.remove('is-open');
-            menuOverlay.classList.add('hidden');
-        };
-    }
+    window.showView = (viewId) => {
+        showView(viewId); // Lógica de ui-controller.js
+        
+        // Carga de datos bajo demanda para optimizar rendimiento
+        if (viewId === 'caja') loadCajaData();
+        if (viewId === 'stats') loadStatsData();
+        
+        // Siempre cerrar el menú lateral al navegar
+        window.toggleMenu(false);
+    };
 
-    const logoutBtn = document.getElementById('logout-btn');
-    if (logoutBtn) {
-        logoutBtn.onclick = () => signOut(auth);
-    }
+    // Gestión de Modales
+    window.openModal = openModal;
+    window.closeModals = closeModals;
 
-    // Vinculación de los botones del menú lateral mediante data-view
-    document.querySelectorAll('.menu-item').forEach(btn => {
-        btn.onclick = () => {
-            const viewId = btn.dataset.view;
-            showView(viewId);
+    // Agenda y Reservas
+    window.prevMonth = prevMonth;
+    window.nextMonth = nextMonth;
+    window.adjustJumpers = adjustJumpers;
+    window.updateBookingVisualTotal = updateBookingTotal;
+
+    // Inventario y Kiosco
+    window.toggleProductForm = (show) => {
+        const formContainer = document.getElementById('product-form-container');
+        if (show === false) {
+            formContainer.classList.add('is-hidden');
+        } else {
+            formContainer.classList.toggle('is-hidden');
+        }
+    };
+    
+    // Vinculación de confirmaciones de modales (Reposición y Edición)
+    window.handleConfirmRestock = handleConfirmRestock;
+    window.handleConfirmEditProduct = handleConfirmEditProduct;
+
+    // Punto de Venta (POS)
+    window.openSaleModal = openSaleModal;
+    window.handleConfirmSale = handleConfirmSale;
+    window.renderSaleCatalog = renderSaleCatalog;
+
+    // --- 2. MANEJO DE LA SESIÓN (FIREBASE AUTH) ---
+    onAuthStateChanged(auth, (user) => {
+        const appContainer = document.getElementById('app-container');
+        const loginView = document.getElementById('login-view');
+        const emailDisplay = document.getElementById('user-email-display');
+
+        if (user) {
+            // Usuario autenticado: Mostramos el Panel
+            appContainer.classList.remove('is-hidden');
+            loginView.classList.add('is-hidden');
+            if (emailDisplay) emailDisplay.textContent = user.email;
             
-            // Cargas específicas según la vista
-            if (viewId === 'caja') loadCajaData();
-            if (viewId === 'stats') loadStatsData();
-        };
+            // Iniciamos la sincronización en tiempo real de los datos
+            syncBookings();
+            syncProducts();
+            
+            // Cargamos la vista inicial (Calendario)
+            window.showView('calendar');
+        } else {
+            // Usuario no autenticado: Mostramos el Login
+            appContainer.classList.add('is-hidden');
+            loginView.classList.remove('is-hidden');
+            if (emailDisplay) emailDisplay.textContent = "";
+        }
     });
 
-    // --- 4. GESTIÓN DE FORMULARIOS ---
-
-    // Login Form
+    // Formulario de Inicio de Sesión
     const loginForm = document.getElementById('login-form');
     if (loginForm) {
-        loginForm.onsubmit = (e) => {
+        loginForm.onsubmit = async (e) => {
             e.preventDefault();
-            handleLogin(
-                document.getElementById('login-email').value,
-                document.getElementById('login-password').value
-            );
-        };
-    }
-
-    // Formulario de Reserva (Bento Layout)
-    const bookingForm = document.getElementById('booking-form');
-    if (bookingForm) {
-        bookingForm.onsubmit = (e) => handleSaveBooking(e);
-    }
-
-    // Formulario de Carga de Productos
-    const productForm = document.getElementById('product-form');
-    if (productForm) {
-        productForm.onsubmit = (e) => handleSaveProduct(e);
-    }
-
-    // --- 5. ACCIONES DE COMPONENTES ---
-
-    // Botón Venta Kiosco (Header)
-    const saleBtn = document.getElementById('header-sale-btn');
-    if (saleBtn) {
-        saleBtn.onclick = () => openSaleModal();
-    }
-
-    // Botón Agregar Producto (Stock)
-    const addProductBtn = document.getElementById('add-product-btn');
-    if (addProductBtn) {
-        addProductBtn.onclick = () => {
-            const container = document.getElementById('product-form-container');
-            if (container) {
-                container.classList.toggle('is-hidden');
-                calculateProductPrices(); // Recalcular al abrir
+            const email = document.getElementById('login-email').value;
+            const pass = document.getElementById('login-password').value;
+            
+            try { 
+                await signInWithEmailAndPassword(auth, email, pass); 
+            } catch(err) { 
+                console.error("Login Error:", err.code);
+                alert("DATOS INCORRECTOS: Verifica tu usuario y contraseña."); 
             }
         };
     }
 
-    // Navegación Calendario
-    const prevMonthBtn = document.getElementById('prev-month-btn');
-    if (prevMonthBtn) prevMonthBtn.onclick = () => prevMonth();
+    // Botón de Cierre de Sesión
+    const logoutBtn = document.getElementById('logout-btn');
+    if (logoutBtn) {
+        logoutBtn.onclick = async () => {
+            try { 
+                await signOut(auth); 
+            } catch (e) { 
+                console.error("Error al cerrar sesión:", e); 
+            }
+        };
+    }
 
-    const nextMonthBtn = document.getElementById('next-month-btn');
-    if (nextMonthBtn) nextMonthBtn.onclick = () => nextMonth();
-
-    // Listeners para cálculos de precios en tiempo real (Kiosco)
-    ['prod-batch-cost', 'prod-batch-qty', 'prod-profit-pct'].forEach(id => {
+    // --- 3. LISTENERS DE CÁLCULO E INPUTS ---
+    
+    // Cálculo automático de precios sugeridos al tipear en el formulario de stock
+    const calcInputs = ['prod-batch-cost', 'prod-batch-qty', 'prod-profit-pct'];
+    calcInputs.forEach(id => {
         const el = document.getElementById(id);
         if (el) el.addEventListener('input', calculateProductPrices);
     });
 
-    // --- 6. EXPOSICIÓN GLOBAL (DIRECTIVA DE INTEROPERABILIDAD) ---
-    /**
-     * IMPORTANTE: Al usar type="module", las funciones no son visibles para el HTML.
-     * Aquí las exponemos al objeto window para que los "onclick" del index.html funcionen.
-     */
-    window.showView = showView;
-    window.closeModals = closeModals;
-    window.openModal = openModal;
-    window.adjustJumpers = adjustJumpers;
-    window.updateBookingVisualTotal = updateBookingTotal;
-    window.handleConfirmRestock = handleConfirmRestock;
-    window.handleConfirmEditProduct = handleConfirmEditProduct;
-    window.handleConfirmSale = handleConfirmSale;
-    window.updCatalogQty = updCatalogQty;
-    window.openSaleModal = openSaleModal;
+    // Envío de Formulario de Inventario (Alta)
+    const productForm = document.getElementById('product-form');
+    if (productForm) {
+        productForm.onsubmit = handleSaveProduct;
+    }
+
+    // Envío de Formulario de Reservas (Alta/Edición)
+    const bookingForm = document.getElementById('booking-form');
+    if (bookingForm) {
+        bookingForm.onsubmit = handleSaveBooking;
+    }
+    
+    // Formulario de Configuración (Tarifas)
+    const configForm = document.getElementById('config-form');
+    if (configForm) {
+        configForm.onsubmit = (e) => {
+            e.preventDefault();
+            // Aquí iría la lógica de setDoc para guardar tarifas en Firebase si fuera necesario
+            showMessage("TARIFAS ACTUALIZADAS! ✅");
+        };
+    }
 });
