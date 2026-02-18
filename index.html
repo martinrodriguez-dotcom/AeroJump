@@ -13,7 +13,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;900&family=JetBrains+Mono:wght@500;800&display=swap" rel="stylesheet">
     
-    <!-- Tailwind CSS (Utilidades de estructura y espaciado) -->
+    <!-- Tailwind CSS (Utilidades de estructura) -->
     <script src="https://cdn.tailwindcss.com"></script>
     
     <!-- ARCHIVO MAESTRO DE ESTILO -->
@@ -45,8 +45,8 @@
         
         <!-- HEADER SUPERIOR FIJO -->
         <header class="flex-shrink-0 bg-white z-[50] border-b-2 border-slate-100">
-            <div class="flex items-center justify-between px-6 py-4">
-                <div class="flex items-center gap-4">
+            <div class="flex items-center justify-between px-4 py-3 md:px-6 md:py-4">
+                <div class="flex items-center gap-3 md:gap-4">
                     <!-- Botón para abrir el menú lateral -->
                     <button id="menu-btn" onclick="window.toggleMenu(true)" class="p-2 bg-black text-white rounded-xl active:scale-90 transition-transform">
                         <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="4">
@@ -54,19 +54,19 @@
                         </svg>
                     </button>
                     <div class="leading-none text-left">
-                        <h1 class="text-xl font-black uppercase italic">AeroJump</h1>
-                        <span class="text-[8px] font-black text-[#7c3aed] uppercase font-mono">Gualeguaychú</span>
+                        <h1 class="text-lg md:text-xl font-black uppercase italic text-black">AeroJump</h1>
+                        <span class="text-[7px] md:text-[8px] font-black text-[#7c3aed] uppercase font-mono">Gualeguaychú</span>
                     </div>
                 </div>
                 <!-- Botón de Acceso Rápido al Kiosco -->
-                <button id="header-sale-btn" onclick="window.openSaleModal()" class="bg-orange-primary btn-premium py-2 px-4 text-[10px]">VENTA KIOSCO</button>
+                <button id="header-sale-btn" onclick="window.openSaleModal()" class="bg-orange-primary btn-premium py-2 px-3 text-[9px] md:text-[10px]">VENTA KIOSCO</button>
             </div>
         </header>
 
         <!-- NAVEGACIÓN LATERAL (SIDEBAR) -->
         <nav id="main-menu" class="fixed top-0 left-0 h-screen w-72 bg-white z-[1100] flex flex-col shadow-2xl border-r border-slate-100 transition-transform -translate-x-full">
             <div class="p-8 border-b-2 border-slate-50 text-center">
-                <p id="user-email-display" class="user-display truncate mb-4"></p>
+                <p id="user-email-display" class="user-display truncate mb-4 font-black text-slate-400 italic"></p>
                 <button id="logout-btn" class="btn-logout-small">CERRAR SESIÓN 🔒</button>
             </div>
             <div class="p-4 space-y-3 overflow-y-auto custom-scrollbar">
@@ -81,16 +81,16 @@
         <!-- Overlay del menú -->
         <div id="menu-overlay" onclick="window.toggleMenu(false)" class="fixed inset-0 bg-black/80 z-[1000] hidden"></div>
 
-        <!-- ÁREA DE CONTENIDO (MAIN VIEWPORT CON SCROLL) -->
-        <main class="flex-grow overflow-y-auto custom-scrollbar pt-6 pb-20 px-4 md:px-8">
-            <div class="max-w-7xl mx-auto w-full">
+        <!-- ÁREA DE CONTENIDO (MAIN VIEWPORT CON SCROLL REAL) -->
+        <main class="flex-grow overflow-y-auto custom-scrollbar bg-[#f8fafc]">
+            <div class="max-w-7xl mx-auto w-full p-4 md:p-8">
                 
                 <!-- VISTA: AGENDA / CALENDARIO -->
                 <div id="calendar-view" class="view-container">
                     <div class="bento-card mb-6 flex justify-between items-center bg-white">
-                        <button onclick="window.prevMonth()" class="p-3 bg-slate-50 rounded-xl font-black hover:bg-slate-200 transition-colors">◀</button>
-                        <h2 id="current-month-year" class="text-xl md:text-3xl font-black uppercase italic tracking-tighter text-slate-900">FEBRERO 2026</h2>
-                        <button onclick="window.nextMonth()" class="p-3 bg-slate-50 rounded-xl font-black hover:bg-slate-200 transition-colors">▶</button>
+                        <button onclick="window.prevMonth()" class="p-3 bg-slate-50 rounded-xl font-black hover:bg-slate-200">◀</button>
+                        <h2 id="current-month-year" class="text-xl md:text-3xl font-black uppercase italic tracking-tighter text-slate-900"></h2>
+                        <button onclick="window.nextMonth()" class="p-3 bg-slate-50 rounded-xl font-black hover:bg-slate-200">▶</button>
                     </div>
                     <div class="grid grid-cols-7 gap-1 md:gap-3 mb-2">
                         <div class="calendar-header-day">Lun</div><div class="calendar-header-day">Mar</div><div class="calendar-header-day">Mie</div><div class="calendar-header-day">Jue</div><div class="calendar-header-day">Vie</div><div class="calendar-header-day">Sab</div><div class="calendar-header-day">Dom</div>
@@ -107,62 +107,54 @@
                         <button onclick="window.toggleProductForm()" class="bg-violet-primary btn-premium text-xs">+ NUEVO PRODUCTO</button>
                     </div>
 
-                    <!-- Formulario de Alta con Cálculo Automático -->
                     <div id="product-form-container" class="is-hidden bento-card mb-10 border-2 border-violet-100 bg-violet-50/10">
                         <form id="product-form" class="space-y-6">
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div class="bento-inner-card">
                                     <label class="label-tiny">Nombre del Artículo</label>
-                                    <input type="text" id="prod-name" placeholder="Ej: COCA COLA 500ML" required class="input-clean italic uppercase">
+                                    <input type="text" id="prod-name" placeholder="EJ: COCA COLA 500ML" required class="input-clean italic uppercase">
                                 </div>
                                 <div class="bento-inner-card">
                                     <label class="label-tiny">Stock Inicial</label>
                                     <input type="number" id="prod-stock" value="0" required class="input-count text-left">
                                 </div>
                             </div>
-                            
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                                 <div class="bento-inner-card">
                                     <label class="label-tiny">Costo Bulto / Cantidad</label>
-                                    <div class="cost-split-input mt-2 flex items-center gap-2">
+                                    <div class="cost-split-input mt-1 flex items-center gap-2">
                                         <div class="w-1/2 border-r border-slate-200 pr-2">
-                                            <span class="text-[10px] block opacity-50 font-black mb-1">$ COSTO</span>
+                                            <span class="text-[9px] block opacity-50 mb-1">$ COSTO</span>
                                             <input type="number" id="prod-batch-cost" placeholder="0" required class="input-money text-sm">
                                         </div>
                                         <div class="w-1/2 pl-2">
-                                            <span class="text-[10px] block opacity-50 font-black mb-1">UNIDADES</span>
+                                            <span class="text-[9px] block opacity-50 mb-1">UNIDADES</span>
                                             <input type="number" id="prod-batch-qty" placeholder="0" required class="input-money text-sm">
                                         </div>
                                     </div>
                                 </div>
-
                                 <div class="bento-inner-card">
                                     <label class="label-tiny">% Ganancia Aplicada</label>
-                                    <input type="number" id="prod-profit-pct" value="40" min="1" class="input-count text-violet-600 text-left mt-2">
+                                    <input type="number" id="prod-profit-pct" value="40" min="1" class="input-count text-violet-600 text-left">
                                 </div>
-
                                 <div class="bento-inner-card bg-black text-white">
                                     <label class="label-tiny text-slate-400">Precio Real de Venta</label>
-                                    <div class="flex items-center gap-1 mt-1">
-                                        <span class="text-orange-400 font-black text-2xl">$</span>
-                                        <input type="number" id="prod-real-price" required placeholder="0" class="input-money text-white text-left text-2xl">
+                                    <div class="flex items-center gap-1">
+                                        <span class="text-orange-400 font-black text-xl">$</span>
+                                        <input type="number" id="prod-real-price" required placeholder="0" class="input-money text-white text-left text-xl">
                                     </div>
-                                    <p class="text-[8px] font-black text-slate-500 uppercase mt-2 italic">Sugerido: <span id="prod-suggested-price" class="text-orange-400 font-mono font-bold">$0</span></p>
+                                    <p class="text-[7px] font-black text-slate-500 uppercase mt-2 italic">Sugerido: <span id="prod-suggested-price" class="text-orange-400 font-mono font-bold">$0</span></p>
                                 </div>
                             </div>
-
-                            <input type="hidden" id="prod-unit-cost">
-                            
-                            <div class="flex justify-end gap-4 pt-4 border-t border-slate-100">
+                            <div class="flex justify-end gap-3 pt-4 border-t border-slate-100">
                                 <button type="button" onclick="window.toggleProductForm(false)" class="btn-premium bg-slate-100 text-slate-500 text-[10px]">DESCARTAR</button>
-                                <button type="submit" class="bg-violet-primary btn-premium">CARGAR FICHA</button>
+                                <button type="submit" class="bg-violet-primary btn-premium">GUARDAR FICHA</button>
                             </div>
                         </form>
                     </div>
 
-                    <!-- Listado de Productos -->
                     <div id="product-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                        <!-- Tarjetas de producto inyectadas por kiosco-controller.js -->
+                        <!-- Productos inyectados por JS -->
                     </div>
                 </div>
 
@@ -172,35 +164,35 @@
                     <div class="text-center mb-10 bento-card bg-white">
                         <p class="label-tiny tracking-widest italic uppercase">Balance Neto Real Acumulado</p>
                         <div id="caja-total-combined" class="total-big-display py-4">$0</div>
-                        <p class="text-[10px] font-black text-slate-400 uppercase">Sincronizado con Cloud Firestore</p>
+                        <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Sincronizado Cloud</p>
                     </div>
                     <div id="caja-daily-list" class="space-y-4 max-w-4xl mx-auto">
                         <!-- Lista de balances diarios -->
                     </div>
                 </div>
 
-                <!-- VISTA: RANKINGS DE FIDELIDAD -->
+                <!-- VISTA: RANKINGS -->
                 <div id="stats-view" class="view-container is-hidden">
-                    <h2 class="section-title mb-8 text-center uppercase">Ranking de Fidelidad</h2>
+                    <h2 class="section-title mb-8 text-center uppercase italic">Ranking de Fidelidad</h2>
                     <div id="stats-list" class="space-y-4 max-w-3xl mx-auto">
-                        <!-- Lista de clientes inyectada por JS -->
+                        <!-- Rankings inyectados -->
                     </div>
                 </div>
 
-                <!-- VISTA: CONFIGURACIÓN DE TARIFAS -->
+                <!-- VISTA: CONFIGURACIÓN -->
                 <div id="config-view" class="view-container is-hidden max-w-xl mx-auto">
-                    <h2 class="section-title mb-8 text-center uppercase">Ajustes Base del Sistema</h2>
+                    <h2 class="section-title mb-8 text-center uppercase italic">Tarifas del Sistema</h2>
                     <div class="bento-card bg-white">
                         <form id="config-form" class="space-y-8">
                             <div>
                                 <label class="label-tiny mb-2">Precio Hora de Salto ($)</label>
-                                <input type="number" id="config-court1-price" value="5000" class="input-clean border-b-4 border-slate-100 text-center font-mono py-4" style="font-size: 3rem !important;">
+                                <input type="number" id="config-court1-price" value="5000" class="input-clean border-b-4 border-slate-100 text-center font-mono py-4 text-3xl">
                             </div>
                             <div>
                                 <label class="label-tiny mb-2">Precio Evento Exclusivo ($)</label>
-                                <input type="number" id="config-event-price" value="15000" class="input-clean border-b-4 border-slate-100 text-center font-mono py-4" style="font-size: 3rem !important;">
+                                <input type="number" id="config-event-price" value="15000" class="input-clean border-b-4 border-slate-100 text-center font-mono py-4 text-3xl">
                             </div>
-                            <button type="submit" class="w-full bg-black text-white btn-premium py-6 italic text-xl uppercase tracking-widest">Actualizar Valores</button>
+                            <button type="submit" class="w-full bg-black text-white btn-premium py-6 font-black uppercase italic tracking-widest">Actualizar Valores</button>
                         </form>
                     </div>
                 </div>
@@ -209,32 +201,28 @@
         </main>
     </div>
 
-    <!-- 3. MODALES DE GESTIÓN (ESTRUCTURA DE CABECERA/PIE FIJOS) -->
-
-    <!-- Modal: Opciones del Día (Agenda Diaria) -->
+    <!-- 3. MODALES DE GESTIÓN (ESTRUCTURA HEADER/PIE FIJOS) -->
+    
+    <!-- Modal: Opciones del Día -->
     <div id="day-options-modal" class="modal">
         <div class="modal-content max-w-md">
             <div class="modal-header">
                 <div class="text-left leading-none">
                     <h3 class="font-black italic uppercase text-lg">Agenda del Día</h3>
-                    <p id="options-modal-date" class="label-tiny text-violet-600 font-bold mt-1 uppercase">FECHA</p>
+                    <p id="options-modal-date" class="label-tiny text-violet-600 font-bold uppercase mt-1"></p>
                 </div>
-                <button onclick="window.closeModals()" class="btn-close-modal">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4"><path d="M18 6L6 18M6 6l12 12"/></svg>
-                </button>
+                <button onclick="window.closeModals()" class="btn-close-modal">X</button>
             </div>
             <div class="modal-body custom-scrollbar">
-                <div id="day-bookings-list" class="space-y-3">
-                    <!-- Lista de turnos: Ver Detalle, Editar, Eliminar -->
-                </div>
+                <div id="day-bookings-list" class="space-y-3"></div>
             </div>
             <div class="modal-footer">
-                <button id="add-new-from-options" class="w-full bg-violet-primary btn-premium py-4 font-black uppercase">Nueva Reserva +</button>
+                <button id="add-new-from-options" class="w-full bg-violet-primary btn-premium py-4 font-black uppercase italic">Nueva Reserva +</button>
             </div>
         </div>
     </div>
 
-    <!-- Modal: Formulario de Reserva (Compacto de 700px) -->
+    <!-- Modal: Formulario Reserva -->
     <div id="booking-modal" class="modal">
         <div class="modal-content modal-booking-compact">
             <div class="modal-header">
@@ -250,24 +238,22 @@
                 <input type="hidden" id="booking-id">
                 <input type="hidden" id="booking-date">
                 <input type="hidden" id="booking-type">
-
                 <div class="bento-inner-card">
                     <label class="label-tiny">Responsable del Grupo / Cumpleaños</label>
                     <input type="text" id="teamName" required placeholder="NOMBRE..." class="input-clean italic uppercase font-black">
                 </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
                     <div class="bento-inner-card text-center">
                         <label class="label-tiny">Personas</label>
                         <div class="flex items-center justify-center gap-2 mt-2">
-                            <button type="button" onclick="window.adjustJumpers(-1)" class="adjust-btn-small hover:bg-black hover:text-white transition-colors">-</button>
+                            <button type="button" onclick="window.adjustJumpers(-1)" class="adjust-btn-small">-</button>
                             <input type="number" id="peopleCount" value="1" class="input-count w-14">
-                            <button type="button" onclick="window.adjustJumpers(1)" class="adjust-btn-small hover:bg-black hover:text-white transition-colors">+</button>
+                            <button type="button" onclick="window.adjustJumpers(1)" class="adjust-btn-small">+</button>
                         </div>
                     </div>
                     <div class="bento-inner-card text-center">
                         <label class="label-tiny">Costo x Hora ($)</label>
-                        <input type="number" id="costPerHour" class="input-money mt-2" oninput="window.updateBookingVisualTotal()">
+                        <input type="number" id="costPerHour" class="input-money mt-2">
                     </div>
                     <div class="bento-inner-card text-center">
                         <label class="label-tiny">Medio de Pago</label>
@@ -277,12 +263,9 @@
                         </select>
                     </div>
                 </div>
-
                 <div class="bento-inner-card">
-                    <label class="label-tiny mb-3">Selección de Horarios (Cupo Máx 30 pers.)</label>
-                    <div id="court-hours-list" class="grid grid-cols-4 sm:grid-cols-5 gap-2">
-                        <!-- Slots inyectados por booking-controller.js -->
-                    </div>
+                    <label class="label-tiny mb-3 italic">Horarios Seleccionados (Cupo Máx 30 pers.)</label>
+                    <div id="court-hours-list" class="grid grid-cols-4 sm:grid-cols-5 gap-2"></div>
                 </div>
             </form>
             <div class="modal-footer">
@@ -290,12 +273,12 @@
                     <span class="label-tiny">Total a Cobrar:</span>
                     <p id="booking-total" class="booking-total-display">$0</p>
                 </div>
-                <button type="submit" form="booking-form" class="bg-violet-primary btn-premium font-black">CONFIRMAR TURNO</button>
+                <button type="submit" form="booking-form" class="bg-violet-primary btn-premium font-black uppercase italic">Guardar Reserva</button>
             </div>
         </div>
     </div>
 
-    <!-- Modal: Punto de Venta (POS) del Kiosco -->
+    <!-- Modal: Punto de Venta (POS) -->
     <div id="sale-modal" class="modal">
         <div class="modal-content max-w-5xl h-[94vh]">
             <div class="modal-header">
@@ -303,39 +286,29 @@
                 <button onclick="window.closeModals()" class="btn-close-modal">X</button>
             </div>
             <div class="pos-layout-container flex-grow overflow-hidden flex flex-col md:flex-row">
-                <!-- Izquierda: Catálogo -->
                 <div class="pos-catalog-side flex-grow flex flex-col border-r border-slate-100 bg-white overflow-hidden">
                     <div class="p-4 border-b border-slate-100">
                         <input type="text" id="sale-catalog-filter" placeholder="🔍 BUSCAR PRODUCTO..." class="input-clean !text-base" oninput="window.renderSaleCatalog(this.value)">
                     </div>
-                    <div id="sale-catalog-list" class="flex-grow overflow-y-auto custom-scrollbar">
-                        <!-- Catálogo inyectado por sales-controller.js -->
-                    </div>
+                    <div id="sale-catalog-list" class="flex-grow overflow-y-auto custom-scrollbar"></div>
                 </div>
-                <!-- Derecha: Ticket (PIE FIJO) -->
                 <div class="pos-ticket-side w-full md:w-[350px] flex flex-col bg-slate-50 overflow-hidden">
-                    <div class="p-4 border-b border-slate-200 bg-white text-center">
-                        <p class="label-tiny font-black uppercase tracking-widest text-slate-400">Resumen de Venta</p>
-                    </div>
+                    <div class="p-4 border-b border-slate-200 bg-white text-center"><p class="label-tiny font-black uppercase text-slate-400">Resumen de Venta</p></div>
                     <div id="sale-cart-list" class="flex-grow overflow-y-auto custom-scrollbar p-4">
                         <div id="empty-cart-msg" class="h-full flex flex-col items-center justify-center opacity-20 font-black text-center">
-                            <span class="text-4xl mb-2">🛒</span>
-                            <p class="text-xs uppercase">Carrito Vacío</p>
+                            <p class="text-xs uppercase italic">Carrito Vacío</p>
                         </div>
                     </div>
                     <div class="pos-checkout-footer flex-shrink-0 bg-white border-t-4 border-slate-100 p-6">
                         <div class="mb-4">
                             <label class="label-tiny mb-2">Seleccionar Pago:</label>
-                            <select id="sale-payment-method" class="select-clean w-full border border-slate-200 font-bold">
-                                <option value="efectivo">Efectivo 💵</option>
-                                <option value="mercadopago">Mercado Pago 📲</option>
-                            </select>
+                            <select id="sale-payment-method" class="select-clean w-full border border-slate-200 font-bold"><option value="efectivo">Efectivo 💵</option><option value="mercadopago">Mercado Pago 📲</option></select>
                         </div>
                         <div class="flex justify-between items-center mb-6">
                             <span class="label-tiny font-black text-slate-400">TOTAL FINAL:</span>
-                            <strong id="sale-total-display" class="text-4xl font-black font-mono italic tracking-tighter text-slate-900">$0</strong>
+                            <strong id="sale-total-display" class="text-4xl font-black font-mono italic text-slate-900">$0</strong>
                         </div>
-                        <button id="confirm-sale-btn" class="w-full bg-orange-primary btn-premium py-5 shadow-lg active:scale-95 transition-all disabled:opacity-50" disabled onclick="window.handleConfirmSale()">COBRAR TICKET</button>
+                        <button id="confirm-sale-btn" class="w-full bg-orange-primary btn-premium py-5 shadow-lg active:scale-95 disabled:opacity-50" disabled onclick="window.handleConfirmSale()">COBRAR TICKET</button>
                     </div>
                 </div>
             </div>
@@ -353,7 +326,7 @@
                 <input type="hidden" id="restock-prod-id">
                 <div class="text-center leading-tight">
                     <p id="restock-name" class="text-2xl font-black italic uppercase text-slate-900">PRODUCTO</p>
-                    <p class="text-[10px] font-bold text-slate-400 mt-2 uppercase tracking-widest">STOCK ACTUAL: <span id="restock-current-stock" class="text-violet-600">0</span> UN.</p>
+                    <p class="text-[10px] font-bold text-slate-400 mt-2 uppercase italic tracking-widest">STOCK ACTUAL: <span id="restock-current-stock" class="text-violet-600">0</span> UN.</p>
                 </div>
                 <div class="grid grid-cols-2 gap-4">
                     <div class="bento-inner-card">
@@ -365,7 +338,7 @@
                         <input type="number" id="restock-batch-cost" required class="input-money">
                     </div>
                 </div>
-                <button type="submit" class="w-full bg-violet-primary btn-premium py-5 font-black uppercase italic">Actualizar Inventario</button>
+                <button type="submit" class="w-full bg-violet-primary btn-premium py-5 font-black uppercase italic">Actualizar Stock</button>
             </form>
         </div>
     </div>
@@ -394,15 +367,15 @@
                     </div>
                 </div>
                 <div class="bento-inner-card">
-                    <label class="label-tiny">Corrección de Stock Manual</label>
+                    <label class="label-tiny">Stock Manual (Corrección)</label>
                     <input type="number" id="edit-prod-stock" required class="input-count text-left">
                 </div>
-                <button type="submit" class="w-full bg-black text-white btn-premium py-5 font-black uppercase italic">Guardar Cambios en Nube</button>
+                <button type="submit" class="w-full bg-black text-white btn-premium py-5 font-black uppercase italic">Guardar Cambios</button>
             </form>
         </div>
     </div>
 
-    <!-- Overlay de Mensajes Dinámicos (Confirmaciones / Errores) -->
+    <!-- Overlay de Mensajes Animado -->
     <div id="message-overlay" class="modal bg-black/95">
         <div class="flex flex-col items-center justify-center text-center p-12">
             <div class="jumping-child text-6xl mb-6">🚀</div>
@@ -410,7 +383,7 @@
         </div>
     </div>
 
-    <!-- ÚNICO PUNTO DE ENTRADA LÓGICO -->
+    <!-- CARGA DE MOTOR LÓGICO -->
     <script type="module" src="main.js"></script>
 </body>
 </html>
