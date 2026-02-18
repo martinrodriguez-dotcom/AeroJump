@@ -1,41 +1,39 @@
 /**
- * AeroJump Gualeguaychú - Booking Controller Module
- * Gestión de agenda, lógica de cupos por hora, medios de pago y diseño Bento.
+ * AeroJump Gualeguaychú - Booking Controller
+ * Gestiona la agenda, lógica de cupos y el flujo de navegación entre turnos.
+ * Incluye el nuevo flujo de "Opciones del Día" para ver/editar/borrar.
  */
 
 import { 
-    onSnapshot, query, where, addDoc, updateDoc, Timestamp 
+    onSnapshot, query, where, addDoc, updateDoc, deleteDoc, Timestamp 
 } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-import { getPublicCollection, getPublicDoc, auth } from "./firebase-config.js";
+import { auth, getPublicCollection, getPublicDoc } from "./firebase-config.js";
 import { openModal, closeModals, showMessage } from "./ui-controller.js";
 
 // --- ESTADO INTERNO ---
 let allMonthBookings = [];
 let currentMonthDate = new Date();
-const MAX_CAPACITY = 30; // Cupo máximo de personas por hora
+const MAX_CAPACITY = 30; // Cupo máximo de saltadores por hora
 const OPERATING_HOURS = [9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23];
 
 /**
- * Sincroniza las reservas del mes visualizado actualmente desde Firestore.
+ * Escucha cambios en las reservas del mes actual en tiempo real.
  */
 export function syncBookings() {
     const y = currentMonthDate.getFullYear();
     const m = String(currentMonthDate.getMonth() + 1).padStart(2, '0');
     const monthYear = `${y}-${m}`;
     
-    // Consulta simple a la colección de reservas filtrando por mes/año
     const q = query(getPublicCollection("bookings"), where("monthYear", "==", monthYear));
     
     onSnapshot(q, (snapshot) => {
         allMonthBookings = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
         renderCalendar();
-    }, (error) => {
-        console.error("AeroJump Agenda Sync Error:", error);
-    });
+    }, (error) => console.error("AeroJump Agenda Sync Error:", error));
 }
 
 /**
- * Renderiza el grid del calendario en el index.html.
+ * Dibuja el calendario mensual y asigna los disparadores de clics.
  */
 export function renderCalendar() {
     const grid = document.getElementById('calendar-grid');
@@ -44,68 +42,110 @@ export function renderCalendar() {
 
     const [y, m] = [currentMonthDate.getFullYear(), currentMonthDate.getMonth()];
     const firstDay = new Date(y, m, 1).getDay();
-    // Ajuste para que la semana empiece en Lunes (0=Dom, 1=Lun...)
-    const offset = firstDay === 0 ? 6 : firstDay - 1;
+    const offset = firstDay === 0 ? 6 : firstDay - 1; // Ajuste para que lunes sea 0
     const lastDate = new Date(y, m + 1, 0).getDate();
 
-    // Actualizar título del mes
-    const monthName = new Intl.DateTimeFormat('es-AR', { month: 'long', year: 'numeric' }).format(currentMonthDate);
-    document.getElementById('current-month-year').textContent = monthName.toUpperCase();
+    document.getElementById('current-month-year').textContent = 
+        new Intl.DateTimeFormat('es-AR', { month: 'long', year: 'numeric' }).format(currentMonthDate).toUpperCase();
 
-    // Celdas vacías para el desfase del inicio de mes
+    // Relleno de días del mes anterior
     for (let i = 0; i < offset; i++) {
         const empty = document.createElement('div');
         empty.className = 'day-cell opacity-20 pointer-events-none';
         grid.appendChild(empty);
     }
 
-    // Celdas de los días del mes
+    // Creación de días del mes actual
     for (let i = 1; i <= lastDate; i++) {
         const dateStr = `${y}-${String(m + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
         const dayBookings = allMonthBookings.filter(b => b.day === dateStr);
         
         const cell = document.createElement('div');
         cell.className = 'day-cell';
-        cell.innerHTML = `<span class="font-black text-slate-300">${i}</span>`;
+        cell.innerHTML = `<span class="font-black text-slate-300 text-lg">${i}</span>`;
         
-        // Si hay reservas, añadimos un indicador visual
         if (dayBookings.length > 0) {
-            const badgeContainer = document.createElement('div');
-            badgeContainer.className = 'flex gap-1 justify-end';
-            // Mostramos la cantidad de turnos como un badge tipo inventario
-            badgeContainer.innerHTML = `<span class="badge-type" style="font-size:10px">${dayBookings.length}</span>`;
-            cell.appendChild(badgeContainer);
+            const badge = document.createElement('div');
+            badge.className = 'flex justify-end';
+            badge.innerHTML = `<span class="badge-type" style="font-size:10px">${dayBookings.length} Turnos</span>`;
+            cell.appendChild(badge);
         }
 
-        cell.onclick = () => openBookingForm(dateStr);
+        // Lógica de navegación solicitada:
+        cell.onclick = () => {
+            if (dayBookings.length > 0) {
+                openDayOptions(dateStr, dayBookings);
+            } else {
+                openBookingForm(dateStr);
+            }
+        };
         grid.appendChild(cell);
     }
 }
 
 /**
- * Prepara y abre el formulario compacto tipo "ficha de stock".
- * @param {string} dateStr - Fecha seleccionada en formato YYYY-MM-DD
+ * Abre el modal intermedio de gestión para ver, editar o borrar turnos.
  */
-function openBookingForm(dateStr) {
-    const form = document.getElementById('booking-form');
-    if (form) form.reset();
+function openDayOptions(dateStr, dayBookings) {
+    const list = document.getElementById('day-bookings-list');
+    document.getElementById('options-modal-date').textContent = dateStr;
+    list.innerHTML = '';
 
+    // Renderizado simple de cada turno del día
+    dayBookings.forEach(b => {
+        const hoursText = b.courtHours.sort((a,b) => a-b).map(h => `${h}:00`).join(', ');
+        
+        const card = document.createElement('div');
+        card.className = 'booking-option-card flex justify-between items-center p-4 bg-white border border-slate-100 rounded-2xl mb-2 hover:border-violet-400 transition-all';
+        card.innerHTML = `
+            <div class="text-left leading-tight">
+                <p class="font-black text-sm uppercase text-slate-900">${b.teamName}</p>
+                <p class="text-[10px] font-bold text-slate-400 italic">${hoursText}</p>
+                <p class="text-[9px] font-black text-violet-600 mt-1">${b.peopleCount} personas</p>
+            </div>
+            <div class="flex gap-2">
+                <button onclick="window.editBooking('${b.id}')" title="Ver/Editar" class="p-2 bg-slate-100 rounded-lg hover:bg-black hover:text-white transition-all">✏️</button>
+                <button onclick="window.deleteBooking('${b.id}')" title="Eliminar" class="p-2 bg-red-50 text-red-500 rounded-lg hover:bg-red-500 hover:text-white transition-all">🗑️</button>
+            </div>
+        `;
+        list.appendChild(card);
+    });
+
+    // Botón para agregar una nueva reserva en este mismo día
+    document.getElementById('add-new-from-options').onclick = () => {
+        closeModals();
+        openBookingForm(dateStr);
+    };
+
+    openModal('day-options-modal');
+}
+
+/**
+ * Prepara y abre el formulario de reserva (Nueva o Edición).
+ */
+export function openBookingForm(dateStr, booking = null) {
+    const form = document.getElementById('booking-form');
+    form.reset();
+
+    // Poblado de datos base
     document.getElementById('booking-date').value = dateStr;
-    document.getElementById('booking-id').value = "";
-    document.getElementById('booking-type').value = "court"; 
-    document.getElementById('peopleCount').value = 1;
+    document.getElementById('booking-id').value = booking ? booking.id : "";
+    document.getElementById('teamName').value = booking ? booking.teamName : "";
+    document.getElementById('peopleCount').value = booking ? booking.peopleCount : 1;
+    document.getElementById('costPerHour').value = booking ? booking.unitPrice : 5000;
+    document.getElementById('booking-payment-method').value = booking ? booking.paymentMethod : "efectivo";
     
-    // El precio se carga de un valor base (puede ser dinámico en el futuro)
-    document.getElementById('costPerHour').value = 5000; 
-    
-    renderTimeSlots();
+    // Si es edición, mostramos el badge correcto
+    const label = document.getElementById('booking-type-label');
+    if (label) label.textContent = booking ? "Editando Turno" : "Nueva Reserva";
+
+    renderTimeSlots(booking ? booking.courtHours : []);
     updateBookingTotal();
     openModal('booking-modal');
 }
 
 /**
- * Inyecta los botones de horario calculando disponibilidad real.
- * @param {Array} selected - Horas previamente seleccionadas (para edición).
+ * Calcula disponibilidad y dibuja los slots de horarios.
  */
 function renderTimeSlots(selected = []) {
     const list = document.getElementById('court-hours-list');
@@ -117,7 +157,7 @@ function renderTimeSlots(selected = []) {
     const jumpers = parseInt(document.getElementById('peopleCount').value) || 1;
 
     OPERATING_HOURS.forEach(h => {
-        // Calculamos cuánta gente ya hay agendada en esta hora específica
+        // Cálculo de ocupación real sumando jumpers de otros turnos en esa hora
         const occupied = allMonthBookings
             .filter(b => b.day === date && b.id !== editingId && b.courtHours.includes(h))
             .reduce((acc, curr) => acc + (parseInt(curr.peopleCount) || 0), 0);
@@ -126,9 +166,8 @@ function renderTimeSlots(selected = []) {
         const canFit = free >= jumpers;
 
         const btn = document.createElement('div');
-        // Clase time-slot definida en el style.css maestro
         btn.className = `time-slot ${!canFit ? 'disabled' : ''} ${selected.includes(h) ? 'selected' : ''}`;
-        btn.innerHTML = `<strong>${h}:00</strong><br><small>${free} Libres</small>`;
+        btn.innerHTML = `<strong>${h}:00</strong><br><small>${free} libres</small>`;
 
         if (canFit) {
             btn.onclick = () => {
@@ -141,40 +180,25 @@ function renderTimeSlots(selected = []) {
 }
 
 /**
- * Recolecta los datos del formulario y los guarda en Firebase.
- * Esta función es llamada por el main.js en el evento submit.
+ * Procesa el guardado (Alta o Modificación) en Firestore.
  */
-export async function handleSaveBooking(event) {
-    event.preventDefault();
-    
-    // Obtener horas seleccionadas del DOM
-    const selectedElements = document.querySelectorAll('.time-slot.selected');
-    const hrs = Array.from(selectedElements).map(el => {
-        // Extraemos la hora del texto (ej: "9:00" -> 9)
-        return parseInt(el.querySelector('strong').innerText);
-    });
+export async function handleSaveBooking(e) {
+    e.preventDefault();
+    const hrs = Array.from(document.querySelectorAll('.time-slot.selected'))
+                     .map(el => parseInt(el.querySelector('strong').innerText));
 
-    if (hrs.length === 0) {
-        showMessage("⚠️ Elegí al menos un horario.");
-        return;
-    }
-
-    const teamName = document.getElementById('teamName').value.trim().toUpperCase();
-    const peopleCount = parseInt(document.getElementById('peopleCount').value);
-    const unitPrice = parseFloat(document.getElementById('costPerHour').value);
-    const paymentMethod = document.getElementById('booking-payment-method').value;
-    const day = document.getElementById('booking-date').value;
+    if (hrs.length === 0) return showMessage("Seleccioná al menos un horario");
 
     const data = {
-        teamName,
-        peopleCount,
-        unitPrice,
-        paymentMethod,
-        day,
-        monthYear: day.substring(0, 7),
+        teamName: document.getElementById('teamName').value.trim().toUpperCase(),
+        peopleCount: parseInt(document.getElementById('peopleCount').value),
+        unitPrice: parseFloat(document.getElementById('costPerHour').value),
+        paymentMethod: document.getElementById('booking-payment-method').value,
+        day: document.getElementById('booking-date').value,
+        monthYear: document.getElementById('booking-date').value.substring(0, 7),
         courtHours: hrs,
         type: 'court',
-        totalPrice: hrs.length * unitPrice * peopleCount,
+        totalPrice: hrs.length * parseFloat(document.getElementById('costPerHour').value) * parseInt(document.getElementById('peopleCount').value),
         timestamp: Timestamp.now(),
         adminEmail: auth.currentUser?.email || "admin@aerojump.com"
     };
@@ -182,69 +206,73 @@ export async function handleSaveBooking(event) {
     try {
         const id = document.getElementById('booking-id').value;
         if (id) {
-            // Actualización de reserva existente
             await updateDoc(getPublicDoc("bookings", id), data);
+            showMessage("¡TURNO EDITADO! ✅");
         } else {
-            // Nueva reserva
             await addDoc(getPublicCollection("bookings"), data);
+            showMessage("¡RESERVA GUARDADA! ✅");
         }
         
         closeModals();
-        showMessage("¡TURNO AGENDADO! ✅");
-    } catch (error) {
-        console.error("Error al guardar reserva AeroJump:", error);
-        alert("Error al procesar: " + error.message);
+    } catch (err) {
+        console.error(err);
+        showMessage("Error al guardar", true);
     }
 }
 
 /**
- * Incrementa o decrementa la cantidad de saltadores.
- * Actualiza la disponibilidad de horarios en tiempo real.
+ * Vinculación Global: Edición (Llamada desde el listado de opciones)
+ */
+window.editBooking = (id) => {
+    const b = allMonthBookings.find(x => x.id === id);
+    if (!b) return;
+    closeModals(); // Cerramos el modal de opciones
+    openBookingForm(b.day, b); // Abrimos el formulario con los datos cargados
+};
+
+/**
+ * Vinculación Global: Eliminación (Llamada desde el listado de opciones)
+ */
+window.deleteBooking = async (id) => {
+    if (confirm("¿Confirmás la eliminación definitiva de esta reserva?")) {
+        try {
+            await deleteDoc(getPublicDoc("bookings", id));
+            closeModals();
+            showMessage("Reserva eliminada.");
+        } catch (e) {
+            console.error(e);
+            showMessage("Error al eliminar", true);
+        }
+    }
+};
+
+/**
+ * Control de cantidad de saltadores (Ajuste rápido +/-)
  */
 export function adjustJumpers(delta) {
     const input = document.getElementById('peopleCount');
-    if (!input) return;
-
     let val = (parseInt(input.value) || 1) + delta;
-    
-    // Límites de seguridad
-    if (val < 1) val = 1;
+    if (val < 1) val = 1; 
     if (val > MAX_CAPACITY) val = MAX_CAPACITY;
-    
     input.value = val;
     
-    // Al cambiar la gente, algunos horarios pueden quedar inhabilitados (si no hay cupo)
-    const currentSelected = Array.from(document.querySelectorAll('.time-slot.selected')).map(el => {
-        return parseInt(el.querySelector('strong').innerText);
-    });
-    
-    renderTimeSlots(currentSelected);
+    // Refrescamos disponibilidad de slots según el nuevo número de gente
+    renderTimeSlots(Array.from(document.querySelectorAll('.time-slot.selected'))
+                         .map(el => parseInt(el.querySelector('strong').innerText)));
     updateBookingTotal();
 }
 
 /**
- * Calcula y muestra el total monetario en el pie del modal.
+ * Cálculo visual del total acumulado.
  */
 export function updateBookingTotal() {
-    const hrsCount = document.querySelectorAll('.time-slot.selected').length;
+    const hrs = document.querySelectorAll('.time-slot.selected').length;
     const price = parseFloat(document.getElementById('costPerHour').value) || 0;
     const people = parseInt(document.getElementById('peopleCount').value) || 1;
-    
-    const total = hrsCount * price * people;
-    const totalDisplay = document.getElementById('booking-total');
-    
-    if (totalDisplay) {
-        totalDisplay.textContent = `$${total.toLocaleString('es-AR')}`;
-    }
+    const total = hrs * price * people;
+    document.getElementById('booking-total').textContent = `$${total.toLocaleString('es-AR')}`;
 }
 
-// --- NAVEGACIÓN MENSUAL ---
-export function prevMonth() {
-    currentMonthDate.setMonth(currentMonthDate.getMonth() - 1);
-    syncBookings();
-}
-
-export function nextMonth() {
-    currentMonthDate.setMonth(currentMonthDate.getMonth() + 1);
-    syncBookings();
-}
+// Navegación de meses
+export function prevMonth() { currentMonthDate.setMonth(currentMonthDate.getMonth() - 1); syncBookings(); }
+export function nextMonth() { currentMonthDate.setMonth(currentMonthDate.getMonth() + 1); syncBookings(); }
