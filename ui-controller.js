@@ -1,121 +1,111 @@
 /**
  * AeroJump Gualeguaychú - UI Controller Module
- * Gestiona la navegación, los estados de los modales y las notificaciones visuales.
+ * Maneja la visibilidad de vistas, modales y el sistema de notificaciones.
+ * Optimizado para la nueva animación de trampolín y respuesta rápida.
  */
 
-// Referencias a elementos estructurales
-const mainMenu = document.getElementById('main-menu');
-const menuOverlay = document.getElementById('menu-overlay');
-const viewContainers = document.querySelectorAll('.view-container');
-const messageOverlay = document.getElementById('message-overlay');
-const messageText = document.getElementById('message-text');
-
 /**
- * Cambia la vista activa del sistema.
- * @param {string} viewId - El ID de la vista (ej: 'calendar', 'productos', 'caja').
+ * Cambia la vista activa del sistema (SPA Logic).
+ * @param {string} viewId - ID de la sección (ej: 'calendar', 'firmas').
  */
 export function showView(viewId) {
-    // Ocultamos todas las vistas primero
-    viewContainers.forEach(container => {
-        container.classList.add('is-hidden');
-    });
-
-    // Mostramos la vista solicitada
-    const targetView = document.getElementById(`${viewId}-view`);
-    if (targetView) {
-        targetView.classList.remove('is-hidden');
-    }
-
-    // Cerramos el menú lateral automáticamente al navegar
-    closeMenu();
-}
-
-/**
- * Control del Menú Lateral (Hamburguesa)
- */
-export function toggleMenu() {
-    if (mainMenu && menuOverlay) {
-        const isOpen = mainMenu.classList.contains('is-open');
-        if (isOpen) {
-            closeMenu();
-        } else {
-            mainMenu.classList.add('is-open');
-            mainMenu.style.transform = "translateX(0)";
-            menuOverlay.classList.remove('hidden');
+    // 1. Ocultar todas las vistas de forma masiva
+    const allViews = document.querySelectorAll('.view-container');
+    allViews.forEach(v => v.classList.add('is-hidden'));
+    
+    // 2. Mostrar la vista solicitada
+    const target = document.getElementById(`${viewId}-view`);
+    if (target) {
+        target.classList.remove('is-hidden');
+        
+        // Resetear el scroll del área principal para que el usuario empiece desde arriba
+        const mainContent = document.getElementById('main-content');
+        if (mainContent) {
+            mainContent.scrollTop = 0;
         }
     }
-}
-
-export function closeMenu() {
-    if (mainMenu && menuOverlay) {
-        mainMenu.classList.remove('is-open');
-        mainMenu.style.transform = "translateX(-100%)";
-        menuOverlay.classList.add('hidden');
-    }
+    
+    // 3. Cerrar el menú lateral automáticamente al navegar (UX Mobile)
+    const menu = document.getElementById('main-menu');
+    const overlay = document.getElementById('menu-overlay');
+    if (menu) menu.classList.add('-translate-x-full');
+    if (overlay) overlay.classList.add('hidden');
+    
+    console.log(`Navegando a: ${viewId}`);
 }
 
 /**
- * Control de Modales (Ventanas Extra)
- * Usa la clase 'is-open' definida en style.css
+ * Abre un modal específico y bloquea el scroll de fondo.
+ * @param {string} id - ID del elemento modal en el HTML.
  */
-export function openModal(modalId) {
-    const modal = document.getElementById(modalId);
+export function openModal(id) {
+    const modal = document.getElementById(id);
     if (modal) {
         modal.classList.add('is-open');
+        // Asegurar que el body no haga scroll mientras el modal está abierto
+        document.body.style.overflow = 'hidden';
     }
 }
 
+/**
+ * Cierra todos los modales abiertos en el sistema.
+ */
 export function closeModals() {
-    // Cerramos todos los modales abiertos excepto el de mensajes críticos
-    const modals = document.querySelectorAll('.modal.is-open');
-    modals.forEach(modal => {
-        if (modal.id !== 'message-overlay') {
-            modal.classList.remove('is-open');
-        }
+    const allModals = document.querySelectorAll('.modal');
+    allModals.forEach(m => {
+        m.classList.remove('is-open');
     });
+    // Mantenemos overflow hidden por la estructura general de la app, 
+    // pero si se deseara scroll se habilitaría aquí.
 }
 
 /**
- * Sistema de Notificaciones de Alto Impacto
- * @param {string} text - Mensaje a mostrar.
- * @param {boolean} isError - Si el estilo debe ser de error (naranja/rojo).
+ * Muestra el overlay de confirmación con la persona saltando.
+ * El tiempo de cierre es veloz para no interrumpir el flujo de trabajo.
+ * @param {string} text - Mensaje de éxito o error.
+ * @param {boolean} isError - Si es true, el texto se pone en rojo.
  */
 export function showMessage(text, isError = false) {
-    if (messageOverlay && messageText) {
-        messageText.textContent = text;
-        
-        // Ajustamos color según tipo de mensaje
-        if (isError) {
-            messageText.classList.add('text-orange-600');
-            messageText.classList.remove('text-slate-950');
-        } else {
-            messageText.classList.remove('text-orange-600');
-            messageText.classList.add('text-slate-950');
-        }
-        
-        messageOverlay.classList.add('is-open');
-    }
-}
+    const overlay = document.getElementById('message-overlay');
+    const textEl = document.getElementById('message-text');
+    
+    if (!overlay || !textEl) return;
 
-export function hideMessage() {
-    if (messageOverlay) {
-        messageOverlay.classList.remove('is-open');
-    }
+    // 1. Configurar el contenido y color
+    textEl.textContent = text;
+    textEl.style.color = isError ? '#ef4444' : '#ffffff';
+
+    // 2. Activar la visibilidad (Trigger de animación CSS)
+    overlay.style.display = 'flex';
+    
+    // Pequeño retardo para que el navegador registre el cambio de display y anime la opacidad
+    setTimeout(() => {
+        overlay.classList.add('is-open');
+    }, 10);
+
+    // 3. AUTO-CIERRE ÁGIL (1.5 segundos)
+    // Este tiempo es suficiente para ver la animación y el texto, pero corto
+    // para que puedas seguir trabajando rápidamente.
+    setTimeout(() => {
+        hideMessage();
+    }, 1500); 
 }
 
 /**
- * Inicialización de eventos básicos de la UI
+ * Oculta el mensaje de notificación de forma suave.
  */
-export function initUI() {
-    // Cerrar modales si se hace clic en el fondo oscuro
-    const allModals = document.querySelectorAll('.modal');
-    allModals.forEach(modal => {
-        modal.addEventListener('click', (e) => {
-            if (e.target === modal && modal.id !== 'message-overlay') {
-                closeModals();
-            }
-        });
-    });
-
-    console.log("UI Controller: Sistema visual inicializado.");
+export function hideMessage() {
+    const overlay = document.getElementById('message-overlay');
+    if (overlay) {
+        overlay.classList.remove('is-open');
+        
+        // Esperamos a que la transición de CSS (300ms) termine para quitar el display
+        setTimeout(() => {
+            overlay.style.display = 'none';
+        }, 300);
+    }
 }
+
+// Vinculación global para que se pueda llamar desde cualquier parte del sistema
+window.hideMessage = hideMessage;
+window.showMessage = showMessage;
