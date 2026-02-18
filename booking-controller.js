@@ -1,34 +1,30 @@
 /**
- * AeroJump Gualeguaychú - Booking & Event Controller
- * Gestiona la agenda, saltos normales, eventos exclusivos y lógica de bloqueo.
+ * AeroJump Gualeguaychú - Booking Controller Module
+ * Gestiona la agenda, lógica de cupos, medios de pago y diseño Bento.
  */
 
 import { 
     onSnapshot, query, where, addDoc, updateDoc, deleteDoc, Timestamp 
 } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-import { auth, getPublicCollection, getPublicDoc } from "./firebase-config.js";
-import { showMessage, hideMessage, openModal, closeModals } from "./ui-controller.js";
+import { getPublicCollection, getPublicDoc, auth } from "./firebase-config.js";
+import { openModal, closeModals, showMessage } from "./ui-controller.js";
 
 // --- ESTADO INTERNO ---
 let allMonthBookings = [];
 let currentMonthDate = new Date();
 const MAX_CAPACITY = 30;
 const OPERATING_HOURS = [9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23];
-const monthNames = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
-
-// --- REFERENCIAS DOM ---
-const calendarGrid = document.getElementById('calendar-grid');
-const currentMonthYearEl = document.getElementById('current-month-year');
-const courtHoursList = document.getElementById('court-hours-list');
-const eventHoursList = document.getElementById('event-hours-list');
 
 /**
- * Inicializa la escucha de datos del mes actual.
+ * Sincroniza las reservas del mes actual desde Firestore.
  */
 export function syncBookings() {
-    const monthYear = `${currentMonthDate.getFullYear()}-${String(currentMonthDate.getMonth() + 1).padStart(2, '0')}`;
+    const y = currentMonthDate.getFullYear();
+    const m = String(currentMonthDate.getMonth() + 1).padStart(2, '0');
+    const monthYear = `${y}-${m}`;
+    
     const q = query(getPublicCollection("bookings"), where("monthYear", "==", monthYear));
-
+    
     onSnapshot(q, (snapshot) => {
         allMonthBookings = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
         renderCalendar();
@@ -38,275 +34,188 @@ export function syncBookings() {
 }
 
 /**
- * Renderiza el calendario con lógica de EXCLUSIVIDAD.
+ * Renderiza el grid del calendario con indicadores visuales.
  */
 export function renderCalendar() {
-    if (!calendarGrid) return;
-    calendarGrid.innerHTML = '';
-    
-    currentMonthYearEl.textContent = `${monthNames[currentMonthDate.getMonth()]} ${currentMonthDate.getFullYear()}`;
-    
-    const year = currentMonthDate.getFullYear();
-    const month = currentMonthDate.getMonth();
-    const firstDay = new Date(year, month, 1).getDay();
-    const lastDate = new Date(year, month + 1, 0).getDate();
+    const grid = document.getElementById('calendar-grid');
+    if (!grid) return;
+    grid.innerHTML = '';
 
-    for (let i = 0; i < firstDay; i++) {
-        const d = document.createElement('div');
-        d.className = 'day-cell opacity-0 pointer-events-none';
-        calendarGrid.appendChild(d);
+    const [y, m] = [currentMonthDate.getFullYear(), currentMonthDate.getMonth()];
+    const firstDay = new Date(y, m, 1).getDay();
+    const offset = firstDay === 0 ? 6 : firstDay - 1;
+    const lastDate = new Date(y, m + 1, 0).getDate();
+
+    const monthName = new Intl.DateTimeFormat('es-ES', { month: 'long', year: 'numeric' }).format(currentMonthDate);
+    document.getElementById('current-month-year').textContent = monthName.toUpperCase();
+
+    // Celdas vacías mes anterior
+    for (let i = 0; i < offset; i++) {
+        const empty = document.createElement('div');
+        empty.className = 'day-cell opacity-10 bg-slate-100 border-dashed';
+        grid.appendChild(empty);
     }
 
+    // Celdas de días activos
     for (let i = 1; i <= lastDate; i++) {
-        const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
+        const dateStr = `${y}-${String(m + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
         const dayBookings = allMonthBookings.filter(b => b.day === dateStr);
         const hasEvent = dayBookings.some(b => b.type === 'event');
         
         const cell = document.createElement('div');
-        cell.className = `day-cell p-4 flex flex-col justify-between ${hasEvent ? 'has-event' : ''}`;
-        
-        cell.innerHTML = `
-            <span class="font-black italic ${hasEvent ? 'text-orange-700' : 'text-slate-900'} text-xl">${i}</span>
-        `;
+        cell.className = `day-cell bg-white border-slate-100 shadow-sm ${hasEvent ? 'border-orange-500' : ''}`;
+        cell.innerHTML = `<span class="font-black ${hasEvent ? 'text-orange-600' : 'text-slate-300'} text-lg">${i}</span>`;
         
         if (dayBookings.length > 0) {
-            const badge = document.createElement('div');
-            badge.className = `booking-count ${hasEvent ? 'event' : ''}`;
-            badge.textContent = hasEvent ? "EVENTO" : dayBookings.length;
-            cell.appendChild(badge);
+            const badgeContainer = document.createElement('div');
+            badgeContainer.className = 'flex flex-wrap gap-1 justify-end';
+            dayBookings.forEach(b => {
+                const badge = document.createElement('span');
+                badge.className = `booking-badge ${b.type === 'event' ? 'event' : ''}`;
+                badge.textContent = b.type === 'event' ? 'E' : 'S';
+                badgeContainer.appendChild(badge);
+            });
+            cell.appendChild(badgeContainer);
         }
 
-        cell.onclick = () => {
-            if (dayBookings.length > 0) {
-                showDayOptions(dateStr, dayBookings);
-            } else {
-                window.showBookingModal(dateStr);
-            }
-        };
-        calendarGrid.appendChild(cell);
+        cell.onclick = () => openBookingForm(dateStr);
+        grid.appendChild(cell);
     }
 }
 
 /**
- * Calcula ocupación por hora.
+ * Abre el formulario unificado de reserva.
  */
-function getOccupancyForDay(dateStr) {
-    const occupancy = {};
-    OPERATING_HOURS.forEach(h => occupancy[h] = 0);
-    allMonthBookings.filter(b => b.day === dateStr && b.type === 'court').forEach(b => {
-        const count = parseInt(b.peopleCount) || 0;
-        b.courtHours.forEach(h => { if (occupancy[h] !== undefined) occupancy[h] += count; });
-    });
-    return occupancy;
-}
-
-/**
- * Renderiza slots de tiempo para saltos.
- */
-function renderTimeSlots(container, selected = []) {
-    container.innerHTML = '';
-    const dateStr = document.getElementById('booking-date').value;
-    const occupancy = getOccupancyForDay(dateStr);
-
-    OPERATING_HOURS.forEach(h => {
-        const used = occupancy[h];
-        const free = MAX_CAPACITY - used;
-        const isFull = free <= 0;
-        
-        const btn = document.createElement('button');
-        btn.type = "button";
-        btn.className = `time-slot ${isFull ? 'disabled' : ''} ${selected.includes(h) ? 'selected' : ''}`;
-        btn.innerHTML = `
-            <span class="font-black text-sm">${h}:00</span>
-            <span class="capacity-info">${free} libres</span>
-        `;
-        if (!isFull) {
-            btn.onclick = () => { btn.classList.toggle('selected'); updateBookingTotal(); };
-        }
-        container.appendChild(btn);
-    });
-}
-
-/**
- * Renderiza slots para EVENTOS.
- */
-function renderEventSlots(container, selected = []) {
-    container.innerHTML = '';
-    OPERATING_HOURS.forEach(h => {
-        const btn = document.createElement('button');
-        btn.type = "button";
-        btn.className = `time-slot ${selected.includes(h) ? 'selected' : ''}`;
-        btn.innerHTML = `<span class="font-black text-sm">${h}:00</span><span class="capacity-info">EXCLUSIVO</span>`;
-        btn.onclick = () => { btn.classList.toggle('selected'); updateEventTotal(); };
-        container.appendChild(btn);
-    });
-}
-
-/**
- * Abre el modal de Saltos.
- */
-window.showBookingModal = function(dateStr, booking = null) {
+function openBookingForm(dateStr) {
+    // Reset del esqueleto
     const form = document.getElementById('booking-form');
-    if(form) form.reset();
+    if (form) form.reset();
+
     document.getElementById('booking-date').value = dateStr;
-    document.getElementById('booking-id').value = booking ? booking.id : '';
-    document.getElementById('teamName').value = booking ? booking.teamName : '';
-    document.getElementById('peopleCount').value = booking ? booking.peopleCount : 1;
-    document.getElementById('costPerHour').value = window.appSettings?.court1Price || 5000;
+    document.getElementById('booking-id').value = "";
+    document.getElementById('booking-type').value = "court"; // Por defecto Salto
+    document.getElementById('booking-total').textContent = "$0";
     
-    renderTimeSlots(courtHoursList, booking ? booking.courtHours : []);
-    updateBookingTotal();
+    // El precio lo tomamos de un valor por defecto o configuración
+    document.getElementById('costPerHour').value = "5000"; 
+    
+    renderTimeSlots();
     openModal('booking-modal');
-};
-
-/**
- * Abre el modal de Eventos.
- */
-window.showEventModal = function(dateStr, eventToEdit = null) {
-    const form = document.getElementById('event-form');
-    if(form) form.reset();
-    document.getElementById('event-date').value = dateStr;
-    document.getElementById('event-booking-id').value = eventToEdit ? eventToEdit.id : '';
-    document.getElementById('eventName').value = eventToEdit ? eventToEdit.teamName : '';
-    
-    renderEventSlots(eventHoursList, eventToEdit ? eventToEdit.courtHours : []);
-    updateEventTotal();
-    openModal('event-modal');
-};
-
-/**
- * Muestra opciones del día.
- */
-function showDayOptions(dateStr, dayBookings) {
-    const list = document.getElementById('daily-bookings-list');
-    list.innerHTML = '';
-    const hasEvent = dayBookings.some(b => b.type === 'event');
-    
-    dayBookings.forEach(b => {
-        const item = document.createElement('div');
-        item.className = `p-4 rounded-2xl border-2 mb-3 flex justify-between items-center ${b.type === 'event' ? 'border-orange-500 bg-orange-50' : 'border-slate-100 bg-slate-50'}`;
-        item.innerHTML = `
-            <div class="text-left">
-                <p class="font-black text-xs uppercase">${b.teamName}</p>
-                <p class="text-[9px] font-bold text-slate-400">${b.type === 'event' ? '★ EVENTO EXCLUSIVO' : b.peopleCount + ' saltadores'}</p>
-            </div>
-            <button class="text-red-500 font-black text-[10px] uppercase p-2">Anular</button>
-        `;
-        item.querySelector('button').onclick = (e) => { e.stopPropagation(); deleteBooking(b.id); };
-        item.onclick = () => b.type === 'event' ? window.showEventModal(dateStr, b) : window.showBookingModal(dateStr, b);
-        list.appendChild(item);
-    });
-
-    const addJumpBtn = document.getElementById('add-new-booking-btn');
-    if (hasEvent) {
-        addJumpBtn.classList.add('is-hidden');
-    } else {
-        addJumpBtn.classList.remove('is-hidden');
-        addJumpBtn.onclick = () => { closeModals(); window.showBookingModal(dateStr); };
-    }
-
-    document.getElementById('add-new-event-btn').onclick = () => { closeModals(); window.showEventModal(dateStr); };
-    openModal('options-modal');
 }
 
 /**
- * Guarda SALTO NORMAL.
+ * Inyecta los slots de tiempo con lógica de capacidad.
  */
-export async function handleSaveBooking(e) {
-    e.preventDefault();
-    const btn = e.target.querySelector('button[type="submit"]');
-    const selected = Array.from(courtHoursList.querySelectorAll('.time-slot.selected')).map(el => parseInt(el.querySelector('span').textContent));
-
-    if (selected.length === 0) return alert("Selecciona horarios.");
+function renderTimeSlots(selected = []) {
+    const list = document.getElementById('court-hours-list');
+    if (!list) return;
+    list.innerHTML = '';
     
-    btn.disabled = true;
+    const date = document.getElementById('booking-date').value;
+    const editingId = document.getElementById('booking-id').value;
+    const currentJumpers = parseInt(document.getElementById('peopleCount').value) || 1;
+
+    OPERATING_HOURS.forEach(h => {
+        // Cálculo de ocupación
+        const occupied = allMonthBookings
+            .filter(b => b.day === date && b.id !== editingId && b.courtHours.includes(h))
+            .reduce((acc, curr) => acc + (parseInt(curr.peopleCount) || 0), 0);
+
+        const free = MAX_CAPACITY - occupied;
+        const canFit = free >= currentJumpers;
+
+        const btn = document.createElement('div');
+        btn.className = `time-slot ${!canFit ? 'disabled' : ''} ${selected.includes(h) ? 'selected' : ''}`;
+        btn.dataset.hour = h;
+        btn.innerHTML = `
+            <p class="font-black text-lg">${h}:00</p>
+            <small class="text-[8px] opacity-60 uppercase">${free} Libres</small>
+        `;
+
+        if (canFit) {
+            btn.onclick = () => {
+                btn.classList.toggle('selected');
+                updateBookingTotal();
+            };
+        }
+        list.appendChild(btn);
+    });
+}
+
+// --- EXPORTS REQUERIDOS POR MAIN.JS ---
+
+export async function handleSaveBooking(event) {
+    event.preventDefault();
+    const hrs = Array.from(document.querySelectorAll('.time-slot.selected')).map(el => parseInt(el.dataset.hour));
+    
+    if (hrs.length === 0) {
+        showMessage("Elegí al menos una hora.");
+        return;
+    }
+
+    const totalStr = document.getElementById('booking-total').textContent.replace('$', '').replace(/\./g, '').replace(/,/g, '');
+    
     const data = {
-        type: 'court',
-        teamName: document.getElementById('teamName').value.trim(),
+        teamName: document.getElementById('teamName').value.trim().toUpperCase(),
+        peopleCount: parseInt(document.getElementById('peopleCount').value),
+        unitPrice: parseFloat(document.getElementById('costPerHour').value) || 0,
+        paymentMethod: document.getElementById('booking-payment-method').value,
         day: document.getElementById('booking-date').value,
         monthYear: document.getElementById('booking-date').value.substring(0, 7),
-        peopleCount: parseInt(document.getElementById('peopleCount').value),
-        costPerHour: parseFloat(document.getElementById('costPerHour').value),
-        courtHours: selected,
-        totalPrice: parseFloat(document.getElementById('booking-total').textContent.replace('$','').replace(/\./g,'')),
+        courtHours: hrs,
+        type: document.getElementById('booking-type').value,
+        totalPrice: parseFloat(totalStr),
         timestamp: Timestamp.now(),
-        adminEmail: auth.currentUser.email
+        adminEmail: auth.currentUser?.email || "admin@aerojump.com"
     };
 
-    try {
-        const id = document.getElementById('booking-id').value;
-        if (id) await updateDoc(getPublicDoc("bookings", id), data);
-        else await addDoc(getPublicCollection("bookings"), data);
-        closeModals();
-        showMessage("Salto reservado!");
-        setTimeout(hideMessage, 1500);
-    } catch (err) { alert(err.message); } finally { btn.disabled = false; }
-}
-
-/**
- * Guarda EVENTO EXCLUSIVO.
- */
-export async function handleSaveEvent(e) {
-    e.preventDefault();
-    const btn = e.target.querySelector('button[type="submit"]');
-    const selected = Array.from(eventHoursList.querySelectorAll('.time-slot.selected')).map(el => parseInt(el.querySelector('span').textContent));
-
-    if (selected.length === 0) return alert("Selecciona horarios.");
-
-    btn.disabled = true;
-    const data = {
-        type: 'event',
-        teamName: document.getElementById('eventName').value.trim(),
-        day: document.getElementById('event-date').value,
-        monthYear: document.getElementById('event-date').value.substring(0, 7),
-        courtHours: selected,
-        totalPrice: parseFloat(document.getElementById('event-total').textContent.replace('$','').replace(/\./g,'')),
-        contactPerson: document.getElementById('contactPerson').value,
-        contactPhone: document.getElementById('contactPhone').value,
-        timestamp: Timestamp.now(),
-        adminEmail: auth.currentUser.email
-    };
+    const id = document.getElementById('booking-id').value;
 
     try {
-        const id = document.getElementById('event-booking-id').value;
-        if (id) await updateDoc(getPublicDoc("bookings", id), data);
-        else await addDoc(getPublicCollection("bookings"), data);
+        if (id) {
+            await updateDoc(getPublicDoc("bookings", id), data);
+        } else {
+            await addDoc(getPublicCollection("bookings"), data);
+        }
         closeModals();
-        showMessage("¡Evento Creado!");
-        setTimeout(hideMessage, 1500);
-    } catch (err) { alert(err.message); } finally { btn.disabled = false; }
-}
-
-async function deleteBooking(id) {
-    if (confirm("¿Anular este turno/evento?")) {
-        await deleteDoc(getPublicDoc("bookings", id));
-        closeModals();
+        showMessage("RESERVA GUARDADA! ✅");
+    } catch (e) {
+        console.error("AeroJump Save Error:", e);
     }
 }
 
-/**
- * ACTUALIZA EL TOTAL VISUAL (EXPORTADA PARA MAIN.JS)
- */
-export function updateBookingTotal() {
-    const hours = courtHoursList.querySelectorAll('.time-slot.selected').length;
-    const price = parseFloat(document.getElementById('costPerHour').value) || 0;
-    const jumpers = parseInt(document.getElementById('peopleCount').value) || 1;
-    document.getElementById('booking-total').textContent = `$${(hours * price * jumpers).toLocaleString('es-AR')}`;
-}
-
-function updateEventTotal() {
-    const hours = eventHoursList.querySelectorAll('.time-slot.selected').length;
-    const base = window.appSettings?.eventPrice || 15000;
-    document.getElementById('event-total').textContent = `$${(hours * base).toLocaleString('es-AR')}`;
-}
-
-export function prevMonth() { currentMonthDate.setMonth(currentMonthDate.getMonth() - 1); syncBookings(); }
-export function nextMonth() { currentMonthDate.setMonth(currentMonthDate.getMonth() + 1); syncBookings(); }
-
-window.adjustJumpers = (val) => {
+export function adjustJumpers(delta) {
     const input = document.getElementById('peopleCount');
-    let n = parseInt(input.value) + val;
-    if (n < 1) n = 1; if (n > 30) n = 30;
-    input.value = n;
+    if (!input) return;
+    let val = (parseInt(input.value) || 0) + delta;
+    if (val < 1) val = 1;
+    if (val > MAX_CAPACITY) val = MAX_CAPACITY;
+    input.value = val;
+    
+    // Refrescamos disponibilidad para el nuevo número de personas
+    const currentSelected = Array.from(document.querySelectorAll('.time-slot.selected')).map(el => parseInt(el.dataset.hour));
+    renderTimeSlots(currentSelected);
     updateBookingTotal();
-};
+}
+
+export function updateBookingTotal() {
+    const hrs = document.querySelectorAll('.time-slot.selected').length;
+    const price = parseFloat(document.getElementById('costPerHour').value) || 0;
+    const people = parseInt(document.getElementById('peopleCount').value) || 1;
+    
+    const total = hrs * price * people;
+    const totalDisplay = document.getElementById('booking-total');
+    if (totalDisplay) {
+        totalDisplay.textContent = `$${total.toLocaleString('es-AR')}`;
+    }
+}
+
+export function prevMonth() {
+    currentMonthDate.setMonth(currentMonthDate.getMonth() - 1);
+    syncBookings();
+}
+
+export function nextMonth() {
+    currentMonthDate.setMonth(currentMonthDate.getMonth() + 1);
+    syncBookings();
+}
