@@ -1,23 +1,25 @@
 /* ============================================= */
-/* 1. VARIABLES - IDENTIDAD Y TOKENS            */
+/* 1. VARIABLES E IDENTIDAD VISUAL             */
 /* ============================================= */
 :root {
+    /* Superficies y Fondos */
     --bg-main: #f1f5f9;
     --bg-card: #ffffff;
     --border-color: #e2e8f0;
     
-    /* Colores AeroJump */
+    /* Paleta AeroJump */
     --violet: #7c3aed;
     --violet-dark: #6d28d9;
     --violet-soft: #f5f3ff;
     --violet-glow: rgba(124, 58, 237, 0.2);
     
     --orange: #f97316;
+    --orange-dark: #ea580c;
     --orange-soft: #fff7ed;
     --orange-glow: rgba(249, 115, 22, 0.2);
     
     --black: #0f172a;
-    --text-muted: #94a3b8;
+    --text-muted: #64748b;
     --red: #ef4444;
     --green: #10b981;
     
@@ -25,7 +27,7 @@
     --font-main: 'Outfit', sans-serif;
     --font-mono: 'JetBrains Mono', monospace;
     
-    /* Tokens Bento */
+    /* Tokens de Diseño */
     --radius-xl: 2rem;      
     --radius-lg: 1.25rem;
     --radius-md: 0.75rem;
@@ -33,7 +35,7 @@
 }
 
 /* ============================================= */
-/* 2. RESET Y ESTRUCTURA DE PANTALLA            */
+/* 2. ESTRUCTURA MAESTRA Y RESET                */
 /* ============================================= */
 * { 
     margin: 0; 
@@ -50,14 +52,14 @@ body {
     font-weight: 700;
     height: 100vh;
     width: 100vw;
-    overflow: hidden; /* El scroll es interno por módulo */
+    overflow: hidden; /* El scroll lo maneja el elemento <main> */
 }
 
 .font-mono { font-family: var(--font-mono); font-weight: 500; }
 .is-hidden { display: none !important; }
 
-/* Scrollbar Estilo Moderno */
-.custom-scrollbar::-webkit-scrollbar { width: 6px; }
+/* Scrollbar Personalizada Premium */
+.custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
 .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
 .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: var(--violet); }
 
@@ -103,23 +105,22 @@ body {
 /* 5. NAVEGACIÓN Y MENÚ LATERAL                 */
 /* ============================================= */
 #main-menu {
-    transform: translateX(-100%);
     transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 20px 0 50px rgba(0,0,0,0.1);
 }
-#main-menu.is-open { transform: translateX(0) !important; }
 
 .user-display { font-size: 0.7rem; font-weight: 900; text-decoration: underline; margin-bottom: 1rem; font-family: var(--font-mono); color: var(--text-muted); }
-.btn-logout-small { font-size: 0.65rem; font-weight: 900; border: 2px solid #ef4444; color: #ef4444; padding: 0.5rem; border-radius: 0.5rem; width: 100%; text-transform: uppercase; }
+.btn-logout-small { font-size: 0.65rem; font-weight: 900; border: 2px solid #ef4444; color: #ef4444; padding: 0.5rem; border-radius: 0.5rem; width: 100%; text-transform: uppercase; cursor: pointer; }
 
 /* ============================================= */
-/* 6. MODALES (ESTRUCTURA STICKY FOOTER)        */
+/* 6. MODALES (ESTRUCTURA DE CABECERA/PIE FIJOS)*/
 /* ============================================= */
 .modal {
     display: none;
     position: fixed;
     inset: 0;
-    background: rgba(15, 23, 42, 0.75);
-    backdrop-filter: blur(8px);
+    background: rgba(15, 23, 42, 0.8);
+    backdrop-filter: blur(10px);
     z-index: 2000;
     align-items: center; justify-content: center; padding: 1rem;
 }
@@ -128,101 +129,94 @@ body {
 .modal-content {
     background: white; width: 100%; max-height: 96vh; border-radius: var(--radius-xl);
     display: flex; flex-direction: column; overflow: hidden;
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
 }
 
 .modal-header { 
-    padding: 1rem 1.5rem; 
+    padding: 1.25rem 1.5rem; 
     border-bottom: 1px solid var(--border-color); 
     display: flex; justify-content: space-between; align-items: center; 
     flex-shrink: 0; 
 }
+
 .modal-body { 
     flex: 1; 
     overflow-y: auto; 
     padding: 1.5rem; 
     background: #f8fafc; 
 }
+
 .modal-footer { 
-    padding: 1rem 1.5rem; 
+    padding: 1.25rem 1.5rem; 
     border-top: 1px solid var(--border-color); 
     display: flex; justify-content: space-between; align-items: center; 
     flex-shrink: 0; 
     background: white; 
 }
 
-.btn-close-modal { width: 2.2rem; height: 2.2rem; border-radius: 999px; background: #f1f5f9; color: #64748b; display: flex; align-items: center; justify-content: center; cursor: pointer; border: none; transition: 0.2s; }
+.btn-close-modal { 
+    width: 2.5rem; height: 2.5rem; border-radius: 999px; 
+    background: #f1f5f9; color: #64748b; font-weight: 900; 
+    display: flex; align-items: center; justify-content: center; 
+    cursor: pointer; border: none; transition: 0.2s; 
+}
 .btn-close-modal:hover { background: var(--black); color: white; }
 
 /* ============================================= */
-/* 7. PUNTO DE VENTA (POS) - TOTAL FIJO         */
+/* 7. LAYOUT POS (CAJA KIOSCO - TOTAL FIJO)     */
 /* ============================================= */
-.pos-layout-container {
-    display: flex; flex-direction: row; flex: 1; overflow: hidden; background: #f1f5f9;
-}
+.pos-layout-container { display: flex; flex-direction: row; flex: 1; overflow: hidden; }
+.pos-catalog-side { flex: 1; border-right: 1px solid var(--border-color); background: white; display: flex; flex-direction: column; }
+.pos-ticket-side { display: flex; flex-direction: column; background: #f8fafc; border-left: 1px solid var(--border-color); }
 
-.pos-catalog-side {
-    flex: 1; display: flex; flex-direction: column; border-right: 1px solid var(--border-color); background: white;
-}
-
-.pos-ticket-side {
-    width: 340px; display: flex; flex-direction: column; background: #f8fafc; border-left: 1px solid var(--border-color);
-}
-
-.pos-checkout-footer {
-    padding: 1.25rem; 
+.pos-checkout-footer { 
     background: white; 
-    border-top: 2px solid var(--border-color); 
-    flex-shrink: 0; /* GARANTIZA QUE EL TOTAL NO SE MUEVA */
-    box-shadow: 0 -4px 20px rgba(0,0,0,0.05);
-}
-
-/* Responsividad para POS */
-@media (max-width: 1024px) {
-    .pos-ticket-side { width: 300px; }
+    border-top: 4px solid var(--violet-soft); 
+    flex-shrink: 0; 
+    box-shadow: 0 -10px 30px rgba(0,0,0,0.05); 
 }
 
 @media (max-width: 768px) {
     .pos-layout-container { flex-direction: column; }
-    .pos-ticket-side { width: 100%; flex: 1; border-left: none; }
-    .pos-catalog-side { height: 40vh; flex: none; }
+    .pos-catalog-side { height: 45vh; flex: none; border-right: none; border-bottom: 1px solid var(--border-color); }
+    .pos-ticket-side { width: 100% !important; flex: 1; }
 }
 
 /* ============================================= */
 /* 8. FORMULARIOS (BENTO INNER Y ALTA STOCK)    */
 /* ============================================= */
-.bento-inner-card {
-    background: white; border: 1px solid var(--border-color); border-radius: var(--radius-lg);
-    padding: 1rem; box-shadow: var(--shadow-sm);
+.bento-inner-card { 
+    background: white; border: 1px solid var(--border-color); border-radius: var(--radius-lg); 
+    padding: 1rem; box-shadow: var(--shadow-sm); 
 }
 
 .label-tiny { font-size: 0.65rem; font-weight: 900; text-transform: uppercase; color: var(--text-muted); display: block; margin-bottom: 4px; }
-
-/* Inputs Limpios y Legibles */
 .input-clean { font-size: 1.2rem !important; font-weight: 900; width: 100%; border: none !important; background: transparent !important; outline: none !important; }
 .input-count, .input-money { font-size: 1.5rem !important; font-family: var(--font-mono); font-weight: 800; border: none !important; background: transparent !important; width: 100%; }
 .select-clean { font-size: 0.8rem !important; font-weight: 800; text-transform: uppercase; background: #f1f5f9 !important; border-radius: 0.5rem !important; padding: 0.5rem !important; border: none !important; }
 
-/* Especial: Divisor de Costos para que entre la "Cantidad" */
-.cost-split-input {
-    display: flex; align-items: center; gap: 8px; width: 100%;
-}
-.cost-split-input input {
-    width: 50% !important;
-}
+/* Corrección para campos de bulto */
+.cost-split-input { display: flex; align-items: center; width: 100%; }
+.cost-split-input input { font-size: 1.1rem !important; }
 
 /* ============================================= */
-/* 9. LISTADOS, GRID Y CALENDARIO               */
+/* 9. CALENDARIO Y CELDAS                       */
 /* ============================================= */
-.pos-item-row { border-bottom: 1px solid #f1f5f9; display: flex; align-items: center; padding: 1rem 1.5rem; transition: 0.15s; }
-.pos-item-row:hover { background: #f8fafc; }
+.calendar-header-day { color: var(--violet); font-weight: 900; text-transform: uppercase; font-size: 0.7rem; text-align: center; padding-bottom: 8px; }
 
-.day-cell { background: white; border: 1px solid var(--border-color); border-radius: 0.75rem; aspect-ratio: 1/1; display: flex; flex-direction: column; justify-content: space-between; padding: 0.5rem; cursor: pointer; transition: 0.2s; }
-.day-cell:hover { border-color: var(--violet); background: var(--violet-soft); transform: scale(1.05); z-index: 10; }
+.day-cell { 
+    background: white; border: 1px solid var(--border-color); border-radius: 1rem; 
+    aspect-ratio: 1/1; display: flex; flex-direction: column; justify-content: space-between; 
+    padding: 0.6rem; cursor: pointer; transition: 0.2s; 
+}
+.day-cell:hover { border-color: var(--violet); background: var(--violet-soft); transform: scale(1.05); z-index: 10; box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
 
-.time-slot { background: white; border: 1px solid var(--border-color); border-radius: 0.6rem; padding: 0.5rem 0.25rem; text-align: center; cursor: pointer; transition: 0.15s; font-size: 0.75rem; }
-.time-slot.selected { background: var(--violet) !important; color: white !important; border-color: var(--violet-dark); }
-.time-slot.disabled { opacity: 0.3; cursor: not-allowed; border-style: dashed; }
+.time-slot { 
+    background: white; border: 1px solid var(--border-color); border-radius: 0.6rem; 
+    padding: 0.5rem 0.25rem; text-align: center; cursor: pointer; transition: 0.15s; font-size: 0.75rem; 
+}
+.time-slot.selected { background: var(--violet) !important; color: white !important; }
+.time-slot.disabled { opacity: 0.2; cursor: not-allowed; border-style: dashed; }
 
 /* ============================================= */
 /* 10. ADAPTACIÓN NOTEBOOK (1366x768)          */
@@ -236,19 +230,23 @@ body {
     
     .input-clean { font-size: 1.1rem !important; }
     .input-count, .input-money { font-size: 1.3rem !important; }
-    
     .pos-checkout-footer { padding: 1rem; }
 }
 
 /* ============================================= */
-/* 11. ANIMACIONES                              */
+/* 11. ANIMACIONES Y ESTADOS                    */
 /* ============================================= */
 @keyframes jump { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
 .jumping-child { animation: jump 1.2s ease-in-out infinite; display: inline-block; }
 
+.total-big-display { 
+    font-size: 4.5rem; font-weight: 900; font-family: var(--font-mono); 
+    font-style: italic; color: var(--black); letter-spacing: -4px; 
+}
+
 .booking-total-display { 
     font-size: 2rem; font-weight: 900; font-family: var(--font-mono); 
-    font-style: italic; color: var(--black); letter-spacing: -1px;
+    font-style: italic; color: var(--black); 
 }
 
 .badge-type { 
@@ -256,13 +254,26 @@ body {
     background: var(--violet-soft); color: var(--violet); padding: 2px 8px; border-radius: 99px; 
 }
 
+/* Tarjetas de Agenda Diaria */
+.booking-option-card { 
+    background: white; border: 1px solid var(--border-color); 
+    border-radius: var(--radius-lg); padding: 1rem; 
+    transition: all 0.2s; box-shadow: var(--shadow-sm); 
+}
+.booking-option-card:hover { border-color: var(--violet); transform: translateX(5px); }
+
+/* Ajuste Móvil Estricto */
+@media (max-width: 640px) {
+    .day-cell { padding: 0.4rem; border-radius: 0.6rem; }
+    .day-cell span { font-size: 14px; }
+    .badge-type { font-size: 7px; padding: 1px 3px; }
+    .modal { padding: 0.25rem; }
+    .modal-content { height: 100vh; max-height: 100vh; border-radius: 1rem; }
+}
+
 .adjust-btn-small {
     width: 2.2rem; height: 2.2rem; border-radius: 0.6rem;
     border: 1px solid #e2e8f0; font-weight: 900; background: white; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
 }
 .adjust-btn-small:active { background: var(--black); color: white; }
-
-.total-big-display {
-    font-size: 4rem; font-weight: 900; font-family: var(--font-mono); font-style: italic;
-    color: var(--black); letter-spacing: -4px;
-}
