@@ -1,35 +1,39 @@
 /* ============================================= */
-/* 1. VARIABLES - PALETA Y TOKENS DE DISEÑO     */
+/* 1. VARIABLES - IDENTIDAD VISUAL AEROJUMP      */
 /* ============================================= */
 :root {
-    /* Colores Base */
-    --bg-main: #f1f5f9;
-    --white: #ffffff;
-    --black: #000000;
+    /* Superficies y Fondos */
+    --bg-main: #f1f5f9;       /* Fondo suave */
+    --bg-card: #ffffff;       /* Blanco puro */
+    --border-color: #e2e8f0;  /* Bordes sutiles */
     
-    /* Identidad AeroJump */
-    --violet: #7c3aed;
+    /* Paleta de Marca AeroJump */
+    --violet: #7c3aed;        
     --violet-dark: #6d28d9;
     --violet-soft: #f5f3ff;
+    --violet-glow: rgba(124, 58, 237, 0.2);
     
-    --orange: #f97316;
+    --orange: #f97316;        
     --orange-dark: #ea580c;
     --orange-soft: #fff7ed;
+    --orange-glow: rgba(249, 115, 22, 0.2);
     
+    --black: #000000;
+    --text-main: #0f172a;
+    --text-muted: #64748b;
     --red: #ef4444;
-    --green: #22c55e;
-    --slate-400: #94a3b8;
-    --slate-200: #e2e8f0;
-
-    /* Estructura Bento/Brutalista */
-    --border-width: 3px;
-    --shadow-solid: 6px 6px 0px 0px #000000;
-    --radius-lg: 24px;
-    --radius-md: 14px;
+    --green: #10b981;
+    
+    /* Tokens de Estructura Bento */
+    --radius-xl: 2.5rem;      /* Radio extra grande para look moderno */
+    --radius-lg: 1.5rem;
+    --radius-md: 1rem;
+    --border-width: 2px;
+    --shadow-bento: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
 }
 
 /* ============================================= */
-/* 2. RESET Y ESTRUCTURA DE PANTALLA            */
+/* 2. RESET Y RENDERIZADO GLOBAL                */
 /* ============================================= */
 * {
     margin: 0;
@@ -41,99 +45,80 @@
 body {
     font-family: 'Outfit', sans-serif;
     background-color: var(--bg-main);
-    color: var(--black);
+    color: var(--text-main);
     line-height: 1.2;
     font-weight: 700;
     height: 100vh;
     width: 100vw;
-    overflow: hidden; /* Evita scroll en el body, lo maneja el main */
+    overflow: hidden; /* El scroll lo manejan los contenedores internos */
 }
 
 .font-mono { font-family: 'JetBrains Mono', monospace; font-weight: 500; }
-.is-hidden { display: none !important; }
+.is-hidden { display: none !important; pointer-events: none; }
 
-/* Scrollbar Personalizada */
-.custom-scrollbar::-webkit-scrollbar { width: 8px; height: 8px; }
-.custom-scrollbar::-webkit-scrollbar-thumb { 
-    background: var(--black); 
-    border-radius: 10px; 
-    border: 2px solid var(--white); 
+/* Scrollbar Personalizada Estilo Moderno */
+.custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 10px;
 }
-
-/* ============================================= */
-/* 3. NAVEGACIÓN Y HEADER                       */
-/* ============================================= */
-header {
-    background: var(--white);
-    border-bottom: var(--border-width) solid var(--black);
-    z-index: 1000;
-}
-
-#main-menu {
-    background: var(--white);
-    border-right: var(--border-width) solid var(--black);
-    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.menu-item {
-    transition: all 0.2s;
-}
-.menu-item:hover {
-    background-color: var(--violet-soft);
-    transform: translateX(5px);
-}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover { background: var(--violet); }
 
 /* ============================================= */
-/* 4. COMPONENTES BENTO (ESTILO MAESTRO)        */
+/* 3. COMPONENTES BENTO (TARJETAS Y BOTONES)    */
 /* ============================================= */
-.bento-card {
-    background: var(--white);
-    border: var(--border-width) solid var(--black);
+.bento-card, .data-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
     border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-solid);
     padding: 1.5rem;
-    transition: all 0.15s ease-in-out;
+    box-shadow: var(--shadow-bento);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .bento-card:hover {
-    transform: translate(-2px, -2px);
-    box-shadow: 8px 8px 0px 0px var(--black);
+    transform: translateY(-4px);
+    box-shadow: 0 10px 25px -5px rgba(0,0,0,0.08);
 }
 
 /* Botones Premium */
 .btn-premium {
-    background: var(--white);
-    border: var(--border-width) solid var(--black);
     border-radius: var(--radius-md);
-    font-weight: 900;
+    font-weight: 800;
     text-transform: uppercase;
     padding: 0.8rem 1.5rem;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    box-shadow: 4px 4px 0px 0px var(--black);
-    transition: all 0.1s;
+    transition: all 0.2s;
+    border: none;
+    gap: 0.5rem;
 }
 
-.btn-premium:active {
-    transform: translate(2px, 2px);
-    box-shadow: 0px 0px 0px 0px var(--black);
+.btn-premium:active { transform: scale(0.96); }
+
+.bg-violet-primary {
+    background-color: var(--violet) !important;
+    color: white !important;
+    box-shadow: 0 6px 15px var(--violet-glow);
 }
 
-.bg-violet-primary { background: var(--violet) !important; color: white !important; }
-.bg-orange-primary { background: var(--orange) !important; color: white !important; }
-.bg-red-primary { background: var(--red) !important; color: white !important; }
+.bg-orange-primary {
+    background-color: var(--orange) !important;
+    color: white !important;
+    box-shadow: 0 6px 15px var(--orange-glow);
+}
 
 /* ============================================= */
-/* 5. SISTEMA DE MODALES Y FORMULARIOS          */
+/* 4. MODALES INTELIGENTES (FIX NOTEBOOKS)      */
 /* ============================================= */
 .modal {
     display: none;
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.8);
-    backdrop-filter: blur(4px);
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(8px);
     z-index: 2000;
     align-items: center;
     justify-content: center;
@@ -143,26 +128,21 @@ header {
 .modal.is-open { display: flex; }
 
 .modal-content {
-    background: var(--white);
-    border: var(--border-width) solid var(--black);
-    border-radius: var(--radius-lg);
+    background: white;
     width: 100%;
+    max-width: 850px;
     max-height: 94vh;
+    border-radius: 2.5rem; /* Match look de inventario */
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    animation: popIn 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-@keyframes popIn {
-    from { transform: scale(0.95); opacity: 0; }
-    to { transform: scale(1); opacity: 1; }
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
 }
 
 .modal-header {
-    padding: 1.25rem 1.5rem;
-    border-bottom: var(--border-width) solid var(--black);
-    background: var(--white);
+    padding: 1.5rem 2rem;
+    border-bottom: 2px solid var(--bg-main);
+    background: white;
     flex-shrink: 0;
 }
 
@@ -170,146 +150,177 @@ header {
     flex: 1;
     overflow-y: auto;
     padding: 1.5rem;
-    background: var(--bg-main);
+    background: var(--bg-main); /* Fondo grisaceo igual que el inventario */
     -webkit-overflow-scrolling: touch;
 }
 
 .modal-footer {
-    padding: 1.25rem 1.5rem;
-    border-top: var(--border-width) solid var(--black);
-    background: var(--white);
+    padding: 1.5rem 2rem;
+    border-top: 2px solid var(--bg-main);
+    background: white;
     flex-shrink: 0;
 }
 
-/* Inputs Unificados */
-input, select, textarea {
-    border: var(--border-width) solid var(--black) !important;
-    border-radius: var(--radius-md) !important;
-    padding: 0.75rem 1rem !important;
-    font-size: 1.1rem !important;
-    font-weight: 700 !important;
-    background: var(--white) !important;
-    color: var(--black) !important;
-    width: 100%;
+/* ============================================= */
+/* 5. FORMULARIO DE RESERVA (ESTILO INVENTARIO) */
+/* ============================================= */
+
+/* Cajas dentro del formulario */
+#booking-form .bento-inner-card {
+    background: white;
+    border: 1px solid var(--border-color);
+    border-radius: 2rem;
+    padding: 1.5rem;
+    box-shadow: var(--shadow-bento);
 }
 
-input:focus { background: var(--violet-soft) !important; outline: none; }
+#booking-form input, #booking-form select {
+    background: transparent !important;
+    border: none !important;
+    font-weight: 900 !important;
+    padding: 0 !important;
+    color: var(--text-main) !important;
+}
+
+#booking-form input:focus, #booking-form select:focus {
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+/* Grilla de Horarios */
+.time-slot {
+    background: white;
+    border: 1px solid var(--border-color);
+    border-radius: 1rem;
+    padding: 0.75rem 0.5rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.time-slot:hover:not(.disabled) {
+    border-color: var(--violet);
+    background-color: var(--violet-soft);
+    transform: translateY(-2px);
+}
+
+.time-slot.selected {
+    background-color: var(--violet) !important;
+    color: white !important;
+    border-color: var(--black) !important;
+    box-shadow: 4px 4px 0px 0px var(--black);
+}
+
+.time-slot.disabled {
+    opacity: 0.3;
+    background: #f1f5f9;
+    border-style: dashed;
+    cursor: not-allowed;
+}
+
+/* Botones de ajuste +/- de personas */
+.adjust-btn {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 0.75rem;
+    border: 1px solid var(--border-color);
+    background: var(--bg-main);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    font-weight: 900;
+    transition: all 0.1s;
+}
+
+.adjust-btn:active { background: var(--black); color: white; }
 
 /* ============================================= */
-/* 6. CALENDARIO Y AGENDA                       */
+/* 6. CALENDARIO Y POS                          */
 /* ============================================= */
 .calendar-header-day {
-    text-align: center;
+    color: var(--violet);
     font-weight: 900;
     text-transform: uppercase;
     font-size: 0.75rem;
-    color: var(--violet);
-    padding-bottom: 10px;
+    text-align: center;
+    padding-bottom: 8px;
 }
 
 .day-cell {
+    background: white;
+    border: 1px solid var(--border-color);
+    border-radius: 1rem;
     aspect-ratio: 1/1;
-    border: 2px solid var(--black);
-    background: var(--white);
-    border-radius: 16px;
-    cursor: pointer;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    padding: 0.4rem;
-    transition: all 0.15s;
-    position: relative;
+    padding: 0.5rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: var(--shadow-bento);
 }
 
 .day-cell:hover {
-    background: var(--violet-soft);
-    transform: scale(1.05);
+    border-color: var(--violet);
+    background-color: var(--violet-soft);
+    transform: scale(1.03);
     z-index: 10;
 }
 
 .booking-badge {
-    background: var(--black);
-    color: var(--white);
     font-size: 0.6rem;
     font-weight: 900;
     padding: 1px 4px;
-    border-radius: 5px;
+    border-radius: 4px;
+    background: var(--black);
+    color: white;
 }
 .booking-badge.event { background: var(--orange); }
 
-/* ============================================= */
-/* 7. PUNTO DE VENTA (POS)                      */
-/* ============================================= */
+/* POS Item */
 .pos-item-list {
-    background: var(--white);
-    border: 3px solid var(--black);
-    border-radius: 18px;
-    padding: 1.2rem;
+    background: white;
+    border: 1px solid var(--border-color);
+    border-radius: 1.25rem;
+    padding: 1rem;
+    margin-bottom: 0.75rem;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 0.8rem;
-    box-shadow: 4px 4px 0px 0px rgba(0,0,0,0.1);
-}
-
-.pos-item-list:hover {
-    border-color: var(--orange);
-    transform: translateX(5px);
-}
-
-/* Grilla de Horarios en Formulario */
-.time-slot {
-    background: var(--white);
-    border: 2px solid var(--black);
-    border-radius: var(--radius-md);
-    padding: 0.8rem 0.4rem;
-    text-align: center;
-    cursor: pointer;
-    transition: all 0.2s;
-}
-
-.time-slot.selected {
-    background: var(--violet) !important;
-    color: white !important;
-    box-shadow: 3px 3px 0px 0px var(--black);
-}
-
-.time-slot.disabled {
-    background: var(--slate-200);
-    color: var(--slate-400);
-    border-color: var(--slate-200);
-    cursor: not-allowed;
-    opacity: 0.5;
 }
 
 /* ============================================= */
-/* 8. ADAPTACIÓN NOTEBOOK (1366x768)           */
+/* 7. ADAPTACIÓN NOTEBOOK (1366x768)           */
 /* ============================================= */
 @media (max-height: 800px) {
     .modal-content { max-height: 98vh; }
     
-    /* Reducción de textos gigantes */
-    .text-\[120px\], .text-\[110px\], .text-\[100px\] { 
-        font-size: 3.8rem !important; 
-        line-height: 1 !important;
-    }
+    /* Reducción de fuentes para que todo entre */
+    .text-\[120px\], .text-\[100px\] { font-size: 4rem !important; line-height: 1; }
+    .text-6xl { font-size: 3rem !important; }
+    .text-4xl { font-size: 2rem !important; }
+    .text-5xl { font-size: 2.5rem !important; }
+    
+    .modal-body { padding: 1rem; }
+    #booking-form .bento-inner-card { padding: 1rem; border-radius: 1.5rem; }
     
     .bento-card { padding: 1rem; }
-    h2 { font-size: 1.8rem !important; }
-    
-    .modal-header, .modal-footer { padding: 0.75rem 1.25rem; }
 }
 
 /* ============================================= */
-/* 9. ADAPTACIÓN MÓVIL                         */
+/* 8. ADAPTACIÓN MÓVIL                         */
 /* ============================================= */
 @media (max-width: 640px) {
     .modal { padding: 0.5rem; }
-    .modal-content { border-radius: var(--radius-md); height: 100vh; max-height: 100vh; }
+    .modal-content { border-radius: 1.5rem; height: 100vh; max-height: 100vh; }
     .day-cell span { font-size: 0.8rem; }
-    .bento-card { border-radius: 18px; }
+    .time-slot p { font-size: 1rem; }
 }
 
-/* Animaciones de AeroJump */
-@keyframes jump { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
+/* Animaciones */
+@keyframes jump { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
 .jumping-child { animation: jump 1s ease-in-out infinite; display: inline-block; }
