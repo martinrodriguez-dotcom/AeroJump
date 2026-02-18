@@ -1,25 +1,25 @@
 /* ============================================= */
-/* 1. VARIABLES - IDENTIDAD VISUAL Y TOKENS     */
+/* 1. VARIABLES - IDENTIDAD Y TOKENS            */
 /* ============================================= */
 :root {
-    /* Superficies y Fondos */
-    --bg-main: #f1f5f9;       /* Fondo suave general */
-    --bg-card: #ffffff;       /* Blanco puro para tarjetas */
-    --border-color: #e2e8f0;  /* Bordes modernos sutiles */
+    /* Fondos y Superficies */
+    --bg-main: #f1f5f9;
+    --bg-card: #ffffff;
+    --border-color: #e2e8f0;
     
-    /* Paleta Oficial AeroJump */
-    --violet: #7c3aed;        /* Violeta Principal */
+    /* Colores AeroJump */
+    --violet: #7c3aed;
     --violet-dark: #6d28d9;
     --violet-soft: #f5f3ff;
     --violet-glow: rgba(124, 58, 237, 0.2);
     
-    --orange: #f97316;        /* Naranja Principal */
+    --orange: #f97316;
     --orange-dark: #ea580c;
     --orange-soft: #fff7ed;
     --orange-glow: rgba(249, 115, 22, 0.2);
     
-    --black: #0f172a;         /* Negro azulado profesional */
-    --text-muted: #94a3b8;    /* Gris para etiquetas secundarias */
+    --black: #0f172a;
+    --text-muted: #94a3b8;
     --red: #ef4444;
     --green: #10b981;
     
@@ -27,15 +27,15 @@
     --font-main: 'Outfit', sans-serif;
     --font-mono: 'JetBrains Mono', monospace;
     
-    /* Tokens de Estructura Bento */
-    --radius-xl: 2rem;        /* El radio de las fichas de stock/reservas */
-    --radius-lg: 1.25rem;     /* Radio estándar de tarjetas */
-    --radius-md: 0.75rem;     /* Radio de botones e inputs */
+    /* Tokens Bento */
+    --radius-xl: 2.5rem;      /* Estilo Ficha de Stock */
+    --radius-lg: 1.5rem;
+    --radius-md: 0.8rem;
     --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
 }
 
 /* ============================================= */
-/* 2. RESET Y COMPORTAMIENTO DE PANTALLA        */
+/* 2. RESET Y ESTRUCTURA DE PANTALLA            */
 /* ============================================= */
 * {
     margin: 0;
@@ -52,12 +52,11 @@ body {
     font-weight: 700;
     height: 100vh;
     width: 100vw;
-    overflow: hidden; /* El scroll es interno por módulo */
+    overflow: hidden;
 }
 
 .font-mono { font-family: var(--font-mono); font-weight: 500; }
 
-/* FIX INTERACTIVO: Elementos ocultos no bloquean clics */
 .is-hidden { 
     display: none !important; 
     pointer-events: none; 
@@ -70,33 +69,24 @@ body {
     background: #cbd5e1;
     border-radius: 10px;
 }
-.custom-scrollbar::-webkit-scrollbar-thumb:hover { background: var(--violet); }
 
 /* ============================================= */
-/* 3. ELEMENTOS DE MARCA (LOGO Y TÍTULOS)       */
+/* 3. ELEMENTOS DE MARCA (LOGO Y TITULOS)       */
 /* ============================================= */
 .title-brand { font-size: 3rem; font-weight: 900; font-style: italic; letter-spacing: -2px; }
 .subtitle-brand { 
-    font-size: 10px; 
-    font-weight: 900; 
-    letter-spacing: 2px; 
-    border-bottom: 3px solid var(--black); 
-    display: inline-block; 
-    padding-bottom: 4px; 
+    font-size: 10px; font-weight: 900; letter-spacing: 2px; 
+    border-bottom: 3px solid var(--black); display: inline-block; padding-bottom: 4px; 
 }
 .section-title { 
-    font-size: 2.2rem; 
-    font-weight: 900; 
-    font-style: italic; 
-    text-decoration: underline; 
-    text-decoration-thickness: 5px; 
-    text-underline-offset: 4px; 
+    font-size: 2.2rem; font-weight: 900; font-style: italic; 
+    text-decoration: underline; text-decoration-thickness: 5px; text-underline-offset: 4px; 
 }
 
 /* ============================================= */
 /* 4. COMPONENTES BENTO Y BOTONES               */
 /* ============================================= */
-.bento-card, .data-card {
+.bento-card {
     background: var(--bg-card);
     border: 1px solid var(--border-color);
     border-radius: var(--radius-lg);
@@ -114,7 +104,7 @@ body {
     border-radius: var(--radius-md);
     font-weight: 800;
     text-transform: uppercase;
-    padding: 0.75rem 1.5rem;
+    padding: 0.8rem 1.5rem;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -125,13 +115,44 @@ body {
 }
 
 .btn-premium:active { transform: scale(0.96); }
-.btn-premium:disabled { opacity: 0.4; cursor: not-allowed; }
 
-.bg-violet-primary { background-color: var(--violet) !important; color: white !important; box-shadow: 0 6px 15px var(--violet-glow); }
-.bg-orange-primary { background-color: var(--orange) !important; color: white !important; box-shadow: 0 6px 15px var(--orange-glow); }
+.bg-violet-primary { background-color: var(--violet) !important; color: white !important; }
+.bg-orange-primary { background-color: var(--orange) !important; color: white !important; }
 
 /* ============================================= */
-/* 5. MODALES (SISTEMA COMPACTO Y SCROLL)       */
+/* 5. NAVEGACIÓN Y MENÚ (FIX)                    */
+/* ============================================= */
+#main-menu {
+    transform: translateX(-100%);
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+#main-menu.is-open {
+    transform: translateX(0) !important;
+}
+
+.menu-item {
+    width: 100%;
+    padding: 1rem 1.5rem;
+    background: white;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    text-align: left;
+    text-transform: uppercase;
+    font-weight: 900;
+    font-style: italic;
+    font-size: 0.75rem;
+    transition: all 0.2s;
+}
+
+.menu-item:hover {
+    background: var(--violet-soft);
+    color: var(--violet);
+    transform: translateX(8px);
+}
+
+/* ============================================= */
+/* 6. MODALES (SISTEMA COMPACTO)                */
 /* ============================================= */
 .modal {
     display: none;
@@ -144,6 +165,7 @@ body {
     justify-content: center;
     padding: 1rem;
 }
+
 .modal.is-open { display: flex; }
 
 .modal-content {
@@ -154,16 +176,10 @@ body {
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.2);
-    animation: modalPop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
 }
 
-@keyframes modalPop {
-    from { opacity: 0; transform: scale(0.9) translateY(10px); }
-    to { opacity: 1; transform: scale(1) translateY(0); }
-}
-
-/* Modal de Reserva Compacto (Pedido de 700px) */
+/* Tamaño compacto pedido por el usuario */
 .modal-booking-compact { max-width: 700px; }
 
 .modal-header {
@@ -175,7 +191,7 @@ body {
     flex-shrink: 0;
 }
 
-.modal-header h3 { font-size: 1.5rem; font-weight: 900; font-style: italic; }
+.modal-header h3 { font-size: 1.4rem; font-weight: 900; font-style: italic; }
 
 .modal-body {
     flex: 1;
@@ -194,90 +210,74 @@ body {
     flex-shrink: 0;
 }
 
-/* Botón de Cierre (X) Mini y Refinado */
+/* Botón de Cierre (X) Minimalista */
 .btn-close-modal {
+    width: 2rem; height: 2rem;
     padding: 0.4rem;
     border-radius: 999px;
     background: #f1f5f9;
     color: #64748b;
-    transition: all 0.2s;
     border: none;
     cursor: pointer;
+    transition: all 0.2s;
+    display: flex; align-items: center; justify-content: center;
 }
-.btn-close-modal svg { width: 1.1rem; height: 1.1rem; stroke-width: 3; }
-.btn-close-modal:hover { background: var(--black); color: white; }
+.btn-close-modal:hover { background: #000; color: #fff; }
 
 /* ============================================= */
-/* 6. FORMULARIOS TIPO FICHA (ESTILO BENTO)     */
+/* 7. FORMULARIOS TIPO FICHA (BENTO INNER)      */
 /* ============================================= */
 .bento-inner-card {
     background: white;
     border: 1px solid var(--border-color);
     border-radius: var(--radius-lg);
-    padding: 1.25rem;
+    padding: 1rem;
     margin-bottom: 0.75rem;
-    box-shadow: var(--shadow-sm);
 }
 
 .label-tiny {
-    font-size: 0.65rem;
-    font-weight: 900;
-    text-transform: uppercase;
-    color: var(--text-muted);
-    letter-spacing: 1px;
-    display: block;
-    margin-bottom: 4px;
+    font-size: 0.65rem; font-weight: 900; text-transform: uppercase;
+    color: var(--text-muted); letter-spacing: 1px; display: block; margin-bottom: 4px;
 }
 
-/* Inputs Limpios y Compactos */
+/* Inputs Limpios */
 .input-clean { 
-    font-size: 1.4rem !important; 
-    font-weight: 900; 
-    width: 100%; 
-    border: none !important; 
-    padding: 0 !important; 
-    background: transparent !important; 
-    color: var(--black) !important;
+    font-size: 1.4rem !important; font-weight: 900; width: 100%; 
+    border: none !important; background: transparent !important; outline: none !important;
 }
 
 .input-count, .input-money { 
-    font-size: 1.6rem !important; 
-    font-family: var(--font-mono); 
-    font-weight: 800; 
-    text-align: center; 
-    border: none !important; 
-    background: transparent !important; 
-    width: 100%; 
+    font-size: 1.6rem !important; font-family: var(--font-mono); 
+    font-weight: 800; text-align: center; border: none !important; background: transparent !important;
 }
 
 .select-clean { 
-    font-size: 0.8rem !important; 
-    font-weight: 800; 
-    text-transform: uppercase; 
-    background: #f1f5f9 !important; 
-    border: none !important; 
-    border-radius: 0.5rem !important; 
-    padding: 0.5rem !important; 
-    cursor: pointer;
+    font-size: 0.8rem !important; font-weight: 800; text-transform: uppercase; 
+    background: #f1f5f9 !important; border-radius: 0.5rem !important; padding: 0.5rem !important; 
+    border: none !important; cursor: pointer;
 }
 
 .adjust-btn-small {
-    width: 2rem;
-    height: 2rem;
-    border-radius: 0.5rem;
-    border: 1px solid #e2e8f0;
-    font-weight: 900;
-    background: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: all 0.1s;
+    width: 2rem; height: 2rem; border-radius: 0.5rem;
+    border: 1px solid #e2e8f0; font-weight: 900; background: white; cursor: pointer;
 }
-.adjust-btn-small:active { background: var(--black); color: white; }
 
 /* ============================================= */
-/* 7. CALENDARIO Y AGENDA                       */
+/* 8. POS - LISTA ALFABÉTICA (NUEVO FORMATO)    */
+/* ============================================= */
+.pos-item-row {
+    border-bottom: 1px solid #f1f5f9;
+    display: flex; align-items: center;
+    padding: 1rem 1.5rem;
+    transition: all 0.15s;
+}
+
+.pos-item-row:hover { background: #f8fafc; }
+
+.pos-item-row p { font-size: 0.85rem; letter-spacing: -0.2px; }
+
+/* ============================================= */
+/* 9. CALENDARIO Y SLOTS                        */
 /* ============================================= */
 .calendar-header-day { color: var(--violet); font-weight: 900; text-transform: uppercase; font-size: 0.7rem; text-align: center; padding-bottom: 6px; }
 
@@ -288,94 +288,35 @@ body {
 }
 .day-cell:hover { border-color: var(--violet); background: var(--violet-soft); transform: scale(1.03); }
 
-/* Slots de Horarios en Formulario */
 .time-slot {
-    background: white; 
-    border: 1px solid var(--border-color); 
-    border-radius: 0.6rem;
-    padding: 0.6rem 0.25rem; 
-    text-align: center; 
-    cursor: pointer; 
-    transition: all 0.15s;
-    font-size: 0.75rem;
+    background: white; border: 1px solid var(--border-color); border-radius: 0.6rem;
+    padding: 0.5rem 0.25rem; text-align: center; cursor: pointer; transition: 0.15s; font-size: 0.75rem;
 }
-.time-slot.selected { 
-    background: var(--violet) !important; 
-    color: white !important; 
-    border-color: var(--violet-dark) !important;
-    box-shadow: 0 4px 10px var(--violet-glow); 
-}
+.time-slot.selected { background: var(--violet) !important; color: white !important; box-shadow: 0 4px 10px var(--violet-glow); }
 .time-slot.disabled { opacity: 0.3; cursor: not-allowed; border-style: dashed; }
 
 /* ============================================= */
-/* 8. PUNTO DE VENTA (TABLA ALFABÉTICA)         */
-/* ============================================= */
-.pos-item-row { 
-    border-bottom: 1px solid #f1f5f9; 
-    transition: all 0.2s; 
-}
-.pos-item-row:hover { background: #fafafa; }
-
-.pos-item-row p { font-size: 0.85rem; letter-spacing: -0.2px; }
-
-/* ============================================= */
-/* 9. TOTALES Y BADGES                          */
+/* 10. TOTALES Y ADAPTACIÓN NOTEBOOK            */
 /* ============================================= */
 .booking-total-display { 
-    font-size: 2rem; 
-    font-weight: 900; 
-    font-family: var(--font-mono); 
-    font-style: italic; 
-    color: var(--black); 
-    letter-spacing: -1px;
+    font-size: 2rem; font-weight: 900; font-family: var(--font-mono); 
+    font-style: italic; color: var(--black); 
 }
 .badge-type { 
-    font-size: 0.6rem; 
-    font-weight: 900; 
-    text-transform: uppercase; 
-    background: var(--violet-soft); 
-    color: var(--violet); 
-    padding: 2px 8px; 
-    border-radius: 99px; 
+    font-size: 0.6rem; font-weight: 900; text-transform: uppercase; 
+    background: var(--violet-soft); color: var(--violet); padding: 2px 8px; border-radius: 99px; 
 }
 
-/* ============================================= */
-/* 10. ADAPTACIÓN NOTEBOOK (1366x768)          */
-/* ============================================= */
 @media (max-height: 800px) {
     .modal-content { max-height: 98vh; }
-    .title-brand { font-size: 2rem; }
+    .title-brand { font-size: 2.2rem; }
     .section-title { font-size: 1.8rem; }
-    
     .booking-total-display { font-size: 1.5rem; }
-    .modal-header, .modal-footer { padding: 0.75rem 1.25rem; }
     .bento-inner-card { padding: 0.75rem; margin-bottom: 0.5rem; }
-    
-    .text-\[100px\], .text-\[120px\] { font-size: 4rem !important; line-height: 1 !important; }
 }
 
-/* ============================================= */
-/* 11. ADAPTACIÓN MÓVIL                        */
-/* ============================================= */
-@media (max-width: 640px) {
-    .modal { padding: 0.5rem; }
-    .modal-content { border-radius: 1.5rem; height: 100vh; max-height: 100vh; }
-    .day-cell span { font-size: 0.8rem; }
-    .time-slot p { font-size: 0.9rem; }
-    #main-menu { width: 100%; }
-}
-
-/* ============================================= */
-/* 12. ANIMACIONES                              */
-/* ============================================= */
-@keyframes jump { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+@keyframes jump { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
 .jumping-child { animation: jump 1.2s ease-in-out infinite; display: inline-block; }
 
-.user-display { 
-    font-size: 0.7rem; 
-    font-weight: 900; 
-    text-decoration: underline; 
-    margin-bottom: 1rem; 
-    font-family: var(--font-mono); 
-    color: var(--text-muted);
-}
+.user-display { font-size: 0.7rem; font-weight: 900; text-decoration: underline; margin-bottom: 1rem; font-family: var(--font-mono); color: var(--text-muted); }
+.btn-logout-small { font-size: 0.65rem; font-weight: 900; border: 2px solid #ef4444; color: #ef4444; padding: 0.5rem; border-radius: 0.5rem; width: 100%; text-transform: uppercase; }
