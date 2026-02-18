@@ -1,19 +1,19 @@
 /* ============================================= */
-/* 1. VARIABLES Y RESET DE ALTO CONTRASTE        */
+/* 1. VARIABLES Y CONFIGURACIÓN BASE            */
 /* ============================================= */
 :root {
-    --color-violet: #7c3aed;
-    --color-violet-dark: #4c1d95;
-    --color-orange: #f97316;
-    --color-orange-dark: #9a3412;
-    --color-slate-950: #020617;
-    --color-slate-900: #0f172a;
-    --color-slate-800: #1e293b;
-    --color-slate-100: #f1f5f9;
-    --bg-main: #f8fafc;
-    --font-main: 'Inter', sans-serif;
+    --bg: #F0F2F5;
+    --black: #000000;
+    --white: #FFFFFF;
+    --violet: #6D28D9;
+    --orange: #FB923C;
+    --red: #EF4444;
+    --green: #22C55E;
+    --border-width: 4px;
+    --shadow-offset: 8px;
 }
 
+/* Reset de alto contraste */
 * {
     margin: 0;
     padding: 0;
@@ -22,232 +22,215 @@
 }
 
 body {
-    font-family: var(--font-main);
-    background-color: var(--bg-main);
-    color: var(--color-slate-900);
-    line-height: 1.4;
-    overflow-x: hidden;
+    font-family: 'Outfit', sans-serif;
+    background-color: var(--bg);
+    color: var(--black);
+    line-height: 1.2;
+    font-weight: 700;
+}
+
+.font-mono { font-family: 'JetBrains Mono', monospace; font-weight: 500; }
+.is-hidden { display: none !important; }
+
+/* ============================================= */
+/* 2. COMPONENTES BENTO (TARJETAS Y BOTONES)    */
+/* ============================================= */
+
+/* Bento Cards con Sombra de Bloque Sólida */
+.bento-card {
+    background: var(--white);
+    border: var(--border-width) solid var(--black);
+    border-radius: 24px;
+    box-shadow: var(--shadow-offset) var(--shadow-offset) 0px 0px var(--black);
+    padding: 1.5rem;
+    transition: all 0.1s ease;
+}
+
+/* Premium Buttons con Efecto Mecánico */
+.btn-premium {
+    background: var(--white);
+    border: var(--border-width) solid var(--black);
+    border-radius: 16px;
+    box-shadow: 6px 6px 0px 0px var(--black);
+    font-weight: 900;
+    text-transform: uppercase;
+    padding: 1rem 1.5rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.1s;
+    letter-spacing: 0.5px;
+}
+
+.btn-premium:active {
+    transform: translate(2px, 2px);
+    box-shadow: 0px 0px 0px 0px var(--black);
+}
+
+.btn-premium:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: 2px 2px 0px 0px var(--black);
+}
+
+/* Inputs y Selects */
+input, select {
+    border: var(--border-width) solid var(--black) !important;
+    border-radius: 16px !important;
+    padding: 0.8rem !important;
+    font-size: 1.2rem !important;
+    font-weight: 700 !important;
+    background: var(--white) !important;
+    color: var(--black) !important;
+}
+
+input:focus {
+    background: #F3E8FF !important;
+    outline: none;
+    border-color: var(--violet) !important;
 }
 
 /* ============================================= */
-/* 2. NAVEGACIÓN Y ESTRUCTURA GLOBAL            */
+/* 3. SISTEMA DE MODALES Y SCROLL               */
 /* ============================================= */
-#main-menu {
-    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
 
-#main-menu.is-open {
-    transform: translateX(0);
-}
-
-.is-hidden {
-    display: none !important;
-}
-
-/* Scrollbar Profesional */
+/* Scrollbar Estilo AeroJump */
 .custom-scrollbar::-webkit-scrollbar {
-    width: 5px;
+    width: 10px;
 }
 .custom-scrollbar::-webkit-scrollbar-track {
     background: transparent;
 }
 .custom-scrollbar::-webkit-scrollbar-thumb {
-    background: #cbd5e1;
+    background: var(--black);
     border-radius: 10px;
-}
-.custom-scrollbar::-webkit-scrollbar-thumb:hover {
-    background: #94a3b8;
+    border: 2px solid var(--white);
 }
 
-/* ============================================= */
-/* 3. SISTEMA DE MODALES (ESCALA CORREGIDA)     */
-/* ============================================= */
-.modal {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background-color: rgba(2, 6, 23, 0.85);
-    backdrop-filter: blur(8px);
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
-    padding: 1rem;
-    animation: fadeIn 0.2s ease-out;
-}
-
-.modal.is-open {
-    display: flex;
-}
-
+/* Estructura de Modales Inteligentes */
 .modal-content {
-    background: white;
-    width: 100%;
-    border-radius: 1.5rem;
-    overflow: hidden;
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: var(--white);
+    border: var(--border-width) solid var(--black);
+    display: flex;
+    flex-direction: column;
 }
 
-@keyframes fadeIn {
-    from { opacity: 0; transform: scale(0.98); }
-    to { opacity: 1; transform: scale(1); }
+/* La clave para pantallas 1366x768 */
+.modal-header {
+    border-bottom: var(--border-width) solid var(--black);
+    padding: 1.25rem;
+    flex-shrink: 0;
+    background: white;
+}
+
+.modal-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1.5rem;
+    -webkit-overflow-scrolling: touch;
+    background: #f8fafc;
+}
+
+.modal-footer {
+    border-top: var(--border-width) solid var(--black);
+    padding: 1.25rem;
+    flex-shrink: 0;
+    background: white;
 }
 
 /* ============================================= */
-/* 4. PUNTO DE VENTA (POS) - DISEÑO ARMÓNICO    */
+/* 4. CALENDARIO Y POS                          */
 /* ============================================= */
 
-/* Catálogo de Productos */
-.catalog-item {
-    background: white;
-    border: 1px solid var(--color-slate-100);
-    padding: 0.75rem;
-    border-radius: 1rem;
+.calendar-header-day {
+    text-align: center;
+    font-weight: 900;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    color: var(--violet);
+    padding-bottom: 8px;
+}
+
+.day-cell {
+    aspect-ratio: 1/1;
+    border: 2px solid var(--black);
+    background: var(--white);
+    border-radius: 14px;
     cursor: pointer;
-    transition: all 0.2s;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    text-align: left;
-    height: 100%;
+    padding: 0.4rem;
+    transition: all 0.1s;
 }
 
-.catalog-item:hover {
-    border-color: var(--color-violet);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(124, 58, 237, 0.1);
+.day-cell:hover {
+    background: #F3E8FF;
+    transform: scale(1.03);
+    z-index: 10;
 }
 
-.catalog-item .prod-name {
-    font-weight: 800;
-    text-transform: uppercase;
-    font-size: 0.7rem;
-    color: var(--color-slate-900);
-    margin-bottom: 0.25rem;
-    line-height: 1.2;
+/* Items de Venta en Lista */
+.pos-item-list {
+    background: var(--white);
+    border: 3px solid var(--black);
+    border-radius: 16px;
+    padding: 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.8rem;
+    box-shadow: 4px 4px 0px 0px var(--black);
+    transition: transform 0.1s;
 }
 
-.catalog-item .prod-price {
-    font-weight: 900;
-    font-size: 1.1rem;
-    color: var(--color-violet);
-    font-style: italic;
-    letter-spacing: -0.025em;
-}
-
-.catalog-item .prod-stock {
-    font-size: 0.6rem;
-    font-weight: 700;
-    color: #94a3b8;
-    text-transform: uppercase;
-    margin-top: 0.25rem;
-}
-
-/* Ticket de Venta (Carrito) */
-.payment-option input:checked + span {
-    border-color: currentColor;
-    background: rgba(255, 255, 255, 0.05);
-    color: white;
+.pos-item-list:active {
+    transform: translate(2px, 2px);
+    box-shadow: 0px 0px 0px 0px var(--black);
 }
 
 /* ============================================= */
-/* 5. CALENDARIO Y AGENDA                       */
+/* 5. RESPONSIVE Y AJUSTES DE ALTURA            */
 /* ============================================= */
-.day-cell {
-    aspect-ratio: 1 / 1;
-    border-radius: 0.75rem;
-    border: 1px solid #e2e8f0;
-    background: white;
-    transition: all 0.2s;
-    position: relative;
-    overflow: hidden;
+
+/* Ajuste para Notebooks Viejas (768px de alto) */
+@media (max-height: 800px) {
+    .modal-content {
+        max-height: 98vh !important;
+    }
+    .btn-premium {
+        padding: 0.6rem 1rem;
+        font-size: 0.9rem;
+    }
+    input, select {
+        padding: 0.5rem !important;
+    }
+    .bento-card {
+        padding: 1rem;
+    }
 }
 
-.day-cell:hover:not(.opacity-0) {
-    border-color: var(--color-violet);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+/* Ajustes para Celulares */
+@media (max-width: 768px) {
+    .pos-grid {
+        grid-template-columns: 1fr;
+    }
+    .modal-content {
+        border-radius: 0;
+        border: none;
+    }
+    .day-cell span {
+        font-size: 0.8rem;
+    }
 }
 
-.booking-count {
-    position: absolute;
-    bottom: 0.5rem;
-    right: 0.5rem;
-    background: var(--color-violet);
-    color: white;
-    font-size: 0.6rem;
-    font-weight: 900;
-    padding: 2px 6px;
-    border-radius: 0.5rem;
-}
-
-.booking-count.event {
-    background: var(--color-orange);
-}
-
-/* ============================================= */
-/* 6. COMPONENTES DE INTERFAZ                   */
-/* ============================================= */
-.time-slot {
-    padding: 0.5rem;
-    border-radius: 0.5rem;
-    border: 1px solid #e2e8f0;
-    font-size: 0.7rem;
-    font-weight: 800;
-    text-align: center;
-    cursor: pointer;
-    transition: all 0.2s;
-    background: white;
-}
-
-.time-slot.selected {
-    background: var(--color-violet);
-    border-color: var(--color-violet-dark);
-    color: white;
-}
-
-.time-slot.disabled {
-    opacity: 0.3;
-    cursor: not-allowed;
-    background: #f8fafc;
-    border-style: dashed;
-}
-
-/* Tarjetas de Inventario */
-.product-card {
-    transition: all 0.2s;
-}
-.product-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-}
-
-/* ============================================= */
-/* 7. ANIMACIONES Y ESTADOS                     */
-/* ============================================= */
+/* Animación de Salto */
 @keyframes jump {
     0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-20px); }
+    50% { transform: translateY(-12px); }
 }
-
 .jumping-child {
     animation: jump 0.8s ease-in-out infinite;
-}
-
-.trampoline-line {
-    stroke-dasharray: 100;
-    transition: all 0.3s ease;
-}
-
-/* Ajustes Responsive */
-@media (max-width: 768px) {
-    .modal-content {
-        height: 100vh;
-        max-height: 100vh;
-        border-radius: 0;
-    }
-    
-    #sale-modal .modal-content {
-        max-width: 100vw;
-        height: 100vh;
-    }
 }
