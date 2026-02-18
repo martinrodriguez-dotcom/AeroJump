@@ -12,10 +12,10 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;900&family=JetBrains+Mono:wght@500;800&display=swap" rel="stylesheet">
     
-    <!-- Tailwind CSS (Solo utilidades de grilla) -->
+    <!-- Tailwind CSS (Utilidades de Grilla y Espaciado) -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- ARCHIVO MAESTRO DE ESTILO -->
+    <!-- ARCHIVO MAESTRO DE ESTILO (Única fuente de diseño) -->
     <link rel="stylesheet" href="style.css">
 </head>
 <body class="custom-scrollbar">
@@ -27,7 +27,7 @@
             <p class="subtitle-brand">PANEL DE CONTROL</p>
             <form id="login-form" class="space-y-6 mt-8">
                 <div class="text-left">
-                    <label class="label-tiny">Email de Administrador:</label>
+                    <label class="label-tiny">Usuario (Email):</label>
                     <input type="email" id="login-email" required class="input-clean" style="font-size: 1.1rem !important;">
                 </div>
                 <div class="text-left">
@@ -39,25 +39,23 @@
         </div>
     </section>
 
-    <!-- 2. CONTENEDOR PRINCIPAL DE LA APLICACIÓN -->
+    <!-- 2. CONTENEDOR PRINCIPAL DE LA APP -->
     <div id="app-container" class="is-hidden min-h-screen flex flex-col">
         
-        <!-- HEADER -->
+        <!-- HEADER FIJO -->
         <header class="fixed top-0 left-0 right-0 bg-white z-[50]">
             <div class="flex items-center justify-between px-6 py-4 border-b-2 border-slate-100">
                 <div class="flex items-center gap-4">
                     <!-- Botón para abrir el menú lateral -->
-                    <button id="menu-btn" onclick="toggleMenu(true)" class="p-2 bg-black text-white rounded-xl active:scale-90 transition-transform">
-                        <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="4">
-                            <path d="M4 6h16M4 12h16M4 18h16" />
-                        </svg>
+                    <button id="menu-btn" onclick="window.toggleMenu(true)" class="p-2 bg-black text-white rounded-xl active:scale-90 transition-transform">
+                        <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="4"><path d="M4 6h16M4 12h16M4 18h16" /></svg>
                     </button>
                     <div class="leading-none text-left">
                         <h1 class="text-xl font-black uppercase italic">AeroJump</h1>
                         <span class="text-[8px] font-black text-[#7c3aed] uppercase font-mono">Gualeguaychú</span>
                     </div>
                 </div>
-                <button id="header-sale-btn" onclick="openSaleModal()" class="bg-orange-primary btn-premium btn-small">VENTA KIOSCO</button>
+                <button id="header-sale-btn" onclick="window.openSaleModal()" class="bg-orange-primary btn-premium py-2 px-4 text-[10px]">VENTA KIOSCO</button>
             </div>
         </header>
 
@@ -65,28 +63,26 @@
         <nav id="main-menu" class="fixed top-0 left-0 h-screen w-72 bg-white z-[1100] flex flex-col shadow-2xl">
             <div class="p-8 border-b-2 border-slate-50 text-center">
                 <p id="user-email-display" class="user-display truncate"></p>
-                <button id="logout-btn" class="btn-logout-small mt-2">CERRAR SESIÓN 🔒</button>
+                <button id="logout-btn" class="text-[10px] font-black text-red-500 border-2 border-red-500 px-4 py-2 italic w-full rounded-xl hover:bg-red-50">CERRAR SESIÓN 🔒</button>
             </div>
             <div class="p-4 space-y-3 overflow-y-auto custom-scrollbar">
-                <button class="menu-item" onclick="showView('calendar')" data-view="calendar">🗓️ AGENDA SALTOS</button>
-                <button class="menu-item" onclick="showView('productos')" data-view="productos">🥤 STOCK KIOSCO</button>
-                <button class="menu-item" onclick="showView('caja')" data-view="caja">💰 ARQUEO CAJA</button>
-                <button class="menu-item" onclick="showView('stats')" data-view="stats">📊 RANKINGS</button>
+                <button class="menu-item w-full p-4 bento-card text-left text-xs uppercase italic shadow-none border-slate-100" data-view="calendar" onclick="window.showView('calendar')">🗓️ AGENDA SALTOS</button>
+                <button class="menu-item w-full p-4 bento-card text-left text-xs uppercase italic shadow-none border-slate-100" data-view="productos" onclick="window.showView('productos')">🥤 STOCK KIOSCO</button>
+                <button class="menu-item w-full p-4 bento-card text-left text-xs uppercase italic shadow-none border-slate-100" data-view="caja" onclick="window.showView('caja')">💰 ARQUEO CAJA</button>
+                <button class="menu-item w-full p-4 bento-card text-left text-xs uppercase italic shadow-none border-slate-100" data-view="stats" onclick="window.showView('stats')">📊 RANKINGS</button>
             </div>
         </nav>
+        <div id="menu-overlay" onclick="window.toggleMenu(false)" class="fixed inset-0 bg-black/80 z-[1000] hidden"></div>
 
-        <!-- Overlay para cerrar el menú al hacer clic fuera -->
-        <div id="menu-overlay" onclick="toggleMenu(false)" class="fixed inset-0 bg-black/80 z-[1000] hidden"></div>
-
-        <!-- ÁREA DE CONTENIDO -->
+        <!-- ÁREA DE CONTENIDO (MAIN VIEWPORT) -->
         <main class="flex-grow pt-24 pb-12 px-4 max-w-7xl mx-auto w-full overflow-y-auto custom-scrollbar">
             
             <!-- VISTA: CALENDARIO -->
             <div id="calendar-view" class="view-container">
-                <div class="bento-card mb-6 flex justify-between items-center bg-white">
-                    <button id="prev-month-btn" onclick="prevMonth()" class="btn-nav">◀</button>
-                    <h2 id="current-month-year" class="calendar-title"></h2>
-                    <button id="next-month-btn" onclick="nextMonth()" class="btn-nav">▶</button>
+                <div class="bento-card mb-6 flex justify-between items-center">
+                    <button id="prev-month-btn" onclick="window.prevMonth()" class="p-3 bg-slate-50 border border-slate-200 rounded-xl font-black">◀</button>
+                    <h2 id="current-month-year" class="text-xl font-black uppercase italic tracking-tighter"></h2>
+                    <button id="next-month-btn" onclick="window.nextMonth()" class="p-3 bg-slate-50 border border-slate-200 rounded-xl font-black">▶</button>
                 </div>
                 <div class="grid grid-cols-7 gap-1 md:gap-2 mb-2">
                     <div class="calendar-header-day">Lun</div><div class="calendar-header-day">Mar</div><div class="calendar-header-day">Mie</div><div class="calendar-header-day">Jue</div><div class="calendar-header-day">Vie</div><div class="calendar-header-day">Sab</div><div class="calendar-header-day">Dom</div>
@@ -98,22 +94,20 @@
             <div id="productos-view" class="view-container is-hidden">
                 <div class="flex justify-between items-center mb-8">
                     <h2 class="section-title">INVENTARIO</h2>
-                    <button id="add-product-btn" onclick="toggleProductForm()" class="bg-violet-primary btn-premium btn-small">+ CARGAR</button>
+                    <button id="add-product-btn" onclick="window.toggleProductForm()" class="bg-violet-primary btn-premium text-xs">+ CARGAR</button>
                 </div>
-                <!-- Formulario de carga de productos oculto -->
-                <div id="product-form-container" class="is-hidden bento-card mb-8">
+                <!-- Formulario de producto simplificado en skeleton -->
+                <div id="product-form-container" class="is-hidden bento-card mb-10">
                     <form id="product-form" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <input type="text" id="prod-name" placeholder="Nombre del Producto" required class="input-clean border-b-2 border-slate-100">
-                        <input type="number" id="prod-stock" placeholder="Stock Inicial" required class="input-clean border-b-2 border-slate-100">
-                        <div class="flex gap-2">
-                            <input type="number" id="prod-batch-cost" placeholder="Costo Bulto" required class="input-clean border-b-2 border-slate-100">
-                            <input type="number" id="prod-batch-qty" placeholder="Unidades" required class="input-clean border-b-2 border-slate-100">
-                        </div>
+                        <input type="text" id="prod-name" placeholder="Nombre..." required class="input-clean border-b border-slate-100">
+                        <input type="number" id="prod-stock" placeholder="Stock..." required class="input-clean border-b border-slate-100">
+                        <input type="number" id="prod-batch-cost" placeholder="Costo..." required class="input-clean border-b border-slate-100">
+                        <input type="number" id="prod-batch-qty" placeholder="Unidades..." required class="input-clean border-b border-slate-100">
                         <input type="hidden" id="prod-profit-pct" value="40">
                         <input type="hidden" id="prod-unit-cost">
-                        <div class="flex items-center justify-between p-2">
+                        <div class="flex items-center justify-between col-span-full mt-4">
                             <span class="label-tiny">Sugerido: <strong id="prod-suggested-price">$0</strong></span>
-                            <button type="submit" class="bg-green-primary btn-premium btn-small">Guardar</button>
+                            <button type="submit" class="bg-violet-primary btn-premium">Guardar Ficha</button>
                         </div>
                     </form>
                 </div>
@@ -123,29 +117,30 @@
             <!-- VISTA: CAJA -->
             <div id="caja-view" class="view-container is-hidden">
                 <div class="text-center mb-10">
-                    <p class="label-tiny">Balance Neto Acumulado</p>
-                    <div id="caja-total-combined" class="total-big-display">$0</div>
+                    <p class="label-tiny">Caja Real Acumulada</p>
+                    <div id="caja-total-combined" class="total-big-display" style="font-size: 5rem !important;">$0</div>
                 </div>
                 <div id="caja-daily-list" class="space-y-4 max-w-4xl mx-auto"></div>
             </div>
 
             <!-- VISTA: RANKINGS -->
             <div id="stats-view" class="view-container is-hidden">
-                <h2 class="section-title mb-8">FIDELIDAD CLIENTES</h2>
+                <h2 class="section-title mb-8 text-center">RANKING DE FIDELIDAD</h2>
                 <div id="stats-list" class="space-y-4 max-w-3xl mx-auto"></div>
             </div>
+
         </main>
     </div>
 
-    <!-- 3. MODAL DE RESERVA (COMPACTO) -->
+    <!-- 3. MODAL DE RESERVA (COMPACTO Y REFINADO) -->
     <div id="booking-modal" class="modal">
         <div class="modal-content modal-booking-compact">
             <div class="modal-header">
-                <div class="text-left leading-none">
+                <div class="text-left">
                     <h3 id="booking-modal-title">GESTIÓN DE TURNO</h3>
                     <span id="booking-type-label" class="badge-type">Salto Normal</span>
                 </div>
-                <button onclick="closeModals()" class="btn-close-modal">
+                <button onclick="window.closeModals()" class="btn-close-modal">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M18 6L6 18M6 6l12 12"/></svg>
                 </button>
             </div>
@@ -156,25 +151,25 @@
                 <input type="hidden" id="booking-type">
 
                 <div class="bento-inner-card">
-                    <label class="label-tiny">Nombre del Responsable</label>
-                    <input type="text" id="teamName" required placeholder="Ej: Cumple de Benja" class="input-clean italic">
+                    <label class="label-tiny">Responsable del Grupo</label>
+                    <input type="text" id="teamName" required placeholder="Nombre..." class="input-clean italic">
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div class="bento-inner-card text-center">
                         <label class="label-tiny">Personas</label>
                         <div class="flex items-center justify-center gap-3 mt-1">
-                            <button type="button" onclick="adjustJumpers(-1)" class="adjust-btn-small">-</button>
+                            <button type="button" onclick="window.adjustJumpers(-1)" class="adjust-btn-small">-</button>
                             <input type="number" id="peopleCount" value="1" min="1" max="30" class="input-count">
-                            <button type="button" onclick="adjustJumpers(1)" class="adjust-btn-small">+</button>
+                            <button type="button" onclick="window.adjustJumpers(1)" class="adjust-btn-small">+</button>
                         </div>
                     </div>
                     <div class="bento-inner-card text-center">
                         <label class="label-tiny">Costo x Hora ($)</label>
-                        <input type="number" id="costPerHour" class="input-money mt-1" oninput="updateBookingTotal()">
+                        <input type="number" id="costPerHour" class="input-money mt-1" oninput="window.updateBookingVisualTotal()">
                     </div>
                     <div class="bento-inner-card text-center">
-                        <label class="label-tiny">Medio de Pago</label>
+                        <label class="label-tiny">Pago</label>
                         <select id="booking-payment-method" class="select-clean w-full mt-2">
                             <option value="efectivo">Efectivo 💵</option>
                             <option value="mercadopago">M. Pago 📲</option>
@@ -183,17 +178,17 @@
                 </div>
 
                 <div class="bento-inner-card">
-                    <label class="label-tiny mb-3">Horarios Seleccionados (Cupo 30)</label>
+                    <label class="label-tiny mb-3">Selección de Horarios</label>
                     <div id="court-hours-list" class="grid grid-cols-4 sm:grid-cols-5 gap-2"></div>
                 </div>
             </form>
 
             <div class="modal-footer">
                 <div class="text-left leading-none">
-                    <span class="label-tiny">Total Cobrado</span>
+                    <span class="label-tiny">Total a Cobrar</span>
                     <p id="booking-total" class="booking-total-display">$0</p>
                 </div>
-                <button type="submit" form="booking-form" class="bg-violet-primary btn-premium">CONFIRMAR TURNO</button>
+                <button type="submit" form="booking-form" class="bg-violet-primary btn-premium">GUARDAR TURNO</button>
             </div>
         </div>
     </div>
@@ -203,35 +198,41 @@
         <div class="modal-content max-w-5xl h-[90vh]">
             <div class="modal-header">
                 <h3 class="font-black italic uppercase">Caja Kiosco POS</h3>
-                <button onclick="closeModals()" class="btn-close-modal">
+                <button onclick="window.closeModals()" class="btn-close-modal">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M18 6L6 18M6 6l12 12"/></svg>
                 </button>
             </div>
             <div class="flex-grow flex flex-col md:flex-row overflow-hidden">
+                <!-- Columna Catálogo (Lista Alfabética) -->
                 <div class="flex-grow flex flex-col border-r border-slate-100 overflow-hidden">
                     <div class="p-4 border-b border-slate-50 bg-slate-50/50">
-                        <input type="text" id="sale-catalog-filter" oninput="renderSaleCatalog(this.value)" placeholder="🔍 Buscar producto por nombre..." class="input-clean" style="font-size: 1rem !important;">
+                        <input type="text" id="sale-catalog-filter" placeholder="🔍 Buscar producto por nombre..." class="input-clean" style="font-size: 1rem !important;" oninput="window.renderSaleCatalog(this.value)">
                     </div>
                     <div id="sale-catalog-list" class="flex-grow overflow-y-auto custom-scrollbar"></div>
                 </div>
+                <!-- Columna Ticket -->
                 <div class="w-full md:w-80 flex flex-col bg-slate-50/30 overflow-hidden">
-                    <div class="p-4 border-b border-slate-100"><p class="label-tiny text-center">Resumen de Venta</p></div>
+                    <div class="p-4 border-b border-slate-100"><p class="label-tiny text-center font-black">RESUMEN DE VENTA</p></div>
                     <div id="sale-cart-list" class="flex-grow p-4 overflow-y-auto custom-scrollbar">
-                        <div id="empty-cart-msg" class="h-full flex items-center justify-center opacity-20 italic uppercase font-black text-center text-xs px-4">El ticket está vacío</div>
+                        <div id="empty-cart-msg" class="h-full flex items-center justify-center opacity-20 italic uppercase font-black text-center text-xs px-4">El carrito está vacío</div>
                     </div>
                     <div class="p-6 bg-white border-t-2 border-slate-100">
                         <div class="flex justify-between items-center mb-4">
-                            <span class="label-tiny font-black">TOTAL A COBRAR:</span>
-                            <strong id="sale-total-display" class="text-3xl font-black font-mono italic">$0</strong>
+                            <span class="label-tiny">TOTAL:</span>
+                            <strong id="sale-total-display" class="text-3xl font-black font-mono italic tracking-tighter">0</strong>
                         </div>
-                        <button id="confirm-sale-btn" class="w-full bg-orange-primary btn-premium py-4" disabled onclick="handleConfirmSale()">PROCESAR COBRO</button>
+                        <button id="confirm-sale-btn" class="w-full bg-orange-primary btn-premium py-4" disabled onclick="window.handleConfirmSale()">PROCESAR COBRO</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- OVERLAY DE MENSAJES (CARGANDO/EXITO) -->
+    <!-- OTROS MODALES DE SOPORTE -->
+    <div id="edit-product-modal" class="modal"></div>
+    <div id="restock-modal" class="modal"></div>
+
+    <!-- OVERLAY DE MENSAJES -->
     <div id="message-overlay" class="modal bg-black/95">
         <div class="flex flex-col items-center justify-center text-center p-12">
             <div class="jumping-child text-5xl mb-6">🚀</div>
@@ -239,7 +240,7 @@
         </div>
     </div>
 
-    <!-- CARGA DE LÓGICA -->
-    <script type="module" src="app.js"></script>
+    <!-- CARGA DE MOTOR LÓGICO -->
+    <script type="module" src="main.js"></script>
 </body>
 </html>
