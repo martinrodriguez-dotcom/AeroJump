@@ -8,15 +8,15 @@
     <!-- Bloqueo de error de favicon -->
     <link rel="icon" href="data:,">
     
-    <!-- Google Fonts: Outfit para textos y JetBrains Mono para cifras -->
+    <!-- Google Fonts: Outfit para lectura y JetBrains Mono para cifras y códigos -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;900&family=JetBrains+Mono:wght@500;800&display=swap" rel="stylesheet">
     
-    <!-- Tailwind CSS para utilidades de estructura -->
+    <!-- Tailwind CSS (Utilidades de estructura y espaciado) -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- Único archivo de estilos (Maestro de Diseño) -->
+    <!-- ARCHIVO MAESTRO DE ESTILO (Controla toda la estética Premium Brutalist) -->
     <link rel="stylesheet" href="style.css">
 </head>
 <body class="custom-scrollbar">
@@ -28,7 +28,7 @@
             <p class="subtitle-brand">PANEL DE CONTROL</p>
             <form id="login-form" class="space-y-6 mt-8">
                 <div class="text-left">
-                    <label class="label-tiny">Email de Administrador:</label>
+                    <label class="label-tiny">Usuario (Email):</label>
                     <input type="email" id="login-email" required class="input-clean" style="font-size: 1.1rem !important;">
                 </div>
                 <div class="text-left">
@@ -43,7 +43,7 @@
     <!-- 2. CONTENEDOR PRINCIPAL DE LA APLICACIÓN -->
     <div id="app-container" class="is-hidden min-h-screen flex flex-col">
         
-        <!-- HEADER FIJO -->
+        <!-- HEADER SUPERIOR FIJO -->
         <header class="fixed top-0 left-0 right-0 bg-white z-[50]">
             <div class="flex items-center justify-between px-6 py-4 border-b-2 border-slate-100">
                 <div class="flex items-center gap-4">
@@ -76,12 +76,14 @@
                 <button class="menu-item" onclick="window.showView('config')">⚙️ CONFIGURACIÓN</button>
             </div>
         </nav>
+        
+        <!-- Overlay para cerrar menú -->
         <div id="menu-overlay" onclick="window.toggleMenu(false)" class="fixed inset-0 bg-black/80 z-[1000] hidden"></div>
 
         <!-- ÁREA DE CONTENIDO (MAIN VIEWPORT) -->
         <main class="flex-grow pt-24 pb-12 px-4 max-w-7xl mx-auto w-full overflow-y-auto custom-scrollbar">
             
-            <!-- VISTA: CALENDARIO -->
+            <!-- VISTA: AGENDA (CALENDARIO) -->
             <div id="calendar-view" class="view-container">
                 <div class="bento-card mb-6 flex justify-between items-center bg-white">
                     <button id="prev-month-btn" onclick="window.prevMonth()" class="btn-nav p-3 bg-slate-50 rounded-xl font-black">◀</button>
@@ -94,16 +96,16 @@
                 <div id="calendar-grid" class="grid grid-cols-7 gap-1 md:gap-2"></div>
             </div>
 
-            <!-- VISTA: PRODUCTOS (INVENTARIO COMPLETO) -->
+            <!-- VISTA: INVENTARIO (KIOSCO) -->
             <div id="productos-view" class="view-container is-hidden">
                 <div class="flex justify-between items-center mb-8">
                     <h2 class="section-title">INVENTARIO</h2>
                     <button id="add-product-btn" onclick="window.toggleProductForm()" class="bg-violet-primary btn-premium text-xs">+ NUEVO PRODUCTO</button>
                 </div>
 
-                <!-- Formulario Bento de Alta (Costo, Margen, Precio Real) -->
+                <!-- Formulario de Alta con Cálculo de Rentabilidad -->
                 <div id="product-form-container" class="is-hidden bento-card mb-10 border-2 border-violet-100 bg-violet-50/10">
-                    <form id="product-form" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <form id="product-form" class="grid grid-cols-1 md:grid-cols-3 gap-6">
                         <div class="md:col-span-2">
                             <label class="label-tiny">Nombre del Artículo</label>
                             <input type="text" id="prod-name" placeholder="Ej: Coca Cola 500ml" required class="input-clean border-b border-slate-200">
@@ -123,7 +125,7 @@
                         </div>
 
                         <div class="bento-inner-card bg-white">
-                            <label class="label-tiny">% Ganancia Aplicada</label>
+                            <label class="label-tiny">% Ganancia Sugerida</label>
                             <div class="flex items-center gap-3">
                                 <input type="number" id="prod-profit-pct" value="40" min="1" class="input-count text-lg text-violet-600">
                                 <span class="font-black text-violet-300">%</span>
@@ -148,10 +150,11 @@
                     </form>
                 </div>
 
+                <!-- Grilla de productos (Inyectada por JS) -->
                 <div id="product-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
             </div>
 
-            <!-- VISTA: CAJA -->
+            <!-- VISTA: FINANZAS (CAJA) -->
             <div id="caja-view" class="view-container is-hidden">
                 <div class="text-center mb-10">
                     <p class="label-tiny tracking-widest italic">Balance Neto Real Acumulado</p>
@@ -160,7 +163,7 @@
                 <div id="caja-daily-list" class="space-y-4 max-w-4xl mx-auto"></div>
             </div>
 
-            <!-- VISTA: RANKINGS -->
+            <!-- VISTA: RANKINGS (FIDELIDAD) -->
             <div id="stats-view" class="view-container is-hidden">
                 <h2 class="section-title mb-8 text-center uppercase">Ranking de Fidelidad</h2>
                 <div id="stats-list" class="space-y-4 max-w-3xl mx-auto"></div>
@@ -187,64 +190,15 @@
         </main>
     </div>
 
-    <!-- 3. MODALES DE GESTIÓN (REPOSICIÓN Y EDICIÓN) -->
-    
-    <!-- Modal: Reposición Stock -->
-    <div id="restock-modal" class="modal">
-        <div class="modal-content max-w-sm">
-            <div class="modal-header">
-                <h3 class="font-black italic uppercase">Reponer Stock</h3>
-                <button onclick="window.closeModals()" class="btn-close-modal">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M18 6L6 18M6 6l12 12"/></svg>
-                </button>
-            </div>
-            <form id="restock-form" onsubmit="window.handleConfirmRestock(event)" class="modal-body space-y-6">
-                <input type="hidden" id="restock-prod-id">
-                <div class="text-center">
-                    <p id="restock-name" class="text-xl font-black italic uppercase">PRODUCTO</p>
-                    <p class="text-[9px] font-bold text-slate-400 mt-1">SISTEMA ACTUAL: <span id="restock-current-stock">0</span> un.</p>
-                </div>
-                <div class="grid grid-cols-2 gap-4">
-                    <div class="bento-inner-card"><label class="label-tiny">Nva. Cant.</label><input type="number" id="restock-qty" required class="input-count"></div>
-                    <div class="bento-inner-card"><label class="label-tiny">$ Bulto</label><input type="number" id="restock-batch-cost" required class="input-money"></div>
-                </div>
-                <button type="submit" class="w-full bg-violet-primary btn-premium py-4">ACTUALIZAR STOCK</button>
-            </form>
-        </div>
-    </div>
+    <!-- 3. MODALES DEL SISTEMA -->
 
-    <!-- Modal: Editar Ficha -->
-    <div id="edit-product-modal" class="modal">
-        <div class="modal-content max-w-md">
-            <div class="modal-header">
-                <h3 class="font-black italic uppercase text-orange-600">Editar Ficha</h3>
-                <button onclick="window.closeModals()" class="btn-close-modal">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M18 6L6 18M6 6l12 12"/></svg>
-                </button>
-            </div>
-            <form id="edit-product-form" onsubmit="window.handleConfirmEditProduct(event)" class="modal-body space-y-4">
-                <input type="hidden" id="edit-prod-id">
-                <div class="bento-inner-card">
-                    <label class="label-tiny">Nombre Artículo</label>
-                    <input type="text" id="edit-prod-name" required class="input-clean italic">
-                </div>
-                <div class="grid grid-cols-2 gap-4">
-                    <div class="bento-inner-card"><label class="label-tiny">Costo Unit.</label><input type="number" id="edit-prod-cost" step="0.01" required class="input-money"></div>
-                    <div class="bento-inner-card"><label class="label-tiny">P. Venta</label><input type="number" id="edit-prod-price" required class="input-money text-violet-600"></div>
-                </div>
-                <div class="bento-inner-card"><label class="label-tiny">Stock Manual</label><input type="number" id="edit-prod-stock" required class="input-count text-left"></div>
-                <button type="submit" class="w-full bg-black text-white btn-premium py-4">GUARDAR CAMBIOS</button>
-            </form>
-        </div>
-    </div>
-
-    <!-- 4. MODAL DE RESERVA (COMPACTO Y REFINADO) -->
+    <!-- Modal: Reserva de Salto / Evento (Compacto 700px) -->
     <div id="booking-modal" class="modal">
         <div class="modal-content modal-booking-compact">
             <div class="modal-header">
                 <div class="text-left">
                     <h3 id="booking-modal-title">GESTIÓN DE TURNO</h3>
-                    <span id="booking-type-label" class="badge-type">Salto Normal</span>
+                    <span id="booking-type-label" class="badge-type mt-2 inline-block">Salto Normal</span>
                 </div>
                 <button onclick="window.closeModals()" class="btn-close-modal">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M18 6L6 18M6 6l12 12"/></svg>
@@ -284,7 +238,7 @@
                 </div>
 
                 <div class="bento-inner-card">
-                    <label class="label-tiny mb-3">Selección de Horarios (Cupo Máx 30)</label>
+                    <label class="label-tiny mb-3">Horarios Seleccionados (Límite 30 personas)</label>
                     <div id="court-hours-list" class="grid grid-cols-4 sm:grid-cols-5 gap-2"></div>
                 </div>
             </form>
@@ -299,7 +253,7 @@
         </div>
     </div>
 
-    <!-- 5. MODAL PUNTO DE VENTA (POS) -->
+    <!-- Modal: Punto de Venta (POS Kiosco) -->
     <div id="sale-modal" class="modal">
         <div class="modal-content max-w-5xl h-[90vh]">
             <div class="modal-header">
@@ -316,7 +270,7 @@
                     </div>
                     <div id="sale-catalog-list" class="flex-grow overflow-y-auto custom-scrollbar"></div>
                 </div>
-                <!-- Columna Ticket -->
+                <!-- Columna Ticket / Carrito -->
                 <div class="w-full md:w-80 flex flex-col bg-slate-50/50 overflow-hidden">
                     <div class="p-4 border-b border-slate-100 bg-white"><p class="label-tiny text-center font-black">RESUMEN DE VENTA</p></div>
                     <div id="sale-cart-list" class="flex-grow p-4 overflow-y-auto custom-scrollbar">
@@ -341,7 +295,56 @@
         </div>
     </div>
 
-    <!-- OVERLAY DE MENSAJES -->
+    <!-- Modal: Reposición de Stock -->
+    <div id="restock-modal" class="modal">
+        <div class="modal-content max-w-sm">
+            <div class="modal-header">
+                <h3 class="font-black italic uppercase">Reponer Stock</h3>
+                <button onclick="window.closeModals()" class="btn-close-modal">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M18 6L6 18M6 6l12 12"/></svg>
+                </button>
+            </div>
+            <form id="restock-form" onsubmit="window.handleConfirmRestock(event)" class="modal-body space-y-6">
+                <input type="hidden" id="restock-prod-id">
+                <div class="text-center">
+                    <p id="restock-name" class="text-xl font-black italic uppercase">PRODUCTO</p>
+                    <p class="text-[9px] font-bold text-slate-400 mt-1">SISTEMA ACTUAL: <span id="restock-current-stock">0</span> un.</p>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="bento-inner-card"><label class="label-tiny">Nva. Cant.</label><input type="number" id="restock-qty" required class="input-count"></div>
+                    <div class="bento-inner-card"><label class="label-tiny">$ Bulto</label><input type="number" id="restock-batch-cost" required class="input-money"></div>
+                </div>
+                <button type="submit" class="w-full bg-violet-primary btn-premium py-4">ACTUALIZAR STOCK</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal: Editar Ficha de Producto -->
+    <div id="edit-product-modal" class="modal">
+        <div class="modal-content max-w-md">
+            <div class="modal-header">
+                <h3 class="font-black italic uppercase text-orange-600">Editar Ficha</h3>
+                <button onclick="window.closeModals()" class="btn-close-modal">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M18 6L6 18M6 6l12 12"/></svg>
+                </button>
+            </div>
+            <form id="edit-product-form" onsubmit="window.handleConfirmEditProduct(event)" class="modal-body space-y-4">
+                <input type="hidden" id="edit-prod-id">
+                <div class="bento-inner-card">
+                    <label class="label-tiny">Nombre Artículo</label>
+                    <input type="text" id="edit-prod-name" required class="input-clean italic">
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="bento-inner-card"><label class="label-tiny">Costo Unit.</label><input type="number" id="edit-prod-cost" step="0.01" required class="input-money"></div>
+                    <div class="bento-inner-card"><label class="label-tiny">P. Venta</label><input type="number" id="edit-prod-price" required class="input-money text-violet-600"></div>
+                </div>
+                <div class="bento-inner-card"><label class="label-tiny">Stock Manual</label><input type="number" id="edit-prod-stock" required class="input-count text-left"></div>
+                <button type="submit" class="w-full bg-black text-white btn-premium py-4">GUARDAR CAMBIOS</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Overlay de Mensajes Animado -->
     <div id="message-overlay" class="modal bg-black/95">
         <div class="flex flex-col items-center justify-center text-center p-12">
             <div class="jumping-child text-5xl mb-6">🚀</div>
@@ -349,7 +352,7 @@
         </div>
     </div>
 
-    <!-- CARGA DE MOTOR LÓGICO CENTRAL -->
+    <!-- ÚNICO ARCHIVO DE CARGA DE LÓGICA -->
     <script type="module" src="main.js"></script>
 </body>
 </html>
