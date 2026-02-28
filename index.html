@@ -76,34 +76,34 @@
         #main-menu.is-open { transform: translateX(0); }
 
         .menu-item {
-            padding: 1rem 1.5rem; margin: 0.5rem; border-radius: 1rem;
-            cursor: pointer; transition: all 0.2s; text-transform: uppercase; font-size: 0.8rem;
+            padding: 1rem 1.5rem; margin: 0.3rem 0.8rem; border-radius: 1rem;
+            cursor: pointer; transition: all 0.2s; text-transform: uppercase; font-size: 0.8rem; font-weight: 900;
         }
         .menu-item:hover { background: #f5f3ff; color: var(--violet); transform: translateX(5px); }
 
         /* Modales Estilo Bento */
         .modal {
             display: none; position: fixed; inset: 0;
-            background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(8px);
+            background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(8px);
             z-index: 2000; align-items: center; justify-content: center; padding: 1rem;
         }
         .modal.is-open { display: flex; }
 
         .modal-content {
-            background: white; width: 100%; max-width: 800px; max-height: 90vh;
+            background: white; width: 100%; max-width: 850px; max-height: 92vh;
             border-radius: var(--radius-xl); display: flex; flex-direction: column; overflow: hidden;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.3);
         }
 
-        .modal-header { padding: 1.5rem; border-bottom: 1px solid #f1f5f9; display: flex; justify-content: space-between; align-items: center; }
+        .modal-header { padding: 1.5rem; border-bottom: 1px solid #f1f5f9; display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; }
         .modal-body { flex: 1; overflow-y: auto; padding: 1.5rem; background: #f8fafc; }
-        .modal-footer { padding: 1.5rem; border-top: 1px solid #f1f5f9; display: flex; justify-content: space-between; align-items: center; background: white; }
+        .modal-footer { padding: 1.5rem; border-top: 1px solid #f1f5f9; display: flex; justify-content: space-between; align-items: center; background: white; flex-shrink: 0; }
 
         /* Celdas del Calendario */
         .day-cell {
             background: white; border: 1px solid #e2e8f0; border-radius: 1rem;
             aspect-ratio: 1/1; display: flex; flex-direction: column; justify-content: space-between;
-            padding: 0.6rem; cursor: pointer; transition: 0.2s;
+            padding: 0.6rem; cursor: pointer; transition: 0.2s; box-shadow: 0 2px 5px rgba(0,0,0,0.02);
         }
         .day-cell:hover { border-color: var(--violet); background: #f5f3ff; transform: scale(1.05); z-index: 10; }
 
@@ -116,9 +116,14 @@
         .signature-container { touch-action: none; border: 2px dashed #cbd5e1; background: white; border-radius: 1rem; position: relative; }
         #signature-pad { width: 100%; height: 200px; cursor: crosshair; }
 
-        /* POS */
-        .pos-item-row { border-bottom: 1px solid #f1f5f9; transition: background 0.2s; }
+        /* POS Avanzado */
+        .pos-header-fixed { position: sticky; top: 0; background: white; z-index: 10; border-bottom: 1px solid #f1f5f9; padding: 1rem; }
+        .pos-item-row { border-bottom: 1px solid #f1f5f9; transition: background 0.2s; padding: 1rem; display: flex; align-items: center; justify-content: space-between; }
         .pos-item-row:hover { background: #f8fafc; }
+
+        /* Estilo para los botones de las tarjetas de inventario */
+        .inv-action-btn { font-size: 9px; font-weight: 900; text-transform: uppercase; padding: 8px; border-radius: 10px; background: #f1f5f9; transition: 0.2s; }
+        .inv-action-btn:hover { background: var(--black); color: white; }
     </style>
 </head>
 <body class="custom-scrollbar">
@@ -126,18 +131,18 @@
     <!-- 1. VISTA ACCESO -->
     <section id="login-view" class="min-h-screen flex items-center justify-center p-4 bg-[#0f172a]">
         <div class="bento-card w-full max-w-sm text-center p-10">
-            <h2 class="text-4xl font-black italic tracking-tighter mb-2">AeroJump</h2>
-            <p class="text-[10px] uppercase font-black tracking-[0.3em] text-slate-400 mb-8">Panel de Control v2026</p>
+            <h2 class="text-4xl font-black italic tracking-tighter mb-2 text-slate-900">AeroJump</h2>
+            <p class="text-[10px] uppercase font-black tracking-[0.3em] text-slate-400 mb-8">Administración Gchu</p>
             <form id="login-form" class="space-y-4">
                 <div class="text-left">
-                    <label class="label-tiny">Administrador:</label>
+                    <label class="label-tiny">Usuario:</label>
                     <input type="email" id="login-email" required class="bento-inner-card w-full outline-none font-bold">
                 </div>
                 <div class="text-left">
                     <label class="label-tiny">Contraseña:</label>
                     <input type="password" id="login-password" required class="bento-inner-card w-full outline-none font-bold">
                 </div>
-                <button type="submit" class="w-full bg-violet-600 btn-premium text-white shadow-lg shadow-violet-200">Entrar al Sistema</button>
+                <button type="submit" class="w-full bg-violet-600 btn-premium text-white shadow-lg shadow-violet-100">Ingresar al Sistema</button>
             </form>
         </div>
     </section>
@@ -149,19 +154,18 @@
                 <button onclick="toggleMenu(true)" class="p-2 bg-slate-900 text-white rounded-xl active:scale-90 transition-transform">
                     <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M4 6h16M4 12h16M4 18h16" /></svg>
                 </button>
-                <div class="leading-none">
-                    <h1 class="text-lg font-black uppercase italic">AeroJump <span class="text-violet-600">Gchu</span></h1>
-                </div>
+                <h1 class="text-lg font-black uppercase italic">AeroJump <span class="text-violet-600 font-mono text-sm">v2.6</span></h1>
             </div>
-            <button onclick="openSaleModal()" class="bg-orange-500 btn-premium text-white text-[10px] px-4 py-2 shadow-lg shadow-orange-100 italic">Venta Kiosco</button>
+            <button onclick="openSaleModal()" class="bg-orange-500 btn-premium text-white text-[10px] px-5 py-2 shadow-lg shadow-orange-100 italic">VENTA KIOSCO</button>
         </header>
 
         <nav id="main-menu" class="flex flex-col">
             <div class="p-8 border-b border-slate-100 bg-slate-50/50 text-center">
-                <p id="user-email-display" class="text-[10px] font-black truncate mb-4 text-slate-400"></p>
+                <div class="w-12 h-12 bg-black text-white rounded-2xl flex items-center justify-center mx-auto mb-3 font-black italic text-xl">AJ</div>
+                <p id="user-email-display" class="text-[10px] font-black truncate mb-4 text-slate-400 uppercase tracking-widest"></p>
                 <button id="logout-btn" class="w-full border-2 border-red-100 text-red-500 p-2 rounded-xl font-black text-[9px] uppercase hover:bg-red-50">Cerrar Sesión 🔒</button>
             </div>
-            <div class="flex-grow overflow-y-auto custom-scrollbar p-2">
+            <div class="flex-grow overflow-y-auto custom-scrollbar p-2 mt-4">
                 <div class="menu-item" onclick="showView('calendar')">🗓️ Agenda Saltos</div>
                 <div class="menu-item" onclick="showView('productos')">🥤 Stock Kiosco</div>
                 <div class="menu-item" onclick="showView('caja')">💰 Arqueo Caja</div>
@@ -173,14 +177,14 @@
 
         <div id="menu-overlay" onclick="toggleMenu(false)" class="fixed inset-0 bg-black/40 z-[1000] hidden backdrop-blur-sm"></div>
 
-        <main id="main-content" class="flex-grow overflow-y-auto p-4 md:p-8 custom-scrollbar">
+        <main id="main-content" class="flex-grow overflow-y-auto p-4 md:p-8 custom-scrollbar bg-[#f8fafc]">
             
             <!-- VISTA: CALENDARIO -->
             <div id="calendar-view" class="view-container">
-                <div class="bento-card mb-6 p-4 flex justify-between items-center bg-white">
-                    <button onclick="prevMonth()" class="p-3 bg-slate-50 rounded-xl font-black hover:bg-slate-100">◀</button>
-                    <h2 id="current-month-year" class="text-2xl font-black uppercase italic tracking-tighter"></h2>
-                    <button onclick="nextMonth()" class="p-3 bg-slate-50 rounded-xl font-black hover:bg-slate-100">▶</button>
+                <div class="bento-card mb-6 p-4 flex justify-between items-center bg-white border-none shadow-xl shadow-slate-100">
+                    <button onclick="prevMonth()" class="p-3 bg-slate-50 rounded-xl font-black hover:bg-slate-100 transition-all">◀</button>
+                    <h2 id="current-month-year" class="text-2xl font-black uppercase italic tracking-tighter">Cargando...</h2>
+                    <button onclick="nextMonth()" class="p-3 bg-slate-50 rounded-xl font-black hover:bg-slate-100 transition-all">▶</button>
                 </div>
                 <div class="grid grid-cols-7 gap-2 mb-2 text-center font-black text-[10px] text-violet-500 uppercase tracking-widest italic">
                     <div>Lun</div><div>Mar</div><div>Mie</div><div>Jue</div><div>Vie</div><div>Sab</div><div>Dom</div>
@@ -188,45 +192,49 @@
                 <div id="calendar-grid" class="grid grid-cols-7 gap-3"></div>
             </div>
 
-            <!-- VISTA: PRODUCTOS -->
+            <!-- VISTA: PRODUCTOS (INVENTARIO) -->
             <div id="productos-view" class="view-container is-hidden">
-                <div class="flex justify-between items-center mb-8">
-                    <h2 class="section-title">Inventario</h2>
-                    <button onclick="toggleProductForm()" class="btn-premium bg-violet-600 text-white text-xs">+ Nuevo Producto</button>
+                <div class="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
+                    <h2 class="section-title italic">Inventario Real</h2>
+                    <div class="flex gap-3 w-full md:w-auto">
+                        <input type="text" id="inventory-search" placeholder="🔍 Buscar artículo..." class="bento-card flex-grow p-3 px-6 outline-none font-bold text-sm italic" oninput="renderProducts(this.value)">
+                        <button onclick="toggleProductForm()" class="btn-premium bg-violet-600 text-white text-xs">+ NUEVO</button>
+                    </div>
                 </div>
-                <div id="product-form-container" class="is-hidden bento-card p-8 mb-10 border-violet-100 bg-violet-50/10">
+                
+                <div id="product-form-container" class="is-hidden bento-card p-8 mb-10 border-violet-100 bg-violet-50/20">
                     <form id="product-form" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div class="bento-inner-card"><label class="label-tiny">Nombre del Artículo</label><input type="text" id="prod-name" required class="input-clean uppercase"></div>
+                        <div class="bento-inner-card"><label class="label-tiny">Nombre del Producto</label><input type="text" id="prod-name" required class="input-clean uppercase"></div>
                         <div class="bento-inner-card"><label class="label-tiny">Stock Inicial</label><input type="number" id="prod-stock" required class="input-clean"></div>
-                        <div class="bento-inner-card"><label class="label-tiny">$ Bulto / Costo Total</label><input type="number" id="prod-batch-cost" required class="input-clean"></div>
+                        <div class="bento-inner-card"><label class="label-tiny">$ Costo Bulto</label><input type="number" id="prod-batch-cost" required class="input-clean"></div>
                         <div class="bento-inner-card"><label class="label-tiny">Unidades x Bulto</label><input type="number" id="prod-batch-qty" required class="input-clean"></div>
-                        <div class="bento-inner-card bg-black text-white"><label class="label-tiny text-slate-400">Precio Venta Real</label><input type="number" id="prod-real-price" required class="input-clean text-white"></div>
-                        <button type="submit" class="btn-premium bg-violet-600 text-white col-span-full py-4 text-sm">Guardar Ficha Técnica</button>
+                        <div class="bento-inner-card bg-black text-white"><label class="label-tiny text-slate-400">Precio Venta Público ($)</label><input type="number" id="prod-real-price" required class="input-clean text-white"></div>
+                        <button type="submit" class="btn-premium bg-violet-600 text-white col-span-full py-4 text-sm font-black">REGISTRAR EN STOCK ✅</button>
                     </form>
                 </div>
-                <div id="product-list" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
+                <div id="product-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
             </div>
 
             <!-- VISTA: CAJA -->
             <div id="caja-view" class="view-container is-hidden">
                 <div class="flex justify-between items-center mb-8">
-                    <h2 class="section-title">Arqueo Caja</h2>
-                    <button onclick="openExpenseModal()" class="btn-premium bg-red-500 text-white text-xs">Anotar Gasto -</button>
+                    <h2 class="section-title italic">Arqueo de Caja</h2>
+                    <button onclick="openExpenseModal()" class="btn-premium bg-red-500 text-white text-xs font-black italic">ANOTAR GASTO -</button>
                 </div>
-                <div class="bento-card p-12 text-center mb-10 bg-white border-violet-100">
-                    <p class="label-tiny tracking-widest mb-2">Caja Neto Real</p>
-                    <div id="caja-total-combined" class="text-7xl font-black italic tracking-tighter text-slate-900">$0</div>
+                <div class="bento-card p-12 text-center mb-10 bg-white border-violet-200">
+                    <p class="label-tiny tracking-[0.4em] mb-4">Balance Neto Actual</p>
+                    <div id="caja-total-combined" class="text-7xl font-black italic tracking-tighter text-slate-900 font-mono">$0</div>
                 </div>
                 <div id="caja-daily-list" class="space-y-4 max-w-3xl mx-auto"></div>
             </div>
 
-            <!-- VISTA: FIRMAS -->
+            <!-- VISTA: FIRMAS DIGITALES -->
             <div id="firmas-view" class="view-container is-hidden">
                 <div class="flex justify-between items-center mb-8">
-                    <h2 class="section-title">Documentación</h2>
-                    <button onclick="openWaiverModal()" class="btn-premium bg-black text-white text-xs">+ Nueva Firma Digital</button>
+                    <h2 class="section-title italic">Documentación</h2>
+                    <button onclick="openWaiverModal()" class="btn-premium bg-black text-white text-xs">+ NUEVA FIRMA</button>
                 </div>
-                <div class="mb-6"><input type="text" id="waiver-filter" placeholder="🔍 BUSCAR POR NOMBRE O DNI..." class="bento-card w-full p-5 outline-none font-bold italic border-2 border-slate-100"></div>
+                <div class="mb-8"><input type="text" id="waiver-filter" placeholder="🔍 BUSCAR POR RESPONSABLE O DNI..." class="bento-card w-full p-5 outline-none font-bold italic border-2 border-slate-50 shadow-sm" oninput="renderWaiverList(this.value)"></div>
                 <div id="waiver-list" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
             </div>
 
@@ -238,11 +246,11 @@
 
             <!-- VISTA: CONFIG -->
             <div id="config-view" class="view-container is-hidden">
-                <h2 class="section-title text-center mb-12 italic">Ajustes</h2>
-                <div class="bento-card p-12 max-w-md mx-auto">
-                    <form id="config-form" class="space-y-8 text-center">
-                        <div class="bento-inner-card"><label class="label-tiny">Precio Hora Salto ($)</label><input type="number" id="config-court-price" value="5000" class="input-clean text-center text-4xl font-black"></div>
-                        <button type="submit" class="btn-premium bg-black text-white w-full py-5 shadow-2xl">Actualizar Tarifas</button>
+                <h2 class="section-title text-center mb-12">Tarifas del Sistema</h2>
+                <div class="bento-card p-12 max-w-md mx-auto text-center border-none">
+                    <form id="config-form" class="space-y-8">
+                        <div class="bento-inner-card"><label class="label-tiny">Costo Hora Salto ($)</label><input type="number" id="config-court-price" value="5000" class="input-clean text-center text-4xl font-black italic"></div>
+                        <button type="submit" class="w-full bg-slate-900 btn-premium text-white py-6 shadow-2xl active:scale-95 transition-all font-black uppercase">Guardar Cambios ☁️</button>
                     </form>
                 </div>
             </div>
@@ -256,129 +264,155 @@
     <div id="booking-modal" class="modal">
         <div class="modal-content max-w-2xl">
             <div class="modal-header">
-                <h3 class="font-black uppercase italic text-lg" id="booking-modal-title">Nueva Reserva</h3>
-                <button onclick="closeModals()" class="w-10 h-10 bg-slate-100 rounded-full font-black hover:bg-black hover:text-white">X</button>
+                <h3 class="font-black uppercase italic text-lg" id="booking-modal-title">Turno AeroJump</h3>
+                <button onclick="closeModals()" class="w-10 h-10 bg-slate-50 rounded-full font-black hover:bg-black hover:text-white transition-all">X</button>
             </div>
             <form id="booking-form" class="modal-body space-y-6">
                 <input type="hidden" id="booking-id"><input type="hidden" id="booking-date">
-                <div class="bento-inner-card"><label class="label-tiny">Responsable del Grupo</label><input type="text" id="teamName" required class="input-clean uppercase"></div>
+                <div class="bento-inner-card"><label class="label-tiny">Responsable del Grupo</label><input type="text" id="teamName" required class="input-clean uppercase italic font-black"></div>
                 <div class="grid grid-cols-2 gap-4">
-                    <div class="bento-inner-card"><label class="label-tiny">Cant. Saltadores</label><input type="number" id="peopleCount" value="1" class="input-clean"></div>
-                    <div class="bento-inner-card"><label class="label-tiny">Costo p/ Hora ($)</label><input type="number" id="costPerHour" class="input-clean"></div>
+                    <div class="bento-inner-card"><label class="label-tiny">Personas</label><input type="number" id="peopleCount" value="1" class="input-clean font-mono"></div>
+                    <div class="bento-inner-card"><label class="label-tiny">Costo p/ Hora ($)</label><input type="number" id="costPerHour" class="input-clean font-mono"></div>
                 </div>
                 <div class="bento-inner-card">
-                    <label class="label-tiny mb-4">Selección de Horarios (Límite 30 pers):</label>
+                    <label class="label-tiny mb-4 italic">Selección de Horarios:</label>
                     <div id="court-hours-list" class="grid grid-cols-5 gap-3"></div>
                 </div>
             </form>
-            <div class="modal-footer">
-                <div class="text-left leading-none"><span class="label-tiny">Total:</span><p id="booking-total" class="text-3xl font-black italic text-violet-600">$0</p></div>
-                <button type="submit" form="booking-form" class="btn-premium bg-violet-600 text-white px-10 py-5">Confirmar Turno ✅</button>
+            <div class="modal-footer bg-slate-50">
+                <div class="text-left leading-none"><span class="label-tiny">Monto Total:</span><p id="booking-total" class="text-4xl font-black italic text-violet-600 font-mono">$0</p></div>
+                <button type="submit" form="booking-form" class="btn-premium bg-violet-600 text-white px-12 py-5 shadow-lg shadow-violet-100">CONFIRMAR TURNO ✅</button>
             </div>
         </div>
     </div>
 
-    <!-- Modal POS -->
+    <!-- Modal POS (Punto de Venta) -->
     <div id="sale-modal" class="modal">
-        <div class="modal-content !max-w-5xl h-[90vh]">
-            <div class="modal-header bg-white border-b"><h3 class="font-black italic uppercase text-lg">Caja POS Kiosco</h3><button onclick="closeModals()" class="w-10 h-10 bg-slate-100 rounded-full font-black">X</button></div>
+        <div class="modal-content !max-w-5xl h-[94vh]">
+            <div class="modal-header bg-white border-b-2">
+                <h3 class="font-black italic uppercase text-lg">Terminal de Venta Kiosco</h3>
+                <button onclick="closeModals()" class="w-10 h-10 bg-slate-50 rounded-full font-black">X</button>
+            </div>
             <div class="flex flex-col md:flex-row flex-grow overflow-hidden">
-                <div class="flex-grow p-6 overflow-y-auto custom-scrollbar border-r">
-                    <input type="text" id="sale-filter" placeholder="🔍 Buscar artículo..." class="bento-inner-card w-full mb-6 outline-none font-bold italic p-4 border-2 border-slate-50" oninput="renderSaleCatalog(this.value)">
-                    <div id="sale-catalog-list" class="space-y-3"></div>
+                <!-- Izquierda: Catálogo con barra fija -->
+                <div class="flex-grow flex flex-col bg-white overflow-hidden border-r">
+                    <div class="pos-header-fixed shadow-sm">
+                        <input type="text" id="sale-filter" placeholder="🔍 BUSCAR ARTÍCULO POR NOMBRE..." class="bento-inner-card w-full outline-none font-black italic p-4 text-base border-2" oninput="renderSaleCatalog(this.value)">
+                    </div>
+                    <div id="sale-catalog-list" class="flex-grow overflow-y-auto custom-scrollbar p-2 space-y-1"></div>
                 </div>
-                <div class="w-full md:w-[380px] bg-slate-50 flex flex-col shadow-inner">
+                <!-- Derecha: Ticket y Pago -->
+                <div class="w-full md:w-[400px] bg-slate-50 flex flex-col shadow-inner">
+                    <div class="p-6 border-b bg-white italic text-[10px] uppercase font-black text-slate-400 tracking-widest text-center shadow-sm">Resumen del Ticket</div>
                     <div id="sale-cart-list" class="flex-grow p-6 overflow-y-auto space-y-3 custom-scrollbar"></div>
-                    <div class="p-8 bg-white border-t-2 border-slate-100 shadow-2xl">
-                        <div class="flex justify-between mb-6 items-end"><span class="label-tiny text-slate-400">Total Ticket:</span><strong id="sale-total-display" class="text-5xl font-black italic tracking-tighter leading-none">$0</strong></div>
-                        <button onclick="handleConfirmSale()" id="btn-sale-confirm" class="w-full btn-premium bg-orange-500 text-white py-6 text-xl rounded-2xl shadow-xl shadow-orange-100" disabled>Cobrar Venta 💰</button>
+                    <div class="p-8 bg-white border-t-4 border-violet-100 shadow-2xl">
+                        <div class="mb-6">
+                            <label class="label-tiny">Medio de Pago:</label>
+                            <select id="sale-payment-method" class="w-full p-4 rounded-2xl bg-slate-50 border-2 border-slate-100 font-black italic outline-none text-sm">
+                                <option value="efectivo">EFECTIVO 💵</option>
+                                <option value="mercadopago">MERCADO PAGO 📲</option>
+                            </select>
+                        </div>
+                        <div class="flex justify-between mb-8 items-end">
+                            <span class="label-tiny italic">Total Final:</span>
+                            <strong id="sale-total-display" class="text-6xl font-black italic tracking-tighter leading-none text-slate-900">$0</strong>
+                        </div>
+                        <button onclick="handleConfirmSale()" id="btn-sale-confirm" class="w-full btn-premium bg-orange-500 text-white py-8 text-2xl rounded-3xl shadow-xl shadow-orange-100 transition-all active:scale-95 disabled:opacity-30 disabled:cursor-not-allowed font-black italic" disabled>COBRAR VENTA 💰</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Modal Waiver (Exención) con Contrato Completo -->
+    <!-- Modal Waiver (Exención Legal Completa) -->
     <div id="waiver-modal" class="modal">
         <div class="modal-content">
-            <div class="modal-header bg-slate-900 text-white">
-                <h3 class="font-black italic uppercase">Deslinde de Responsabilidad</h3>
+            <div class="modal-header bg-black text-white">
+                <h3 class="font-black italic uppercase">Deslinde Legal Digital</h3>
                 <button onclick="closeModals()" class="text-white bg-white/10 w-10 h-10 rounded-full">X</button>
             </div>
             <form id="waiver-form" class="modal-body space-y-6">
-                <div class="grid grid-cols-2 gap-4">
-                    <div class="bento-inner-card"><label class="label-tiny">Adulto Responsable</label><input type="text" id="waiver-adult-name" required class="input-clean uppercase"></div>
-                    <div class="bento-inner-card"><label class="label-tiny">DNI / Pasaporte</label><input type="text" id="waiver-dni" required class="input-clean font-mono"></div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bento-inner-card"><label class="label-tiny">Adulto Responsable</label><input type="text" id="waiver-adult-name" required class="input-clean uppercase italic font-black"></div>
+                    <div class="bento-inner-card"><label class="label-tiny">DNI / Documento</label><input type="text" id="waiver-dni" required class="input-clean font-mono"></div>
                 </div>
-                <div class="bento-inner-card"><label class="label-tiny">Nombre del Menor a cargo</label><input type="text" id="waiver-minor-name" class="input-clean uppercase" placeholder="DEJAR VACÍO SI NO HAY MENORES"></div>
+                <div class="bento-inner-card"><label class="label-tiny">Nombre del Menor a cargo</label><input type="text" id="waiver-minor-name" class="input-clean uppercase font-black italic" placeholder="DEJAR VACÍO SI NO HAY MENORES"></div>
                 
-                <div class="bento-inner-card bg-slate-50 border-slate-200">
-                    <p class="text-[11px] font-bold text-slate-600 mb-3">Mediante la presente, eximo de toda responsabilidad a AeroJump Gchu y su dueña Fenocchio María Irene por cualquier lesión física derivada del uso de las instalaciones.</p>
+                <div class="bento-inner-card bg-slate-50 border-slate-200 p-6 italic">
+                    <p class="text-[11px] font-bold text-slate-600 mb-4 text-justify">Mediante la presente, eximo de toda responsabilidad a AeroJump Gchu y su dueña Fenocchio María Irene por cualquier lesión física derivada del uso de las instalaciones. Declaro conocer los riesgos y estar en condiciones óptimas.</p>
                     
-                    <button type="button" onclick="toggleLegalFullText()" id="toggle-legal-btn" class="w-full py-3 bg-white border-2 border-slate-200 rounded-xl text-[10px] font-black text-violet-600 hover:bg-violet-50 transition-colors uppercase italic tracking-tighter">
+                    <button type="button" onclick="toggleLegalFullText()" id="toggle-legal-btn" class="w-full py-4 bg-white border-2 border-slate-200 rounded-2xl text-[10px] font-black text-violet-600 hover:bg-violet-50 transition-colors uppercase italic tracking-widest shadow-sm">
                         [ + ] LEER ACUERDO COMPLETO, RIESGOS Y AUTORIZACIONES (Sección 1 y 2)
                     </button>
                     
-                    <div id="legal-full-text-container" class="is-hidden mt-4 p-5 bg-white border border-slate-200 rounded-2xl text-[10px] font-bold text-slate-700 space-y-4 max-h-80 overflow-y-auto custom-scrollbar text-justify leading-relaxed">
-                        <h4 class="font-black uppercase text-black border-b border-slate-200 pb-2">SECCIÓN 1: RIESGOS</h4>
+                    <!-- CONTRATO COMPLETO INTEGRADO -->
+                    <div id="legal-full-text-container" class="is-hidden mt-6 p-6 bg-white border border-slate-200 rounded-2xl text-[10px] font-bold text-slate-700 space-y-5 max-h-96 overflow-y-auto custom-scrollbar text-justify leading-relaxed shadow-inner">
+                        <h4 class="font-black uppercase text-black border-b-2 border-slate-100 pb-2 text-xs">SECCIÓN 1: RIESGOS</h4>
                         <p>Mediante la firma del presente consentimiento, entiendo y reconozco que mi participación y la participación de los menores con quienes ingreso al parque con suficiente representación y/o autorización en el uso del parque, sus juegos y sus actividades conllevan riesgos conocidos, esperados e inesperados, que podrían resultar en lesiones físicas, emocionales, parálisis o muerte a mi persona, a los menores de edad por quienes me hago responsable al firmar o a terceros.</p>
-                        <p>Los riesgos incluyen, aunque no se limitan a resbalones, malas caídas, colisiones con objetos fijos y/u otros participantes. Los posibles daños incluyen: esguinces, fractura de huesos, lesiones oculares, roturas de ligamentos, parálisis, infarto o muerte.</p>
-                        <p class="bg-yellow-50 p-3 border-l-4 border-yellow-400 font-black italic">AEROJUMP Y SU DUEÑA Fenocchio maría irene NO recomienda el ingreso al área de salto en caso de estar embarazada o sospechas.</p>
-                        <h4 class="font-black uppercase text-black border-b border-slate-200 pb-2 mt-4">ASUNCIÓN DE RIESGOS</h4>
-                        <p>(a) Acepto todos los riesgos. (f) Acepto renunciar al fuero que me pudiera corresponder, y que cualquier reclamo judicial será presentado exclusivamente ante la justicia civil y comercial de gualeguaychú. (h) Mi firma es prueba de una completa e incondicional RENUNCIA Y LIBERACIÓN.</p>
-                        <h4 class="font-black uppercase text-black border-b border-slate-200 pb-2 mt-4">SECCIÓN 2: DECLARACIÓN JURADA</h4>
-                        <p>Declaro bajo juramento que revisto el carácter de padre/mother, tutor legal o persona autorizada y que tengo la capacidad/legitimación de firmar este acuerdo en su nombre. Asimismo declaro que la información es verdadera y correcta.</p>
+                        <p>Los riesgos incluyen, aunque no se limitan a los riegos propios de las actividad, como resbalones, malas caídas, colisiones con objetos fijos y/u otros participantes. Daños posibles: esguinces, fractura de huesos, lesiones oculares, roturas de ligamentos, lesiones cerebrales, incapacidades permanentes, muerte.</p>
+                        <p class="bg-yellow-50 p-4 border-l-4 border-yellow-400 font-black italic text-slate-900 rounded-r-xl">AEROJUMP Y SU DUEÑA Fenocchio maría irene NO recomienda el ingreso al área de salto del parque en caso de estar embarazada o sospechas. Si ingreso lo hago bajo mi absoluta responsabilidad.</p>
+                        <h4 class="font-black uppercase text-black border-b-2 border-slate-100 pb-2 mt-4 text-xs">ASUNCIÓN DE RIESGOS</h4>
+                        <p>(a) Acepto todos los riesgos inherentes. (f) Acepto renunciar al fuero que me pudiera corresponder, y que cualquier reclamo judicial será presentado exclusivamente ante la justicia civil y comercial de Gualeguaychú. (h) Mi firma es prueba de una completa e incondicional RENUNCIA Y LIBERACIÓN.</p>
+                        <h4 class="font-black uppercase text-black border-b-2 border-slate-100 pb-2 mt-4 text-xs">SECCIÓN 2: DECLARACIÓN JURADA</h4>
+                        <p>Declaro bajo juramento que revisto el carácter de padre/madre, tutor legal o persona autorizada y que tengo la capacidad/legitimación de firmar este acuerdo en su nombre.</p>
                     </div>
                 </div>
 
-                <div class="signature-container shadow-inner">
-                    <canvas id="signature-pad"></canvas>
+                <div class="signature-container shadow-inner p-2 bg-slate-100">
+                    <canvas id="signature-pad" class="bg-white rounded-xl shadow-inner"></canvas>
                 </div>
                 <div class="flex justify-between items-center px-2">
                     <button type="button" onclick="clearSignature()" class="text-[10px] font-black text-red-500 underline uppercase italic">Borrar Firma 🗑️</button>
-                    <p class="text-[9px] text-slate-400 italic">Firme con el dedo sobre el recuadro</p>
+                    <p class="text-[9px] text-slate-400 font-black italic uppercase">Firma Digital Vínculo Legal</p>
                 </div>
             </form>
-            <div class="modal-footer bg-slate-50">
-                <button type="submit" form="waiver-form" class="w-full btn-premium bg-violet-600 text-white py-5 text-lg shadow-xl shadow-violet-100">Guardar Firma y Finalizar ✅</button>
+            <div class="modal-footer bg-slate-50 p-8">
+                <button type="submit" form="waiver-form" class="w-full btn-premium bg-violet-600 text-white py-6 text-xl shadow-2xl shadow-violet-100 font-black italic">CONFIRMAR Y ARCHIVAR ✅</button>
             </div>
         </div>
     </div>
 
-    <!-- Modal Detalle Firma y Generar PDF -->
+    <!-- Modal Detalle Firma y Generador de PDF -->
     <div id="view-waiver-modal" class="modal">
         <div class="modal-content !max-w-md">
-            <div class="modal-header">
+            <div class="modal-header bg-slate-50">
                 <h3 class="font-black italic uppercase">Certificado Archivada</h3>
-                <button onclick="closeModals()" class="w-10 h-10 bg-slate-50 rounded-full font-black">X</button>
+                <button onclick="closeModals()" class="w-10 h-10 bg-white rounded-full font-black shadow-sm">X</button>
             </div>
-            <div class="modal-body text-center p-10 bg-white">
-                <div id="view-waiver-details" class="bento-inner-card text-left italic text-sm mb-6 bg-slate-50 border-none leading-relaxed"></div>
-                <div class="p-4 border-2 border-slate-900 rounded-3xl inline-block bg-white shadow-2xl">
+            <div class="modal-body text-center p-12 bg-white">
+                <div id="view-waiver-details" class="bento-inner-card text-left italic text-sm mb-8 bg-slate-50 border-none leading-relaxed shadow-inner font-bold"></div>
+                <div class="p-4 border-2 border-slate-900 rounded-[2.5rem] inline-block bg-white shadow-2xl transform rotate-1">
                     <img id="view-waiver-img" class="w-full h-auto rounded-xl">
                 </div>
             </div>
-            <div class="modal-footer bg-slate-50">
-                <button id="btn-print-waiver" class="w-full btn-premium bg-black text-white py-5 text-sm flex items-center justify-center gap-3">
-                    <span>📄</span> IMPRIMIR / GENERAR PDF
+            <div class="modal-footer bg-slate-50 p-8 shadow-inner">
+                <button id="btn-print-waiver" class="w-full btn-premium bg-black text-white py-6 text-lg flex items-center justify-center gap-4 italic font-black shadow-2xl">
+                    <span>📄</span> IMPRIMIR / PDF COMPLETO
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- Overlay Mensajes (Fluido e Instantáneo) -->
+    <!-- Modales Inventario (Reposición y Edición) -->
+    <div id="restock-modal" class="modal"><div class="modal-content !max-w-sm"><div class="modal-header bg-white"><h3 class="font-black italic uppercase">Reponer Mercadería</h3><button onclick="closeModals()" class="w-10 h-10 bg-slate-50 rounded-full font-black">X</button></div><form id="restock-form" class="modal-body space-y-6 text-center bg-slate-50 p-10"><input type="hidden" id="restock-prod-id"><div class="mb-6"><p id="restock-name" class="text-3xl font-black italic uppercase text-slate-900 leading-none"></p><p class="text-[11px] text-slate-400 uppercase tracking-widest mt-4 font-black italic">STOCK ACTUAL: <span id="restock-current-stock" class="text-violet-600 font-black">0</span> UNIDADES</p></div><div class="grid grid-cols-2 gap-4"><div class="bento-inner-card bg-white p-5"><label class="label-tiny">Cant. Nueva</label><input type="number" id="restock-qty" required class="input-clean text-center font-mono text-3xl"></div><div class="bento-inner-card bg-white p-5 text-center"><label class="label-tiny">$ Bulto</label><input type="number" id="restock-batch-cost" required class="input-clean text-center font-mono text-3xl"></div></div><button type="submit" class="w-full bg-violet-primary btn-premium bg-violet-600 text-white py-6 font-black italic shadow-lg active:scale-95 text-lg mt-4">ACTUALIZAR STOCK 🥤</button></form></div></div>
+    
+    <div id="edit-product-modal" class="modal"><div class="modal-content !max-w-md"><div class="modal-header bg-white"><h3 class="font-black italic uppercase text-orange-600 text-lg">Ficha Técnica</h3><button onclick="closeModals()" class="w-10 h-10 bg-slate-50 rounded-full font-black">X</button></div><form id="edit-product-form" class="modal-body space-y-5 bg-slate-50 p-10"><input type="hidden" id="edit-prod-id"><div class="bento-inner-card bg-white p-6"><label class="label-tiny italic font-black uppercase">Nombre del Artículo</label><input type="text" id="edit-prod-name" required class="input-clean italic uppercase font-black text-2xl border-b border-slate-100"></div><div class="grid grid-cols-2 gap-4"><div class="bento-inner-card bg-white p-6"><label class="label-tiny">Costo U. ($)</label><input type="number" id="edit-prod-cost" step="0.01" required class="input-clean font-mono text-2xl"></div><div class="bento-inner-card bg-white p-6"><label class="label-tiny">Venta ($)</label><input type="number" id="edit-prod-price" required class="input-clean text-violet-600 font-mono text-2xl font-black"></div></div><div class="bento-inner-card bg-white p-8 text-center border-violet-500 border-2 rounded-[2rem] mt-4"><label class="label-tiny uppercase font-black text-slate-400 mb-2">Stock Real Estantería</label><input type="number" id="edit-prod-stock" required class="input-clean text-center font-black text-5xl font-mono text-black"></div><button type="submit" class="w-full bg-black text-white btn-premium py-8 font-black uppercase italic shadow-2xl active:scale-95 text-xl mt-6">GUARDAR CAMBIOS ☁️</button></form></div></div>
+
+    <div id="expense-modal" class="modal"><div class="modal-content !max-w-sm"><div class="modal-header bg-red-600 text-white shadow-lg"><h3 class="font-black italic uppercase text-white tracking-widest text-lg">Gasto Manual</h3><button onclick="closeModals()" class="btn-close-modal border-none shadow-none !bg-transparent !text-white text-xl">X</button></div><form id="expense-form" class="modal-body space-y-6 bg-slate-50 p-10 shadow-inner"><div class="bento-inner-card bg-white p-6 border-2"><label class="label-tiny uppercase font-bold text-slate-400">Concepto</label><input type="text" id="exp-name" required class="input-clean italic font-black outline-none w-full border-b border-slate-100 text-2xl uppercase"></div><div class="bento-inner-card bg-white p-6 border-2"><label class="label-tiny uppercase font-bold text-slate-400">Monto ($)</label><input type="number" id="exp-total" required class="input-clean font-black text-red-600 outline-none w-full font-mono text-5xl"></div><button type="submit" class="w-full bg-red-600 text-white btn-premium py-6 font-black uppercase italic shadow-lg active:scale-95 text-lg mt-4">REGISTRAR EGRESO -</button></form></div></div>
+
+    <!-- Overlay Mensajes (Fluido y Rápido) -->
     <div id="message-overlay" class="modal bg-black/90">
-        <div class="flex flex-col items-center justify-center text-center p-10">
-            <div class="text-7xl mb-6">🚀</div>
-            <p id="message-text" class="text-white text-3xl font-black uppercase italic tracking-widest leading-tight"></p>
+        <div class="flex flex-col items-center justify-center text-center p-12">
+            <div class="text-8xl mb-8">✨</div>
+            <p id="message-text" class="text-white text-4xl font-black uppercase italic tracking-widest leading-tight drop-shadow-2xl"></p>
         </div>
     </div>
 
-    <!-- LÓGICA CONSOLIDADA (MANDATO SINGLE FILE) -->
+    <!-- LÓGICA MAESTRA CONSOLIDADA -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, doc, addDoc, updateDoc, deleteDoc, query, onSnapshot, orderBy, where, Timestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, collection, doc, addDoc, updateDoc, deleteDoc, query, onSnapshot, orderBy, where, Timestamp, writeBatch } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyBz0V2ieSXehafKWRNQprb951NVN5FvBD4",
@@ -397,7 +431,7 @@
         const getCol = (n) => collection(db, "artifacts", appId, "public", "data", n);
         const getDocRef = (n, id) => doc(db, "artifacts", appId, "public", "data", n, id);
 
-        // ESTADO
+        // --- ESTADO GLOBAL ---
         let currentMonthDate = new Date();
         let allBookings = [];
         let allProducts = [];
@@ -405,7 +439,7 @@
         let saleCart = [];
         let canvas, ctx, isDrawing = false, lastX = 0, lastY = 0;
 
-        // UI CORE
+        // --- NAVEGACIÓN Y UI ---
         window.showView = (viewId) => {
             document.querySelectorAll('.view-container').forEach(v => v.classList.add('is-hidden'));
             const target = document.getElementById(`${viewId}-view`);
@@ -415,6 +449,7 @@
             if (viewId === 'caja') loadCajaData();
             if (viewId === 'stats') loadStatsData();
             if (viewId === 'firmas') renderWaiverList();
+            if (viewId === 'productos') renderProducts();
         };
 
         window.toggleMenu = (force) => {
@@ -437,7 +472,7 @@
             setTimeout(() => m.classList.remove('is-open'), 1200);
         };
 
-        // AGENDA
+        // --- AGENDA DE SALTOS ---
         window.syncBookings = () => {
             const monthStr = currentMonthDate.toISOString().substring(0, 7);
             const q = query(getCol("bookings"), where("monthYear", "==", monthStr));
@@ -462,8 +497,11 @@
                 const dateStr = `${y}-${String(m + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
                 const dayB = allBookings.filter(b => b.day === dateStr);
                 const cell = document.createElement('div');
-                cell.className = 'day-cell shadow-sm';
-                cell.innerHTML = `<span class="font-black text-slate-300 text-lg">${i}</span> ${dayB.length ? `<div class="flex justify-end"><span class="bg-violet-100 text-violet-600 text-[8px] px-2 py-1 rounded-full font-black uppercase tracking-widest">${dayB.length} Turnos</span></div>` : ''}`;
+                cell.className = 'day-cell';
+                cell.innerHTML = `
+                    <span class="font-black text-slate-300 text-lg">${i}</span> 
+                    ${dayB.length ? `<div class="flex justify-end"><span class="bg-violet-100 text-violet-700 text-[8px] px-2 py-1 rounded-full font-black uppercase tracking-tighter">${dayB.length} Turnos</span></div>` : ''}
+                `;
                 cell.onclick = () => openBookingForm(dateStr);
                 grid.appendChild(cell);
             }
@@ -473,6 +511,7 @@
             document.getElementById('booking-date').value = date;
             document.getElementById('teamName').value = '';
             document.getElementById('costPerHour').value = 5000;
+            document.getElementById('booking-id').value = '';
             renderHours();
             openModal('booking-modal');
         }
@@ -482,7 +521,7 @@
             list.innerHTML = '';
             for (let h = 9; h <= 23; h++) {
                 const item = document.createElement('div');
-                item.className = 'border border-slate-200 p-2 rounded-xl text-[10px] font-black cursor-pointer text-center hover:bg-slate-50 transition-colors';
+                item.className = 'border-2 border-slate-100 p-2 rounded-xl text-[10px] font-black cursor-pointer text-center hover:bg-slate-50 transition-colors italic';
                 item.textContent = `${h}:00`;
                 item.onclick = () => {
                     item.classList.toggle('bg-violet-600');
@@ -512,18 +551,19 @@
                 day: document.getElementById('booking-date').value,
                 monthYear: document.getElementById('booking-date').value.substring(0, 7),
                 hours: hrs,
+                paymentMethod: document.getElementById('booking-payment-method').value,
                 totalPrice: hrs.length * parseFloat(document.getElementById('costPerHour').value) * parseInt(document.getElementById('peopleCount').value),
                 timestamp: Timestamp.now()
             };
             await addDoc(getCol("bookings"), data);
             closeModals();
-            showMessage("RESERVA EXITOSA! ✅");
+            showMessage("RESERVA GUARDADA! ✅");
         };
 
         window.prevMonth = () => { currentMonthDate.setMonth(currentMonthDate.getMonth() - 1); syncBookings(); };
         window.nextMonth = () => { currentMonthDate.setMonth(currentMonthDate.getMonth() + 1); syncBookings(); };
 
-        // PRODUCTOS e INVENTARIO
+        // --- INVENTARIO (PRODUCTOS) ---
         window.syncProducts = () => {
             onSnapshot(getCol("products"), (snap) => {
                 allProducts = snap.docs.map(d => ({ id: d.id, ...d.data() }));
@@ -531,23 +571,35 @@
             });
         };
 
-        function renderProducts() {
+        window.renderProducts = (filter = "") => {
             const list = document.getElementById('product-list');
+            if(!list) return;
             list.innerHTML = '';
-            allProducts.forEach(p => {
+            
+            // Ordenar alfabéticamente
+            const sorted = [...allProducts].sort((a,b) => a.name.localeCompare(b.name));
+            const filtered = sorted.filter(p => p.name.includes(filter.toUpperCase()));
+
+            filtered.forEach(p => {
                 const card = document.createElement('div');
-                card.className = 'bento-card p-6 flex flex-col gap-3';
+                card.className = 'bento-card p-6 flex flex-col gap-4';
                 card.innerHTML = `
                     <div class="flex justify-between items-start">
-                        <h4 class="font-black uppercase italic leading-none">${p.name}</h4>
-                        <strong class="text-xl font-black text-slate-900">$${p.salePrice}</strong>
+                        <div>
+                            <h4 class="font-black uppercase italic leading-none text-base mb-1">${p.name}</h4>
+                            <span class="text-[9px] font-black uppercase ${p.stock <= 5 ? 'text-red-500 bg-red-50' : 'text-slate-400 bg-slate-50'} px-2 py-1 rounded-lg">Stock: ${p.stock} un.</span>
+                        </div>
+                        <strong class="text-2xl font-black text-slate-900 font-mono italic">$${p.salePrice}</strong>
                     </div>
-                    <span class="text-[9px] font-black uppercase text-slate-400 tracking-widest bg-slate-50 px-2 py-1 rounded-lg w-fit">Stock: ${p.stock} un.</span>
-                    <button class="mt-2 w-full p-3 bg-slate-900 text-white rounded-xl font-black text-[10px] uppercase active:scale-95 transition-all" onclick="window.deleteProduct('${p.id}')">Eliminar</button>
+                    <div class="grid grid-cols-2 gap-2 mt-2">
+                        <button class="inv-action-btn hover:!bg-violet-600 hover:!text-white" onclick="window.openRestock('${p.id}')">Reposición</button>
+                        <button class="inv-action-btn hover:!bg-orange-500 hover:!text-white" onclick="window.openEditProduct('${p.id}')">Editar Ficha</button>
+                        <button class="col-span-2 inv-action-btn !text-red-500 hover:!bg-red-500 hover:!text-white opacity-40 hover:opacity-100" onclick="window.deleteProduct('${p.id}')">Eliminar</button>
+                    </div>
                 `;
                 list.appendChild(card);
             });
-        }
+        };
 
         window.toggleProductForm = () => document.getElementById('product-form-container').classList.toggle('is-hidden');
 
@@ -567,35 +619,96 @@
         };
 
         window.deleteProduct = async (id) => {
-            if(confirm("¿Eliminar producto?")) await deleteDoc(getDocRef("products", id));
+            if(confirm("¿ELIMINAR PRODUCTO DEL SISTEMA?")) await deleteDoc(getDocRef("products", id));
         };
 
-        // CAJA Y RANKING
+        window.openRestock = (id) => {
+            const p = allProducts.find(x => x.id === id);
+            document.getElementById('restock-prod-id').value = p.id;
+            document.getElementById('restock-name').textContent = p.name;
+            document.getElementById('restock-current-stock').textContent = p.stock;
+            openModal('restock-modal');
+        };
+
+        document.getElementById('restock-form').onsubmit = async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('restock-prod-id').value;
+            const qty = parseInt(document.getElementById('restock-qty').value);
+            const p = allProducts.find(x => x.id === id);
+            await updateDoc(getDocRef("products", id), { stock: p.stock + qty });
+            closeModals();
+            showMessage("STOCK ACTUALIZADO! 🥤");
+        };
+
+        window.openEditProduct = (id) => {
+            const p = allProducts.find(x => x.id === id);
+            document.getElementById('edit-prod-id').value = p.id;
+            document.getElementById('edit-prod-name').value = p.name;
+            document.getElementById('edit-prod-cost').value = p.unitCost || 0;
+            document.getElementById('edit-prod-price').value = p.salePrice;
+            document.getElementById('edit-prod-stock').value = p.stock;
+            openModal('edit-product-modal');
+        };
+
+        document.getElementById('edit-product-form').onsubmit = async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('edit-prod-id').value;
+            await updateDoc(getDocRef("products", id), {
+                name: document.getElementById('edit-prod-name').value.toUpperCase(),
+                unitCost: parseFloat(document.getElementById('edit-prod-cost').value),
+                salePrice: parseFloat(document.getElementById('edit-prod-price').value),
+                stock: parseInt(document.getElementById('edit-prod-stock').value)
+            });
+            closeModals();
+            showMessage("FICHA ACTUALIZADA! ✅");
+        };
+
+        // --- CAJA Y FINANZAS ---
         async function loadCajaData() {
             const list = document.getElementById('caja-daily-list');
-            list.innerHTML = '<p class="p-10 text-center animate-pulse italic">Calculando balance...</p>';
+            list.innerHTML = '<p class="p-10 text-center animate-pulse italic text-slate-400">Calculando balance real...</p>';
             
-            const qB = query(getCol("bookings"), orderBy("timestamp", "desc"));
-            onSnapshot(qB, (snap) => {
-                const data = snap.docs.map(d => d.data());
-                let total = 0;
-                data.forEach(b => total += b.totalPrice);
-                document.getElementById('caja-total-combined').textContent = `$${total.toLocaleString('es-AR')}`;
-                
-                list.innerHTML = '';
-                // Agrupación simplificada por día para visualización
-                const days = {};
-                data.forEach(b => {
-                    days[b.day] = (days[b.day] || 0) + b.totalPrice;
-                });
-                Object.entries(days).sort((a,b) => b[0].localeCompare(a[0])).forEach(([day, val]) => {
-                    const row = document.createElement('div');
-                    row.className = 'bento-card p-6 flex justify-between items-center italic bg-white';
-                    row.innerHTML = `<span class="font-black uppercase">${day}</span><strong class="text-2xl font-black text-slate-900">$${val.toLocaleString()}</strong>`;
-                    list.appendChild(row);
+            onSnapshot(query(getCol("bookings"), orderBy("timestamp", "desc")), (snapB) => {
+                onSnapshot(query(getCol("sales"), orderBy("timestamp", "desc")), (snapS) => {
+                    onSnapshot(query(getCol("expenses"), orderBy("timestamp", "desc")), (snapE) => {
+                        const bookings = snapB.docs.map(d => d.data());
+                        const sales = snapS.docs.map(d => d.data());
+                        const expenses = snapE.docs.map(d => d.data());
+                        
+                        let total = 0;
+                        const daily = {};
+
+                        bookings.forEach(b => { total += b.totalPrice; daily[b.day] = (daily[b.day] || 0) + b.totalPrice; });
+                        sales.forEach(s => { total += s.total; daily[s.day] = (daily[s.day] || 0) + s.total; });
+                        expenses.forEach(e => { total -= e.total; daily[e.day] = (daily[e.day] || 0) - e.total; });
+
+                        document.getElementById('caja-total-combined').textContent = `$${total.toLocaleString('es-AR')}`;
+                        
+                        list.innerHTML = '';
+                        Object.entries(daily).sort((a,b) => b[0].localeCompare(a[0])).forEach(([day, val]) => {
+                            const row = document.createElement('div');
+                            row.className = 'bento-card p-6 flex justify-between items-center italic bg-white hover:border-violet-300 transition-all cursor-pointer';
+                            row.innerHTML = `<span class="font-black uppercase text-slate-400 tracking-widest text-xs">${day}</span><strong class="text-2xl font-black ${val >= 0 ? 'text-slate-900' : 'text-red-500'} font-mono tracking-tighter">$${val.toLocaleString()}</strong>`;
+                            list.appendChild(row);
+                        });
+                    });
                 });
             });
         }
+
+        window.openExpenseModal = () => { document.getElementById('expense-form').reset(); openModal('expense-modal'); };
+        document.getElementById('expense-form').onsubmit = async (e) => {
+            e.preventDefault();
+            const data = {
+                concept: document.getElementById('exp-name').value.toUpperCase(),
+                total: parseFloat(document.getElementById('exp-total').value),
+                timestamp: Timestamp.now(),
+                day: new Date().toISOString().split('T')[0]
+            };
+            await addDoc(getCol("expenses"), data);
+            closeModals();
+            showMessage("GASTO REGISTRADO! 💸");
+        };
 
         async function loadStatsData() {
             const list = document.getElementById('stats-list');
@@ -603,36 +716,17 @@
             allBookings.forEach(b => counts[b.teamName] = (counts[b.teamName] || 0) + 1);
             const sorted = Object.entries(counts).sort((a,b) => b[1] - a[1]).slice(0, 10);
             list.innerHTML = sorted.length ? sorted.map(([name, val], idx) => `
-                <div class="bento-card p-6 flex justify-between items-center shadow-lg shadow-slate-100 border-none bg-white">
-                    <div class="flex items-center gap-4">
-                        <span class="w-10 h-10 flex items-center justify-center bg-violet-600 text-white rounded-full font-black text-sm shadow-lg shadow-violet-100">#${idx+1}</span>
-                        <span class="font-black uppercase italic">${name}</span>
+                <div class="bento-card p-6 flex justify-between items-center shadow-lg shadow-slate-50 border-none">
+                    <div class="flex items-center gap-6">
+                        <span class="w-12 h-12 flex items-center justify-center bg-violet-600 text-white rounded-2xl font-black text-lg shadow-lg shadow-violet-100">#${idx+1}</span>
+                        <span class="font-black uppercase italic text-lg tracking-tighter text-slate-900">${name}</span>
                     </div>
-                    <span class="text-slate-400 font-black text-xs uppercase">${val} Turnos</span>
+                    <span class="text-slate-400 font-black text-xs uppercase bg-slate-50 px-3 py-1 rounded-full">${val} Reservas</span>
                 </div>
-            `).join('') : '<p class="p-10 text-center italic opacity-20">Sin datos registrados</p>';
+            `).join('') : '<p class="p-10 text-center italic opacity-20 font-black">Sin datos registrados</p>';
         }
 
-        // FIRMAS DIGITALES
-        window.renderWaiverList = (f = "") => {
-            const list = document.getElementById('waiver-list');
-            list.innerHTML = '';
-            allWaivers.filter(w => w.adultName.includes(f.toUpperCase()) || w.dni.includes(f)).forEach(w => {
-                const card = document.createElement('div');
-                card.className = 'bento-card p-6 cursor-pointer hover:border-violet-400';
-                card.innerHTML = `
-                    <p class="label-tiny">Responsable:</p>
-                    <h4 class="font-black uppercase italic text-lg mb-2">${w.adultName}</h4>
-                    <p class="text-xs font-bold text-slate-400">DNI: ${w.dni}</p>
-                    <div class="mt-4 pt-4 border-t border-slate-50 flex justify-end">
-                        <span class="text-[9px] font-black uppercase text-violet-600 underline">Ver Detalle 📄</span>
-                    </div>
-                `;
-                card.onclick = () => viewWaiver(w.id);
-                list.appendChild(card);
-            });
-        };
-
+        // --- FIRMAS DIGITALES ---
         window.syncWaivers = () => {
             onSnapshot(query(getCol("waivers"), orderBy("timestamp", "desc")), (snap) => {
                 allWaivers = snap.docs.map(d => ({ id: d.id, ...d.data() }));
@@ -640,19 +734,36 @@
             });
         };
 
+        window.renderWaiverList = (filter = "") => {
+            const list = document.getElementById('waiver-list');
+            if(!list) return;
+            list.innerHTML = '';
+            allWaivers.filter(w => w.adultName.includes(filter.toUpperCase()) || w.dni.includes(filter)).forEach(w => {
+                const card = document.createElement('div');
+                card.className = 'bento-card p-6 cursor-pointer hover:border-violet-400 group';
+                card.innerHTML = `
+                    <span class="text-[8px] font-black uppercase text-violet-500 tracking-[0.2em] mb-2 block">Certificado Legal</span>
+                    <h4 class="font-black uppercase italic text-lg mb-1 tracking-tighter group-hover:text-violet-600 transition-colors">${w.adultName}</h4>
+                    <p class="text-xs font-bold text-slate-400">DNI: ${w.dni}</p>
+                    <div class="mt-4 pt-4 border-t border-slate-50 flex justify-between items-center">
+                        <span class="text-[9px] font-bold text-slate-300 font-mono">${w.dateStr.split(' ')[0]}</span>
+                        <span class="text-[9px] font-black uppercase text-violet-600 underline">VER DETALLE 📄</span>
+                    </div>
+                `;
+                card.onclick = () => viewWaiver(w.id);
+                list.appendChild(card);
+            });
+        };
+
         function viewWaiver(id) {
             const w = allWaivers.find(x => x.id === id);
             if(!w) return;
             document.getElementById('view-waiver-details').innerHTML = `
-                <div class="space-y-1">
-                    <p class="label-tiny">Nombre Adulto:</p>
-                    <p class="font-black uppercase text-base">${w.adultName}</p>
-                    <p class="label-tiny mt-2">DNI:</p>
-                    <p class="font-black text-base">${w.dni}</p>
-                    <p class="label-tiny mt-2">Menor/es:</p>
-                    <p class="font-black uppercase text-base text-orange-600">${w.minorName}</p>
-                    <p class="label-tiny mt-4">Fecha de Registro:</p>
-                    <p class="font-bold text-[10px] text-slate-400">${w.dateStr}</p>
+                <div class="grid grid-cols-2 gap-4 uppercase tracking-tighter">
+                    <div><p class="label-tiny">Responsable:</p><p class="text-base font-black">${w.adultName}</p></div>
+                    <div><p class="label-tiny">DNI:</p><p class="text-base font-mono font-black">${w.dni}</p></div>
+                    <div class="col-span-2"><p class="label-tiny">Menor Autorizado:</p><p class="text-base font-black text-orange-600">${w.minorName}</p></div>
+                    <div class="col-span-2 pt-4 border-t"><p class="label-tiny">Firma Registrada el:</p><p class="text-[10px] text-slate-400 font-bold">${w.dateStr}</p></div>
                 </div>
             `;
             document.getElementById('view-waiver-img').src = w.signature;
@@ -674,20 +785,13 @@
             canvas.width = canvas.offsetWidth;
             canvas.height = canvas.offsetHeight;
             ctx = canvas.getContext('2d');
-            ctx.lineWidth = 3; ctx.lineCap = 'round'; ctx.strokeStyle = '#000000';
+            ctx.lineWidth = 4; ctx.lineCap = 'round'; ctx.strokeStyle = '#0f172a';
 
-            const start = (e) => { 
-                isDrawing = true; 
-                const r = canvas.getBoundingClientRect();
-                const x = (e.offsetX || e.touches[0].clientX - r.left);
-                const y = (e.offsetY || e.touches[0].clientY - r.top);
-                [lastX, lastY] = [x, y];
-            };
+            const start = (e) => { isDrawing = true; const r = canvas.getBoundingClientRect(); [lastX, lastY] = [(e.offsetX || e.touches[0].clientX - r.left), (e.offsetY || e.touches[0].clientY - r.top)]; };
             const draw = (e) => {
                 if (!isDrawing) return;
                 const r = canvas.getBoundingClientRect();
-                const x = (e.offsetX || e.touches[0].clientX - r.left);
-                const y = (e.offsetY || e.touches[0].clientY - r.top);
+                const [x, y] = [(e.offsetX || e.touches[0].clientX - r.left), (e.offsetY || e.touches[0].clientY - r.top)];
                 ctx.beginPath(); ctx.moveTo(lastX, lastY); ctx.lineTo(x, y); ctx.stroke();
                 [lastX, lastY] = [x, y];
                 if (e.touches) e.preventDefault();
@@ -707,7 +811,7 @@
 
         document.getElementById('waiver-form').onsubmit = async (e) => {
             e.preventDefault();
-            showMessage("GUARDANDO FIRMA...");
+            showMessage("GUARDANDO ARCHIVO...");
             const data = {
                 adultName: document.getElementById('waiver-adult-name').value.toUpperCase(),
                 dni: document.getElementById('waiver-dni').value,
@@ -725,34 +829,33 @@
             const win = window.open('', '_blank');
             const legalText = document.getElementById('legal-full-text-container').innerHTML;
             win.document.write(`
-                <html><head><title>AeroJump - Certificado Digital</title>
-                <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700&display=swap" rel="stylesheet">
+                <html><head><title>Certificado AeroJump - ${w.adultName}</title>
+                <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;900&display=swap" rel="stylesheet">
                 <style>
-                    body { font-family: 'Outfit', sans-serif; padding: 50px; color: #0f172a; line-height: 1.6; font-size: 12px; }
-                    .header { text-align: center; border-bottom: 4px solid #7c3aed; padding-bottom: 20px; margin-bottom: 30px; }
-                    .header h1 { margin: 0; font-size: 40px; font-style: italic; text-transform: uppercase; font-weight: 900; }
-                    .data-grid { display: grid; grid-template-cols: 1fr 1fr; gap: 20px; background: #f8fafc; padding: 25px; border-radius: 20px; border: 1px solid #e2e8f0; margin-bottom: 30px; }
-                    .legal { text-align: justify; padding: 20px; border: 1px solid #eee; border-radius: 20px; margin-bottom: 40px; color: #475569; }
-                    .sig-section { display: flex; flex-direction: column; align-items: center; margin-top: 40px; page-break-inside: avoid; }
-                    .sig-section p { font-weight: 900; text-transform: uppercase; font-size: 10px; margin-bottom: 10px; }
-                    img { border: 2px solid black; border-radius: 15px; max-width: 400px; padding: 10px; background: white; }
-                    h4 { text-transform: uppercase; border-bottom: 1px solid #7c3aed; display: inline-block; margin-top: 20px; margin-bottom: 10px; }
+                    body { font-family: 'Outfit', sans-serif; padding: 40px; color: #0f172a; line-height: 1.5; font-size: 11px; }
+                    .header { text-align: center; border-bottom: 3px solid #7c3aed; padding-bottom: 15px; margin-bottom: 25px; }
+                    .header h1 { margin: 0; font-size: 38px; font-style: italic; text-transform: uppercase; font-weight: 900; }
+                    .header p { margin: 5px 0 0; font-weight: 900; color: #7c3aed; font-size: 10px; }
+                    .data-grid { display: grid; grid-template-cols: 1fr 1fr; gap: 15px; background: #f8fafc; padding: 20px; border-radius: 15px; border: 1px solid #e2e8f0; margin-bottom: 25px; }
+                    .legal { text-align: justify; padding: 15px; border: 1px solid #eee; border-radius: 15px; margin-bottom: 30px; color: #475569; }
+                    .sig-section { display: flex; flex-direction: column; align-items: center; margin-top: 30px; page-break-inside: avoid; }
+                    .sig-section p { font-weight: 900; text-transform: uppercase; font-size: 9px; margin-bottom: 10px; }
+                    img { border: 2px solid black; border-radius: 10px; max-width: 400px; padding: 10px; background: white; }
+                    h4 { text-transform: uppercase; border-bottom: 1px solid #7c3aed; display: inline-block; margin-top: 15px; margin-bottom: 8px; }
                 </style></head>
                 <body>
-                    <div class="header"><h1>AeroJump Gualeguaychú</h1><p>CERTIFICADO DE RESPONSABILIDAD LEGAL DIGITAL</p></div>
+                    <div class="header"><h1>AeroJump Gchu</h1><p>DESLINDE DE RESPONSABILIDAD LEGAL DIGITAL</p></div>
                     <div class="data-grid">
                         <div><strong>RESPONSABLE:</strong> ${w.adultName}</div>
-                        <div><strong>DNI:</strong> ${w.dni}</div>
+                        <div><strong>DOCUMENTO:</strong> ${w.dni}</div>
                         <div><strong>MENORES A CARGO:</strong> ${w.minorName}</div>
-                        <div><strong>FECHA DE REGISTRO:</strong> ${w.dateStr}</div>
+                        <div><strong>REGISTRO:</strong> ${w.dateStr}</div>
                     </div>
-                    <div class="legal">
-                        ${legalText}
-                    </div>
+                    <div class="legal">${legalText}</div>
                     <div class="sig-section">
-                        <p>Firma Digital del Adulto Responsable:</p>
+                        <p>Firma Digital Validada:</p>
                         <img src="${w.signature}">
-                        <p style="margin-top:20px; color:#94a3b8; font-weight:normal;">Identificador: ${w.id} | Validado digitalmente por AeroJump System</p>
+                        <p style="margin-top:20px; color:#94a3b8; font-weight:normal; font-size: 8px;">ID Transacción: ${w.id} | Firmado digitalmente en AeroJump Gualeguaychú</p>
                     </div>
                     <script>window.onload=function(){ setTimeout(() => { window.print(); window.close(); }, 500); }<\/script>
                 </body></html>
@@ -760,9 +863,11 @@
             win.document.close();
         };
 
-        // POS & VENTAS
+        // --- POS (VENTAS) ---
         window.openSaleModal = () => {
             saleCart = [];
+            const filterInput = document.getElementById('sale-filter');
+            if(filterInput) filterInput.value = '';
             renderSaleCatalog();
             renderSaleCart();
             openModal('sale-modal');
@@ -770,28 +875,55 @@
 
         window.renderSaleCatalog = (filter = "") => {
             const list = document.getElementById('sale-catalog-list');
+            if(!list) return;
             list.innerHTML = '';
-            allProducts.filter(p => p.name.includes(filter.toUpperCase())).forEach(p => {
+            
+            // Alfabético
+            const sorted = [...allProducts].sort((a,b) => a.name.localeCompare(b.name));
+            const filtered = sorted.filter(p => p.name.includes(filter.toUpperCase()));
+
+            filtered.forEach(p => {
+                const itemInCart = saleCart.find(i => i.id === p.id);
+                const currentQty = itemInCart ? itemInCart.qty : 0;
+                
                 const row = document.createElement('div');
-                row.className = 'pos-item-row p-4 flex justify-between items-center rounded-xl';
+                row.className = 'pos-item-row';
                 row.innerHTML = `
-                    <div class="text-left">
-                        <p class="font-black uppercase text-xs">${p.name}</p>
-                        <p class="text-[9px] text-slate-400">STOCK: ${p.stock} un.</p>
+                    <div class="text-left flex-grow">
+                        <p class="font-black uppercase text-sm italic">${p.name}</p>
+                        <p class="text-[9px] text-slate-400 font-bold uppercase tracking-widest">Stock: ${p.stock} un. • <span class="text-slate-900">$${p.salePrice}</span></p>
                     </div>
                     <div class="flex items-center gap-4">
-                        <strong class="text-lg font-black font-mono">$${p.salePrice}</strong>
-                        <button class="w-10 h-10 bg-violet-600 text-white rounded-xl font-black text-xl active:scale-90" onclick="window.addToCart('${p.id}')">+</button>
+                        <div class="flex items-center gap-2 bg-slate-50 p-1 rounded-xl border border-slate-100">
+                            <button class="w-8 h-8 bg-white border border-slate-200 rounded-lg font-black active:scale-90 transition-all" onclick="window.updSaleQty('${p.id}', -1)">-</button>
+                            <span class="font-black text-lg font-mono w-6 text-center ${currentQty > 0 ? 'text-violet-600' : 'text-slate-300'}">${currentQty}</span>
+                            <button class="w-8 h-8 bg-slate-900 text-white rounded-lg font-black active:scale-90 transition-all" onclick="window.updSaleQty('${p.id}', 1)">+</button>
+                        </div>
                     </div>
                 `;
                 list.appendChild(row);
             });
         };
 
-        window.addToCart = (id) => {
-            const p = allProducts.find(x => x.id === id);
-            if(p.stock <= 0) return showMessage("SIN STOCK!", true);
-            saleCart.push(p);
+        window.updSaleQty = (id, delta) => {
+            const product = allProducts.find(p => p.id === id);
+            const index = saleCart.findIndex(item => item.id === id);
+
+            if (index > -1) {
+                saleCart[index].qty += delta;
+                if (saleCart[index].qty <= 0) saleCart.splice(index, 1);
+                else if (saleCart[index].qty > product.stock) {
+                    saleCart[index].qty = product.stock;
+                    showMessage("SIN MÁS STOCK!", true);
+                }
+            } else if (delta > 0) {
+                if (product.stock > 0) {
+                    saleCart.push({ id: product.id, name: product.name, price: product.salePrice, qty: 1, stockMax: product.stock });
+                } else {
+                    showMessage("SIN STOCK!", true);
+                }
+            }
+            renderSaleCatalog(document.getElementById('sale-filter').value);
             renderSaleCart();
         };
 
@@ -799,16 +931,14 @@
             const list = document.getElementById('sale-cart-list');
             list.innerHTML = '';
             let total = 0;
+            
             saleCart.forEach((item, idx) => {
-                total += item.salePrice;
+                total += item.price * item.qty;
                 const d = document.createElement('div');
-                d.className = 'bg-white p-3 rounded-xl border border-slate-100 flex justify-between items-center shadow-sm';
+                d.className = 'bg-white p-4 rounded-2xl border border-slate-100 flex justify-between items-center shadow-sm italic';
                 d.innerHTML = `
-                    <div class="text-left"><p class="text-[10px] font-black uppercase">${item.name}</p></div>
-                    <div class="flex items-center gap-3">
-                        <span class="font-black text-xs">$${item.salePrice}</span>
-                        <button class="text-red-400 font-black" onclick="window.removeFromCart(${idx})">✕</button>
-                    </div>
+                    <div class="text-left"><p class="text-[10px] font-black uppercase text-slate-800">${item.name}</p><p class="text-[9px] text-slate-400 font-bold">${item.qty} x $${item.price}</p></div>
+                    <strong class="font-black text-sm text-violet-600 font-mono">$${(item.price * item.qty).toLocaleString()}</strong>
                 `;
                 list.appendChild(d);
             });
@@ -816,27 +946,29 @@
             document.getElementById('btn-sale-confirm').disabled = !saleCart.length;
         }
 
-        window.removeFromCart = (idx) => { saleCart.splice(idx, 1); renderSaleCart(); };
-
         window.handleConfirmSale = async () => {
-            showMessage("COBRANDO...");
-            const total = saleCart.reduce((a,b) => a + b.salePrice, 0);
-            await addDoc(getCol("sales"), {
-                total,
-                itemsCount: saleCart.length,
-                timestamp: Timestamp.now(),
-                day: new Date().toISOString().split('T')[0]
+            document.getElementById('btn-sale-confirm').disabled = true;
+            showMessage("PROCESANDO COBRO...");
+            const batch = writeBatch(db);
+            const now = new Date();
+            const dayStr = now.toISOString().split('T')[0];
+            const payMethod = document.getElementById('sale-payment-method').value;
+
+            saleCart.forEach(item => {
+                const saleRef = getDocRef("sales", `${Date.now()}_${item.id}`);
+                batch.set(saleRef, {
+                    name: item.name, total: item.price * item.qty, qty: item.qty, day: dayStr,
+                    paymentMethod: payMethod, timestamp: Timestamp.now(), adminEmail: auth.currentUser?.email
+                });
+                batch.update(getDocRef("products", item.id), { stock: item.stockMax - item.qty });
             });
-            // Descuento de stock (simulado en batch)
-            for(let item of saleCart) {
-                const ref = getDocRef("products", item.id);
-                await updateDoc(ref, { stock: item.stock - 1 });
-            }
+
+            await batch.commit();
             closeModals();
             showMessage("VENTA COBRADA! 💰");
         };
 
-        // AUTH & BOOTSTRAP
+        // --- AUTH & BOOTSTRAP ---
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 document.getElementById('app-container').classList.remove('is-hidden');
