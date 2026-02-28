@@ -58,7 +58,7 @@
         }
         .btn-premium:active { transform: scale(0.96); }
 
-        /* Navegación Lateral Expandida */
+        /* Navegación Lateral */
         #main-menu {
             position: fixed; top: 0; left: 0; height: 100vh; width: 280px;
             background: white; z-index: 1100; transform: translateX(-100%);
@@ -95,19 +95,19 @@
         /* Calendario Compacto Pro */
         .day-cell {
             background: white; border: 1px solid #e2e8f0; border-radius: 0.8rem;
-            height: 62px; display: flex; flex-direction: column; justify-content: space-between;
+            height: 60px; display: flex; flex-direction: column; justify-content: space-between;
             padding: 0.3rem; cursor: pointer; transition: 0.2s;
         }
         .day-cell:hover { border-color: var(--violet); background: #f5f3ff; transform: scale(1.02); z-index: 10; }
         .day-num { font-weight: 900; font-size: 0.85rem; color: #cbd5e1; }
 
-        /* Stock Alerta Rojo Palpitante */
+        /* Alerta de Stock Rojo Palpitante */
         @keyframes alert-pulsate {
             0% { background-color: #ffffff; border-color: #ef4444; }
             50% { background-color: #fef2f2; border-color: #ef4444; box-shadow: 0 0 10px rgba(239, 68, 68, 0.3); }
             100% { background-color: #ffffff; border-color: #ef4444; }
         }
-        .stock-alert { animation: alert-pulsate 1.5s infinite; border: 2px solid #ef4444 !important; }
+        .stock-alert { animation: alert-pulsate 1.2s infinite; border: 2px solid #ef4444 !important; }
 
         /* UI Inputs */
         .input-clean { font-size: 1.1rem; font-weight: 800; width: 100%; border: none; background: transparent; outline: none; }
@@ -157,17 +157,17 @@
     <!-- 2. APP CONTAINER -->
     <div id="app-container" class="is-hidden h-screen flex flex-col overflow-hidden">
         
-        <header class="bg-white border-b border-slate-200 p-4 flex justify-between items-center z-50 shadow-sm">
+        <header class="bg-white border-b border-slate-200 p-4 flex justify-between items-center z-50 shadow-sm text-black">
             <div class="flex items-center gap-4">
                 <button onclick="window.toggleMenu(true)" class="p-2.5 bg-slate-900 text-white rounded-2xl active:scale-90 transition-transform">
                     <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M4 6h16M4 12h16M4 18h16" /></svg>
                 </button>
-                <h1 class="text-xl font-black uppercase italic tracking-tighter text-black">AeroJump <span class="text-violet-600 font-mono text-sm">PRO v2.6</span></h1>
+                <h1 class="text-xl font-black uppercase italic tracking-tighter">AeroJump <span class="text-violet-600 font-mono text-sm">PRO v2.6</span></h1>
             </div>
             <button onclick="window.openSaleModal()" class="bg-orange-500 btn-premium text-white text-[10px] px-7 py-3 shadow-lg shadow-orange-100 italic font-black uppercase tracking-widest">NUEVA VENTA 🥤</button>
         </header>
 
-        <nav id="main-menu">
+        <nav id="main-menu" class="text-black">
             <div class="p-8 border-b border-slate-100 bg-slate-50/50 text-center">
                 <div class="w-16 h-16 bg-black text-white rounded-[1.5rem] flex items-center justify-center mx-auto mb-4 font-black italic text-2xl shadow-2xl">AJ</div>
                 <p id="user-email-display" class="text-[10px] font-black truncate mb-4 text-slate-400 uppercase tracking-widest"></p>
@@ -185,7 +185,7 @@
 
         <div id="menu-overlay" onclick="window.toggleMenu(false)" class="fixed inset-0 bg-black/40 z-[1000] hidden backdrop-blur-md"></div>
 
-        <main id="main-content" class="flex-grow overflow-y-auto p-4 md:p-8 bg-[#f8fafc] custom-scrollbar">
+        <main id="main-content" class="flex-grow overflow-y-auto p-4 md:p-8 bg-[#f8fafc] custom-scrollbar text-black">
             
             <!-- VISTA: CALENDARIO -->
             <div id="calendar-view" class="view-container">
@@ -224,7 +224,7 @@
                             <div class="text-right leading-none"><label class="label-tiny text-slate-400 font-black italic">Establecer Venta Final ($)</label><input type="number" id="prod-real-price" required class="input-clean text-white text-5xl text-right font-black font-mono" placeholder="0"></div>
                         </div>
                         <input type="hidden" id="prod-unit-cost">
-                        <button type="submit" class="btn-premium bg-violet-600 text-white col-span-full font-black py-6 mt-4 shadow-xl shadow-violet-100 italic text-lg uppercase">Agregado a Catálogo ✅</button>
+                        <button type="submit" class="btn-premium bg-violet-600 text-white col-span-full font-black py-6 mt-4 shadow-xl shadow-violet-100 italic text-lg uppercase">AGREGAR A CATÁLOGO ✅</button>
                     </form>
                 </div>
                 <div id="product-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
@@ -240,7 +240,7 @@
                     </div>
                 </div>
                 <div class="bento-card p-14 text-center mb-10 border-violet-200 bg-white">
-                    <p class="label-tiny tracking-[0.4em] mb-4 font-black text-slate-400 uppercase">Saldo Neto Acumulado</p>
+                    <p class="label-tiny tracking-[0.4em] mb-4 font-black text-slate-400 uppercase">Saldo Neto Real Acumulado</p>
                     <div id="caja-total-combined" class="text-7xl font-black italic tracking-tighter text-slate-900 font-mono leading-none">$0</div>
                 </div>
                 <div id="caja-daily-list" class="space-y-4 max-w-4xl mx-auto"></div>
@@ -256,9 +256,9 @@
                 <div id="waiver-list" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
             </div>
 
-            <!-- VISTA: RANKING STATS -->
+            <!-- VISTA: STATS -->
             <div id="stats-view" class="view-container is-hidden text-black font-black">
-                <h2 class="section-title text-center mb-12 uppercase italic underline decoration-violet-500 text-black">Top Clientes AeroJump</h2>
+                <h2 class="section-title text-center mb-12 uppercase italic underline decoration-violet-500 text-black">Ranking Clientes AeroJump</h2>
                 <div id="stats-list" class="max-w-2xl mx-auto space-y-5"></div>
             </div>
 
@@ -317,7 +317,7 @@
                     <div id="sale-catalog-list" class="flex-grow overflow-y-auto custom-scrollbar p-4 space-y-1 bg-slate-50/10 text-black font-bold italic"></div>
                 </div>
                 <div class="w-full md:w-[400px] bg-slate-50 flex flex-col shadow-inner">
-                    <div class="p-6 border-b bg-white italic text-[11px] uppercase font-black text-slate-400 tracking-widest text-center shadow-sm">Ticket de Venta</div>
+                    <div class="p-6 border-b bg-white text-center italic text-[11px] uppercase font-black text-slate-400 tracking-widest text-center shadow-sm">Ticket de Venta</div>
                     <div id="sale-cart-list" class="flex-grow p-6 overflow-y-auto space-y-4 custom-scrollbar text-black font-black italic"></div>
                     <div class="p-10 bg-white border-t-8 border-violet-100 shadow-2xl">
                         <div class="mb-6 text-black"><label class="label-tiny italic font-black uppercase text-slate-400">Seleccionar Pago:</label><select id="sale-payment-method" class="w-full p-4.5 rounded-2xl bg-slate-50 border-2 border-slate-100 font-black italic text-xs text-black shadow-inner"><option value="efectivo">EFECTIVO 💵</option><option value="mercadopago">M. PAGO 📲</option></select></div>
@@ -343,12 +343,13 @@
         <div class="modal-content !max-w-md shadow-2xl text-black">
             <div class="modal-header bg-violet-600 text-white"><h3>Crear Nueva Promoción</h3><button onclick="window.closeModals()">X</button></div>
             <form id="promo-form" class="modal-body space-y-6 bg-slate-50 p-10 font-black">
-                <div class="bento-inner-card"><label class="label-tiny">Nombre de la Oferta</label><input type="text" id="promo-name" required class="input-clean uppercase italic font-black text-black"></div>
+                <div class="bento-inner-card shadow-inner"><label class="label-tiny uppercase">Nombre de la Promo</label><input type="text" id="promo-name" required class="input-clean uppercase italic font-black text-black"></div>
+                <div class="bento-inner-card shadow-inner"><label class="label-tiny uppercase italic">Seleccionar Mes Aplicable:</label><input type="month" id="promo-month" required class="input-clean font-black text-black font-mono"></div>
                 <div class="grid grid-cols-2 gap-4">
-                    <div class="bento-inner-card"><label class="label-tiny">Precio Unit. Promo ($)</label><input type="number" id="promo-price" required class="input-clean font-mono text-black font-black"></div>
+                    <div class="bento-inner-card shadow-inner"><label class="label-tiny">Precio Unit. ($)</label><input type="number" id="promo-price" required class="input-clean font-mono text-black font-black"></div>
                     <div class="bento-inner-card flex flex-col items-center justify-center bg-violet-50 border-violet-200"><label class="label-tiny">¿Activar 2x1?</label><input type="checkbox" id="promo-2x1" class="w-7 h-7 rounded-lg accent-violet-600"></div>
                 </div>
-                <div class="bento-inner-card text-black text-center shadow-inner"><label class="label-tiny mb-4 italic text-slate-400 uppercase tracking-widest">Seleccionar Días Vigentes:</label><div id="promo-days-grid" class="grid grid-cols-7 gap-2"></div></div>
+                <div class="bento-inner-card text-black text-center shadow-inner"><label class="label-tiny mb-4 italic text-slate-400 uppercase tracking-widest">Días con Promo:</label><div id="promo-days-grid" class="grid grid-cols-7 gap-2"></div></div>
                 <button type="submit" class="w-full bg-violet-600 btn-premium text-white py-6 shadow-xl font-black uppercase italic text-lg mt-2">LANZAR PROMOCIÓN ✨</button>
             </form>
         </div>
@@ -361,9 +362,22 @@
     <div id="edit-product-modal" class="modal"><div class="modal-content !max-w-md"><div class="modal-header bg-white text-black"><h3>Editar Ficha Técnica</h3><button onclick="window.closeModals()" class="text-black">X</button></div><form id="edit-product-form" class="modal-body space-y-6 bg-slate-50 p-12 text-black"><input type="hidden" id="edit-prod-id"><div class="bento-inner-card bg-white p-6 shadow-inner border-2 text-black"><label class="label-tiny italic font-black uppercase tracking-widest">Nombre del Artículo</label><input type="text" id="edit-prod-name" required class="input-clean italic font-black text-2xl uppercase text-black"></div><div class="grid grid-cols-2 gap-4 text-black"><div class="bento-inner-card bg-white p-6 shadow-inner border-2 text-black"><label class="label-tiny italic">Costo U. ($)</label><input type="number" id="edit-prod-cost" step="0.01" required class="input-clean font-mono text-2xl text-black"></div><div class="bento-inner-card bg-white p-6 shadow-inner border-2 text-black"><label class="label-tiny italic">Venta Púb. ($)</label><input type="number" id="edit-prod-price" required class="input-clean text-violet-600 font-mono text-2xl font-black text-violet-600"></div></div><div class="bento-inner-card bg-white p-10 text-center border-violet-500 border-4 rounded-[2.5rem] mt-8 shadow-2xl leading-none"><label class="label-tiny uppercase font-black text-slate-400 mb-4 tracking-[0.2em]">Stock Real en Estantería</label><input type="number" id="edit-prod-stock" required class="input-clean text-center font-black text-6xl font-mono text-black"></div><button type="submit" class="w-full bg-black text-white btn-premium py-9 font-black shadow-2xl active:scale-95 text-2xl mt-10 italic uppercase tracking-tighter shadow-black/20">Guardar Cambios ☁️</button></form></div></div>
     <div id="view-waiver-modal" class="modal"><div class="modal-content !max-w-md shadow-2xl text-black"><div class="modal-header bg-slate-50 text-black border-none"><h3 class="font-black italic uppercase tracking-widest">Certificado Digital</h3><button onclick="window.closeModals()" class="w-10 h-10 bg-white rounded-full font-black shadow-sm text-black">X</button></div><div class="modal-body text-center p-12 bg-white text-black"><div id="view-waiver-details" class="bento-inner-card text-left italic text-sm mb-12 bg-slate-50 border-none leading-relaxed font-black uppercase shadow-inner text-black p-8 rounded-[2rem]"></div><div class="p-4 border-2 border-slate-900 rounded-[2.5rem] inline-block bg-white shadow-2xl transform rotate-1"><img id="view-waiver-img" class="w-full h-auto rounded-xl"></div></div><div class="modal-footer bg-slate-50 p-8 border-none"><button id="btn-print-waiver" class="w-full btn-premium bg-black text-white py-7 shadow-2xl italic font-black uppercase italic tracking-[0.2em] text-sm"><span>📄</span> Imprimir Documento / PDF</button></div></div></div>
 
+    <!-- Hidden Legal Text for Printing -->
+    <div id="legal-full-text-container" class="is-hidden">
+        <h4>SECCIÓN 1: RIESGOS</h4>
+        <p>Mediante la firma del presente consentimiento, entiendo y reconozco que mi participación y la participación de los menores con quienes ingreso al parque con suficiente representación y/o autorización en el uso del parque, sus juegos y sus actividades conllevan riesgos conocidos, esperados e inesperados, que podrían resultar en lesiones físicas, emocionales, parálisis o muerte a mi persona, a los menores de edad por quienes me hago responsable al firmar o a terceros.</p>
+        <p>Los riesgos incluyen, aunque no se limitan a resbalones, malas caídas, colisiones con objetos fijos y/u otros participantes. Daños posibles: esguinces, fractura de huesos, lesiones oculares, roturas de ligamentos, lesiones cerebrales, incapacidades permanentes, muerte.</p>
+        <p>AEROJUMP Y SU DUEÑA Fenocchio maría irene NO recomienda el ingreso al área de salto del parque en caso de estar embarazada o sospechas. Si ingreso lo hago bajo mi absoluta responsabilidad.</p>
+        <h4>ASUNCIÓN DE RIESGOS</h4>
+        <p>(a) Acepto todos los riesgos inherentes. (f) Acepto renunciar al fuero que me pudiera corresponder, y que cualquier reclamo judicial será presentado exclusivamente ante la justicia civil y comercial de Gualeguaychú. (h) Mi firma es prueba de una completa e incondicional RENUNCIA Y LIBERACIÓN.</p>
+        <h4>SECCIÓN 2: DECLARACIÓN JURADA</h4>
+        <p>Declaro bajo juramento que revisto el carácter de padre/madre, tutor legal o persona autorizada y que tengo la capacidad de firmar este acuerdo en su nombre.</p>
+    </div>
+
+    <!-- Message Overlay -->
     <div id="message-overlay" class="modal bg-black/95 transition-none z-[3000]"><div class="flex flex-col items-center justify-center p-12 text-center text-white"><div class="text-8xl mb-8 text-white">✨</div><p id="message-text" class="text-white text-3xl font-black uppercase italic tracking-widest drop-shadow-2xl"></p></div></div>
 
-    <!-- LÓGICA MAESTRA CONSOLIDADA -->
+    <!-- FIREBASE LÓGICA MAESTRA -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
@@ -440,9 +454,6 @@
 
             const logoutBtn = document.getElementById('logout-btn');
             if(logoutBtn) logoutBtn.onclick = () => signOut(auth);
-
-            const toggleLegalBtn = document.getElementById('toggle-legal-btn');
-            if(toggleLegalBtn) toggleLegalBtn.onclick = () => document.getElementById('legal-full-text-container').classList.toggle('is-hidden');
             
             const clearSigBtn = document.getElementById('clear-sig-btn');
             if(clearSigBtn) clearSigBtn.onclick = () => ctx.clearRect(0,0,canvas.width,canvas.height);
@@ -531,7 +542,7 @@
                 cell.className = 'day-cell';
                 cell.innerHTML = `
                     <div class="flex justify-between items-start text-black">
-                        <span class="day-num">${i}</span>
+                        <span class="day-num font-black text-slate-300 text-[10px]">${i}</span>
                         ${dayP ? `<span class="bg-violet-600 text-white rounded p-0.5 text-[5px] font-black uppercase italic tracking-tighter leading-none">PROMO</span>` : ''}
                     </div>
                     ${dayB.length ? `<div class="flex justify-end"><span class="bg-violet-600 text-white text-[7px] px-1 rounded-full font-black uppercase italic leading-none">${dayB.length}T</span></div>` : ''}
@@ -543,7 +554,8 @@
 
         window.openBookingForm = (date) => {
             const dayNum = parseInt(date.split('-')[2]);
-            const promo = allPromos.find(p => p.monthYear === date.substring(0, 7) && p.days.includes(dayNum));
+            const monthStr = date.substring(0, 7);
+            const promo = allPromos.find(p => p.monthYear === monthStr && p.days.includes(dayNum));
             document.getElementById('booking-date').value = date;
             document.getElementById('teamName').value = '';
             document.getElementById('costPerHour').value = promo ? promo.price : document.getElementById('config-court-price').value;
@@ -588,7 +600,8 @@
             if (!hrs.length) return alert("Selecciona horarios");
             const price = parseFloat(document.getElementById('costPerHour').value);
             const date = document.getElementById('booking-date').value;
-            const promo = allPromos.find(p => p.days.includes(parseInt(date.split('-')[2])));
+            const dayNum = parseInt(date.split('-')[2]);
+            const promo = allPromos.find(p => p.days.includes(dayNum) && p.monthYear === date.substring(0, 7));
             const payablePeople = (promo && promo.is2x1) ? Math.ceil(parseInt(document.getElementById('peopleCount').value)/2) : parseInt(document.getElementById('peopleCount').value);
             const data = {
                 teamName: document.getElementById('teamName').value.toUpperCase(),
@@ -622,7 +635,8 @@
             const margin = parseFloat(document.getElementById('prod-profit-pct').value) || 0;
             const unitCost = costBatch / qtyBatch;
             const suggested = Math.ceil(unitCost * (1 + (margin / 100)));
-            document.getElementById('prod-suggested-price').textContent = `$${suggested}`;
+            const sugEl = document.getElementById('prod-suggested-price');
+            if(sugEl) sugEl.textContent = `$${suggested}`;
             document.getElementById('prod-unit-cost').value = unitCost;
         };
 
@@ -632,11 +646,11 @@
             const filtered = allProducts.filter(p => p.name.includes(f.toUpperCase())).sort((a,b) => a.name.localeCompare(b.name));
             filtered.forEach(p => {
                 const card = document.createElement('div');
-                card.className = 'bento-card p-5 flex flex-col gap-3 text-left shadow-sm font-black italic';
+                card.className = 'bento-card p-5 flex flex-col gap-3 text-left italic font-black text-black';
                 card.innerHTML = `
                     <div class="flex justify-between items-start">
                         <div><h4 class="font-black uppercase text-xs mb-1 text-black">${p.name}</h4><span class="text-[8px] font-black uppercase ${p.stock <= 5 ? 'text-red-500 bg-red-50' : 'text-slate-400 bg-slate-50'} px-2 py-1 rounded-lg">Stock: ${p.stock} un.</span></div>
-                        <strong class="text-xl font-black font-mono italic text-slate-900 font-mono italic">$${p.salePrice}</strong>
+                        <strong class="text-xl font-black font-mono italic text-slate-900">$${p.salePrice}</strong>
                     </div>
                     <div class="grid grid-cols-2 gap-2 mt-2">
                         <button class="inv-action-btn" onclick="window.openRestock('${p.id}')">Reposición</button>
@@ -661,24 +675,6 @@
             await addDoc(getCol("products"), data);
             window.toggleProductForm(); e.target.reset(); window.showMessage("ARTÍCULO CARGADO! ✅");
         }
-
-        window.openRestock = (id) => {
-            const p = allProducts.find(x => x.id === id);
-            document.getElementById('restock-prod-id').value = p.id;
-            document.getElementById('restock-name').textContent = p.name;
-            document.getElementById('restock-current-stock').textContent = p.stock;
-            window.openModal('restock-modal');
-        };
-
-        window.openEditProduct = (id) => {
-            const p = allProducts.find(x => x.id === id);
-            document.getElementById('edit-prod-id').value = p.id;
-            document.getElementById('edit-prod-name').value = p.name;
-            document.getElementById('edit-prod-cost').value = p.unitCost || 0;
-            document.getElementById('edit-prod-price').value = p.salePrice;
-            document.getElementById('edit-prod-stock').value = p.stock;
-            window.openModal('edit-product-modal');
-        };
 
         window.handleRestock = async (e) => {
             e.preventDefault();
@@ -707,7 +703,8 @@
         // --- CAJA ---
         window.loadCajaData = async () => {
             const list = document.getElementById('caja-daily-list');
-            list.innerHTML = '<p class="p-10 text-center italic text-slate-400">Calculando balance...</p>';
+            if(!list) return;
+            list.innerHTML = '<p class="p-10 text-center italic text-slate-400">Arqueando...</p>';
             onSnapshot(query(getCol("bookings"), orderBy("timestamp", "desc")), (snapB) => {
                 onSnapshot(query(getCol("sales"), orderBy("timestamp", "desc")), (snapS) => {
                     onSnapshot(query(getCol("expenses"), orderBy("timestamp", "desc")), (snapE) => {
@@ -716,11 +713,13 @@
                         const expenses = snapE.docs.map(d => ({...d.data(), type: 'gasto'}));
                         let totalNeto = 0; detailedData = {};
                         [...bookings, ...sales, ...expenses].forEach(m => {
-                            const day = m.day; if(!detailedData[day]) detailedData[day] = { total: 0, items: [] };
-                            let amount = m.type === 'turno' ? m.totalPrice : (m.type === 'venta' ? m.total : -m.total);
+                            const day = m.day; if(!day) return;
+                            if(!detailedData[day]) detailedData[day] = { total: 0, items: [] };
+                            let amount = m.type === 'turno' ? (m.totalPrice || 0) : (m.type === 'venta' ? (m.total || 0) : -(m.total || 0));
                             totalNeto += amount; detailedData[day].total += amount; detailedData[day].items.push(m);
                         });
-                        document.getElementById('caja-total-combined').textContent = `$${totalNeto.toLocaleString('es-AR')}`;
+                        const totalEl = document.getElementById('caja-total-combined');
+                        if(totalEl) totalEl.textContent = `$${totalNeto.toLocaleString('es-AR')}`;
                         list.innerHTML = '';
                         Object.entries(detailedData).sort((a,b) => b[0].localeCompare(a[0])).forEach(([day, d]) => {
                             const row = document.createElement('div');
@@ -757,18 +756,24 @@
                 const s = doc.data(); const p = allProducts.find(item => item.name === s.name);
                 if(p) { const profit = (p.salePrice - (p.unitCost || 0)) * (s.qty || 1); totalProfit += profit; if(s.day === todayStr) todayProfit += profit; }
             });
-            document.getElementById('total-profit-display').textContent = `$${totalProfit.toLocaleString('es-AR')}`;
-            document.getElementById('today-profit-display').textContent = `$${todayProfit.toLocaleString('es-AR')}`;
+            const totalProfEl = document.getElementById('total-profit-display');
+            const todayProfEl = document.getElementById('today-profit-display');
+            if(totalProfEl) totalProfEl.textContent = `$${totalProfit.toLocaleString('es-AR')}`;
+            if(todayProfEl) todayProfEl.textContent = `$${todayProfit.toLocaleString('es-AR')}`;
             window.openModal('profit-modal');
         };
 
-        window.openExpenseModal = () => { document.getElementById('expense-form').reset(); window.openModal('expense-modal'); };
-        window.handleConfirmExpense = async (e) => {
+        window.openExpenseModal = () => { 
+            const form = document.getElementById('expense-form');
+            if(form) form.reset(); 
+            window.openModal('expense-modal'); 
+        };
+        async function handleConfirmExpense(e) {
             e.preventDefault();
             const data = { concept: document.getElementById('exp-name').value.toUpperCase(), total: parseFloat(document.getElementById('exp-total').value), timestamp: Timestamp.now(), day: new Date().toISOString().split('T')[0] };
             await addDoc(getCol("expenses"), data);
             window.closeModals(); window.showMessage("GASTO REGISTRADO! 💸");
-        };
+        }
 
         // --- FIRMAS ---
         function syncWaivers() {
@@ -781,10 +786,12 @@
         window.renderWaiverList = (f = "") => {
             const list = document.getElementById('waiver-list');
             if(!list) return; list.innerHTML = '';
-            allWaivers.filter(w => w.adultName.includes(f.toUpperCase()) || w.dni.includes(f)).forEach(w => {
+            const filtered = allWaivers.filter(w => (w.adultName || "").includes(f.toUpperCase()) || (w.dni || "").includes(f));
+            filtered.forEach(w => {
+                const datePart = (w.dateStr || "N/A").split(' ')[0];
                 const card = document.createElement('div');
-                card.className = 'bento-card p-5 cursor-pointer hover:border-violet-500 group text-black italic font-black shadow-sm';
-                card.innerHTML = `<span class="label-tiny">Registro: ${w.dateStr.split(' ')[0]}</span><h4 class="font-black uppercase text-sm group-hover:text-violet-600 tracking-tighter">${w.adultName}</h4><p class="text-[10px] text-slate-400 font-mono">DNI: ${w.dni}</p>`;
+                card.className = 'bento-card p-5 cursor-pointer hover:border-violet-500 group text-black font-black italic shadow-sm';
+                card.innerHTML = `<span class="label-tiny">Registro: ${datePart}</span><h4 class="font-black uppercase text-sm group-hover:text-violet-600 tracking-tighter">${w.adultName}</h4><p class="text-[10px] text-slate-400 font-mono italic">DNI: ${w.dni}</p>`;
                 card.onclick = () => viewWaiver(w.id);
                 list.appendChild(card);
             });
@@ -792,7 +799,8 @@
 
         function viewWaiver(id) {
             const w = allWaivers.find(x => x.id === id);
-            document.getElementById('view-waiver-details').innerHTML = `<p>Adulto: ${w.adultName}</p><p>DNI: ${w.dni}</p><p class="text-orange-600">Menor: ${w.minorName}</p><p class="text-[10px] mt-4 opacity-50 font-bold">${w.dateStr}</p>`;
+            if(!w) return;
+            document.getElementById('view-waiver-details').innerHTML = `<p>Responsable: ${w.adultName}</p><p>DNI: ${w.dni}</p><p class="text-orange-600">Menor: ${w.minorName}</p><p class="text-[10px] mt-4 opacity-50 font-bold">${w.dateStr}</p>`;
             document.getElementById('view-waiver-img').src = w.signature;
             document.getElementById('btn-print-waiver').onclick = () => window.downloadWaiverDocument(w);
             window.openModal('view-waiver-modal');
@@ -805,11 +813,14 @@
         };
 
         window.openWaiverModal = () => {
-            document.getElementById('waiver-form').reset();
-            document.getElementById('legal-full-text-container').classList.add('is-hidden');
+            const form = document.getElementById('waiver-form');
+            if(form) form.reset();
+            const legalCont = document.getElementById('legal-full-text-container');
+            if(legalCont) legalCont.classList.add('is-hidden');
             window.openModal('waiver-modal');
             setTimeout(() => {
                 canvas = document.getElementById('signature-pad');
+                if(!canvas) return;
                 canvas.width = canvas.offsetWidth; canvas.height = canvas.offsetHeight;
                 ctx = canvas.getContext('2d'); ctx.lineWidth = 4; ctx.lineCap = 'round'; ctx.strokeStyle = '#0f172a';
                 const start = (e) => { isDrawing = true; const r = canvas.getBoundingClientRect(); [lastX, lastY] = [(e.offsetX || e.touches[0].clientX - r.left), (e.offsetY || e.touches[0].clientY - r.top)]; };
@@ -819,7 +830,7 @@
             }, 500);
         };
 
-        window.handleSaveWaiver = async (e) => {
+        async function handleSaveWaiver(e) {
             e.preventDefault(); window.showMessage("GUARDANDO...");
             const data = { adultName: document.getElementById('waiver-adult-name').value.toUpperCase(), dni: document.getElementById('waiver-dni').value, minorName: document.getElementById('waiver-minor-name').value.toUpperCase() || "N/A", signature: canvas.toDataURL(), timestamp: Timestamp.now(), dateStr: new Date().toLocaleString('es-AR') };
             await addDoc(getCol("waivers"), data);
@@ -846,13 +857,18 @@
             const p = allProducts.find(x => x.id === id); const idx = saleCart.findIndex(i => i.id === id);
             if(idx > -1) { saleCart[idx].qty += delta; if(saleCart[idx].qty <= 0) saleCart.splice(idx, 1); else if(saleCart[idx].qty > p.stock) { saleCart[idx].qty = p.stock; window.showMessage("LIMITE STOCK!", true); }
             } else if(delta > 0) { if(p.stock > 0) saleCart.push({ id: p.id, name: p.name, price: p.salePrice, qty: 1, stockMax: p.stock }); else showMessage("SIN STOCK!", true); }
-            window.renderSaleCatalog(document.getElementById('sale-filter').value); renderSaleCart();
+            const searchVal = document.getElementById('sale-filter')?.value || "";
+            window.renderSaleCatalog(searchVal); renderSaleCart();
         };
 
         function renderSaleCart() {
-            const list = document.getElementById('sale-cart-list'); list.innerHTML = ''; let total = 0;
+            const list = document.getElementById('sale-cart-list'); if(!list) return;
+            list.innerHTML = ''; let total = 0;
             saleCart.forEach(i => { total += i.price * i.qty; const d = document.createElement('div'); d.className = 'bg-white p-4 rounded-2xl border border-slate-100 flex justify-between items-center text-[10px] font-black italic shadow-sm text-black font-black italic'; d.innerHTML = `<div class="text-left leading-none"><p class="uppercase text-black mb-1 font-black">${i.name}</p><p class="text-slate-300 font-mono font-black">${i.qty} x $${i.price}</p></div><span class="font-mono text-lg text-black font-black">$${(i.qty * i.price).toLocaleString()}</span>`; list.appendChild(d); });
-            document.getElementById('sale-total-display').textContent = `$${total.toLocaleString('es-AR')}`; document.getElementById('btn-sale-confirm').disabled = !saleCart.length;
+            const totalDisp = document.getElementById('sale-total-display');
+            if(totalDisp) totalDisp.textContent = `$${total.toLocaleString('es-AR')}`;
+            const confirmBtn = document.getElementById('btn-sale-confirm');
+            if(confirmBtn) confirmBtn.disabled = !saleCart.length;
         }
 
         window.handleConfirmSale = async () => {
@@ -861,15 +877,40 @@
             await batch.commit(); window.closeModals(); window.showMessage("VENTA EXITOSA! 💰");
         };
 
-        // PROMOCIONES
+        // --- PROMOCIONES ---
         function syncPromos() { onSnapshot(getCol("promos"), (snap) => { allPromos = snap.docs.map(d => ({ id: d.id, ...d.data() })); window.renderPromosList(); renderCalendar(); }); }
-        window.openPromoModal = () => { selectedPromoDays = []; document.getElementById('promo-form').reset(); const grid = document.getElementById('promo-days-grid'); grid.innerHTML = ''; for(let i=1; i<=31; i++) { const b = document.createElement('div'); b.className = 'day-promo-btn text-black font-black italic shadow-sm'; b.textContent = i; b.onclick = () => { b.classList.toggle('active'); if(selectedPromoDays.includes(i)) selectedPromoDays = selectedPromoDays.filter(x => x!==i); else selectedPromoDays.push(i); }; grid.appendChild(b); } window.openModal('promo-modal'); };
-        window.handleSavePromo = async (e) => { e.preventDefault(); const data = { name: document.getElementById('promo-name').value.toUpperCase(), price: parseFloat(document.getElementById('promo-price').value), is2x1: document.getElementById('promo-2x1').checked, days: selectedPromoDays, monthYear: currentMonthDate.toISOString().substring(0, 7), timestamp: Timestamp.now() }; await addDoc(getCol("promos"), data); window.closeModals(); window.showMessage("PROMO CREADA! ✨"); };
-        window.renderPromosList = () => { const list = document.getElementById('promos-list'); if(!list) return; list.innerHTML = ''; allPromos.forEach(p => { const d = document.createElement('div'); d.className = 'bento-inner-card flex justify-between items-center text-xs italic font-black text-black shadow-sm mb-3 border-violet-100 bg-violet-50/20 uppercase font-black'; d.innerHTML = `<div><p class="text-black font-black uppercase italic">${p.name}</p><p class="text-[8px] text-slate-400 font-bold">$${p.price} | ${p.is2x1 ? '2x1 ✅' : 'Normal'}</p></div><button class="text-red-500 font-black p-2 bg-white rounded-lg border border-red-50" onclick="window.deletePromo('${p.id}')">✕</button>`; list.appendChild(d); }); };
+        window.openPromoModal = () => { 
+            selectedPromoDays = []; 
+            const form = document.getElementById('promo-form');
+            if(form) form.reset(); 
+            const grid = document.getElementById('promo-days-grid'); 
+            if(!grid) return;
+            grid.innerHTML = ''; 
+            for(let i=1; i<=31; i++) { 
+                const b = document.createElement('div'); b.className = 'day-promo-btn text-black font-black italic shadow-sm'; b.textContent = i; 
+                b.onclick = () => { b.classList.toggle('active'); if(selectedPromoDays.includes(i)) selectedPromoDays = selectedPromoDays.filter(x => x!==i); else selectedPromoDays.push(i); }; 
+                grid.appendChild(b); 
+            } 
+            window.openModal('promo-modal'); 
+        };
+        async function handleSavePromo(e) { 
+            e.preventDefault(); 
+            const data = { 
+                name: document.getElementById('promo-name').value.toUpperCase(), 
+                price: parseFloat(document.getElementById('promo-price').value), 
+                is2x1: document.getElementById('promo-2x1').checked, 
+                days: selectedPromoDays, 
+                monthYear: document.getElementById('promo-month').value, 
+                timestamp: Timestamp.now() 
+            }; 
+            await addDoc(getCol("promos"), data); 
+            window.closeModals(); window.showMessage("PROMO CREADA! ✨"); 
+        }
+        window.renderPromosList = () => { const list = document.getElementById('promos-list'); if(!list) return; list.innerHTML = ''; allPromos.forEach(p => { const d = document.createElement('div'); d.className = 'bento-inner-card flex justify-between items-center text-xs italic font-black text-black shadow-sm mb-3 border-violet-100 bg-violet-50/20 uppercase font-black'; d.innerHTML = `<div><p class="text-black font-black uppercase italic">${p.name}</p><p class="text-[8px] text-slate-400 font-bold">$${p.price} | ${p.is2x1 ? '2x1 ✅' : 'Normal'} | ${p.monthYear}</p></div><button class="text-red-500 font-black p-2 bg-white rounded-lg border border-red-50" onclick="window.deletePromo('${p.id}')">✕</button>`; list.appendChild(d); }); };
         window.deletePromo = async (id) => { if(confirm("¿Eliminar promoción?")) await deleteDoc(getDocRef("promos", id)); };
 
-        // STATS
-        window.loadStatsData = async () => { const list = document.getElementById('stats-list'); const counts = {}; allBookings.forEach(b => counts[b.teamName] = (counts[b.teamName] || 0) + 1); const sorted = Object.entries(counts).sort((a,b) => b[1] - a[1]).slice(0, 10); list.innerHTML = sorted.map(([name, val], idx) => `<div class="bento-card p-6 flex justify-between items-center border-none shadow-lg text-black bg-white italic font-black"><div class="flex items-center gap-6"><span class="w-14 h-14 flex items-center justify-center bg-violet-600 text-white rounded-2xl font-black text-2xl shadow-md">#${idx+1}</span><span class="font-black uppercase italic text-lg text-black tracking-tighter">${name}</span></div><span class="text-slate-300 font-black text-[10px] uppercase bg-slate-50 px-4 py-2 rounded-xl italic font-black">${val} Turnos</span></div>`).join(''); };
+        // --- STATS ---
+        window.loadStatsData = async () => { const list = document.getElementById('stats-list'); if(!list) return; const counts = {}; allBookings.forEach(b => counts[b.teamName] = (counts[b.teamName] || 0) + 1); const sorted = Object.entries(counts).sort((a,b) => b[1] - a[1]).slice(0, 10); list.innerHTML = sorted.map(([name, val], idx) => `<div class="bento-card p-6 flex justify-between items-center border-none shadow-lg text-black bg-white italic font-black"><div class="flex items-center gap-6"><span class="w-14 h-14 flex items-center justify-center bg-violet-600 text-white rounded-2xl font-black text-2xl shadow-md">#${idx+1}</span><span class="font-black uppercase italic text-lg text-black tracking-tighter">${name}</span></div><span class="text-slate-300 font-black text-[10px] uppercase bg-slate-50 px-4 py-2 rounded-xl italic font-black">${val} Turnos</span></div>`).join(''); };
     </script>
 </body>
 </html>
