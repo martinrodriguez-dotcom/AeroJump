@@ -1,28 +1,863 @@
 <!DOCTYPE html>
 <html lang="es">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />
-    <meta name="theme-color" content="#ff6b00" />
-    <title>Aero Jump | Gestión</title>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>AeroJump Gualeguaychú - Sistema v2026</title>
     
+    <link rel="icon" href="data:,">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;900&family=JetBrains+Mono:wght@500;800&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
 
     <style>
-      body { margin: 0; font-family: 'Inter', sans-serif; background-color: #1a1a1a; color: white; }
-      #root-loader { display: flex; justify-content: center; align-items: center; height: 100vh; flex-direction: column; }
-      .spinner { width: 50px; height: 50px; border: 5px solid rgba(255, 107, 0, 0.2); border-left-color: #ff6b00; border-radius: 50%; animation: spin 1s linear infinite; }
-      @keyframes spin { to { transform: rotate(360deg); } }
+        :root {
+            --bg-main: #f8fafc;
+            --violet: #7c3aed;
+            --orange: #f97316;
+            --black: #0f172a;
+            --radius-xl: 2rem;
+            --radius-lg: 1.25rem;
+            --shadow-bento: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg-main);
+            color: var(--black);
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            font-weight: 600;
+        }
+
+        .is-hidden { display: none !important; }
+
+        /* Scrollbar Estilo AeroJump */
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: var(--violet); }
+
+        /* Estética Bento */
+        .bento-card {
+            background: white;
+            border-radius: var(--radius-lg);
+            border: 1px solid #e2e8f0;
+            box-shadow: var(--shadow-bento);
+            transition: all 0.2s ease;
+        }
+
+        .btn-premium {
+            border-radius: 0.8rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            padding: 0.8rem 1.5rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            border: none;
+        }
+        .btn-premium:active { transform: scale(0.96); }
+
+        /* Menu Lateral */
+        #main-menu {
+            position: fixed; top: 0; left: 0; height: 100vh; width: 280px;
+            background: white; z-index: 1100; transform: translateX(-100%);
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 20px 0 50px rgba(0,0,0,0.05);
+        }
+        #main-menu.is-open { transform: translateX(0); }
+
+        .menu-item {
+            padding: 1rem 1.5rem; margin: 0.5rem; border-radius: 1rem;
+            cursor: pointer; transition: all 0.2s; text-transform: uppercase; font-size: 0.8rem;
+        }
+        .menu-item:hover { background: #f5f3ff; color: var(--violet); transform: translateX(5px); }
+
+        /* Modales Estilo Bento */
+        .modal {
+            display: none; position: fixed; inset: 0;
+            background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(8px);
+            z-index: 2000; align-items: center; justify-content: center; padding: 1rem;
+        }
+        .modal.is-open { display: flex; }
+
+        .modal-content {
+            background: white; width: 100%; max-width: 800px; max-height: 90vh;
+            border-radius: var(--radius-xl); display: flex; flex-direction: column; overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+
+        .modal-header { padding: 1.5rem; border-bottom: 1px solid #f1f5f9; display: flex; justify-content: space-between; align-items: center; }
+        .modal-body { flex: 1; overflow-y: auto; padding: 1.5rem; background: #f8fafc; }
+        .modal-footer { padding: 1.5rem; border-top: 1px solid #f1f5f9; display: flex; justify-content: space-between; align-items: center; background: white; }
+
+        /* Celdas del Calendario */
+        .day-cell {
+            background: white; border: 1px solid #e2e8f0; border-radius: 1rem;
+            aspect-ratio: 1/1; display: flex; flex-direction: column; justify-content: space-between;
+            padding: 0.6rem; cursor: pointer; transition: 0.2s;
+        }
+        .day-cell:hover { border-color: var(--violet); background: #f5f3ff; transform: scale(1.05); z-index: 10; }
+
+        /* Inputs y Fichas */
+        .input-clean { font-size: 1.1rem; font-weight: 800; width: 100%; border: none; background: transparent; outline: none; }
+        .bento-inner-card { background: white; border: 1px solid #e2e8f0; border-radius: 1rem; padding: 1rem; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+        .label-tiny { font-size: 0.65rem; font-weight: 800; text-transform: uppercase; color: #94a3b8; margin-bottom: 4px; }
+
+        /* Firma Digital */
+        .signature-container { touch-action: none; border: 2px dashed #cbd5e1; background: white; border-radius: 1rem; position: relative; }
+        #signature-pad { width: 100%; height: 200px; cursor: crosshair; }
+
+        /* POS */
+        .pos-item-row { border-bottom: 1px solid #f1f5f9; transition: background 0.2s; }
+        .pos-item-row:hover { background: #f8fafc; }
     </style>
-  </head>
-  <body>
-    <div id="root">
-      <div id="root-loader">
-        <div class="spinner"></div>
-        <p style="margin-top: 20px;">Iniciando Sistema...</p>
-      </div>
+</head>
+<body class="custom-scrollbar">
+
+    <!-- 1. VISTA ACCESO -->
+    <section id="login-view" class="min-h-screen flex items-center justify-center p-4 bg-[#0f172a]">
+        <div class="bento-card w-full max-w-sm text-center p-10">
+            <h2 class="text-4xl font-black italic tracking-tighter mb-2">AeroJump</h2>
+            <p class="text-[10px] uppercase font-black tracking-[0.3em] text-slate-400 mb-8">Panel de Control v2026</p>
+            <form id="login-form" class="space-y-4">
+                <div class="text-left">
+                    <label class="label-tiny">Administrador:</label>
+                    <input type="email" id="login-email" required class="bento-inner-card w-full outline-none font-bold">
+                </div>
+                <div class="text-left">
+                    <label class="label-tiny">Contraseña:</label>
+                    <input type="password" id="login-password" required class="bento-inner-card w-full outline-none font-bold">
+                </div>
+                <button type="submit" class="w-full bg-violet-600 btn-premium text-white shadow-lg shadow-violet-200">Entrar al Sistema</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- 2. APP CONTAINER -->
+    <div id="app-container" class="is-hidden h-screen flex flex-col">
+        <header class="bg-white border-b border-slate-200 p-4 flex justify-between items-center z-50 shadow-sm">
+            <div class="flex items-center gap-4">
+                <button onclick="toggleMenu(true)" class="p-2 bg-slate-900 text-white rounded-xl active:scale-90 transition-transform">
+                    <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M4 6h16M4 12h16M4 18h16" /></svg>
+                </button>
+                <div class="leading-none">
+                    <h1 class="text-lg font-black uppercase italic">AeroJump <span class="text-violet-600">Gchu</span></h1>
+                </div>
+            </div>
+            <button onclick="openSaleModal()" class="bg-orange-500 btn-premium text-white text-[10px] px-4 py-2 shadow-lg shadow-orange-100 italic">Venta Kiosco</button>
+        </header>
+
+        <nav id="main-menu" class="flex flex-col">
+            <div class="p-8 border-b border-slate-100 bg-slate-50/50 text-center">
+                <p id="user-email-display" class="text-[10px] font-black truncate mb-4 text-slate-400"></p>
+                <button id="logout-btn" class="w-full border-2 border-red-100 text-red-500 p-2 rounded-xl font-black text-[9px] uppercase hover:bg-red-50">Cerrar Sesión 🔒</button>
+            </div>
+            <div class="flex-grow overflow-y-auto custom-scrollbar p-2">
+                <div class="menu-item" onclick="showView('calendar')">🗓️ Agenda Saltos</div>
+                <div class="menu-item" onclick="showView('productos')">🥤 Stock Kiosco</div>
+                <div class="menu-item" onclick="showView('caja')">💰 Arqueo Caja</div>
+                <div class="menu-item" onclick="showView('firmas')">✍️ Firmas Digitales</div>
+                <div class="menu-item" onclick="showView('stats')">📊 Rankings</div>
+                <div class="menu-item" onclick="showView('config')">⚙️ Configuración</div>
+            </div>
+        </nav>
+
+        <div id="menu-overlay" onclick="toggleMenu(false)" class="fixed inset-0 bg-black/40 z-[1000] hidden backdrop-blur-sm"></div>
+
+        <main id="main-content" class="flex-grow overflow-y-auto p-4 md:p-8 custom-scrollbar">
+            
+            <!-- VISTA: CALENDARIO -->
+            <div id="calendar-view" class="view-container">
+                <div class="bento-card mb-6 p-4 flex justify-between items-center bg-white">
+                    <button onclick="prevMonth()" class="p-3 bg-slate-50 rounded-xl font-black hover:bg-slate-100">◀</button>
+                    <h2 id="current-month-year" class="text-2xl font-black uppercase italic tracking-tighter"></h2>
+                    <button onclick="nextMonth()" class="p-3 bg-slate-50 rounded-xl font-black hover:bg-slate-100">▶</button>
+                </div>
+                <div class="grid grid-cols-7 gap-2 mb-2 text-center font-black text-[10px] text-violet-500 uppercase tracking-widest italic">
+                    <div>Lun</div><div>Mar</div><div>Mie</div><div>Jue</div><div>Vie</div><div>Sab</div><div>Dom</div>
+                </div>
+                <div id="calendar-grid" class="grid grid-cols-7 gap-3"></div>
+            </div>
+
+            <!-- VISTA: PRODUCTOS -->
+            <div id="productos-view" class="view-container is-hidden">
+                <div class="flex justify-between items-center mb-8">
+                    <h2 class="section-title">Inventario</h2>
+                    <button onclick="toggleProductForm()" class="btn-premium bg-violet-600 text-white text-xs">+ Nuevo Producto</button>
+                </div>
+                <div id="product-form-container" class="is-hidden bento-card p-8 mb-10 border-violet-100 bg-violet-50/10">
+                    <form id="product-form" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="bento-inner-card"><label class="label-tiny">Nombre del Artículo</label><input type="text" id="prod-name" required class="input-clean uppercase"></div>
+                        <div class="bento-inner-card"><label class="label-tiny">Stock Inicial</label><input type="number" id="prod-stock" required class="input-clean"></div>
+                        <div class="bento-inner-card"><label class="label-tiny">$ Bulto / Costo Total</label><input type="number" id="prod-batch-cost" required class="input-clean"></div>
+                        <div class="bento-inner-card"><label class="label-tiny">Unidades x Bulto</label><input type="number" id="prod-batch-qty" required class="input-clean"></div>
+                        <div class="bento-inner-card bg-black text-white"><label class="label-tiny text-slate-400">Precio Venta Real</label><input type="number" id="prod-real-price" required class="input-clean text-white"></div>
+                        <button type="submit" class="btn-premium bg-violet-600 text-white col-span-full py-4 text-sm">Guardar Ficha Técnica</button>
+                    </form>
+                </div>
+                <div id="product-list" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
+            </div>
+
+            <!-- VISTA: CAJA -->
+            <div id="caja-view" class="view-container is-hidden">
+                <div class="flex justify-between items-center mb-8">
+                    <h2 class="section-title">Arqueo Caja</h2>
+                    <button onclick="openExpenseModal()" class="btn-premium bg-red-500 text-white text-xs">Anotar Gasto -</button>
+                </div>
+                <div class="bento-card p-12 text-center mb-10 bg-white border-violet-100">
+                    <p class="label-tiny tracking-widest mb-2">Caja Neto Real</p>
+                    <div id="caja-total-combined" class="text-7xl font-black italic tracking-tighter text-slate-900">$0</div>
+                </div>
+                <div id="caja-daily-list" class="space-y-4 max-w-3xl mx-auto"></div>
+            </div>
+
+            <!-- VISTA: FIRMAS -->
+            <div id="firmas-view" class="view-container is-hidden">
+                <div class="flex justify-between items-center mb-8">
+                    <h2 class="section-title">Documentación</h2>
+                    <button onclick="openWaiverModal()" class="btn-premium bg-black text-white text-xs">+ Nueva Firma Digital</button>
+                </div>
+                <div class="mb-6"><input type="text" id="waiver-filter" placeholder="🔍 BUSCAR POR NOMBRE O DNI..." class="bento-card w-full p-5 outline-none font-bold italic border-2 border-slate-100"></div>
+                <div id="waiver-list" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
+            </div>
+
+            <!-- VISTA: STATS -->
+            <div id="stats-view" class="view-container is-hidden">
+                <h2 class="section-title text-center mb-12">Top Fidelidad AeroJump</h2>
+                <div id="stats-list" class="max-w-2xl mx-auto space-y-4"></div>
+            </div>
+
+            <!-- VISTA: CONFIG -->
+            <div id="config-view" class="view-container is-hidden">
+                <h2 class="section-title text-center mb-12 italic">Ajustes</h2>
+                <div class="bento-card p-12 max-w-md mx-auto">
+                    <form id="config-form" class="space-y-8 text-center">
+                        <div class="bento-inner-card"><label class="label-tiny">Precio Hora Salto ($)</label><input type="number" id="config-court-price" value="5000" class="input-clean text-center text-4xl font-black"></div>
+                        <button type="submit" class="btn-premium bg-black text-white w-full py-5 shadow-2xl">Actualizar Tarifas</button>
+                    </form>
+                </div>
+            </div>
+
+        </main>
     </div>
-  </body>
+
+    <!-- MODALES -->
+    
+    <!-- Modal Turnos -->
+    <div id="booking-modal" class="modal">
+        <div class="modal-content max-w-2xl">
+            <div class="modal-header">
+                <h3 class="font-black uppercase italic text-lg" id="booking-modal-title">Nueva Reserva</h3>
+                <button onclick="closeModals()" class="w-10 h-10 bg-slate-100 rounded-full font-black hover:bg-black hover:text-white">X</button>
+            </div>
+            <form id="booking-form" class="modal-body space-y-6">
+                <input type="hidden" id="booking-id"><input type="hidden" id="booking-date">
+                <div class="bento-inner-card"><label class="label-tiny">Responsable del Grupo</label><input type="text" id="teamName" required class="input-clean uppercase"></div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="bento-inner-card"><label class="label-tiny">Cant. Saltadores</label><input type="number" id="peopleCount" value="1" class="input-clean"></div>
+                    <div class="bento-inner-card"><label class="label-tiny">Costo p/ Hora ($)</label><input type="number" id="costPerHour" class="input-clean"></div>
+                </div>
+                <div class="bento-inner-card">
+                    <label class="label-tiny mb-4">Selección de Horarios (Límite 30 pers):</label>
+                    <div id="court-hours-list" class="grid grid-cols-5 gap-3"></div>
+                </div>
+            </form>
+            <div class="modal-footer">
+                <div class="text-left leading-none"><span class="label-tiny">Total:</span><p id="booking-total" class="text-3xl font-black italic text-violet-600">$0</p></div>
+                <button type="submit" form="booking-form" class="btn-premium bg-violet-600 text-white px-10 py-5">Confirmar Turno ✅</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal POS -->
+    <div id="sale-modal" class="modal">
+        <div class="modal-content !max-w-5xl h-[90vh]">
+            <div class="modal-header bg-white border-b"><h3 class="font-black italic uppercase text-lg">Caja POS Kiosco</h3><button onclick="closeModals()" class="w-10 h-10 bg-slate-100 rounded-full font-black">X</button></div>
+            <div class="flex flex-col md:flex-row flex-grow overflow-hidden">
+                <div class="flex-grow p-6 overflow-y-auto custom-scrollbar border-r">
+                    <input type="text" id="sale-filter" placeholder="🔍 Buscar artículo..." class="bento-inner-card w-full mb-6 outline-none font-bold italic p-4 border-2 border-slate-50" oninput="renderSaleCatalog(this.value)">
+                    <div id="sale-catalog-list" class="space-y-3"></div>
+                </div>
+                <div class="w-full md:w-[380px] bg-slate-50 flex flex-col shadow-inner">
+                    <div id="sale-cart-list" class="flex-grow p-6 overflow-y-auto space-y-3 custom-scrollbar"></div>
+                    <div class="p-8 bg-white border-t-2 border-slate-100 shadow-2xl">
+                        <div class="flex justify-between mb-6 items-end"><span class="label-tiny text-slate-400">Total Ticket:</span><strong id="sale-total-display" class="text-5xl font-black italic tracking-tighter leading-none">$0</strong></div>
+                        <button onclick="handleConfirmSale()" id="btn-sale-confirm" class="w-full btn-premium bg-orange-500 text-white py-6 text-xl rounded-2xl shadow-xl shadow-orange-100" disabled>Cobrar Venta 💰</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Waiver (Exención) con Contrato Completo -->
+    <div id="waiver-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header bg-slate-900 text-white">
+                <h3 class="font-black italic uppercase">Deslinde de Responsabilidad</h3>
+                <button onclick="closeModals()" class="text-white bg-white/10 w-10 h-10 rounded-full">X</button>
+            </div>
+            <form id="waiver-form" class="modal-body space-y-6">
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="bento-inner-card"><label class="label-tiny">Adulto Responsable</label><input type="text" id="waiver-adult-name" required class="input-clean uppercase"></div>
+                    <div class="bento-inner-card"><label class="label-tiny">DNI / Pasaporte</label><input type="text" id="waiver-dni" required class="input-clean font-mono"></div>
+                </div>
+                <div class="bento-inner-card"><label class="label-tiny">Nombre del Menor a cargo</label><input type="text" id="waiver-minor-name" class="input-clean uppercase" placeholder="DEJAR VACÍO SI NO HAY MENORES"></div>
+                
+                <div class="bento-inner-card bg-slate-50 border-slate-200">
+                    <p class="text-[11px] font-bold text-slate-600 mb-3">Mediante la presente, eximo de toda responsabilidad a AeroJump Gchu y su dueña Fenocchio María Irene por cualquier lesión física derivada del uso de las instalaciones.</p>
+                    
+                    <button type="button" onclick="toggleLegalFullText()" id="toggle-legal-btn" class="w-full py-3 bg-white border-2 border-slate-200 rounded-xl text-[10px] font-black text-violet-600 hover:bg-violet-50 transition-colors uppercase italic tracking-tighter">
+                        [ + ] LEER ACUERDO COMPLETO, RIESGOS Y AUTORIZACIONES (Sección 1 y 2)
+                    </button>
+                    
+                    <div id="legal-full-text-container" class="is-hidden mt-4 p-5 bg-white border border-slate-200 rounded-2xl text-[10px] font-bold text-slate-700 space-y-4 max-h-80 overflow-y-auto custom-scrollbar text-justify leading-relaxed">
+                        <h4 class="font-black uppercase text-black border-b border-slate-200 pb-2">SECCIÓN 1: RIESGOS</h4>
+                        <p>Mediante la firma del presente consentimiento, entiendo y reconozco que mi participación y la participación de los menores con quienes ingreso al parque con suficiente representación y/o autorización en el uso del parque, sus juegos y sus actividades conllevan riesgos conocidos, esperados e inesperados, que podrían resultar en lesiones físicas, emocionales, parálisis o muerte a mi persona, a los menores de edad por quienes me hago responsable al firmar o a terceros.</p>
+                        <p>Los riesgos incluyen, aunque no se limitan a resbalones, malas caídas, colisiones con objetos fijos y/u otros participantes. Los posibles daños incluyen: esguinces, fractura de huesos, lesiones oculares, roturas de ligamentos, parálisis, infarto o muerte.</p>
+                        <p class="bg-yellow-50 p-3 border-l-4 border-yellow-400 font-black italic">AEROJUMP Y SU DUEÑA Fenocchio maría irene NO recomienda el ingreso al área de salto en caso de estar embarazada o sospechas.</p>
+                        <h4 class="font-black uppercase text-black border-b border-slate-200 pb-2 mt-4">ASUNCIÓN DE RIESGOS</h4>
+                        <p>(a) Acepto todos los riesgos. (f) Acepto renunciar al fuero que me pudiera corresponder, y que cualquier reclamo judicial será presentado exclusivamente ante la justicia civil y comercial de gualeguaychú. (h) Mi firma es prueba de una completa e incondicional RENUNCIA Y LIBERACIÓN.</p>
+                        <h4 class="font-black uppercase text-black border-b border-slate-200 pb-2 mt-4">SECCIÓN 2: DECLARACIÓN JURADA</h4>
+                        <p>Declaro bajo juramento que revisto el carácter de padre/mother, tutor legal o persona autorizada y que tengo la capacidad/legitimación de firmar este acuerdo en su nombre. Asimismo declaro que la información es verdadera y correcta.</p>
+                    </div>
+                </div>
+
+                <div class="signature-container shadow-inner">
+                    <canvas id="signature-pad"></canvas>
+                </div>
+                <div class="flex justify-between items-center px-2">
+                    <button type="button" onclick="clearSignature()" class="text-[10px] font-black text-red-500 underline uppercase italic">Borrar Firma 🗑️</button>
+                    <p class="text-[9px] text-slate-400 italic">Firme con el dedo sobre el recuadro</p>
+                </div>
+            </form>
+            <div class="modal-footer bg-slate-50">
+                <button type="submit" form="waiver-form" class="w-full btn-premium bg-violet-600 text-white py-5 text-lg shadow-xl shadow-violet-100">Guardar Firma y Finalizar ✅</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Detalle Firma y Generar PDF -->
+    <div id="view-waiver-modal" class="modal">
+        <div class="modal-content !max-w-md">
+            <div class="modal-header">
+                <h3 class="font-black italic uppercase">Certificado Archivada</h3>
+                <button onclick="closeModals()" class="w-10 h-10 bg-slate-50 rounded-full font-black">X</button>
+            </div>
+            <div class="modal-body text-center p-10 bg-white">
+                <div id="view-waiver-details" class="bento-inner-card text-left italic text-sm mb-6 bg-slate-50 border-none leading-relaxed"></div>
+                <div class="p-4 border-2 border-slate-900 rounded-3xl inline-block bg-white shadow-2xl">
+                    <img id="view-waiver-img" class="w-full h-auto rounded-xl">
+                </div>
+            </div>
+            <div class="modal-footer bg-slate-50">
+                <button id="btn-print-waiver" class="w-full btn-premium bg-black text-white py-5 text-sm flex items-center justify-center gap-3">
+                    <span>📄</span> IMPRIMIR / GENERAR PDF
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Overlay Mensajes (Fluido e Instantáneo) -->
+    <div id="message-overlay" class="modal bg-black/90">
+        <div class="flex flex-col items-center justify-center text-center p-10">
+            <div class="text-7xl mb-6">🚀</div>
+            <p id="message-text" class="text-white text-3xl font-black uppercase italic tracking-widest leading-tight"></p>
+        </div>
+    </div>
+
+    <!-- LÓGICA CONSOLIDADA (MANDATO SINGLE FILE) -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, doc, addDoc, updateDoc, deleteDoc, query, onSnapshot, orderBy, where, Timestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBz0V2ieSXehafKWRNQprb951NVN5FvBD4",
+            authDomain: "aerojump-841fb.firebaseapp.com",
+            projectId: "aerojump-841fb",
+            storageBucket: "aerojump-841fb.firebasestorage.app",
+            messagingSenderId: "68080726646",
+            appId: "1:68080726646:web:a830613a1278871d416557"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const appId = "aerojump-gchu";
+
+        const getCol = (n) => collection(db, "artifacts", appId, "public", "data", n);
+        const getDocRef = (n, id) => doc(db, "artifacts", appId, "public", "data", n, id);
+
+        // ESTADO
+        let currentMonthDate = new Date();
+        let allBookings = [];
+        let allProducts = [];
+        let allWaivers = [];
+        let saleCart = [];
+        let canvas, ctx, isDrawing = false, lastX = 0, lastY = 0;
+
+        // UI CORE
+        window.showView = (viewId) => {
+            document.querySelectorAll('.view-container').forEach(v => v.classList.add('is-hidden'));
+            const target = document.getElementById(`${viewId}-view`);
+            if (target) target.classList.remove('is-hidden');
+            document.getElementById('main-content').scrollTop = 0;
+            window.toggleMenu(false);
+            if (viewId === 'caja') loadCajaData();
+            if (viewId === 'stats') loadStatsData();
+            if (viewId === 'firmas') renderWaiverList();
+        };
+
+        window.toggleMenu = (force) => {
+            const menu = document.getElementById('main-menu');
+            const overlay = document.getElementById('menu-overlay');
+            const isOpen = force !== undefined ? force : !menu.classList.contains('is-open');
+            menu.classList.toggle('is-open', isOpen);
+            overlay.classList.toggle('hidden', !isOpen);
+        };
+
+        window.openModal = (id) => document.getElementById(id).classList.add('is-open');
+        window.closeModals = () => document.querySelectorAll('.modal').forEach(m => m.classList.remove('is-open'));
+
+        window.showMessage = (text, err = false) => {
+            const m = document.getElementById('message-overlay');
+            const t = document.getElementById('message-text');
+            t.textContent = text;
+            t.style.color = err ? '#ef4444' : '#ffffff';
+            m.classList.add('is-open');
+            setTimeout(() => m.classList.remove('is-open'), 1200);
+        };
+
+        // AGENDA
+        window.syncBookings = () => {
+            const monthStr = currentMonthDate.toISOString().substring(0, 7);
+            const q = query(getCol("bookings"), where("monthYear", "==", monthStr));
+            onSnapshot(q, (snap) => {
+                allBookings = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+                renderCalendar();
+            });
+        };
+
+        function renderCalendar() {
+            const grid = document.getElementById('calendar-grid');
+            const [y, m] = [currentMonthDate.getFullYear(), currentMonthDate.getMonth()];
+            const firstDay = new Date(y, m, 1).getDay();
+            const offset = firstDay === 0 ? 6 : firstDay - 1;
+            const lastDate = new Date(y, m + 1, 0).getDate();
+
+            document.getElementById('current-month-year').textContent = new Intl.DateTimeFormat('es-AR', { month: 'long', year: 'numeric' }).format(currentMonthDate);
+            grid.innerHTML = '';
+
+            for (let i = 0; i < offset; i++) grid.innerHTML += '<div class="opacity-0"></div>';
+            for (let i = 1; i <= lastDate; i++) {
+                const dateStr = `${y}-${String(m + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
+                const dayB = allBookings.filter(b => b.day === dateStr);
+                const cell = document.createElement('div');
+                cell.className = 'day-cell shadow-sm';
+                cell.innerHTML = `<span class="font-black text-slate-300 text-lg">${i}</span> ${dayB.length ? `<div class="flex justify-end"><span class="bg-violet-100 text-violet-600 text-[8px] px-2 py-1 rounded-full font-black uppercase tracking-widest">${dayB.length} Turnos</span></div>` : ''}`;
+                cell.onclick = () => openBookingForm(dateStr);
+                grid.appendChild(cell);
+            }
+        }
+
+        function openBookingForm(date) {
+            document.getElementById('booking-date').value = date;
+            document.getElementById('teamName').value = '';
+            document.getElementById('costPerHour').value = 5000;
+            renderHours();
+            openModal('booking-modal');
+        }
+
+        function renderHours() {
+            const list = document.getElementById('court-hours-list');
+            list.innerHTML = '';
+            for (let h = 9; h <= 23; h++) {
+                const item = document.createElement('div');
+                item.className = 'border border-slate-200 p-2 rounded-xl text-[10px] font-black cursor-pointer text-center hover:bg-slate-50 transition-colors';
+                item.textContent = `${h}:00`;
+                item.onclick = () => {
+                    item.classList.toggle('bg-violet-600');
+                    item.classList.toggle('text-white');
+                    item.classList.toggle('border-violet-600');
+                    updateBookingTotal();
+                };
+                list.appendChild(item);
+            }
+        }
+
+        function updateBookingTotal() {
+            const hrs = document.querySelectorAll('#court-hours-list .bg-violet-600').length;
+            const price = parseFloat(document.getElementById('costPerHour').value) || 0;
+            const people = parseInt(document.getElementById('peopleCount').value) || 1;
+            document.getElementById('booking-total').textContent = `$${(hrs * price * people).toLocaleString('es-AR')}`;
+        }
+
+        document.getElementById('booking-form').onsubmit = async (e) => {
+            e.preventDefault();
+            const hrs = Array.from(document.querySelectorAll('#court-hours-list .bg-violet-600')).map(x => x.textContent);
+            if (!hrs.length) return alert("Selecciona horarios");
+            const data = {
+                teamName: document.getElementById('teamName').value.toUpperCase(),
+                peopleCount: parseInt(document.getElementById('peopleCount').value),
+                unitPrice: parseFloat(document.getElementById('costPerHour').value),
+                day: document.getElementById('booking-date').value,
+                monthYear: document.getElementById('booking-date').value.substring(0, 7),
+                hours: hrs,
+                totalPrice: hrs.length * parseFloat(document.getElementById('costPerHour').value) * parseInt(document.getElementById('peopleCount').value),
+                timestamp: Timestamp.now()
+            };
+            await addDoc(getCol("bookings"), data);
+            closeModals();
+            showMessage("RESERVA EXITOSA! ✅");
+        };
+
+        window.prevMonth = () => { currentMonthDate.setMonth(currentMonthDate.getMonth() - 1); syncBookings(); };
+        window.nextMonth = () => { currentMonthDate.setMonth(currentMonthDate.getMonth() + 1); syncBookings(); };
+
+        // PRODUCTOS e INVENTARIO
+        window.syncProducts = () => {
+            onSnapshot(getCol("products"), (snap) => {
+                allProducts = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+                renderProducts();
+            });
+        };
+
+        function renderProducts() {
+            const list = document.getElementById('product-list');
+            list.innerHTML = '';
+            allProducts.forEach(p => {
+                const card = document.createElement('div');
+                card.className = 'bento-card p-6 flex flex-col gap-3';
+                card.innerHTML = `
+                    <div class="flex justify-between items-start">
+                        <h4 class="font-black uppercase italic leading-none">${p.name}</h4>
+                        <strong class="text-xl font-black text-slate-900">$${p.salePrice}</strong>
+                    </div>
+                    <span class="text-[9px] font-black uppercase text-slate-400 tracking-widest bg-slate-50 px-2 py-1 rounded-lg w-fit">Stock: ${p.stock} un.</span>
+                    <button class="mt-2 w-full p-3 bg-slate-900 text-white rounded-xl font-black text-[10px] uppercase active:scale-95 transition-all" onclick="window.deleteProduct('${p.id}')">Eliminar</button>
+                `;
+                list.appendChild(card);
+            });
+        }
+
+        window.toggleProductForm = () => document.getElementById('product-form-container').classList.toggle('is-hidden');
+
+        document.getElementById('product-form').onsubmit = async (e) => {
+            e.preventDefault();
+            const data = {
+                name: document.getElementById('prod-name').value.toUpperCase(),
+                stock: parseInt(document.getElementById('prod-stock').value),
+                salePrice: parseFloat(document.getElementById('prod-real-price').value),
+                unitCost: parseFloat(document.getElementById('prod-batch-cost').value) / parseInt(document.getElementById('prod-batch-qty').value),
+                timestamp: Timestamp.now()
+            };
+            await addDoc(getCol("products"), data);
+            toggleProductForm();
+            e.target.reset();
+            showMessage("PRODUCTO CARGADO! ✅");
+        };
+
+        window.deleteProduct = async (id) => {
+            if(confirm("¿Eliminar producto?")) await deleteDoc(getDocRef("products", id));
+        };
+
+        // CAJA Y RANKING
+        async function loadCajaData() {
+            const list = document.getElementById('caja-daily-list');
+            list.innerHTML = '<p class="p-10 text-center animate-pulse italic">Calculando balance...</p>';
+            
+            const qB = query(getCol("bookings"), orderBy("timestamp", "desc"));
+            onSnapshot(qB, (snap) => {
+                const data = snap.docs.map(d => d.data());
+                let total = 0;
+                data.forEach(b => total += b.totalPrice);
+                document.getElementById('caja-total-combined').textContent = `$${total.toLocaleString('es-AR')}`;
+                
+                list.innerHTML = '';
+                // Agrupación simplificada por día para visualización
+                const days = {};
+                data.forEach(b => {
+                    days[b.day] = (days[b.day] || 0) + b.totalPrice;
+                });
+                Object.entries(days).sort((a,b) => b[0].localeCompare(a[0])).forEach(([day, val]) => {
+                    const row = document.createElement('div');
+                    row.className = 'bento-card p-6 flex justify-between items-center italic bg-white';
+                    row.innerHTML = `<span class="font-black uppercase">${day}</span><strong class="text-2xl font-black text-slate-900">$${val.toLocaleString()}</strong>`;
+                    list.appendChild(row);
+                });
+            });
+        }
+
+        async function loadStatsData() {
+            const list = document.getElementById('stats-list');
+            const counts = {};
+            allBookings.forEach(b => counts[b.teamName] = (counts[b.teamName] || 0) + 1);
+            const sorted = Object.entries(counts).sort((a,b) => b[1] - a[1]).slice(0, 10);
+            list.innerHTML = sorted.length ? sorted.map(([name, val], idx) => `
+                <div class="bento-card p-6 flex justify-between items-center shadow-lg shadow-slate-100 border-none bg-white">
+                    <div class="flex items-center gap-4">
+                        <span class="w-10 h-10 flex items-center justify-center bg-violet-600 text-white rounded-full font-black text-sm shadow-lg shadow-violet-100">#${idx+1}</span>
+                        <span class="font-black uppercase italic">${name}</span>
+                    </div>
+                    <span class="text-slate-400 font-black text-xs uppercase">${val} Turnos</span>
+                </div>
+            `).join('') : '<p class="p-10 text-center italic opacity-20">Sin datos registrados</p>';
+        }
+
+        // FIRMAS DIGITALES
+        window.renderWaiverList = (f = "") => {
+            const list = document.getElementById('waiver-list');
+            list.innerHTML = '';
+            allWaivers.filter(w => w.adultName.includes(f.toUpperCase()) || w.dni.includes(f)).forEach(w => {
+                const card = document.createElement('div');
+                card.className = 'bento-card p-6 cursor-pointer hover:border-violet-400';
+                card.innerHTML = `
+                    <p class="label-tiny">Responsable:</p>
+                    <h4 class="font-black uppercase italic text-lg mb-2">${w.adultName}</h4>
+                    <p class="text-xs font-bold text-slate-400">DNI: ${w.dni}</p>
+                    <div class="mt-4 pt-4 border-t border-slate-50 flex justify-end">
+                        <span class="text-[9px] font-black uppercase text-violet-600 underline">Ver Detalle 📄</span>
+                    </div>
+                `;
+                card.onclick = () => viewWaiver(w.id);
+                list.appendChild(card);
+            });
+        };
+
+        window.syncWaivers = () => {
+            onSnapshot(query(getCol("waivers"), orderBy("timestamp", "desc")), (snap) => {
+                allWaivers = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+                renderWaiverList();
+            });
+        };
+
+        function viewWaiver(id) {
+            const w = allWaivers.find(x => x.id === id);
+            if(!w) return;
+            document.getElementById('view-waiver-details').innerHTML = `
+                <div class="space-y-1">
+                    <p class="label-tiny">Nombre Adulto:</p>
+                    <p class="font-black uppercase text-base">${w.adultName}</p>
+                    <p class="label-tiny mt-2">DNI:</p>
+                    <p class="font-black text-base">${w.dni}</p>
+                    <p class="label-tiny mt-2">Menor/es:</p>
+                    <p class="font-black uppercase text-base text-orange-600">${w.minorName}</p>
+                    <p class="label-tiny mt-4">Fecha de Registro:</p>
+                    <p class="font-bold text-[10px] text-slate-400">${w.dateStr}</p>
+                </div>
+            `;
+            document.getElementById('view-waiver-img').src = w.signature;
+            document.getElementById('btn-print-waiver').onclick = () => window.downloadWaiverDocument(w);
+            openModal('view-waiver-modal');
+        }
+
+        window.openWaiverModal = () => {
+            document.getElementById('waiver-form').reset();
+            document.getElementById('legal-full-text-container').classList.add('is-hidden');
+            document.getElementById('toggle-legal-btn').textContent = "[ + ] LEER ACUERDO COMPLETO, RIESGOS Y AUTORIZACIONES (Sección 1 y 2)";
+            openModal('waiver-modal');
+            setTimeout(initSignaturePad, 500);
+        };
+
+        function initSignaturePad() {
+            canvas = document.getElementById('signature-pad');
+            const rect = canvas.getBoundingClientRect();
+            canvas.width = canvas.offsetWidth;
+            canvas.height = canvas.offsetHeight;
+            ctx = canvas.getContext('2d');
+            ctx.lineWidth = 3; ctx.lineCap = 'round'; ctx.strokeStyle = '#000000';
+
+            const start = (e) => { 
+                isDrawing = true; 
+                const r = canvas.getBoundingClientRect();
+                const x = (e.offsetX || e.touches[0].clientX - r.left);
+                const y = (e.offsetY || e.touches[0].clientY - r.top);
+                [lastX, lastY] = [x, y];
+            };
+            const draw = (e) => {
+                if (!isDrawing) return;
+                const r = canvas.getBoundingClientRect();
+                const x = (e.offsetX || e.touches[0].clientX - r.left);
+                const y = (e.offsetY || e.touches[0].clientY - r.top);
+                ctx.beginPath(); ctx.moveTo(lastX, lastY); ctx.lineTo(x, y); ctx.stroke();
+                [lastX, lastY] = [x, y];
+                if (e.touches) e.preventDefault();
+            };
+            canvas.onmousedown = start; canvas.onmousemove = draw; window.onmouseup = () => isDrawing = false;
+            canvas.ontouchstart = start; canvas.ontouchmove = draw; canvas.ontouchend = () => isDrawing = false;
+        }
+
+        window.clearSignature = () => ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        window.toggleLegalFullText = () => {
+            const c = document.getElementById('legal-full-text-container');
+            const b = document.getElementById('toggle-legal-btn');
+            c.classList.toggle('is-hidden');
+            b.textContent = c.classList.contains('is-hidden') ? '[ + ] LEER ACUERDO COMPLETO, RIESGOS Y AUTORIZACIONES (Sección 1 y 2)' : '[ - ] CERRAR ACUERDO COMPLETO';
+        };
+
+        document.getElementById('waiver-form').onsubmit = async (e) => {
+            e.preventDefault();
+            showMessage("GUARDANDO FIRMA...");
+            const data = {
+                adultName: document.getElementById('waiver-adult-name').value.toUpperCase(),
+                dni: document.getElementById('waiver-dni').value,
+                minorName: document.getElementById('waiver-minor-name').value.toUpperCase() || "N/A",
+                signature: canvas.toDataURL(),
+                timestamp: Timestamp.now(),
+                dateStr: new Date().toLocaleDateString('es-AR') + ' ' + new Date().toLocaleTimeString('es-AR', {hour:'2-digit', minute:'2-digit'})
+            };
+            await addDoc(getCol("waivers"), data);
+            closeModals();
+            showMessage("FIRMA ARCHIVADA! ✅");
+        };
+
+        window.downloadWaiverDocument = (w) => {
+            const win = window.open('', '_blank');
+            const legalText = document.getElementById('legal-full-text-container').innerHTML;
+            win.document.write(`
+                <html><head><title>AeroJump - Certificado Digital</title>
+                <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700&display=swap" rel="stylesheet">
+                <style>
+                    body { font-family: 'Outfit', sans-serif; padding: 50px; color: #0f172a; line-height: 1.6; font-size: 12px; }
+                    .header { text-align: center; border-bottom: 4px solid #7c3aed; padding-bottom: 20px; margin-bottom: 30px; }
+                    .header h1 { margin: 0; font-size: 40px; font-style: italic; text-transform: uppercase; font-weight: 900; }
+                    .data-grid { display: grid; grid-template-cols: 1fr 1fr; gap: 20px; background: #f8fafc; padding: 25px; border-radius: 20px; border: 1px solid #e2e8f0; margin-bottom: 30px; }
+                    .legal { text-align: justify; padding: 20px; border: 1px solid #eee; border-radius: 20px; margin-bottom: 40px; color: #475569; }
+                    .sig-section { display: flex; flex-direction: column; align-items: center; margin-top: 40px; page-break-inside: avoid; }
+                    .sig-section p { font-weight: 900; text-transform: uppercase; font-size: 10px; margin-bottom: 10px; }
+                    img { border: 2px solid black; border-radius: 15px; max-width: 400px; padding: 10px; background: white; }
+                    h4 { text-transform: uppercase; border-bottom: 1px solid #7c3aed; display: inline-block; margin-top: 20px; margin-bottom: 10px; }
+                </style></head>
+                <body>
+                    <div class="header"><h1>AeroJump Gualeguaychú</h1><p>CERTIFICADO DE RESPONSABILIDAD LEGAL DIGITAL</p></div>
+                    <div class="data-grid">
+                        <div><strong>RESPONSABLE:</strong> ${w.adultName}</div>
+                        <div><strong>DNI:</strong> ${w.dni}</div>
+                        <div><strong>MENORES A CARGO:</strong> ${w.minorName}</div>
+                        <div><strong>FECHA DE REGISTRO:</strong> ${w.dateStr}</div>
+                    </div>
+                    <div class="legal">
+                        ${legalText}
+                    </div>
+                    <div class="sig-section">
+                        <p>Firma Digital del Adulto Responsable:</p>
+                        <img src="${w.signature}">
+                        <p style="margin-top:20px; color:#94a3b8; font-weight:normal;">Identificador: ${w.id} | Validado digitalmente por AeroJump System</p>
+                    </div>
+                    <script>window.onload=function(){ setTimeout(() => { window.print(); window.close(); }, 500); }<\/script>
+                </body></html>
+            `);
+            win.document.close();
+        };
+
+        // POS & VENTAS
+        window.openSaleModal = () => {
+            saleCart = [];
+            renderSaleCatalog();
+            renderSaleCart();
+            openModal('sale-modal');
+        };
+
+        window.renderSaleCatalog = (filter = "") => {
+            const list = document.getElementById('sale-catalog-list');
+            list.innerHTML = '';
+            allProducts.filter(p => p.name.includes(filter.toUpperCase())).forEach(p => {
+                const row = document.createElement('div');
+                row.className = 'pos-item-row p-4 flex justify-between items-center rounded-xl';
+                row.innerHTML = `
+                    <div class="text-left">
+                        <p class="font-black uppercase text-xs">${p.name}</p>
+                        <p class="text-[9px] text-slate-400">STOCK: ${p.stock} un.</p>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <strong class="text-lg font-black font-mono">$${p.salePrice}</strong>
+                        <button class="w-10 h-10 bg-violet-600 text-white rounded-xl font-black text-xl active:scale-90" onclick="window.addToCart('${p.id}')">+</button>
+                    </div>
+                `;
+                list.appendChild(row);
+            });
+        };
+
+        window.addToCart = (id) => {
+            const p = allProducts.find(x => x.id === id);
+            if(p.stock <= 0) return showMessage("SIN STOCK!", true);
+            saleCart.push(p);
+            renderSaleCart();
+        };
+
+        function renderSaleCart() {
+            const list = document.getElementById('sale-cart-list');
+            list.innerHTML = '';
+            let total = 0;
+            saleCart.forEach((item, idx) => {
+                total += item.salePrice;
+                const d = document.createElement('div');
+                d.className = 'bg-white p-3 rounded-xl border border-slate-100 flex justify-between items-center shadow-sm';
+                d.innerHTML = `
+                    <div class="text-left"><p class="text-[10px] font-black uppercase">${item.name}</p></div>
+                    <div class="flex items-center gap-3">
+                        <span class="font-black text-xs">$${item.salePrice}</span>
+                        <button class="text-red-400 font-black" onclick="window.removeFromCart(${idx})">✕</button>
+                    </div>
+                `;
+                list.appendChild(d);
+            });
+            document.getElementById('sale-total-display').textContent = `$${total.toLocaleString('es-AR')}`;
+            document.getElementById('btn-sale-confirm').disabled = !saleCart.length;
+        }
+
+        window.removeFromCart = (idx) => { saleCart.splice(idx, 1); renderSaleCart(); };
+
+        window.handleConfirmSale = async () => {
+            showMessage("COBRANDO...");
+            const total = saleCart.reduce((a,b) => a + b.salePrice, 0);
+            await addDoc(getCol("sales"), {
+                total,
+                itemsCount: saleCart.length,
+                timestamp: Timestamp.now(),
+                day: new Date().toISOString().split('T')[0]
+            });
+            // Descuento de stock (simulado en batch)
+            for(let item of saleCart) {
+                const ref = getDocRef("products", item.id);
+                await updateDoc(ref, { stock: item.stock - 1 });
+            }
+            closeModals();
+            showMessage("VENTA COBRADA! 💰");
+        };
+
+        // AUTH & BOOTSTRAP
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                document.getElementById('app-container').classList.remove('is-hidden');
+                document.getElementById('login-view').classList.add('is-hidden');
+                document.getElementById('user-email-display').textContent = user.email;
+                syncBookings(); syncProducts(); syncWaivers();
+                showView('calendar');
+            } else {
+                document.getElementById('app-container').classList.add('is-hidden');
+                document.getElementById('login-view').classList.remove('is-hidden');
+            }
+        });
+
+        document.getElementById('login-form').onsubmit = async (e) => {
+            e.preventDefault();
+            try { await signInWithEmailAndPassword(auth, document.getElementById('login-email').value, document.getElementById('login-password').value); }
+            catch(err) { alert("DATOS INCORRECTOS"); }
+        };
+
+        document.getElementById('logout-btn').onclick = () => signOut(auth);
+
+    </script>
+</body>
 </html>
