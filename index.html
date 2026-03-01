@@ -41,11 +41,11 @@
         .is-hidden { display: none !important; }
 
         /* Scrollbars Premium */
-        .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+        .custom-scrollbar::-webkit-scrollbar { width: 5px; height: 5px; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
         .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: var(--violet); }
 
-        /* Tarjetas Estilo Bento Moderno */
+        /* Estética Bento Moderno */
         .bento-card {
             background: white; border-radius: var(--radius-lg);
             border: 1px solid rgba(226, 232, 240, 0.8);
@@ -57,11 +57,11 @@
         .btn-premium {
             border-radius: 1rem; font-weight: 700; text-transform: uppercase;
             padding: 0.8rem 1.5rem; cursor: pointer; transition: all 0.2s;
-            display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+            display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; border: none;
         }
         .btn-premium:active { transform: scale(0.95); }
 
-        /* Navegación */
+        /* Nav Lateral */
         #main-menu {
             position: fixed; top: 0; left: 0; height: 100vh; width: 280px;
             background: white; z-index: 1100; transform: translateX(-100%);
@@ -112,7 +112,7 @@
             50% { background-color: #fee2e2; border-color: #ef4444; box-shadow: 0 0 15px rgba(239, 68, 68, 0.2); }
             100% { background-color: #ffffff; border-color: #ef4444; }
         }
-        .stock-alert { animation: alert-pulsate 1.2s infinite; border: 2px solid #ef4444 !important; }
+        .stock-alert { animation: alert-pulsate 1.5s infinite; border: 2px solid #ef4444 !important; }
 
         /* UI Forms */
         .input-clean { font-size: 1.1rem; font-weight: 700; width: 100%; border: none; background: transparent; outline: none; color: black; }
@@ -150,11 +150,11 @@
     <section id="login-view" class="min-h-screen flex items-center justify-center p-4 bg-[#0f172a]">
         <div class="bento-card w-full max-w-sm text-center p-12 shadow-2xl border-none">
             <h2 class="text-4xl font-black italic tracking-tighter mb-2 text-slate-900 leading-none">AEROJUMP</h2>
-            <p class="text-[10px] uppercase font-black tracking-[0.4em] text-slate-400 mb-10 italic text-black">Acceso Administrador</p>
+            <p class="text-[10px] uppercase font-black tracking-[0.4em] text-slate-400 mb-10 italic">Admin Gualeguaychú</p>
             <form id="login-form" class="space-y-5">
-                <div class="text-left"><label class="label-tiny">Usuario de Gestión:</label><input type="email" id="login-email" required class="bento-inner-card w-full outline-none font-bold text-black border-slate-100"></div>
+                <div class="text-left"><label class="label-tiny">Usuario:</label><input type="email" id="login-email" required class="bento-inner-card w-full outline-none font-bold text-black border-slate-100"></div>
                 <div class="text-left"><label class="label-tiny">Contraseña:</label><input type="password" id="login-password" required class="bento-inner-card w-full outline-none font-bold text-black border-slate-100"></div>
-                <button type="submit" class="w-full bg-violet-600 btn-premium text-white shadow-xl shadow-violet-100 py-4.5 mt-4 italic font-black uppercase">INGRESAR AL PANEL 🔒</button>
+                <button type="submit" class="w-full bg-violet-600 btn-premium text-white shadow-xl shadow-violet-200 py-4.5 mt-4 font-black">ENTRAR AL SISTEMA</button>
             </form>
         </div>
     </section>
@@ -162,23 +162,25 @@
     <!-- 2. APP CONTAINER -->
     <div id="app-container" class="is-hidden h-screen flex flex-col overflow-hidden">
         
-        <header class="bg-white border-b border-slate-200 p-4 flex justify-between items-center z-50 shadow-sm text-black">
+        <header class="bg-white border-b border-slate-100 p-4 flex justify-between items-center z-50 shadow-sm text-black">
             <div class="flex items-center gap-5">
                 <button onclick="window.toggleMenu(true)" class="p-2.5 bg-slate-900 text-white rounded-2xl active:scale-90 transition-transform">
                     <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M4 6h16M4 12h16M4 18h16" /></svg>
                 </button>
-                <h1 class="text-xl font-black uppercase italic tracking-tighter text-black">AeroJump <span class="text-violet-600 font-mono text-sm">PRO v2.6</span></h1>
+                <div class="leading-none">
+                    <h1 class="text-xl font-black uppercase italic tracking-tighter">AeroJump <span class="text-violet-600 font-mono text-sm font-black">PRO v2.6</span></h1>
+                </div>
             </div>
-            <button onclick="window.openSaleModal()" class="bg-orange-500 btn-premium text-white text-[10px] px-7 py-3 shadow-lg shadow-orange-100 italic font-black uppercase tracking-widest">NUEVA VENTA 🛒</button>
+            <button onclick="window.openSaleModal()" class="bg-orange-500 btn-premium text-white text-[10px] px-8 py-3 shadow-lg shadow-orange-100 font-black italic tracking-widest uppercase">NUEVA VENTA 🛒</button>
         </header>
 
         <nav id="main-menu" class="text-black">
-            <div class="p-8 border-b border-slate-100 bg-slate-50/50 text-center text-black">
-                <div class="w-16 h-16 bg-black text-white rounded-[1.5rem] flex items-center justify-center mx-auto mb-4 font-black italic text-2xl shadow-xl">AJ</div>
-                <p id="user-email-display" class="text-[10px] font-black truncate mb-4 text-slate-400 uppercase tracking-widest"></p>
-                <button id="logout-btn" class="w-full border-2 border-red-100 text-red-500 p-2.5 rounded-xl font-black text-[9px] uppercase hover:bg-red-50 transition-colors">Cerrar Sesión 🔒</button>
+            <div class="p-10 border-b border-slate-50 bg-slate-50/30 text-center">
+                <div class="w-16 h-16 bg-black text-white rounded-[1.8rem] flex items-center justify-center mx-auto mb-4 font-black italic text-2xl shadow-xl">AJ</div>
+                <p id="user-email-display" class="text-[10px] font-black truncate mb-5 text-slate-400 uppercase tracking-widest"></p>
+                <button id="logout-btn" class="w-full border-2 border-red-50 text-red-500 p-3 rounded-2xl font-black text-[9px] uppercase hover:bg-red-50 transition-colors">Cerrar Sesión 🔒</button>
             </div>
-            <div class="flex-grow overflow-y-auto custom-scrollbar p-2 mt-4">
+            <div class="flex-grow overflow-y-auto custom-scrollbar p-3 mt-4">
                 <div class="menu-item" onclick="window.showView('calendar')">🗓️ Agenda de Saltos</div>
                 <div class="menu-item" onclick="window.showView('productos')">🥤 Stock e Inventario</div>
                 <div class="menu-item" onclick="window.showView('caja')">💰 Arqueo de Caja</div>
@@ -188,101 +190,101 @@
             </div>
         </nav>
 
-        <div id="menu-overlay" onclick="window.toggleMenu(false)" class="fixed inset-0 bg-black/40 z-[1000] hidden backdrop-blur-md"></div>
+        <div id="menu-overlay" onclick="window.toggleMenu(false)" class="fixed inset-0 bg-black/30 z-[1000] hidden backdrop-blur-md"></div>
 
-        <main id="main-content" class="flex-grow overflow-y-auto p-4 md:p-8 bg-[#f8fafc] custom-scrollbar text-black">
+        <main id="main-content" class="flex-grow overflow-y-auto p-4 md:p-10 bg-[#f8fafc] custom-scrollbar text-black font-semibold">
             
             <!-- VISTA: CALENDARIO -->
             <div id="calendar-view" class="view-container">
-                <div class="bento-card mb-4 p-3 flex justify-between items-center bg-white border-none shadow-xl shadow-slate-100 text-black">
-                    <button onclick="window.prevMonth()" class="p-2 bg-slate-50 rounded-lg font-black hover:bg-slate-100 transition-all">◀</button>
-                    <h2 id="current-month-year" class="text-lg font-black uppercase italic tracking-tighter"></h2>
-                    <button onclick="window.nextMonth()" class="p-2 bg-slate-50 rounded-lg font-black hover:bg-slate-100 transition-all">▶</button>
+                <div class="bento-card mb-6 p-5 flex justify-between items-center bg-white border-none shadow-xl">
+                    <button onclick="window.prevMonth()" class="p-4 bg-slate-50 rounded-2xl font-black hover:bg-slate-100 transition-all">◀</button>
+                    <h2 id="current-month-year" class="text-3xl font-black uppercase italic tracking-tighter text-slate-900">Cargando...</h2>
+                    <button onclick="window.nextMonth()" class="p-4 bg-slate-50 rounded-2xl font-black hover:bg-slate-100 transition-all">▶</button>
                 </div>
-                <div class="grid grid-cols-7 gap-1.5 mb-1 text-center font-black text-[9px] text-violet-500 uppercase tracking-widest italic">
+                <div class="grid grid-cols-7 gap-2 mb-3 text-center font-black text-[11px] text-violet-500 uppercase tracking-widest italic">
                     <div>Lun</div><div>Mar</div><div>Mie</div><div>Jue</div><div>Vie</div><div>Sab</div><div>Dom</div>
                 </div>
-                <div id="calendar-grid" class="grid grid-cols-7 gap-1.5"></div>
+                <div id="calendar-grid" class="grid grid-cols-7 gap-3"></div>
             </div>
 
             <!-- VISTA: PRODUCTOS (INVENTARIO) -->
             <div id="productos-view" class="view-container is-hidden">
-                <div class="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
+                <div class="flex flex-col md:flex-row justify-between items-center mb-10 gap-5">
                     <h2 class="section-title italic uppercase text-black font-black">Inventario Real</h2>
-                    <div class="flex gap-3 w-full md:w-auto">
-                        <input type="text" id="inventory-search" placeholder="🔍 Buscar por nombre..." class="bento-card flex-grow p-3 outline-none font-bold text-sm italic text-black shadow-sm" oninput="window.renderProducts(this.value)">
+                    <div class="flex gap-4 w-full md:w-auto">
+                        <input type="text" id="inventory-search" placeholder="🔍 Buscar por nombre..." class="bento-card flex-grow p-4 px-8 outline-none font-bold text-sm italic text-black shadow-sm" oninput="window.renderProducts(this.value)">
                         <button onclick="window.toggleProductForm()" class="btn-premium bg-violet-600 text-white text-xs font-black">+ NUEVO</button>
                     </div>
                 </div>
                 
-                <div id="product-form-container" class="is-hidden bento-card p-6 mb-8 border-violet-100 bg-violet-50/20 text-black">
-                    <form id="product-form" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div class="bento-inner-card"><label class="label-tiny">Nombre del Producto</label><input type="text" id="prod-name" required class="input-clean uppercase text-black"></div>
-                        <div class="bento-inner-card"><label class="label-tiny">Stock Inicial</label><input type="number" id="prod-stock" required class="input-clean text-black"></div>
-                        <div class="grid grid-cols-3 gap-2 col-span-full">
-                            <div class="bento-inner-card"><label class="label-tiny">$ Costo Bulto</label><input type="number" id="prod-batch-cost" required class="input-clean" oninput="window.calculateSuggested()"></div>
-                            <div class="bento-inner-card"><label class="label-tiny">Unid. Bulto</label><input type="number" id="prod-batch-qty" required class="input-clean" oninput="window.calculateSuggested()"></div>
-                            <div class="bento-inner-card"><label class="label-tiny">% Ganancia</label><input type="number" id="prod-profit-pct" value="40" class="input-clean font-black text-violet-600" oninput="window.calculateSuggested()"></div>
+                <div id="product-form-container" class="is-hidden bento-card p-12 mb-12 border-violet-100 bg-violet-50/20 text-black">
+                    <form id="product-form" class="grid grid-cols-1 md:grid-cols-2 gap-8 text-black">
+                        <div class="bento-inner-card"><label class="label-tiny">Nombre del Producto</label><input type="text" id="prod-name" required class="input-clean uppercase text-black font-black"></div>
+                        <div class="bento-inner-card"><label class="label-tiny">Stock Inicial</label><input type="number" id="prod-stock" required class="input-clean text-black font-black"></div>
+                        <div class="grid grid-cols-3 gap-4 col-span-full">
+                            <div class="bento-inner-card"><label class="label-tiny">$ Costo de Bulto</label><input type="number" id="prod-batch-cost" required class="input-clean text-black" oninput="window.calculateSuggested()"></div>
+                            <div class="bento-inner-card"><label class="label-tiny">Unidades x Bulto</label><input type="number" id="prod-batch-qty" required class="input-clean text-black" oninput="window.calculateSuggested()"></div>
+                            <div class="bento-inner-card"><label class="label-tiny">% Margen</label><input type="number" id="prod-profit-pct" value="40" class="input-clean font-black text-violet-600" oninput="window.calculateSuggested()"></div>
                         </div>
-                        <div class="bento-inner-card bg-slate-900 text-white col-span-full flex justify-between items-center p-5 shadow-xl border-none">
-                            <div class="leading-none text-left"><label class="label-tiny text-slate-400 font-black">Precio Sugerido:</label><div id="prod-suggested-price" class="text-3xl font-black italic text-emerald-400 font-mono">$0</div></div>
-                            <div class="text-right leading-none"><label class="label-tiny text-slate-400 font-black italic">Venta Púb. Final ($)</label><input type="number" id="prod-real-price" required class="input-clean text-white text-4xl text-right font-black" placeholder="0"></div>
+                        <div class="bento-inner-card bg-slate-900 text-white col-span-full flex justify-between items-center p-8 shadow-2xl border-none">
+                            <div class="leading-none text-left italic"><label class="label-tiny text-slate-400 italic font-black uppercase">Precio Sugerido:</label><div id="prod-suggested-price" class="text-5xl font-black italic text-emerald-400 font-mono tracking-tighter">$0</div></div>
+                            <div class="text-right leading-none italic"><label class="label-tiny text-slate-400 font-black italic uppercase">Venta Público ($)</label><input type="number" id="prod-real-price" required class="input-clean text-white text-6xl text-right font-black font-mono" placeholder="0"></div>
                         </div>
                         <input type="hidden" id="prod-unit-cost">
-                        <button type="submit" class="btn-premium bg-violet-600 text-white col-span-full font-black py-4 mt-2">GUARDAR PRODUCTO ✅</button>
+                        <button type="submit" class="btn-premium bg-violet-600 text-white col-span-full font-black py-7 mt-4 shadow-2xl shadow-violet-200 italic text-xl uppercase italic">GUARDAR PRODUCTO ✅</button>
                     </form>
                 </div>
-                <div id="product-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"></div>
+                <div id="product-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
             </div>
 
             <!-- VISTA: CAJA -->
             <div id="caja-view" class="view-container is-hidden">
-                <div class="flex justify-between items-center mb-6">
-                    <h2 class="section-title italic uppercase text-black font-black">Arqueo</h2>
-                    <div class="flex gap-2">
-                        <button onclick="window.openProfitModal()" class="btn-premium bg-emerald-500 text-white text-[10px] font-black shadow-md italic">GANANCIA 📈</button>
-                        <button onclick="window.openExpenseModal()" class="btn-premium bg-red-500 text-white text-[10px] font-black shadow-md italic">GASTO -</button>
+                <div class="flex justify-between items-center mb-10">
+                    <h2 class="section-title italic uppercase text-black font-black">Caja</h2>
+                    <div class="flex gap-4">
+                        <button onclick="window.openProfitModal()" class="btn-premium bg-emerald-500 text-white text-[11px] font-black shadow-lg italic uppercase tracking-widest">Ganancia 📈</button>
+                        <button onclick="window.openExpenseModal()" class="btn-premium bg-red-500 text-white text-[11px] font-black shadow-lg italic uppercase tracking-widest">Anotar Gasto -</button>
                     </div>
                 </div>
-                <div class="bento-card p-12 text-center mb-8 border-violet-100 bg-white">
-                    <p class="label-tiny tracking-widest mb-3 uppercase font-black text-slate-400">Saldo Neto Real</p>
-                    <div id="caja-total-combined" class="text-7xl font-black italic tracking-tighter text-slate-900 font-mono">$0</div>
+                <div class="bento-card p-16 text-center mb-12 border-violet-100 bg-white">
+                    <p class="label-tiny tracking-[0.5em] mb-4 font-black text-slate-400 uppercase italic">Saldo Neto Acumulado</p>
+                    <div id="caja-total-combined" class="text-8xl font-black italic tracking-tighter text-slate-900 font-mono leading-none">$0</div>
                 </div>
-                <div id="caja-daily-list" class="space-y-3 max-w-3xl mx-auto"></div>
+                <div id="caja-daily-list" class="space-y-5 max-w-4xl mx-auto text-black"></div>
             </div>
 
             <!-- VISTA: FIRMAS -->
-            <div id="firmas-view" class="view-container is-hidden text-black font-semibold">
-                <div class="flex justify-between items-center mb-6">
-                    <h2 class="section-title italic uppercase underline decoration-violet-500 decoration-4 text-black font-black">Expedientes Digitales</h2>
-                    <button onclick="window.openWaiverModal()" class="btn-premium bg-black text-white text-xs shadow-lg font-black uppercase">+ NUEVA FIRMA</button>
+            <div id="firmas-view" class="view-container is-hidden text-black">
+                <div class="flex justify-between items-center mb-8">
+                    <h2 class="section-title italic uppercase underline decoration-violet-500 decoration-4 text-black font-black">Expedientes</h2>
+                    <button onclick="window.openWaiverModal()" class="btn-premium bg-black text-white text-xs shadow-lg font-black uppercase italic">+ NUEVA FIRMA</button>
                 </div>
-                <div class="mb-8"><input type="text" id="waiver-filter" placeholder="🔍 BUSCAR RESPONSABLE O DNI..." class="bento-card w-full p-4 mb-6 outline-none font-bold italic border-slate-100 text-black shadow-sm" oninput="window.renderWaiverList(this.value)"></div>
-                <div id="waiver-list" class="grid grid-cols-1 md:grid-cols-3 gap-6 text-black"></div>
+                <div class="mb-10"><input type="text" id="waiver-filter" placeholder="🔍 BUSCAR POR NOMBRE O DNI..." class="bento-card w-full p-6 outline-none font-bold italic border-slate-100 text-black shadow-sm" oninput="window.renderWaiverList(this.value)"></div>
+                <div id="waiver-list" class="grid grid-cols-1 md:grid-cols-3 gap-8"></div>
             </div>
 
             <!-- VISTA: STATS -->
-            <div id="stats-view" class="view-container is-hidden">
-                <h2 class="section-title text-center mb-10 underline decoration-violet-500 uppercase text-black font-black">Ranking Clientes</h2>
-                <div id="stats-list" class="max-w-2xl mx-auto space-y-4 text-black font-black"></div>
+            <div id="stats-view" class="view-container is-hidden text-black font-black">
+                <h2 class="section-title text-center mb-12 uppercase italic underline decoration-violet-500 text-black">Top Clientes</h2>
+                <div id="stats-list" class="max-w-2xl mx-auto space-y-5"></div>
             </div>
 
             <!-- VISTA: CONFIG -->
             <div id="config-view" class="view-container is-hidden text-black font-black italic uppercase">
-                <h2 class="section-title text-center mb-10 italic uppercase text-black font-black italic">Panel Maestro</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-10 text-black">
-                    <div class="bento-card p-10 text-center border-none shadow-2xl text-black">
-                        <h3 class="label-tiny mb-6 text-black tracking-widest font-black italic text-black">Tarifas y Capacidad</h3>
-                        <form id="config-form" class="space-y-6">
-                            <div class="bento-inner-card bg-violet-50 border-violet-100"><label class="label-tiny text-black">Hora Salto Base ($)</label><input type="number" id="config-court-price" value="5000" class="input-clean text-center text-4xl font-black italic text-black font-mono"></div>
-                            <div class="bento-inner-card bg-orange-50 border-orange-100"><label class="label-tiny text-black">Límite Saltadores x Hora</label><input type="number" id="config-max-capacity" value="35" class="input-clean text-center text-4xl font-black italic text-black font-mono"></div>
-                            <button type="submit" class="w-full bg-slate-900 btn-premium text-white py-6 shadow-2xl uppercase italic font-black text-lg mt-4 italic">Guardar Ajustes ☁️</button>
+                <h2 class="section-title text-center mb-12 uppercase text-black font-black leading-none">Ajustes</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                    <div class="bento-card p-12 text-center border-none shadow-2xl">
+                        <h3 class="label-tiny mb-8 text-black tracking-[0.3em] font-black italic">Precios y Capacidad</h3>
+                        <form id="config-form" class="space-y-8">
+                            <div class="bento-inner-card bg-violet-50 border-violet-100"><label class="label-tiny">Hora Salto Base ($)</label><input type="number" id="config-court-price" value="5000" class="input-clean text-center text-4xl font-black italic text-black font-mono"></div>
+                            <div class="bento-inner-card bg-orange-50 border-orange-100"><label class="label-tiny">Límite Saltadores x Hora</label><input type="number" id="config-max-capacity" value="35" class="input-clean text-center text-4xl font-black italic text-black font-mono"></div>
+                            <button type="submit" class="w-full bg-slate-900 btn-premium text-white py-7 shadow-2xl uppercase italic font-black text-lg mt-5">Guardar Ajustes ☁️</button>
                         </form>
                     </div>
-                    <div class="bento-card p-10 border-none shadow-2xl flex flex-col text-black font-black">
-                        <h3 class="label-tiny mb-6 text-black text-center tracking-widest font-black italic uppercase">Gestión de Promociones</h3>
-                        <div id="promos-list" class="flex-grow space-y-3 mb-6 overflow-y-auto custom-scrollbar pr-2 max-h-64"></div>
-                        <button onclick="window.openPromoModal()" class="w-full bg-violet-600 btn-premium text-white py-7 font-black uppercase italic shadow-xl shadow-violet-100 text-lg">+ CREAR PROMO ✨</button>
+                    <div class="bento-card p-12 border-none shadow-2xl flex flex-col text-black italic font-black uppercase">
+                        <h3 class="label-tiny mb-8 text-black text-center tracking-[0.3em] font-black italic">Promociones</h3>
+                        <div id="promos-list" class="flex-grow space-y-4 mb-8 overflow-y-auto custom-scrollbar pr-3 max-h-80"></div>
+                        <button onclick="window.openPromoModal()" class="w-full bg-violet-600 btn-premium text-white py-8 font-black uppercase italic shadow-xl shadow-violet-100 text-lg uppercase italic font-black">+ CREAR PROMO ✨</button>
                     </div>
                 </div>
             </div>
@@ -290,125 +292,127 @@
         </main>
     </div>
 
-    <!-- MODALES -->
+    <!-- MODALES DE GESTIÓN -->
     
     <!-- Modal Opciones del Día -->
     <div id="day-options-modal" class="modal">
-        <div class="modal-content max-w-md shadow-2xl text-black font-black uppercase italic">
-            <div class="modal-header bg-slate-50 font-black uppercase italic"><div class="text-left leading-none text-black font-black italic"><h3 class="uppercase text-lg">Agenda del Día</h3><p id="options-modal-date" class="label-tiny text-violet-600 mt-1"></p></div><button onclick="window.closeModals()" class="w-10 h-10 bg-white rounded-full font-black shadow-sm text-black">X</button></div>
-            <div class="modal-body custom-scrollbar bg-slate-50 p-6 font-black uppercase italic"><div id="day-bookings-list" class="space-y-4"></div></div>
-            <div class="modal-footer bg-white p-6 shadow-inner text-black font-black uppercase italic"><button id="add-new-from-options" class="w-full bg-violet-primary btn-premium bg-violet-600 text-white py-4 shadow-xl italic font-black">+ NUEVA RESERVA</button></div>
+        <div class="modal-content max-w-md shadow-2xl text-black font-black italic uppercase">
+            <div class="modal-header bg-slate-50"><div class="text-left leading-none text-black font-black italic"><h3 class="uppercase text-lg italic font-black">Agenda del Día</h3><p id="options-modal-date" class="label-tiny text-violet-600 mt-1 uppercase italic font-black"></p></div><button onclick="window.closeModals()" class="w-10 h-10 bg-white rounded-full font-black shadow-sm text-black">X</button></div>
+            <div class="modal-body custom-scrollbar bg-slate-50 p-8"><div id="day-bookings-list" class="space-y-4 text-black"></div></div>
+            <div class="modal-footer bg-white p-8 shadow-inner text-black font-black uppercase italic uppercase"><button id="add-new-from-options" class="w-full bg-violet-primary btn-premium bg-violet-600 text-white py-5 shadow-xl italic font-black italic uppercase tracking-widest">+ AGREGAR RESERVA</button></div>
         </div>
     </div>
 
     <div id="booking-modal" class="modal">
-        <div class="modal-content max-w-2xl shadow-2xl text-black font-black uppercase italic">
-            <div class="modal-header bg-white font-black uppercase italic"><h3 class="font-black uppercase italic text-black font-black" id="booking-modal-title">Asignar Turno</h3><button onclick="window.closeModals()" class="w-9 h-9 bg-slate-50 rounded-full font-black text-black">X</button></div>
-            <form id="booking-form" class="modal-body space-y-4 text-black bg-slate-50 font-black italic uppercase">
+        <div class="modal-content max-w-2xl shadow-2xl text-black">
+            <div class="modal-header bg-white"><h3 class="font-black uppercase italic text-black font-black" id="booking-modal-title">Turno AeroJump</h3><button onclick="window.closeModals()" class="w-9 h-9 bg-slate-50 rounded-full font-black text-black">X</button></div>
+            <form id="booking-form" class="modal-body space-y-6 text-black bg-slate-50 font-black italic uppercase">
                 <input type="hidden" id="booking-id"><input type="hidden" id="booking-date">
-                <div class="bento-inner-card shadow-inner border-2 italic font-black uppercase"><label class="label-tiny font-black text-black italic">Responsable</label><input type="text" id="teamName" required class="input-clean uppercase italic font-black text-black"></div>
-                <div class="grid grid-cols-3 gap-3 text-black italic font-black">
-                    <div class="bento-inner-card text-center"><label class="label-tiny italic text-black uppercase">Saltadores</label><input type="number" id="peopleCount" value="1" class="input-clean font-mono text-center text-black font-black" oninput="window.renderHours()"></div>
-                    <div class="bento-inner-card text-center"><label class="label-tiny italic text-black uppercase">Precio p/ Hora</label><input type="number" id="costPerHour" class="input-clean font-mono text-center text-black font-black"></div>
-                    <div class="bento-inner-card text-center"><label class="label-tiny italic text-black uppercase">Medio Pago</label><select id="booking-payment-method" class="w-full font-black text-[10px] outline-none bg-transparent italic mt-2 text-black"><option value="efectivo">EFECTIVO 💵</option><option value="mercadopago">M. PAGO 📲</option></select></div>
+                <div class="bento-inner-card shadow-inner border-2"><label class="label-tiny font-black text-black italic">Responsable del Turno</label><input type="text" id="teamName" required class="input-clean uppercase italic font-black text-black"></div>
+                <div class="grid grid-cols-3 gap-5 text-black italic font-black">
+                    <div class="bento-inner-card text-center shadow-inner"><label class="label-tiny italic text-black">Personas</label><input type="number" id="peopleCount" value="1" class="input-clean font-mono text-center text-black font-black" oninput="window.renderHours()"></div>
+                    <div class="bento-inner-card text-center shadow-inner"><label class="label-tiny italic text-black">Precio p/ H ($)</label><input type="number" id="costPerHour" class="input-clean font-mono text-center text-black font-black"></div>
+                    <div class="bento-inner-card text-center shadow-inner"><label class="label-tiny italic text-black">Medio Pago</label><select id="booking-payment-method" class="w-full font-black text-[11px] outline-none bg-transparent italic mt-2 text-black"><option value="efectivo">EFECTIVO 💵</option><option value="mercadopago">M. PAGO 📲</option></select></div>
                 </div>
-                <div class="bento-inner-card bg-white shadow-inner uppercase font-black italic"><label class="label-tiny mb-2 uppercase text-slate-400 italic">Disponibilidad:</label><div id="court-hours-list" class="grid grid-cols-5 gap-2"></div></div>
+                <div class="bento-inner-card bg-white shadow-inner p-6 font-black uppercase italic"><label class="label-tiny mb-2 uppercase text-slate-400 font-black italic uppercase italic">Horarios Disponibles:</label><div id="court-hours-list" class="grid grid-cols-5 gap-3 text-black"></div></div>
             </form>
-            <div class="modal-footer bg-slate-50 p-6 shadow-inner text-black font-black uppercase italic"><div class="text-left text-black font-black leading-none italic"><span class="label-tiny text-slate-400">Total a Cobrar:</span><p id="booking-total" class="text-3xl font-black italic text-violet-600 font-mono tracking-tighter">$0</p></div><button type="submit" form="booking-form" class="btn-premium bg-violet-600 text-white px-10 py-4 shadow-lg italic font-black">Confirmar Turno ✅</button></div>
+            <div class="modal-footer bg-slate-50 p-10 shadow-inner text-black font-black uppercase italic uppercase"><div class="text-left text-black font-black leading-none italic"><span class="label-tiny text-slate-400 font-black italic uppercase">Monto a Cobrar:</span><p id="booking-total" class="text-5xl font-black italic text-violet-600 font-mono tracking-tighter">$0</p></div><button type="submit" form="booking-form" class="btn-premium bg-violet-600 text-white px-16 py-7 shadow-2xl italic text-xl font-black uppercase italic uppercase font-black uppercase tracking-widest">Confirmar ✅</button></div>
         </div>
     </div>
 
     <!-- Modal POS Kiosco -->
     <div id="sale-modal" class="modal">
         <div class="modal-content !max-w-6xl h-[94vh] shadow-2xl">
-            <div class="modal-header bg-white border-b-2 shadow-sm text-black font-black italic uppercase italic"><h3 class="font-black italic uppercase text-xl text-black">Terminal de Ventas</h3><button onclick="window.closeModals()" class="w-10 h-10 bg-slate-50 rounded-full font-black text-black">X</button></div>
+            <div class="modal-header bg-white border-b-2 shadow-sm text-black font-black italic uppercase italic"><h3 class="font-black italic uppercase text-2xl text-black">Terminal de Ventas</h3><button onclick="window.closeModals()" class="w-10 h-10 bg-slate-50 rounded-full font-black text-black">X</button></div>
             <div class="flex flex-col md:flex-row flex-grow overflow-hidden text-black font-black uppercase italic">
-                <div class="flex-grow flex flex-col bg-white overflow-hidden border-r border-slate-100 font-black uppercase italic">
+                <div class="flex-grow flex flex-col bg-white overflow-hidden border-r border-slate-100 font-black">
                     <div class="pos-header-fixed shadow-sm">
-                        <input type="text" id="sale-filter" placeholder="🔍 BUSCAR PRODUCTO POR NOMBRE..." class="bento-inner-card w-full outline-none font-black italic p-4 text-base border-2 border-slate-100 text-black shadow-inner" oninput="window.renderSaleCatalog(this.value)">
+                        <input type="text" id="sale-filter" placeholder="🔍 BUSCAR PRODUCTO POR NOMBRE..." class="bento-inner-card w-full outline-none font-black italic p-5 text-base border-2 border-slate-100 text-black shadow-inner italic" oninput="window.renderSaleCatalog(this.value)">
                     </div>
-                    <div id="sale-catalog-list" class="flex-grow overflow-y-auto custom-scrollbar p-3 space-y-1 bg-slate-50/10 text-black font-bold font-black italic"></div>
+                    <div id="sale-catalog-list" class="flex-grow overflow-y-auto custom-scrollbar p-5 space-y-2 bg-slate-50/10 text-black font-bold font-black italic"></div>
                 </div>
-                <div class="w-full md:w-[380px] bg-slate-50 flex flex-col shadow-inner font-black uppercase italic">
-                    <div class="p-5 border-b bg-white text-center italic text-[10px] font-black text-slate-400">Resumen Ticket</div>
-                    <div id="sale-cart-list" class="flex-grow p-6 overflow-y-auto space-y-3 custom-scrollbar text-black font-black italic"></div>
-                    <div class="p-10 bg-white border-t-8 border-violet-50 shadow-2xl text-black font-black italic">
-                        <div class="mb-5 text-black italic font-black uppercase"><label class="label-tiny italic font-black uppercase text-slate-400 italic">Pago:</label><select id="sale-payment-method" class="w-full p-4 rounded-xl bg-slate-50 border-2 border-slate-100 font-black italic text-xs text-black shadow-inner"><option value="efectivo">EFECTIVO 💵</option><option value="mercadopago">M. PAGO 📲</option></select></div>
-                        <div class="flex justify-between mb-8 items-end text-black leading-none italic font-black uppercase"><span class="label-tiny italic text-lg uppercase font-black">TOTAL:</span><strong id="sale-total-display" class="text-6xl font-black italic tracking-tighter text-slate-900 font-mono text-black font-black">$0</strong></div>
-                        <button onclick="window.handleConfirmSale()" id="btn-sale-confirm" class="w-full btn-premium bg-orange-500 text-white py-8 text-2xl rounded-[2.5rem] shadow-2xl active:scale-95 disabled:opacity-30 font-black italic uppercase tracking-widest" disabled>COBRAR VENTA 💰</button>
+                <div class="w-full md:w-[420px] bg-slate-100 flex flex-col shadow-inner font-black">
+                    <div class="p-6 border-b bg-white italic text-[11px] uppercase font-black text-slate-400 tracking-widest text-center shadow-sm">Ticket de Venta</div>
+                    <div id="sale-cart-list" class="flex-grow p-6 overflow-y-auto space-y-4 custom-scrollbar text-black font-black italic uppercase"></div>
+                    <div class="p-10 bg-white border-t-8 border-violet-100 shadow-2xl text-black font-black italic uppercase italic">
+                        <div class="mb-6 text-black font-black italic uppercase font-black uppercase"><label class="label-tiny italic font-black uppercase text-slate-400 italic font-black uppercase italic">Pago:</label><select id="sale-payment-method" class="w-full p-4.5 rounded-2xl bg-slate-50 border-2 border-slate-100 font-black italic text-xs text-black shadow-inner italic font-black uppercase"><option value="efectivo">EFECTIVO 💵</option><option value="mercadopago">M. PAGO 📲</option></select></div>
+                        <div class="flex justify-between mb-10 items-end text-black leading-none italic font-black uppercase italic"><span class="label-tiny italic text-lg uppercase font-black italic">TOTAL:</span><strong id="sale-total-display" class="text-7xl font-black italic tracking-tighter text-slate-900 font-mono text-black font-black italic">$0</strong></div>
+                        <button onclick="window.handleConfirmSale()" id="btn-sale-confirm" class="w-full btn-premium bg-orange-500 text-white py-9 text-2xl rounded-[3rem] shadow-2xl active:scale-95 disabled:opacity-30 font-black italic uppercase tracking-widest italic" disabled>COBRAR VENTA 💰</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Modales Finanzas -->
+    <!-- Modales Soporte -->
     <div id="daily-audit-modal" class="modal">
         <div class="modal-content max-w-xl shadow-2xl text-black font-black italic uppercase">
-            <div class="modal-header bg-slate-900 text-white shadow-xl text-black font-black italic leading-none font-black italic uppercase"><div class="text-left leading-none font-black italic"><h3 class="font-black italic uppercase text-lg text-white">Desglose del Día</h3><p id="audit-modal-date" class="label-tiny text-orange-400 italic mt-2 font-mono uppercase tracking-widest font-black italic uppercase"></p></div><button onclick="window.closeModals()" class="text-white bg-white/10 w-10 h-10 rounded-full italic font-black">X</button></div>
-            <div class="modal-body !p-0"><div id="audit-items-list" class="divide-y divide-slate-100 bg-white text-black font-bold italic uppercase"></div></div>
-            <div class="modal-footer bg-slate-50 border-t flex justify-between items-center text-black font-black italic uppercase"><span class="label-tiny font-black italic text-black uppercase tracking-widest font-black italic uppercase">Saldo Neto Final:</span><strong id="audit-modal-total" class="text-4xl font-black font-mono tracking-tighter text-black font-black italic uppercase">$0</strong></div>
+            <div class="modal-header bg-slate-900 text-white shadow-xl text-black font-black italic leading-none"><div class="text-left leading-none font-black italic"><h3 class="font-black italic uppercase text-lg text-white">Auditoría del Día</h3><p id="audit-modal-date" class="label-tiny text-orange-400 italic mt-2 font-mono uppercase tracking-widest font-black italic italic"></p></div><button onclick="window.closeModals()" class="text-white bg-white/10 w-10 h-10 rounded-full italic font-black">X</button></div>
+            <div class="modal-body !p-0"><div id="audit-items-list" class="divide-y divide-slate-100 bg-white text-black font-bold italic uppercase italic"></div></div>
+            <div class="modal-footer bg-slate-50 border-t flex justify-between items-center text-black font-black italic uppercase italic font-black"><span class="label-tiny font-black italic text-black uppercase tracking-widest font-black italic">Saldo Neto Final:</span><strong id="audit-modal-total" class="text-4xl font-black font-mono tracking-tighter text-black font-black italic uppercase">$0</strong></div>
         </div>
     </div>
 
     <div id="profit-modal" class="modal">
-        <div class="modal-content !max-w-md text-center text-black shadow-2xl font-black italic uppercase font-black italic">
-            <div class="modal-header text-black border-b-2 font-black italic uppercase"><h3>Análisis Rentabilidad</h3><button onclick="window.closeModals()" class="text-black bg-slate-50 w-8 h-8 rounded-full shadow-sm font-black italic uppercase">X</button></div>
-            <div class="modal-body space-y-10 p-10 text-black font-black italic uppercase leading-none font-black italic">
-                <div class="bento-card bg-emerald-50 border-emerald-200 shadow-xl py-10"><p class="label-tiny text-emerald-600 mb-2 font-black uppercase italic tracking-widest">Utilidad Total</p><div id="total-profit-display" class="text-6xl font-black italic tracking-tighter text-emerald-700 font-mono">$0</div></div>
-                <div class="bento-card bg-violet-50 border-violet-200 shadow-xl py-8"><p class="label-tiny text-violet-600 mb-2 font-black uppercase italic tracking-widest">Utilidad Hoy</p><div id="today-profit-display" class="text-5xl font-black italic tracking-tighter text-violet-700 font-mono">$0</div></div>
-                <p class="text-[9px] text-slate-400 font-bold uppercase tracking-[0.2em] italic leading-relaxed px-4 text-black italic">Cálculo: (Venta Público - Costo Unitario) por unidad cobrada.</p>
+        <div class="modal-content !max-w-md text-center text-black shadow-2xl font-black italic uppercase italic">
+            <div class="modal-header text-black border-b-2 font-black italic uppercase italic"><h3>Análisis Rentabilidad</h3><button onclick="window.closeModals()" class="text-black bg-slate-50 w-8 h-8 rounded-full shadow-sm">X</button></div>
+            <div class="modal-body space-y-12 p-12 text-black font-black italic uppercase leading-none font-black italic font-black">
+                <div class="bento-card bg-emerald-50 border-emerald-200 shadow-xl py-10"><p class="label-tiny text-emerald-600 mb-3 font-black uppercase tracking-widest italic font-black italic">Utilidad Total</p><div id="total-profit-display" class="text-7xl font-black italic tracking-tighter text-emerald-700 font-mono font-black italic">$0</div></div>
+                <div class="bento-card bg-violet-50 border-violet-200 shadow-xl py-8"><p class="label-tiny text-violet-600 mb-3 font-black uppercase tracking-widest italic font-black italic">Utilidad Hoy</p><div id="today-profit-display" class="text-5xl font-black italic tracking-tighter text-violet-700 font-mono font-black italic">$0</div></div>
             </div>
         </div>
     </div>
 
-    <!-- Modales Firma / Waiver -->
+    <div id="restock-modal" class="modal"><div class="modal-content !max-w-sm shadow-2xl text-black font-black italic uppercase font-black"><div class="modal-header bg-white text-black italic font-black uppercase font-black italic"><h3>Sumar Stock</h3><button onclick="window.closeModals()" class="text-black font-black italic">X</button></div><form id="restock-form" class="modal-body space-y-8 text-center bg-slate-50 p-12 text-black font-black uppercase italic font-black"><input type="hidden" id="restock-prod-id"><p id="restock-name" class="text-4xl font-black italic uppercase text-slate-900 leading-tight italic font-black uppercase"></p><div class="grid grid-cols-2 gap-6 text-black font-black uppercase italic italic font-black uppercase"><div class="bento-inner-card bg-white p-6 shadow-inner border-2 font-black italic uppercase"><label class="label-tiny font-black italic uppercase">Cant. Nueva</label><input type="number" id="restock-qty" required class="input-clean text-center font-mono text-4xl text-black font-black italic uppercase"></div><div class="bento-inner-card bg-white p-6 text-center shadow-inner border-2 font-black italic uppercase"><label class="label-tiny font-black italic uppercase">$ Bulto Nuevo</label><input type="number" id="restock-batch-cost" required class="input-clean text-center font-mono text-4xl text-black font-black italic uppercase"></div></div><button type="submit" class="w-full bg-violet-600 btn-premium text-white py-7 shadow-xl mt-4 font-black uppercase italic text-xl italic font-black uppercase font-black italic shadow-violet-100">ACTUALIZAR 🥤</button></form></div></div>
+    
+    <div id="edit-product-modal" class="modal"><div class="modal-content !max-w-md shadow-2xl text-black font-black italic uppercase italic font-black"><div class="modal-header bg-white border-b-2 shadow-sm text-black font-black italic uppercase italic font-black uppercase"><h3>Ficha Técnica</h3><button onclick="window.closeModals()" class="text-black bg-slate-50 w-8 h-8 rounded-full font-black italic uppercase font-black uppercase font-black">X</button></div><form id="edit-product-form" class="modal-body space-y-6 bg-slate-50 p-12 text-black font-black italic uppercase italic font-black uppercase font-black"><input type="hidden" id="edit-prod-id"><div class="bento-inner-card bg-white p-6 shadow-inner border-2 text-black font-black italic uppercase font-black uppercase font-black italic uppercase"><label class="label-tiny italic font-black uppercase tracking-widest font-black uppercase italic font-black italic font-black">Nombre del Artículo</label><input type="text" id="edit-prod-name" required class="input-clean italic font-black text-2xl uppercase text-black font-black italic font-black uppercase font-black italic"></div><div class="grid grid-cols-2 gap-4 text-black italic font-black uppercase italic font-black uppercase font-black italic font-black"><div class="bento-inner-card bg-white p-6 shadow-inner border-2 text-black italic font-black uppercase font-black italic font-black uppercase font-black italic uppercase"><label class="label-tiny italic uppercase font-black italic uppercase font-black uppercase font-black uppercase font-black uppercase font-black">Costo U. ($)</label><input type="number" id="edit-prod-cost" step="0.01" required class="input-clean font-mono text-2xl text-black font-black italic font-black uppercase font-black italic"></div><div class="bento-inner-card bg-white p-6 shadow-inner border-2 text-black italic font-black uppercase font-black italic font-black uppercase font-black italic uppercase font-black italic uppercase"><label class="label-tiny italic uppercase font-black italic font-black italic font-black italic font-black italic font-black uppercase font-black">Venta Púb. ($)</label><input type="number" id="edit-prod-price" required class="input-clean text-violet-600 font-mono text-2xl font-black italic font-black italic font-black italic uppercase font-black uppercase font-black"></div></div><div class="bento-inner-card bg-white p-10 text-center border-violet-500 border-4 rounded-[2.5rem] mt-8 shadow-inner text-black font-black italic uppercase font-black uppercase font-black italic font-black uppercase"><label class="label-tiny uppercase font-black text-slate-400 mb-4 tracking-[0.2em] font-black uppercase font-black italic font-black uppercase font-black uppercase">Stock Real Estantería</label><input type="number" id="edit-prod-stock" required class="input-clean text-center font-black text-6xl font-mono text-black font-black italic uppercase font-black italic font-black italic font-black"></div><button type="submit" class="w-full bg-black text-white btn-premium py-8 font-black italic shadow-2xl mt-10 text-2xl tracking-tighter uppercase font-black">Guardar Cambios</button></form></div></div>
+
+    <div id="expense-modal" class="modal"><div class="modal-content !max-w-sm shadow-2xl text-black font-black italic uppercase font-black italic uppercase font-black"><div class="modal-header bg-red-600 text-white font-black italic uppercase italic uppercase font-black uppercase italic uppercase font-black uppercase"><h3>Anotar Gasto</h3><button onclick="window.closeModals()" class="text-white font-black italic font-black italic uppercase font-black">X</button></div><form id="expense-form" class="modal-body space-y-6 bg-slate-50 p-10 shadow-inner italic font-black uppercase italic font-black uppercase font-black italic font-black uppercase"><div class="bento-inner-card bg-white p-6 shadow-inner border-2 italic font-black uppercase italic uppercase font-black uppercase italic font-black uppercase italic uppercase font-black"><label class="label-tiny font-black italic uppercase text-slate-400 italic font-black uppercase italic font-black italic font-black italic font-black">Concepto</label><input type="text" id="exp-name" required class="input-clean font-black text-black border-b border-slate-100 text-2xl uppercase font-black italic uppercase font-black italic uppercase font-black uppercase italic uppercase"></div><div class="bento-inner-card bg-white p-6 shadow-inner border-2 italic font-black uppercase italic uppercase font-black uppercase italic font-black uppercase italic uppercase font-black italic uppercase font-black uppercase"><label class="label-tiny font-black italic uppercase text-slate-400 italic uppercase font-black italic uppercase font-black italic font-black italic uppercase font-black italic uppercase font-black">Importe ($)</label><input type="number" id="exp-total" required class="input-clean font-black text-red-600 text-5xl font-mono font-black italic uppercase font-black italic uppercase font-black italic uppercase font-black italic uppercase"></div><button type="submit" class="w-full bg-red-600 btn-premium text-white py-6 font-black uppercase shadow-lg italic uppercase font-black shadow-red-200 font-black italic font-black uppercase italic uppercase font-black uppercase">REGISTRAR SALIDA -</button></form></div></div>
+
     <div id="waiver-modal" class="modal">
-        <div class="modal-content max-w-2xl shadow-2xl text-black font-black italic uppercase">
-            <div class="modal-header bg-black text-white shadow-xl italic font-black uppercase"><h3 class="font-black italic uppercase text-lg italic uppercase">Certificado de Responsabilidad</h3><button onclick="window.closeModals()" class="text-white bg-black w-8 h-8 font-black italic uppercase">X</button></div>
-            <form id="waiver-form" class="modal-body space-y-6 bg-slate-50 font-black italic uppercase text-black font-black italic uppercase">
-                <div class="grid grid-cols-2 gap-4 text-black italic font-black uppercase">
-                    <div class="bento-inner-card shadow-inner text-black font-black italic uppercase"><label class="label-tiny font-black text-black italic uppercase">Adulto Responsable</label><input type="text" id="waiver-adult-name" required class="input-clean uppercase italic font-black text-black italic"></div>
-                    <div class="bento-inner-card shadow-inner text-black font-black italic uppercase"><label class="label-tiny font-black text-black italic uppercase">DNI / Pasaporte</label><input type="text" id="waiver-dni" required class="input-clean font-mono text-black font-black italic"></div>
+        <div class="modal-content max-w-2xl shadow-2xl text-black font-black italic uppercase italic">
+            <div class="modal-header bg-black text-white shadow-xl italic font-black uppercase italic"><h3 class="font-black italic uppercase text-lg italic uppercase font-black">Certificado Legal AeroJump</h3><button onclick="window.closeModals()" class="text-white bg-black w-8 h-8">X</button></div>
+            <form id="waiver-form" class="modal-body space-y-6 bg-slate-50 font-black italic uppercase text-black font-black italic uppercase italic">
+                <div class="grid grid-cols-2 gap-4 text-black italic font-black">
+                    <div class="bento-inner-card shadow-inner text-black font-black italic uppercase italic font-black uppercase"><label class="label-tiny font-black text-black italic uppercase italic font-black uppercase">Adulto Responsable</label><input type="text" id="waiver-adult-name" required class="input-clean uppercase italic font-black text-black font-black"></div>
+                    <div class="bento-inner-card shadow-inner text-black font-black italic uppercase italic font-black uppercase"><label class="label-tiny font-black text-black italic uppercase italic font-black uppercase">DNI Documento</label><input type="text" id="waiver-dni" required class="input-clean font-mono text-black font-black font-black italic"></div>
                 </div>
-                <div class="bento-inner-card shadow-inner text-black font-black italic uppercase"><label class="label-tiny font-black text-black uppercase italic uppercase">Menor a Cargo</label><input type="text" id="waiver-minor-name" class="input-clean uppercase font-black italic text-black font-black italic" placeholder="DEJAR VACÍO SI NO HAY"></div>
+                <div class="bento-inner-card shadow-inner text-black font-black italic uppercase italic font-black uppercase italic font-black uppercase"><label class="label-tiny font-black text-black uppercase italic font-black uppercase italic">Menor a Cargo</label><input type="text" id="waiver-minor-name" class="input-clean uppercase font-black italic text-black font-black italic font-black" placeholder="DEJAR VACÍO SI NO HAY"></div>
                 
-                <div class="bento-inner-card bg-white border-2 border-slate-100 p-8 shadow-inner italic text-black font-bold uppercase font-black italic uppercase">
-                    <p class="text-[11px] mb-4 text-justify font-black leading-relaxed italic uppercase">Eximo de responsabilidad a AeroJump Gualeguaychú y su dueña Fenocchio María Irene por riesgos físicos derivados del uso.</p>
-                    <button type="button" id="toggle-legal-btn" class="w-full py-5 bg-slate-50 border-2 border-slate-200 rounded-2xl text-[9px] font-black text-violet-600 underline uppercase tracking-widest shadow-sm italic font-black uppercase font-black">[ + ] VER ACUERDO COMPLETO SECCIÓN 1 Y 2</button>
-                    <div id="legal-full-text-container" class="is-hidden mt-8 p-8 bg-white border-2 border-slate-200 rounded-[2.5rem] text-[10px] font-bold text-slate-700 space-y-6 max-h-60 overflow-y-auto custom-scrollbar text-justify leading-relaxed shadow-inner font-black uppercase italic uppercase">
-                        <h4 class="font-black uppercase border-b-2 border-slate-200 pb-2 text-black italic uppercase">SECCIÓN 1: RIESGOS</h4>
-                        <p>Mediante la firma reconozco que la participación en AeroJump conlleva riesgos conocidos e inesperados de lesiones físicas, emocional, parálisis o muerte a mi persona o terceros.</p>
-                        <p>Los riesgos incluyen resbalones, caídas, colisiones y enfermedades por contacto. Acepto que el parque utiliza iluminación estroboscópica.</p>
-                        <p class="bg-yellow-50 p-4 border-l-8 border-yellow-400 font-black italic text-black rounded-r-2xl font-black uppercase italic uppercase font-black">AEROJUMP NO recomienda el ingreso al área de salto en caso de embarazo. Ingreso bajo mi absoluta responsabilidad.</p>
-                        <h4 class="font-black uppercase border-b-2 border-slate-200 pb-2 text-black mt-4 italic font-black uppercase">SECCIÓN 2: DECLARACIÓN JURADA</h4>
-                        <p>Declaro bajo juramento ser padre/tutor legal de los menores mencionados y tener la capacidad/legitimación de firmar este acuerdo.</p>
+                <div class="bento-inner-card bg-white border-2 border-slate-100 p-8 shadow-inner italic text-black font-bold uppercase font-black italic uppercase font-black italic">
+                    <p class="text-[11px] mb-4 text-justify font-black leading-relaxed italic uppercase font-black uppercase">Eximo de responsabilidad a AeroJump Gualeguaychú por riesgos derivados del uso. Estoy en óptimas condiciones físicas.</p>
+                    <button type="button" id="toggle-legal-btn" class="w-full py-5 bg-slate-50 border-2 border-slate-200 rounded-2xl text-[9px] font-black text-violet-600 underline uppercase tracking-widest shadow-sm italic font-black font-black">[ + ] VER ACUERDO COMPLETO SECCIÓN 1 Y 2</button>
+                    <div id="legal-full-text-container" class="is-hidden mt-8 p-8 bg-white border-2 border-slate-200 rounded-[2.5rem] text-[10px] font-bold text-slate-700 space-y-6 max-h-60 overflow-y-auto custom-scrollbar text-justify leading-relaxed shadow-inner font-bold uppercase font-black italic uppercase italic">
+                        <h4 class="font-black uppercase border-b-2 border-slate-200 pb-2 text-black italic uppercase font-black font-black italic">SECCIÓN 1: RIESGOS</h4>
+                        <p>Reconozco que AeroJump conlleva riesgos de lesiones, parálisis o muerte. El límite de cupo es de 35 saltadores por hora.</p>
+                        <p>Los riesgos incluyen caídas, colisiones y resbalones. Acepto que el parque usa luces estroboscópicas.</p>
+                        <p class="bg-yellow-50 p-4 border-l-8 border-yellow-400 font-black italic text-black rounded-r-2xl italic font-black italic uppercase italic uppercase font-black uppercase italic font-black uppercase italic font-black uppercase italic">AEROJUMP NO recomienda el ingreso al área de salto en caso de embarazo. Ingreso bajo mi responsabilidad.</p>
+                        <h4 class="font-black uppercase border-b-2 border-slate-200 pb-2 text-black mt-4 italic font-black font-black italic">SECCIÓN 2: DECLARACIÓN JURADA</h4>
+                        <p>Declaro bajo juramento ser padre/tutor legal de los menores mencionados y autorizar su ingreso bajo mi absoluta responsabilidad.</p>
                     </div>
                 </div>
-                <div class="signature-container p-3 bg-white border-4 border-black shadow-2xl rounded-[1.5rem] font-black italic uppercase italic"><canvas id="signature-pad" class="bg-white"></canvas></div>
-                <div class="flex justify-between px-2 text-black font-black italic uppercase"><button type="button" id="clear-sig-btn" class="text-[10px] font-black text-red-500 underline uppercase tracking-widest italic font-black italic uppercase">Limpiar Lienzo 🗑️</button><p class="text-[9px] text-slate-400 italic font-black uppercase text-black font-black italic">Expediente Legal Digital</p></div>
+                <div class="signature-container p-3 bg-white border-4 border-black shadow-2xl rounded-[1.5rem] text-black font-black italic uppercase italic font-black uppercase italic"><canvas id="signature-pad" class="bg-white"></canvas></div>
+                <div class="flex justify-between px-3 text-black font-black italic uppercase italic font-black"><button type="button" id="clear-sig-btn" class="text-[10px] font-black text-red-500 underline uppercase tracking-widest italic uppercase italic font-black uppercase italic uppercase font-black uppercase">Limpiar Firma 🗑️</button><p class="text-[9px] text-slate-400 italic font-black uppercase text-black font-black italic font-black uppercase">Vínculo Legal Digital</p></div>
             </form>
-            <div class="modal-footer bg-white p-8 shadow-xl border-t-4 border-slate-50 font-black italic uppercase"><button type="submit" form="waiver-form" class="w-full btn-premium bg-violet-600 text-white py-6 text-xl shadow-2xl font-black italic uppercase italic">ARCHIVAR Y FINALIZAR ✅</button></div>
+            <div class="modal-footer bg-white p-8 shadow-xl border-t-4 border-slate-50 text-black font-black italic uppercase italic font-black italic uppercase"><button type="submit" form="waiver-form" class="w-full btn-premium bg-violet-600 text-white py-6 text-xl shadow-2xl font-black italic uppercase tracking-tighter italic uppercase font-black italic uppercase">ARCHIVAR Y FINALIZAR ✅</button></div>
         </div>
     </div>
 
     <div id="view-waiver-modal" class="modal">
-        <div class="modal-content !max-w-md shadow-2xl text-black font-black italic uppercase">
-            <div class="modal-header bg-slate-50 text-black border-none font-black italic uppercase tracking-widest"><h3>Archivo Archivada</h3><button onclick="window.closeModals()" class="w-10 h-10 bg-white rounded-full font-black shadow-sm text-black italic font-black italic uppercase">X</button></div>
-            <div class="modal-body text-center p-12 bg-white text-black font-black uppercase italic font-black uppercase italic shadow-inner"><div id="view-waiver-details" class="bento-inner-card text-left text-sm mb-10 bg-slate-50 border-none leading-relaxed font-black uppercase shadow-inner p-10 rounded-[2.5rem] text-black italic"></div><div class="p-6 border-4 border-slate-900 rounded-[3rem] inline-block bg-white shadow-2xl transform rotate-2 italic uppercase font-black"><img id="view-waiver-img" class="w-full h-auto rounded-2xl shadow-inner font-black italic uppercase"></div></div>
-            <div class="modal-footer bg-slate-50 p-8 border-none font-black italic uppercase"><button id="btn-print-waiver" class="w-full btn-premium bg-black text-white py-6 shadow-2xl italic font-black uppercase italic tracking-[0.2em] text-sm italic uppercase font-black"><span>📄</span> IMPRIMIR DECLARACIÓN / PDF</button></div>
+        <div class="modal-content !max-w-md shadow-2xl text-black font-black italic uppercase italic font-black uppercase italic">
+            <div class="modal-header bg-slate-50 text-black border-none font-black italic uppercase tracking-widest italic font-black uppercase italic font-black italic uppercase"><h3>Ficha Digital</h3><button onclick="window.closeModals()" class="w-10 h-10 bg-white rounded-full font-black shadow-sm text-black italic font-black italic uppercase font-black uppercase">X</button></div>
+            <div class="modal-body text-center p-12 bg-white text-black font-black uppercase italic font-black uppercase italic font-black italic uppercase italic font-black italic uppercase italic shadow-inner italic font-black font-black"><div id="view-waiver-details" class="bento-inner-card text-left text-sm mb-10 bg-slate-50 border-none leading-relaxed font-black uppercase shadow-inner p-10 rounded-[2.5rem] text-black italic font-black italic font-black italic"></div><div class="p-6 border-4 border-slate-900 rounded-[3rem] inline-block bg-white shadow-2xl transform rotate-2 italic uppercase font-black italic font-black italic font-black italic font-black"><img id="view-waiver-img" class="w-full h-auto rounded-2xl shadow-inner font-black italic uppercase font-black italic uppercase font-black uppercase"></div></div>
+            <div class="modal-footer bg-slate-50 p-8 border-none font-black italic uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase font-black"><button id="btn-print-waiver" class="w-full btn-premium bg-black text-white py-7 shadow-2xl italic font-black uppercase italic tracking-[0.2em] text-sm italic uppercase font-black italic font-black italic uppercase italic font-black"><span>📄</span> IMPRIMIR DOCUMENTO / PDF</button></div>
         </div>
     </div>
-
-    <div id="expense-modal" class="modal"><div class="modal-content !max-w-sm shadow-2xl text-black font-black italic uppercase"><div class="modal-header bg-red-600 text-white italic font-black uppercase italic"><h3>Anotar Gasto</h3><button onclick="window.closeModals()" class="text-white">X</button></div><form id="expense-form" class="modal-body space-y-6 bg-slate-50 p-10 shadow-inner italic font-black uppercase"><div class="bento-inner-card bg-white p-6 shadow-inner border-2 italic font-black uppercase italic"><label class="label-tiny font-black italic uppercase text-slate-400 italic">Concepto</label><input type="text" id="exp-name" required class="input-clean font-black text-black border-b border-slate-100 text-2xl uppercase font-black italic uppercase"></div><div class="bento-inner-card bg-white p-6 shadow-inner border-2 italic font-black uppercase italic"><label class="label-tiny font-black italic uppercase text-slate-400 italic uppercase">Importe ($)</label><input type="number" id="exp-total" required class="input-clean font-black text-red-600 text-5xl font-mono font-black italic uppercase"></div><button type="submit" class="w-full bg-red-600 btn-premium text-white py-6 font-black uppercase shadow-lg italic uppercase font-black shadow-red-200">REGISTRAR SALIDA -</button></form></div></div>
 
     <!-- Promo Modal -->
     <div id="promo-modal" class="modal">
         <div class="modal-content !max-w-md shadow-2xl text-black font-black italic uppercase">
             <div class="modal-header bg-violet-600 text-white font-black italic uppercase italic uppercase font-black"><h3>Lanzar Nueva Promoción</h3><button onclick="window.closeModals()">X</button></div>
-            <form id="promo-form" class="modal-body space-y-6 bg-slate-50 p-12 font-black italic uppercase italic font-black">
-                <div class="bento-inner-card shadow-inner border-2 italic font-black uppercase"><label class="label-tiny uppercase italic font-black italic">Nombre de la Promo</label><input type="text" id="promo-name" required class="input-clean uppercase italic font-black text-black italic font-black"></div>
-                <div class="bento-inner-card shadow-inner border-2 italic font-black uppercase italic font-black"><label class="label-tiny uppercase italic font-black uppercase italic">Mes/Año Vigente:</label><input type="month" id="promo-month" required class="input-clean font-black text-black font-mono text-2xl border-b border-slate-100 italic"></div>
+            <form id="promo-form" class="modal-body space-y-6 bg-slate-50 p-12 font-black italic uppercase">
+                <div class="bento-inner-card shadow-inner border-2 italic font-black uppercase"><label class="label-tiny uppercase italic font-black italic">Nombre de la Promo</label><input type="text" id="promo-name" required class="input-clean uppercase italic font-black text-black italic"></div>
+                <div class="bento-inner-card shadow-inner border-2 italic font-black uppercase italic font-black"><label class="label-tiny uppercase italic font-black uppercase italic">Elegir Mes/Año:</label><input type="month" id="promo-month" required class="input-clean font-black text-black font-mono text-2xl border-b border-slate-100 italic"></div>
                 <div class="grid grid-cols-2 gap-4 italic font-black uppercase">
                     <div class="bento-inner-card shadow-inner border-2 italic font-black uppercase"><label class="label-tiny font-black uppercase italic">Costo Salto ($)</label><input type="number" id="promo-price" required class="input-clean font-mono text-black font-black text-2xl italic font-black uppercase"></div>
                     <div class="bento-inner-card flex flex-col items-center justify-center bg-violet-50 border-2 border-violet-200 font-black italic uppercase italic font-black"><label class="label-tiny font-black uppercase italic">¿Activar 2x1?</label><input type="checkbox" id="promo-2x1" class="w-8 h-8 rounded-lg accent-violet-600 font-black italic"></div>
@@ -419,10 +423,10 @@
         </div>
     </div>
 
-    <!-- Notification Message Overlay -->
+    <!-- Message Overlay -->
     <div id="message-overlay" class="modal bg-black/95 transition-none z-[4000] italic font-black uppercase italic uppercase font-black"><div class="flex flex-col items-center justify-center p-12 text-center text-white font-black italic uppercase italic font-black"><div class="text-8xl mb-8 text-white font-black italic uppercase italic font-black uppercase italic">🚀</div><p id="message-text" class="text-white text-3xl font-black uppercase italic tracking-widest drop-shadow-2xl font-black italic uppercase italic uppercase font-black italic uppercase font-black"></p></div></div>
 
-    <!-- FIREBASE MAESTRO CONSOLIDADO -->
+    <!-- LÓGICA MAESTRA CONSOLIDADA -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
@@ -456,7 +460,7 @@
         let detailedData = {};
         let selectedPromoDays = [];
 
-        // --- PERSISTENCIA CONFIGURACIÓN ---
+        // PERSISTENCIA CONFIG
         async function loadConfig() {
             const configRef = doc(db, "artifacts", appId, "public", "data", "app_settings", "global");
             const snap = await getDoc(configRef);
@@ -478,7 +482,7 @@
             window.showMessage("SISTEMA ACTUALIZADO! ☁️");
         }
 
-        // --- HANDLERS SEGUROS ---
+        // --- HANDLERS SEGUROS (SOLUCIÓN AL ERROR TYPEERROR NULL) ---
         window.addEventListener('DOMContentLoaded', () => {
             const bindForm = (id, fn) => { const el = document.getElementById(id); if(el) el.onsubmit = fn; };
             bindForm('login-form', handleLogin);
@@ -582,10 +586,10 @@
                 cell.className = 'day-cell';
                 cell.innerHTML = `
                     <div class="flex justify-between items-start text-black">
-                        <span class="day-num font-black italic uppercase">${i}</span>
-                        ${dayP ? `<span class="bg-violet-600 text-white rounded p-0.5 text-[5px] font-black uppercase italic tracking-tighter">PROMO</span>` : ''}
+                        <span class="day-num">${i}</span>
+                        ${dayP ? `<span class="bg-violet-600 text-white rounded p-0.5 text-[5px] font-black uppercase italic tracking-tighter leading-none">PROMO</span>` : ''}
                     </div>
-                    ${dayB.length ? `<div class="flex justify-end"><span class="bg-violet-600 text-white text-[7px] px-1 rounded-full font-black italic uppercase">${dayB.length}T</span></div>` : ''}
+                    ${dayB.length ? `<div class="flex justify-end font-black"><span class="bg-violet-600 text-white text-[7px] px-1 rounded-full uppercase italic leading-none font-black">${dayB.length}T</span></div>` : ''}
                 `;
                 cell.onclick = () => window.openDayManagement(dateStr, dayB);
                 grid.appendChild(cell);
@@ -601,9 +605,9 @@
                 list.innerHTML = '';
                 dayBookings.forEach(b => {
                     const row = document.createElement('div');
-                    row.className = 'bento-card p-4 flex justify-between items-center text-xs border-2 italic font-black text-black';
+                    row.className = 'bento-card p-4 flex justify-between items-center text-xs border-2 italic font-black text-black uppercase italic';
                     row.innerHTML = `
-                        <div class="text-left font-black uppercase italic"><p>${b.teamName}</p><p class="text-[9px] text-slate-400 font-mono italic uppercase">${b.courtHours.join(', ')}:00hs</p></div>
+                        <div class="text-left font-black italic"><p>${b.teamName}</p><p class="text-[9px] text-slate-400 font-mono">${b.courtHours.join(', ')}:00hs</p></div>
                         <div class="flex gap-2"><button onclick="window.editExistingBooking('${b.id}')" class="p-2 bg-slate-50 rounded-lg shadow-sm">✏️</button><button onclick="window.deleteBooking('${b.id}')" class="p-2 bg-red-50 text-red-500 rounded-lg shadow-sm">🗑️</button></div>
                     `;
                     list.appendChild(row);
@@ -619,12 +623,20 @@
             const dayNum = parseInt(date.split('-')[2]);
             const monthStr = date.substring(0, 7);
             const promo = allPromos.find(p => p.monthYear === monthStr && p.days.includes(dayNum));
-            document.getElementById('booking-id').value = booking ? booking.id : '';
-            document.getElementById('booking-date').value = date;
-            document.getElementById('teamName').value = booking ? booking.teamName : '';
-            document.getElementById('peopleCount').value = booking ? booking.peopleCount : 1;
-            document.getElementById('costPerHour').value = promo ? promo.price : (booking ? booking.unitPrice : document.getElementById('config-court-price').value);
-            document.getElementById('booking-payment-method').value = booking ? booking.paymentMethod : "efectivo";
+            const idEl = document.getElementById('booking-id');
+            const dateEl = document.getElementById('booking-date');
+            const teamEl = document.getElementById('teamName');
+            const peopleEl = document.getElementById('peopleCount');
+            const costEl = document.getElementById('costPerHour');
+            const payEl = document.getElementById('booking-payment-method');
+
+            if(idEl) idEl.value = booking ? booking.id : '';
+            if(dateEl) dateEl.value = date;
+            if(teamEl) teamEl.value = booking ? booking.teamName : '';
+            if(peopleEl) peopleEl.value = booking ? booking.peopleCount : 1;
+            if(costEl) costEl.value = promo ? promo.price : (booking ? booking.unitPrice : document.getElementById('config-court-price').value);
+            if(payEl) payEl.value = booking ? booking.paymentMethod : "efectivo";
+
             window.renderHours(booking ? booking.courtHours : []); updateBookingTotal(); window.openModal('booking-modal');
         };
 
@@ -641,7 +653,7 @@
                 const free = maxCap - occupied;
                 const canFit = (free >= jumpers) || selected.includes(h);
                 const item = document.createElement('div');
-                item.className = `time-slot italic font-black uppercase text-black ${!canFit ? 'disabled pointer-events-none' : ''} ${selected.includes(h) ? 'selected' : ''}`;
+                item.className = `time-slot italic font-black text-black ${!canFit ? 'disabled pointer-events-none' : ''} ${selected.includes(h) ? 'selected' : ''}`;
                 item.innerHTML = `<span>${h}:00</span><br><span class="text-[7px] opacity-40 font-black uppercase text-black italic">${free} LIB</span>`;
                 if(canFit) { item.onclick = () => { item.classList.toggle('selected'); updateBookingTotal(); }; }
                 list.appendChild(item);
@@ -658,7 +670,8 @@
             let people = parseInt(document.getElementById('peopleCount').value) || 1;
             if(promo && promo.is2x1) { people = Math.ceil(people / 2); }
             const total = hrsCount * price * people;
-            document.getElementById('booking-total').textContent = `$${total.toLocaleString('es-AR')}`;
+            const totalEl = document.getElementById('booking-total');
+            if(totalEl) totalEl.textContent = `$${total.toLocaleString('es-AR')}`;
         }
 
         window.handleSaveBooking = async (e) => {
@@ -672,12 +685,17 @@
             const data = {
                 teamName: document.getElementById('teamName').value.toUpperCase(),
                 peopleCount: parseInt(document.getElementById('peopleCount').value),
-                unitPrice: price, day: date, monthYear: date.substring(0, 7), courtHours: hrs,
-                totalPrice: hrs.length * price * payablePeople, paymentMethod: document.getElementById('booking-payment-method').value, timestamp: Timestamp.now()
+                unitPrice: price,
+                day: date,
+                monthYear: date.substring(0, 7),
+                courtHours: hrs,
+                totalPrice: hrs.length * price * payablePeople,
+                paymentMethod: document.getElementById('booking-payment-method').value,
+                timestamp: Timestamp.now()
             };
             const id = document.getElementById('booking-id').value;
             if(id) await updateDoc(getDocRef("bookings", id), data); else await addDoc(getCol("bookings"), data);
-            window.closeModals(); window.showMessage("RESERVA AGENDADA! ✅");
+            window.closeModals(); window.showMessage("TURNO GUARDADO! ✅");
         };
 
         window.editExistingBooking = (id) => { const b = allBookings.find(x => x.id === id); if(b) { window.closeModals(); window.openBookingForm(b.day, b); } };
@@ -705,12 +723,23 @@
         };
 
         window.renderProducts = (f = "") => {
-            const list = document.getElementById('product-list'); if(!list) return; list.innerHTML = '';
-            const filtered = allProducts.filter(p => (p.name||"").includes(f.toUpperCase())).sort((a,b) => (a.name||"").localeCompare(b.name||""));
+            const list = document.getElementById('product-list');
+            if(!list) return; list.innerHTML = '';
+            const filtered = allProducts.filter(p => (p.name || "").includes(f.toUpperCase())).sort((a,b) => (a.name||"").localeCompare(b.name||""));
             filtered.forEach(p => {
                 const card = document.createElement('div');
-                card.className = 'bento-card p-6 flex flex-col gap-4 text-left font-black italic text-black';
-                card.innerHTML = `<div class="flex justify-between items-start text-black font-black"><div><h4 class="font-black uppercase text-xs mb-1 text-black italic">${p.name}</h4><span class="text-[8px] font-black uppercase ${p.stock <= 5 ? 'text-red-500 bg-red-50' : 'text-slate-400 bg-slate-50'} px-2 py-1 rounded-lg italic font-black">Stock: ${p.stock} un.</span></div><strong class="text-2xl font-black font-mono italic text-slate-900 font-mono">$${p.salePrice}</strong></div><div class="grid grid-cols-2 gap-3 mt-2 font-black italic"><button class="inv-action-btn italic font-black uppercase italic" onclick="window.openRestock('${p.id}')">Reposición</button><button class="inv-action-btn italic font-black uppercase italic" onclick="window.openEditProduct('${p.id}')">Ficha</button><button class="col-span-2 inv-action-btn !text-red-500 opacity-40 hover:opacity-100 italic font-black uppercase italic" onclick="window.deleteProduct('${p.id}')">Eliminar</button></div>`;
+                card.className = 'bento-card p-5 flex flex-col gap-3 text-left font-black italic text-black uppercase italic shadow-sm';
+                card.innerHTML = `
+                    <div class="flex justify-between items-start text-black">
+                        <div><h4 class="font-black uppercase text-xs mb-1 text-black italic font-black">${p.name}</h4><span class="text-[8px] font-black uppercase ${p.stock <= 5 ? 'text-red-500 bg-red-50' : 'text-slate-400 bg-slate-50'} px-2 py-1 rounded-lg italic font-black">Stock: ${p.stock} un.</span></div>
+                        <strong class="text-xl font-black font-mono italic text-slate-900">$${p.salePrice}</strong>
+                    </div>
+                    <div class="grid grid-cols-2 gap-3 mt-2">
+                        <button class="inv-action-btn italic font-black" onclick="window.openRestock('${p.id}')">Reposición</button>
+                        <button class="inv-action-btn italic font-black" onclick="window.openEditProduct('${p.id}')">Ficha</button>
+                        <button class="col-span-2 inv-action-btn !text-red-500 opacity-40 hover:opacity-100 italic font-black" onclick="window.deleteProduct('${p.id}')">Eliminar</button>
+                    </div>
+                `;
                 list.appendChild(card);
             });
         };
@@ -731,9 +760,12 @@
 
         window.openRestock = (id) => {
             const p = allProducts.find(x => x.id === id); if(!p) return;
-            document.getElementById('restock-prod-id').value = p.id;
-            document.getElementById('restock-name').textContent = p.name;
-            document.getElementById('restock-current-stock').textContent = p.stock;
+            const modalId = document.getElementById('restock-prod-id');
+            const modalName = document.getElementById('restock-name');
+            const modalStock = document.getElementById('restock-current-stock');
+            if(modalId) modalId.value = p.id;
+            if(modalName) modalName.textContent = p.name;
+            if(modalStock) modalStock.textContent = p.stock;
             window.openModal('restock-modal');
         };
 
@@ -743,17 +775,25 @@
             const qty = parseInt(document.getElementById('restock-qty').value);
             const costBatch = parseFloat(document.getElementById('restock-batch-cost').value);
             const p = allProducts.find(x => x.id === id);
-            await updateDoc(getDocRef("products", id), { stock: p.stock + qty, unitCost: costBatch / qty });
+            await updateDoc(getDocRef("products", id), { 
+                stock: (p.stock || 0) + qty,
+                unitCost: costBatch / qty
+            });
             window.closeModals(); window.showMessage("STOCK ACTUALIZADO!");
         };
 
         window.openEditProduct = (id) => {
             const p = allProducts.find(x => x.id === id); if(!p) return;
-            document.getElementById('edit-prod-id').value = p.id;
-            document.getElementById('edit-prod-name').value = p.name;
-            document.getElementById('edit-prod-cost').value = p.unitCost || 0;
-            document.getElementById('edit-prod-price').value = p.salePrice;
-            document.getElementById('edit-prod-stock').value = p.stock;
+            const idEl = document.getElementById('edit-prod-id');
+            const nameEl = document.getElementById('edit-prod-name');
+            const costEl = document.getElementById('edit-prod-cost');
+            const priceEl = document.getElementById('edit-prod-price');
+            const stockEl = document.getElementById('edit-prod-stock');
+            if(idEl) idEl.value = p.id;
+            if(nameEl) nameEl.value = p.name;
+            if(costEl) costEl.value = p.unitCost || 0;
+            if(priceEl) priceEl.value = p.salePrice;
+            if(stockEl) stockEl.value = p.stock;
             window.openModal('edit-product-modal');
         };
 
@@ -774,7 +814,7 @@
         // --- CAJA ---
         window.loadCajaData = async () => {
             const list = document.getElementById('caja-daily-list'); if(!list) return;
-            list.innerHTML = '<p class="p-10 text-center italic text-slate-400">Arqueando...</p>';
+            list.innerHTML = '<p class="p-10 text-center italic text-slate-400 font-black">Arqueando...</p>';
             onSnapshot(query(getCol("bookings"), orderBy("timestamp", "desc")), (snapB) => {
                 onSnapshot(query(getCol("sales"), orderBy("timestamp", "desc")), (snapS) => {
                     onSnapshot(query(getCol("expenses"), orderBy("timestamp", "desc")), (snapE) => {
@@ -788,12 +828,13 @@
                             let amount = m.type === 'turno' ? (m.totalPrice || 0) : (m.type === 'venta' ? (m.total || 0) : -(m.total || 0));
                             totalNeto += amount; detailedData[day].total += amount; detailedData[day].items.push(m);
                         });
-                        if(document.getElementById('caja-total-combined')) document.getElementById('caja-total-combined').textContent = `$${totalNeto.toLocaleString('es-AR')}`;
+                        const totalDisp = document.getElementById('caja-total-combined');
+                        if(totalDisp) totalDisp.textContent = `$${totalNeto.toLocaleString('es-AR')}`;
                         list.innerHTML = '';
                         Object.entries(detailedData).sort((a,b) => b[0].localeCompare(a[0])).forEach(([day, d]) => {
                             const row = document.createElement('div');
-                            row.className = 'bento-card p-6 flex justify-between items-center bg-white cursor-pointer hover:border-violet-300 shadow-sm font-black italic text-black';
-                            row.innerHTML = `<span class="font-black text-slate-400 text-xs italic uppercase tracking-widest">${day}</span><div class="flex items-center gap-6 text-black font-black"><strong class="text-2xl font-black ${d.total >= 0 ? 'text-slate-900' : 'text-red-500'} font-mono text-black font-black">$${d.total.toLocaleString()}</strong> <button class="bg-slate-50 p-2 rounded-xl text-[8px] font-black uppercase text-slate-400 hover:text-black border border-slate-100 italic font-black uppercase" onclick="window.openAuditDetails('${day}')">Ver Detalle 📄</button></div>`;
+                            row.className = 'bento-card p-6 flex justify-between items-center bg-white cursor-pointer hover:border-violet-300 shadow-sm font-black italic text-black font-black uppercase';
+                            row.innerHTML = `<span class="font-black text-slate-400 text-xs italic font-black uppercase tracking-widest">${day}</span><div class="flex items-center gap-6 text-black font-black italic font-black uppercase"><strong class="text-2xl font-black ${d.total >= 0 ? 'text-slate-900' : 'text-red-500'} font-mono text-black font-black italic">$${d.total.toLocaleString()}</strong> <button class="bg-slate-50 p-2 rounded-xl text-[8px] font-black uppercase text-slate-400 hover:text-black border border-slate-100 italic" onclick="window.openAuditDetails('${day}')">Ver Detalle 📄</button></div>`;
                             list.appendChild(row);
                         });
                     });
@@ -803,16 +844,20 @@
 
         window.openAuditDetails = (day) => {
             const data = detailedData[day]; if(!data) return;
-            document.getElementById('audit-modal-date').textContent = day;
-            const list = document.getElementById('audit-items-list'); list.innerHTML = '';
+            const dateLabel = document.getElementById('audit-modal-date');
+            const itemsList = document.getElementById('audit-items-list');
+            const totalLabel = document.getElementById('audit-modal-total');
+            if(!dateLabel || !itemsList || !totalLabel) return;
+            dateLabel.textContent = day;
+            itemsList.innerHTML = '';
             data.items.forEach(m => {
-                const row = document.createElement('div'); row.className = 'p-5 flex justify-between items-center text-xs italic font-bold text-black font-black uppercase italic';
+                const row = document.createElement('div'); row.className = 'p-5 flex justify-between items-center text-xs italic font-bold text-black font-black uppercase';
                 let label = m.type === 'turno' ? `🚀 Turno: ${m.teamName}` : (m.type === 'venta' ? `🥤 Venta: ${m.name || 'Ticket'}` : `💸 Gasto: ${m.concept}`);
                 let val = m.type === 'turno' ? m.totalPrice : (m.type === 'venta' ? m.total : -m.total);
-                row.innerHTML = `<span class="uppercase italic font-black">${label} (${m.paymentMethod || 'Efectivo'})</span><strong class="${val >= 0 ? 'text-emerald-600' : 'text-red-500'} font-mono text-black font-black italic uppercase italic">$${val.toLocaleString()}</strong>`;
-                list.appendChild(row);
+                row.innerHTML = `<span class="uppercase italic font-black font-black uppercase italic font-black uppercase">${label} (${m.paymentMethod || 'Efectivo'})</span><strong class="${val >= 0 ? 'text-emerald-600' : 'text-red-500'} font-mono text-black font-black italic font-black uppercase">$${val.toLocaleString()}</strong>`;
+                itemsList.appendChild(row);
             });
-            document.getElementById('audit-modal-total').textContent = `$${data.total.toLocaleString()}`;
+            totalLabel.textContent = `$${data.total.toLocaleString()}`;
             window.openModal('daily-audit-modal');
         };
 
@@ -824,8 +869,10 @@
                 const s = doc.data(); const p = allProducts.find(item => item.name === s.name);
                 if(p) { const profit = (p.salePrice - (p.unitCost || 0)) * (s.qty || 1); totalProfit += profit; if(s.day === todayStr) todayProfit += profit; }
             });
-            if(document.getElementById('total-profit-display')) document.getElementById('total-profit-display').textContent = `$${totalProfit.toLocaleString('es-AR')}`;
-            if(document.getElementById('today-profit-display')) document.getElementById('today-profit-display').textContent = `$${todayProfit.toLocaleString('es-AR')}`;
+            const totalProfEl = document.getElementById('total-profit-display');
+            const todayProfEl = document.getElementById('today-profit-display');
+            if(totalProfEl) totalProfEl.textContent = `$${totalProfit.toLocaleString('es-AR')}`;
+            if(todayProfEl) todayProfEl.textContent = `$${todayProfit.toLocaleString('es-AR')}`;
             window.openModal('profit-modal');
         };
 
@@ -847,11 +894,12 @@
 
         window.renderWaiverList = (f = "") => {
             const list = document.getElementById('waiver-list'); if(!list) return; list.innerHTML = '';
-            allWaivers.filter(w => (w.adultName||"").includes(f.toUpperCase()) || (w.dni||"").includes(f)).forEach(w => {
+            const filtered = allWaivers.filter(w => (w.adultName||"").includes(f.toUpperCase()) || (w.dni||"").includes(f));
+            filtered.forEach(w => {
                 const datePart = (w.dateStr || "N/A").split(' ')[0];
                 const card = document.createElement('div');
                 card.className = 'bento-card p-5 cursor-pointer hover:border-violet-500 group text-black font-black italic shadow-sm uppercase italic';
-                card.innerHTML = `<span class="label-tiny italic font-black uppercase">Registro: ${datePart}</span><h4 class="font-black uppercase text-sm group-hover:text-violet-600 tracking-tighter italic font-black italic uppercase">${w.adultName}</h4><p class="text-[10px] text-slate-400 font-mono italic font-black uppercase italic text-black italic">DNI: ${w.dni}</p>`;
+                card.innerHTML = `<span class="label-tiny italic font-black uppercase">Registro: ${datePart}</span><h4 class="font-black uppercase text-sm group-hover:text-violet-600 tracking-tighter italic font-black uppercase italic">${w.adultName}</h4><p class="text-[10px] text-slate-400 font-mono italic font-black uppercase italic text-black italic">DNI: ${w.dni}</p>`;
                 card.onclick = () => viewWaiver(w.id);
                 list.appendChild(card);
             });
@@ -859,27 +907,32 @@
 
         function viewWaiver(id) {
             const w = allWaivers.find(x => x.id === id); if(!w) return;
-            document.getElementById('view-waiver-details').innerHTML = `<p>Responsable: ${w.adultName}</p><p>DNI: ${w.dni}</p><p class="text-orange-600 font-black italic uppercase">Menor: ${w.minorName}</p><p class="text-[9px] mt-4 opacity-50 font-bold font-black uppercase italic">${w.dateStr}</p>`;
-            document.getElementById('view-waiver-img').src = w.signature;
-            document.getElementById('btn-print-waiver').onclick = () => window.downloadWaiverDocument(w);
+            const detailEl = document.getElementById('view-waiver-details');
+            const imgEl = document.getElementById('view-waiver-img');
+            const printBtn = document.getElementById('btn-print-waiver');
+            if(detailEl) detailEl.innerHTML = `<p>Responsable: ${w.adultName}</p><p>DNI: ${w.dni}</p><p class="text-orange-600 font-black italic uppercase">Menor: ${w.minorName}</p><p class="text-[9px] mt-4 opacity-50 font-bold font-black uppercase italic">${w.dateStr}</p>`;
+            if(imgEl) imgEl.src = w.signature;
+            if(printBtn) printBtn.onclick = () => window.downloadWaiverDocument(w);
             window.openModal('view-waiver-modal');
         }
 
         window.downloadWaiverDocument = (w) => {
             const win = window.open('', '_blank');
-            const legalText = document.getElementById('legal-full-text-container').innerHTML;
-            win.document.write(`<html><body style="font-family:Outfit,sans-serif;padding:60px">
-                <h1 style="text-align:center;border-bottom:4px solid black;padding-bottom:10px;text-transform:uppercase;font-style:italic">AeroJump Certificado Digital</h1>
-                <hr><div style="font-size:16px;margin:20px 0"><strong>RESPONSABLE:</strong> ${w.adultName} | <strong>DNI:</strong> ${w.dni} | <strong>MENOR:</strong> ${w.minorName}</div><hr>
-                <div style="font-size:11px;text-align:justify;color:#333;line-height:1.6">${legalText}</div>
-                <div style="text-align:center;margin-top:60px"><p style="font-weight:900;text-transform:uppercase;font-size:10px">Firma Digital Registrada:</p><img src="${w.signature}" style="border:2px solid black;width:350px;border-radius:15px"></div>
-                <script>window.onload=function(){window.print();window.close();}<\/script></body></html>`);
+            const legalText = `
+                <h3 style="text-align:center">DESLINDE DE RESPONSABILIDAD - SECCIONES 1 Y 2</h3>
+                <h4>SECCIÓN 1: RIESGOS</h4>
+                <p>Acepto riesgos de caídas y fracturas derivados del uso. Capacidad máx: 35 saltadores/hora. Reconozco que la participación en AeroJump conlleva riesgos conocidos e inesperados de lesiones físicas, emocional, parálisis o muerte a mi persona o terceros.</p>
+                <p>AEROJUMP NO recomienda el ingreso al área de salto en caso de embarazo o sospecha. Ingreso bajo mi absoluta responsabilidad.</p>
+                <h4>SECCIÓN 2: DECLARACIÓN JURADA</h4>
+                <p>Declaro ser el tutor legal de los menores mencionados bajo mi absoluta responsabilidad.</p>
+            `;
+            win.document.write(`<html><body style="font-family:sans-serif;padding:60px"><h1>AeroJump Certificado Digital</h1><hr><div><strong>Firmante:</strong> ${w.adultName} | DNI: ${w.dni} | Menor: ${w.minorName}</div><hr><div>${legalText}</div><div style="text-align:center;margin-top:30px"><p style="font-weight:900;text-transform:uppercase;font-size:10px">Firma Digital:</p><img src="${w.signature}" style="border:2px solid black;width:300px"></div><script>window.onload=function(){window.print();window.close();}<\/script></body></html>`);
             win.document.close();
         };
 
         window.openWaiverModal = () => {
-            const form = document.getElementById('waiver-form'); if(form) form.reset();
-            const legal = document.getElementById('legal-full-text-container'); if(legal) legal.classList.add('is-hidden');
+            document.getElementById('waiver-form').reset();
+            document.getElementById('legal-full-text-container').classList.add('is-hidden');
             window.openModal('waiver-modal');
             setTimeout(() => {
                 canvas = document.getElementById('signature-pad'); if(!canvas) return;
@@ -895,7 +948,8 @@
         window.handleSaveWaiver = async (e) => {
             e.preventDefault(); window.showMessage("GUARDANDO...");
             const data = { adultName: document.getElementById('waiver-adult-name').value.toUpperCase(), dni: document.getElementById('waiver-dni').value, minorName: document.getElementById('waiver-minor-name').value.toUpperCase() || "N/A", signature: canvas.toDataURL(), timestamp: Timestamp.now(), dateStr: new Date().toLocaleString('es-AR') };
-            await addDoc(getCol("waivers"), data); window.closeModals(); window.showMessage("FIRMA GUARDADA! ✅");
+            await addDoc(getCol("waivers"), data);
+            window.closeModals(); window.showMessage("FIRMA GUARDADA! ✅");
         };
 
         // --- POS ---
@@ -905,8 +959,8 @@
             const sorted = [...allProducts].sort((a,b) => (a.name||"").localeCompare(b.name||""));
             sorted.filter(p => (p.name||"").includes(f.toUpperCase())).forEach(p => {
                 const itemInCart = saleCart.find(i => i.id === p.id); const qty = itemInCart ? itemInCart.qty : 0;
-                const row = document.createElement('div'); row.className = `pos-item-row text-black italic font-black uppercase italic ${p.stock <= 0 ? 'stock-alert' : ''}`;
-                row.innerHTML = `<div class="text-left leading-none italic font-black uppercase"><p class="font-black text-sm uppercase italic text-black font-black italic uppercase">${p.name}</p><p class="text-[10px] opacity-40 font-bold mt-1 text-black font-black uppercase italic">Stock: ${p.stock} un. • <span class="text-black font-black font-mono font-black italic">$${p.salePrice}</span></p></div><div class="flex items-center gap-4 italic font-black uppercase"><div class="flex items-center gap-2 bg-slate-100 p-1 rounded-2xl shadow-inner border border-slate-50 text-black font-black italic uppercase"><button class="w-10 h-10 bg-white rounded-xl font-black active:scale-90 shadow-sm text-black italic font-black" onclick="window.updPOSQty('${p.id}', -1)">-</button><span class="font-black text-xl w-8 text-center italic font-mono text-slate-800 font-black">${qty}</span><button class="w-10 h-10 bg-black text-white rounded-xl font-black active:scale-90 shadow-sm text-white italic" onclick="window.updPOSQty('${p.id}', 1)">+</button></div></div>`;
+                const row = document.createElement('div'); row.className = `pos-item-row text-black italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic ${p.stock <= 0 ? 'stock-alert' : ''}`;
+                row.innerHTML = `<div class="text-left leading-none italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic"><p class="font-black text-sm uppercase italic text-black font-black italic uppercase font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic">${p.name}</p><p class="text-[10px] opacity-40 font-bold mt-1 text-black font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic">Stock: ${p.stock} un. • <span class="text-black font-black font-mono font-black italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic">$${p.salePrice}</span></p></div><div class="flex items-center gap-4 italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic"><div class="flex items-center gap-2 bg-slate-100 p-1 rounded-2xl shadow-inner border border-slate-50 text-black font-black italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic"><button class="w-10 h-10 bg-white rounded-xl font-black active:scale-90 shadow-sm text-black italic font-black italic font-black italic font-black italic font-black italic font-black italic font-black italic font-black italic font-black italic font-black italic font-black italic font-black italic font-black italic font-black italic font-black italic font-black italic" onclick="window.updPOSQty('${p.id}', -1)">-</button><span class="font-black text-xl w-8 text-center italic font-mono text-slate-800 font-black italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic">${qty}</span><button class="w-10 h-10 bg-black text-white rounded-xl font-black active:scale-90 shadow-sm text-white italic font-black italic font-black italic font-black italic font-black italic font-black italic font-black italic font-black italic font-black italic font-black italic font-black italic font-black italic font-black italic font-black italic font-black italic font-black italic" onclick="window.updPOSQty('${p.id}', 1)">+</button></div></div>`;
                 list.appendChild(row);
             });
         };
@@ -920,9 +974,11 @@
 
         function renderSaleCart() {
             const list = document.getElementById('sale-cart-list'); if(!list) return; list.innerHTML = ''; let total = 0;
-            saleCart.forEach(i => { total += i.price * i.qty; const d = document.createElement('div'); d.className = 'bg-white p-4 rounded-2xl border border-slate-100 flex justify-between items-center text-[10px] font-black italic shadow-sm text-black font-black italic uppercase'; d.innerHTML = `<div class="text-left leading-none"><p class="uppercase text-black mb-1 font-black">${i.name}</p><p class="text-slate-300 font-mono font-black">${i.qty} x $${i.price}</p></div><span class="font-mono text-lg text-black font-black italic">$${(i.qty * i.price).toLocaleString()}</span>`; list.appendChild(d); });
-            if(document.getElementById('sale-total-display')) document.getElementById('sale-total-display').textContent = `$${total.toLocaleString('es-AR')}`;
-            if(document.getElementById('btn-sale-confirm')) document.getElementById('btn-sale-confirm').disabled = !saleCart.length;
+            saleCart.forEach(i => { total += i.price * i.qty; const d = document.createElement('div'); d.className = 'bg-white p-4 rounded-2xl border border-slate-100 flex justify-between items-center text-[10px] font-black italic shadow-sm text-black font-black italic uppercase'; d.innerHTML = `<div class="text-left leading-none font-black italic"><p class="uppercase text-black mb-1 font-black">${i.name}</p><p class="text-slate-300 font-mono font-black">${i.qty} x $${i.price}</p></div><span class="font-mono text-lg text-black font-black italic font-black">$${(i.qty * i.price).toLocaleString()}</span>`; list.appendChild(d); });
+            const totalDisp = document.getElementById('sale-total-display');
+            if(totalDisp) totalDisp.textContent = `$${total.toLocaleString('es-AR')}`;
+            const confirmBtn = document.getElementById('btn-sale-confirm');
+            if(confirmBtn) confirmBtn.disabled = !saleCart.length;
         }
 
         window.handleConfirmSale = async () => {
