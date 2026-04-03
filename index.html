@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>AeroJump Gualeguaychú - Sistema v2026</title>
+    <title>AeroJump Gualeguaychú - Sistema v3.0</title>
     
     <link rel="icon" href="data:,">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -117,7 +117,7 @@
         /* UI Forms */
         .input-clean { font-size: 1.1rem; font-weight: 700; width: 100%; border: none; background: transparent; outline: none; color: black; }
         .bento-inner-card { background: white; border-radius: 1.2rem; padding: 1rem; border: 1px solid #e2e8f0; }
-        .label-tiny { font-size: 0.65rem; font-weight: 800; text-transform: uppercase; color: #94a3b8; margin-bottom: 4px; letter-spacing: 0.05em; }
+        .label-tiny { font-size: 0.65rem; font-weight: 800; text-transform: uppercase; color: #94a3b8; margin-bottom: 4px; letter-spacing: 0.05em; display: block; }
 
         /* POS Header Fijo */
         .pos-header-fixed { position: sticky; top: 0; background: white; z-index: 20; border-bottom: 1px solid #f1f5f9; padding: 1.2rem; }
@@ -136,7 +136,7 @@
         #signature-pad { width: 100%; height: 220px; cursor: crosshair; }
 
         /* Botones Acción Inventario */
-        .inv-action-btn { font-size: 9px; font-weight: 900; text-transform: uppercase; padding: 10px; border-radius: 12px; background: #f8fafc; transition: 0.2s; border: 1px solid #e2e8f0; }
+        .inv-action-btn { font-size: 9px; font-weight: 900; text-transform: uppercase; padding: 10px; border-radius: 12px; background: #f8fafc; transition: 0.2s; border: 1px solid #e2e8f0; cursor: pointer; }
         .inv-action-btn:hover { background: var(--black); color: white; border-color: var(--black); }
 
         /* Promo Selector */
@@ -150,7 +150,7 @@
     <section id="login-view" class="min-h-screen flex items-center justify-center p-4 bg-[#0f172a]">
         <div class="bento-card w-full max-w-sm text-center p-12 shadow-2xl border-none">
             <h2 class="text-4xl font-black italic tracking-tighter mb-2 text-slate-900 leading-none">AEROJUMP</h2>
-            <p class="text-[10px] uppercase font-black tracking-[0.4em] text-slate-400 mb-10 italic">Admin Gualeguaychú</p>
+            <p class="text-[10px] uppercase font-black tracking-[0.4em] text-slate-400 mb-10 italic">Admin Gualeguaychú v3.0</p>
             <form id="login-form" class="space-y-5">
                 <div class="text-left"><label class="label-tiny">Usuario:</label><input type="email" id="login-email" required class="bento-inner-card w-full outline-none font-bold text-black border-slate-100"></div>
                 <div class="text-left"><label class="label-tiny">Contraseña:</label><input type="password" id="login-password" required class="bento-inner-card w-full outline-none font-bold text-black border-slate-100"></div>
@@ -168,7 +168,7 @@
                     <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M4 6h16M4 12h16M4 18h16" /></svg>
                 </button>
                 <div class="leading-none">
-                    <h1 class="text-xl font-black uppercase italic tracking-tighter">AeroJump <span class="text-violet-600 font-mono text-sm font-black">PRO v2.6</span></h1>
+                    <h1 class="text-xl font-black uppercase italic tracking-tighter">AeroJump <span class="text-violet-600 font-mono text-sm font-black">PRO v3.0</span></h1>
                 </div>
             </div>
             <button onclick="window.openSaleModal()" class="bg-orange-500 btn-premium text-white text-[10px] px-8 py-3 shadow-lg shadow-orange-100 font-black italic tracking-widest uppercase">NUEVA VENTA 🛒</button>
@@ -236,15 +236,15 @@
                 </div>
 
                 <!-- Contenedor del Listado con Cabecera Fija -->
-                <div class="bento-card p-0 overflow-hidden bg-white mb-10 flex flex-col">
+                <div class="bento-card p-0 overflow-hidden bg-white mb-10 flex flex-col border-none shadow-xl">
                     <!-- Cabecera Inmovilizada -->
-                    <div class="hidden md:grid grid-cols-12 gap-4 px-6 py-4 bg-black text-white font-black text-[10px] uppercase tracking-widest italic border-b border-slate-200 shrink-0">
+                    <div class="hidden md:grid grid-cols-12 gap-4 px-6 py-4 bg-slate-50 text-slate-500 font-black text-[10px] uppercase tracking-widest italic border-b border-slate-200 shrink-0">
                         <div class="col-span-4">Nombre del Artículo</div>
                         <div class="col-span-2 text-center">Stock Disp.</div>
                         <div class="col-span-2 text-center">Precio Venta</div>
                         <div class="col-span-4 text-center">Panel de Acciones</div>
                     </div>
-                    <!-- Lista Scrolleable -->
+                    <!-- Lista Scrolleable (Se mantiene el estilo original de tu app pero con grid) -->
                     <div id="product-list" class="flex flex-col max-h-[60vh] overflow-y-auto custom-scrollbar divide-y divide-slate-100 bg-white">
                     </div>
                 </div>
@@ -282,7 +282,7 @@
                 <div id="stats-list" class="max-w-2xl mx-auto space-y-5"></div>
             </div>
 
-            <!-- VISTA: CONFIG -->
+            <!-- VISTA: CONFIG (CON NUEVO MÓDULO DE USUARIOS) -->
             <div id="config-view" class="view-container is-hidden text-black font-black italic uppercase">
                 <h2 class="section-title text-center mb-12 uppercase text-black font-black leading-none">Ajustes</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
@@ -299,6 +299,34 @@
                         <div id="promos-list" class="flex-grow space-y-4 mb-8 overflow-y-auto custom-scrollbar pr-3 max-h-80"></div>
                         <button onclick="window.openPromoModal()" class="w-full bg-violet-600 btn-premium text-white py-8 font-black uppercase italic shadow-xl shadow-violet-100 text-lg uppercase italic font-black">+ CREAR PROMO ✨</button>
                     </div>
+
+                    <!-- Módulo de Administración de Usuarios -->
+                    <div class="bento-card p-12 col-span-1 md:col-span-2 mt-4 border-none shadow-2xl">
+                        <h3 class="label-tiny mb-8 text-black tracking-[0.3em] font-black italic uppercase border-b border-slate-100 pb-4">Administración de Usuarios y Permisos</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                            <form id="user-form" class="space-y-6">
+                                <div class="bento-inner-card"><label class="label-tiny">Correo Electrónico (Usuario)</label><input type="email" id="new-user-email" required class="input-clean text-black"></div>
+                                <div class="bento-inner-card"><label class="label-tiny">Contraseña de Ingreso</label><input type="text" id="new-user-pass" required class="input-clean text-black font-mono"></div>
+                                <div class="bento-inner-card">
+                                    <label class="label-tiny mb-4 text-violet-600">Asignar Permisos y Accesos</label>
+                                    <div class="grid grid-cols-1 gap-3 text-black">
+                                        <label class="flex items-center gap-3 cursor-pointer p-2 hover:bg-slate-50 rounded-lg transition-colors"><input type="checkbox" id="perm-agenda" class="w-5 h-5 accent-violet-600"><span class="font-bold text-xs uppercase">Gestión de Agenda y Reservas</span></label>
+                                        <label class="flex items-center gap-3 cursor-pointer p-2 hover:bg-slate-50 rounded-lg transition-colors"><input type="checkbox" id="perm-kiosco" class="w-5 h-5 accent-violet-600"><span class="font-bold text-xs uppercase">Punto de Venta e Inventario</span></label>
+                                        <label class="flex items-center gap-3 cursor-pointer p-2 hover:bg-slate-50 rounded-lg transition-colors"><input type="checkbox" id="perm-caja" class="w-5 h-5 accent-violet-600"><span class="font-bold text-xs uppercase">Arqueo de Caja y Finanzas</span></label>
+                                        <label class="flex items-center gap-3 cursor-pointer p-2 hover:bg-slate-50 rounded-lg transition-colors"><input type="checkbox" id="perm-config" class="w-5 h-5 accent-violet-600"><span class="font-bold text-xs uppercase">Configuración (Administrador)</span></label>
+                                    </div>
+                                </div>
+                                <button type="submit" class="w-full bg-slate-900 btn-premium text-white py-6 shadow-xl uppercase italic font-black text-sm">Guardar Nuevo Usuario 👤</button>
+                            </form>
+                            
+                            <div class="flex flex-col bg-slate-50 p-8 rounded-[1.5rem] border border-slate-100">
+                                <h4 class="label-tiny mb-6 text-black font-black italic tracking-widest text-base">Usuarios Autorizados</h4>
+                                <div id="users-list" class="flex-grow overflow-y-auto custom-scrollbar space-y-3 max-h-[350px] pr-2">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Fin Módulo Usuarios -->
                 </div>
             </div>
 
@@ -437,13 +465,16 @@
     </div>
 
     <!-- Message Overlay -->
-    <div id="message-overlay" class="modal bg-black/95 transition-none z-[4000] italic font-black uppercase italic uppercase font-black"><div class="flex flex-col items-center justify-center p-12 text-center text-white font-black italic uppercase italic font-black"><div class="text-8xl mb-8 text-white font-black italic uppercase italic font-black uppercase italic">🚀</div><p id="message-text" class="text-white text-3xl font-black uppercase italic tracking-widest drop-shadow-2xl font-black italic uppercase italic uppercase font-black italic uppercase font-black"></p></div></div>
+    <div id="message-overlay" class="modal bg-black/95 transition-none z-[4000] flex-col items-center justify-center">
+        <div class="text-8xl mb-8">🚀</div>
+        <p id="message-text" class="text-white text-3xl font-black uppercase italic tracking-widest text-center px-10"></p>
+    </div>
 
     <!-- LÓGICA MAESTRA CONSOLIDADA -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, doc, addDoc, setDoc, getDoc, updateDoc, deleteDoc, query, onSnapshot, orderBy, where, Timestamp, writeBatch, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, collection, doc, addDoc, setDoc, getDoc, updateDoc, deleteDoc, query, onSnapshot, orderBy, Timestamp, writeBatch, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyBz0V2ieSXehafKWRNQprb951NVN5FvBD4",
@@ -460,7 +491,7 @@
         const appId = "aerojump-gchu";
 
         // ==========================================
-        // 1. RUTA DE BASE DE DATOS EXACTA
+        // RUTA DE BASE DE DATOS EXACTA
         // ==========================================
         const getCol = (n) => collection(db, "artifacts", appId, "public", "data", n);
         const getDocRef = (n, id) => doc(db, "artifacts", appId, "public", "data", n, id);
@@ -471,6 +502,7 @@
         let allProducts = [];
         let allWaivers = [];
         let allPromos = [];
+        let allAppUsers = [];
         let saleCart = [];
         let canvas, ctx, isDrawing = false, lastX = 0, lastY = 0;
         let detailedData = {};
@@ -498,6 +530,73 @@
             window.showMessage("SISTEMA ACTUALIZADO! ☁️");
         }
 
+        // ==========================================
+        // GESTIÓN DE USUARIOS
+        // ==========================================
+        function syncUsers() {
+            onSnapshot(query(getCol("app_users"), orderBy("timestamp", "desc")), (snap) => {
+                allAppUsers = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+                window.renderUsersList();
+            });
+        }
+
+        window.renderUsersList = () => {
+            const list = document.getElementById('users-list'); 
+            if(!list) return; 
+            list.innerHTML = '';
+            
+            if (allAppUsers.length === 0) {
+                list.innerHTML = '<p class="text-center opacity-40 py-10 font-black italic text-slate-400">No hay usuarios registrados</p>';
+                return;
+            }
+
+            allAppUsers.forEach(u => {
+                const card = document.createElement('div');
+                card.className = 'bento-inner-card flex justify-between items-center p-4 border border-slate-200 shadow-sm mb-3 bg-white';
+                
+                let permsHtml = '';
+                if(u.perms.agenda) permsHtml += '<span class="text-[8px] bg-blue-100 text-blue-700 px-2 py-1 rounded-md font-black mr-1">AGENDA</span>';
+                if(u.perms.kiosco) permsHtml += '<span class="text-[8px] bg-green-100 text-green-700 px-2 py-1 rounded-md font-black mr-1">KIOSCO</span>';
+                if(u.perms.caja) permsHtml += '<span class="text-[8px] bg-orange-100 text-orange-700 px-2 py-1 rounded-md font-black mr-1">CAJA</span>';
+                if(u.perms.config) permsHtml += '<span class="text-[8px] bg-purple-100 text-purple-700 px-2 py-1 rounded-md font-black mr-1">ADMIN</span>';
+
+                card.innerHTML = `
+                    <div>
+                        <p class="font-black text-sm lowercase text-slate-800">${u.email}</p>
+                        <p class="text-[10px] text-slate-400 font-mono mt-1">Pass: ${u.password}</p>
+                        <div class="mt-2 flex flex-wrap gap-1">${permsHtml}</div>
+                    </div>
+                    <button class="bg-red-50 text-red-500 p-3 rounded-xl border border-red-100 hover:bg-red-500 hover:text-white transition-colors" onclick="window.deleteUser('${u.id}')">🗑️</button>
+                `;
+                list.appendChild(card);
+            });
+        };
+
+        window.handleSaveUser = async (e) => {
+            e.preventDefault();
+            const data = {
+                email: document.getElementById('new-user-email').value.trim(),
+                password: document.getElementById('new-user-pass').value.trim(),
+                perms: {
+                    agenda: document.getElementById('perm-agenda').checked,
+                    kiosco: document.getElementById('perm-kiosco').checked,
+                    caja: document.getElementById('perm-caja').checked,
+                    config: document.getElementById('perm-config').checked,
+                },
+                timestamp: Timestamp.now()
+            };
+            await addDoc(getCol("app_users"), data);
+            document.getElementById('user-form').reset();
+            window.showMessage("USUARIO AUTORIZADO ✅");
+        };
+
+        window.deleteUser = async (id) => {
+            if(confirm("¿Eliminar usuario del sistema?")) {
+                await deleteDoc(getDocRef("app_users", id));
+                window.showMessage("Usuario eliminado");
+            }
+        };
+
         // --- HANDLERS SEGUROS ---
         window.addEventListener('DOMContentLoaded', () => {
             const bindForm = (id, fn) => { const el = document.getElementById(id); if(el) el.onsubmit = fn; };
@@ -510,6 +609,9 @@
             bindForm('waiver-form', window.handleSaveWaiver);
             bindForm('promo-form', window.handleSavePromo);
             bindForm('config-form', saveConfig);
+            
+            const userForm = document.getElementById('user-form');
+            if(userForm) userForm.onsubmit = window.handleSaveUser;
 
             const logoutBtn = document.getElementById('logout-btn');
             if(logoutBtn) logoutBtn.onclick = () => signOut(auth);
@@ -533,7 +635,7 @@
                 document.getElementById('app-container').classList.remove('is-hidden');
                 document.getElementById('login-view').classList.add('is-hidden');
                 document.getElementById('user-email-display').textContent = user.email;
-                loadConfig(); syncBookings(); syncProducts(); syncWaivers(); syncPromos(); window.showView('calendar');
+                loadConfig(); syncBookings(); syncProducts(); syncWaivers(); syncPromos(); syncUsers(); window.showView('calendar');
             } else {
                 document.getElementById('app-container').classList.add('is-hidden');
                 document.getElementById('login-view').classList.remove('is-hidden');
@@ -576,13 +678,12 @@
         };
 
         // ==========================================
-        // 2. CALENDARIO Y RESERVAS (FILTRO EN MEMORIA JS)
+        // CALENDARIO Y RESERVAS (FILTRO EN MEMORIA JS)
         // ==========================================
         function syncBookings() {
-            const monthStr = currentMonthDate.toISOString().substring(0, 7);
-            // Lectura Plana Completa para evitar errores silenciosos de índice compuesto
+            // Se leen todos los turnos para evitar errores silenciosos de índices y se filtran en JS
             onSnapshot(getCol("bookings"), (snap) => {
-                // Se filtra por código en lugar de la base de datos
+                const monthStr = currentMonthDate.toISOString().substring(0, 7);
                 allBookings = snap.docs.map(d => ({ id: d.id, ...d.data() })).filter(b => b.monthYear === monthStr);
                 renderCalendar();
             });
@@ -724,7 +825,7 @@
         window.nextMonth = () => { currentMonthDate.setMonth(currentMonthDate.getMonth() + 1); syncBookings(); syncPromos(); };
 
         // ==========================================
-        // 3. INVENTARIO (TABULAR CON ESTILO ORIGINAL BENTO)
+        // INVENTARIO TABULAR (ESTILO ORIGINAL)
         // ==========================================
         function syncProducts() {
             onSnapshot(getCol("products"), (snap) => {
@@ -747,44 +848,54 @@
         window.renderProducts = (f = "") => {
             const list = document.getElementById('product-list');
             if(!list) return; list.innerHTML = '';
+
+            // Cabecera Inmovilizada Tabular
+            const header = document.createElement('div');
+            header.className = 'hidden md:grid grid-cols-12 gap-4 px-6 py-4 font-black text-[10px] uppercase tracking-widest italic text-slate-400 border-b border-slate-100 shrink-0';
+            header.innerHTML = `
+                <div class="col-span-4">Nombre del Artículo</div>
+                <div class="col-span-2 text-center">Stock Disp.</div>
+                <div class="col-span-2 text-center">Precio Venta</div>
+                <div class="col-span-4 text-center">Panel de Acciones</div>
+            `;
+            list.appendChild(header);
+
+            // Container scrolleable
+            const rowsContainer = document.createElement('div');
+            rowsContainer.className = 'flex flex-col max-h-[60vh] overflow-y-auto custom-scrollbar divide-y divide-slate-100 bg-white';
             
-            // Filtrado y Orden Alfabético
             const filtered = allProducts
                 .filter(p => (p.name || "").includes(f.toUpperCase()))
                 .sort((a,b) => (a.name||"").localeCompare(b.name||""));
 
             if(filtered.length === 0) {
-                list.innerHTML = '<div class="p-10 text-center font-black text-slate-400 italic tracking-widest uppercase">No existen productos registrados.</div>';
-                return;
+                rowsContainer.innerHTML = '<div class="p-10 text-center font-black text-slate-400 italic tracking-widest uppercase">No existen productos.</div>';
             }
 
             filtered.forEach(p => {
                 const row = document.createElement('div');
-                row.className = `flex flex-col md:grid md:grid-cols-12 md:items-center gap-4 p-5 md:p-4 bg-white transition-colors hover:bg-slate-50 ${p.stock <= 0 ? 'bg-red-50' : ''}`;
+                row.className = `flex flex-col md:grid md:grid-cols-12 md:items-center gap-4 p-5 md:p-4 transition-colors hover:bg-slate-50 font-black italic uppercase text-xs ${p.stock <= 0 ? 'bg-red-50' : ''}`;
                 
                 row.innerHTML = `
                     <div class="md:col-span-4 flex justify-between items-center md:block">
                         <span class="font-black uppercase text-sm text-black italic">${p.name}</span>
-                        <span class="md:hidden text-[10px] font-black uppercase ${p.stock <= 5 ? 'text-red-500 bg-red-100' : 'text-slate-500 bg-slate-100'} px-2 py-1 rounded-lg border border-slate-200">Stock: ${p.stock}</span>
+                        <span class="md:hidden text-[10px] font-black uppercase ${p.stock <= 5 ? 'text-red-500 bg-red-100' : 'text-slate-500 bg-slate-100'} px-2 py-1 rounded-lg">Stock: ${p.stock}</span>
                     </div>
-                    
                     <div class="hidden md:block md:col-span-2 text-center">
                         <span class="text-xs font-black uppercase ${p.stock <= 5 ? 'text-red-500 animate-pulse' : 'text-slate-500'}">${p.stock} UN.</span>
                     </div>
-                    
                     <div class="md:col-span-2 text-left md:text-center">
-                        <span class="md:hidden text-[10px] text-slate-400 font-bold uppercase block mb-1">Precio</span>
                         <strong class="text-lg font-black font-mono italic text-emerald-600">$${p.salePrice}</strong>
                     </div>
-                    
                     <div class="md:col-span-4 grid grid-cols-3 gap-2 mt-2 md:mt-0">
-                        <button class="inv-action-btn w-full !text-[9px] hover:bg-violet-600 hover:text-white" onclick="window.openRestock('${p.id}')">🔄 Reponer</button>
-                        <button class="inv-action-btn w-full !text-[9px] hover:bg-black hover:text-white" onclick="window.openEditProduct('${p.id}')">📝 Ficha</button>
-                        <button class="inv-action-btn w-full !text-[9px] !text-red-500 hover:bg-red-500 hover:!text-white border-red-200" onclick="window.deleteProduct('${p.id}')">🗑️ Bajar</button>
+                        <button class="inv-action-btn hover:bg-violet-600 hover:text-white" onclick="window.openRestock('${p.id}')">🔄 Reponer</button>
+                        <button class="inv-action-btn hover:bg-slate-900 hover:text-white" onclick="window.openEditProduct('${p.id}')">📝 Ficha</button>
+                        <button class="inv-action-btn !text-red-500 opacity-40 hover:opacity-100 border-red-100" onclick="window.deleteProduct('${p.id}')">🗑️ Bajar</button>
                     </div>
                 `;
-                list.appendChild(row);
+                rowsContainer.appendChild(row);
             });
+            list.appendChild(rowsContainer);
         };
 
         window.toggleProductForm = () => document.getElementById('product-form-container').classList.toggle('is-hidden');
