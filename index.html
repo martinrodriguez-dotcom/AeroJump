@@ -235,7 +235,19 @@
                         <button type="submit" class="btn-premium bg-violet-600 text-white col-span-full font-black py-7 mt-4 shadow-2xl shadow-violet-200 italic text-xl uppercase italic">GUARDAR PRODUCTO ✅</button>
                     </form>
                 </div>
-                <div id="product-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
+
+                <!-- Contenedor de Lista con Cabecera Fija -->
+                <div class="bento-card p-0 overflow-hidden bg-white mb-10 flex flex-col border-none shadow-xl">
+                    <div class="hidden md:grid grid-cols-12 gap-4 px-6 py-4 bg-slate-50 text-slate-500 font-black text-[10px] uppercase tracking-widest italic border-b border-slate-200 shrink-0">
+                        <div class="col-span-4">Nombre del Artículo</div>
+                        <div class="col-span-2 text-center">Stock Disp.</div>
+                        <div class="col-span-2 text-center">Precio Venta</div>
+                        <div class="col-span-4 text-center">Panel de Acciones</div>
+                    </div>
+                    <div id="product-list" class="flex flex-col max-h-[50vh] overflow-y-auto custom-scrollbar divide-y divide-slate-100 bg-white">
+                        <!-- Inyectado dinámicamente -->
+                    </div>
+                </div>
             </div>
 
             <!-- VISTA: CAJA -->
