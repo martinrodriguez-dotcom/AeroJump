@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>AeroJump Gualeguaychú - Sistema v3.0</title>
+    <title>AeroJump Gualeguaychú - Sistema v2026</title>
     
     <link rel="icon" href="data:,">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -193,7 +193,7 @@
 
         <div id="menu-overlay" onclick="window.toggleMenu(false)" class="fixed inset-0 bg-black/30 z-[1000] hidden backdrop-blur-md"></div>
 
-        <main id="main-content" class="flex-grow overflow-y-auto p-4 md:p-10 bg-[#f8fafc] custom-scrollbar">
+        <main id="main-content" class="flex-grow overflow-y-auto p-4 md:p-10 bg-[#f8fafc] custom-scrollbar text-black font-semibold">
             
             <!-- VISTA: CALENDARIO -->
             <div id="calendar-view" class="view-container">
@@ -208,7 +208,7 @@
                 <div id="calendar-grid" class="grid grid-cols-7 gap-3"></div>
             </div>
 
-            <!-- VISTA: PRODUCTOS (INVENTARIO LISTADO ACTUALIZADO Y CORREGIDO) -->
+            <!-- VISTA: PRODUCTOS (INVENTARIO) -->
             <div id="productos-view" class="view-container is-hidden">
                 <div class="flex flex-col md:flex-row justify-between items-center mb-10 gap-5">
                     <h2 class="section-title italic uppercase text-black font-black">Inventario Real</h2>
@@ -235,20 +235,7 @@
                         <button type="submit" class="btn-premium bg-violet-600 text-white col-span-full font-black py-7 mt-4 shadow-2xl shadow-violet-200 italic text-xl uppercase italic">GUARDAR PRODUCTO ✅</button>
                     </form>
                 </div>
-
-                <!-- Contenedor del Listado con Cabecera Fija -->
-                <div class="bento-card p-0 overflow-hidden bg-white mb-10 flex flex-col border-none shadow-xl">
-                    <!-- Cabecera Inmovilizada (Fija HTML, NO en JS) -->
-                    <div class="hidden md:grid grid-cols-12 gap-4 px-6 py-4 bg-slate-50 text-slate-500 font-black text-[10px] uppercase tracking-widest italic border-b border-slate-200 shrink-0">
-                        <div class="col-span-4">Nombre del Artículo</div>
-                        <div class="col-span-2 text-center">Stock Disp.</div>
-                        <div class="col-span-2 text-center">Precio Venta</div>
-                        <div class="col-span-4 text-center">Panel de Acciones</div>
-                    </div>
-                    <!-- Lista Scrolleable donde solo se inyectan las filas -->
-                    <div id="product-list" class="flex flex-col max-h-[50vh] overflow-y-auto custom-scrollbar divide-y divide-slate-100 bg-white">
-                    </div>
-                </div>
+                <div id="product-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
             </div>
 
             <!-- VISTA: CAJA -->
@@ -268,7 +255,7 @@
             </div>
 
             <!-- VISTA: FIRMAS -->
-            <div id="firmas-view" class="view-container is-hidden">
+            <div id="firmas-view" class="view-container is-hidden text-black">
                 <div class="flex justify-between items-center mb-8">
                     <h2 class="section-title italic uppercase underline decoration-violet-500 decoration-4 text-black font-black">Expedientes</h2>
                     <button onclick="window.openWaiverModal()" class="btn-premium bg-black text-white text-xs shadow-lg font-black uppercase italic">+ NUEVA FIRMA</button>
@@ -278,13 +265,13 @@
             </div>
 
             <!-- VISTA: STATS -->
-            <div id="stats-view" class="view-container is-hidden">
+            <div id="stats-view" class="view-container is-hidden text-black font-black">
                 <h2 class="section-title text-center mb-12 uppercase italic underline decoration-violet-500 text-black">Top Clientes</h2>
                 <div id="stats-list" class="max-w-2xl mx-auto space-y-5"></div>
             </div>
 
-            <!-- VISTA: CONFIG (CON NUEVO MÓDULO DE USUARIOS) -->
-            <div id="config-view" class="view-container is-hidden">
+            <!-- VISTA: CONFIG -->
+            <div id="config-view" class="view-container is-hidden text-black font-black italic uppercase">
                 <h2 class="section-title text-center mb-12 uppercase text-black font-black leading-none">Ajustes</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
                     <div class="bento-card p-12 text-center border-none shadow-2xl">
@@ -306,7 +293,7 @@
                         <h3 class="label-tiny mb-8 text-black tracking-[0.3em] font-black italic uppercase border-b border-slate-100 pb-4">Administración de Usuarios y Permisos</h3>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
                             <!-- Columna Izquierda: Formulario -->
-                            <form id="user-form" class="space-y-6">
+                            <form id="user-form" class="space-y-6 text-left">
                                 <div class="bento-inner-card"><label class="label-tiny">Correo Electrónico (Usuario)</label><input type="email" id="new-user-email" required class="input-clean text-black"></div>
                                 <div class="bento-inner-card"><label class="label-tiny">Contraseña de Ingreso</label><input type="text" id="new-user-pass" required class="input-clean text-black font-mono"></div>
                                 <div class="bento-inner-card bg-slate-50 border-slate-200">
@@ -320,9 +307,8 @@
                                 </div>
                                 <button type="submit" class="w-full bg-slate-900 btn-premium text-white py-6 shadow-xl uppercase italic font-black text-sm">Guardar Nuevo Usuario 👤</button>
                             </form>
-                            
                             <!-- Columna Derecha: Lista en vivo -->
-                            <div class="flex flex-col bg-slate-50 p-8 rounded-[1.5rem] border border-slate-100">
+                            <div class="flex flex-col bg-slate-50 p-8 rounded-[1.5rem] border border-slate-100 text-left">
                                 <h4 class="label-tiny mb-6 text-black font-black italic tracking-widest text-base">Usuarios Autorizados</h4>
                                 <div id="users-list" class="flex-grow overflow-y-auto custom-scrollbar space-y-3 max-h-[400px] pr-2">
                                     <!-- Inyectado por JS -->
@@ -330,7 +316,6 @@
                             </div>
                         </div>
                     </div>
-                    <!-- Fin Módulo Usuarios -->
 
                 </div>
             </div>
@@ -340,8 +325,9 @@
 
     <!-- MODALES DE GESTIÓN -->
     
+    <!-- Modal Opciones del Día -->
     <div id="day-options-modal" class="modal">
-        <div class="modal-content max-w-md shadow-2xl">
+        <div class="modal-content max-w-md shadow-2xl text-black font-black italic uppercase">
             <div class="modal-header bg-slate-50"><div class="text-left leading-none text-black font-black italic"><h3 class="uppercase text-lg italic font-black">Agenda del Día</h3><p id="options-modal-date" class="label-tiny text-violet-600 mt-1 uppercase italic font-black"></p></div><button onclick="window.closeModals()" class="w-10 h-10 bg-white rounded-full font-black shadow-sm text-black">X</button></div>
             <div class="modal-body custom-scrollbar bg-slate-50 p-8"><div id="day-bookings-list" class="space-y-4 text-black"></div></div>
             <div class="modal-footer bg-white p-8 shadow-inner text-black font-black uppercase italic uppercase"><button id="add-new-from-options" class="w-full bg-violet-primary btn-premium bg-violet-600 text-white py-5 shadow-xl italic font-black italic uppercase tracking-widest">+ AGREGAR RESERVA</button></div>
@@ -579,7 +565,7 @@
 
         window.handleSaveUser = async (e) => {
             e.preventDefault();
-            const email = document.getElementById('new-user-email').value.trim();
+            const email = document.getElementById('new-user-email').value.trim().toLowerCase();
             const pass = document.getElementById('new-user-pass').value.trim();
             
             window.showMessage("Creando registro...");
@@ -661,7 +647,7 @@
                 let perms = { agenda: true, kiosco: true, caja: true, config: true }; // Por defecto asumimos master si no está en la db
                 
                 try {
-                    const q = query(getCol("app_users"), where("email", "==", user.email));
+                    const q = query(getCol("app_users"), where("email", "==", user.email.toLowerCase()));
                     const snap = await getDocs(q);
                     if (!snap.empty) {
                         perms = snap.docs[0].data().perms;
@@ -962,8 +948,10 @@
             const p = allProducts.find(x => x.id === id); if(!p) return;
             const modalId = document.getElementById('restock-prod-id');
             const modalName = document.getElementById('restock-name');
+            const modalStock = document.getElementById('restock-current-stock');
             if(modalId) modalId.value = p.id;
             if(modalName) modalName.textContent = p.name;
+            if(modalStock) modalStock.textContent = p.stock;
             window.openModal('restock-modal');
         };
 
@@ -973,7 +961,7 @@
             const qty = parseInt(document.getElementById('restock-qty').value);
             const costBatch = parseFloat(document.getElementById('restock-batch-cost').value);
             const p = allProducts.find(x => x.id === id);
-            await updateDoc(getDocRef("products", id), { 
+            await updateDoc(getDocRef("products", id), { 
                 stock: (p.stock || 0) + qty,
                 unitCost: costBatch / qty
             });
@@ -1094,9 +1082,10 @@
             const list = document.getElementById('waiver-list'); if(!list) return; list.innerHTML = '';
             const filtered = allWaivers.filter(w => (w.adultName||"").includes(f.toUpperCase()) || (w.dni||"").includes(f));
             filtered.forEach(w => {
+                const datePart = (w.dateStr || "N/A").split(' ')[0];
                 const card = document.createElement('div');
                 card.className = 'bento-card p-5 cursor-pointer hover:border-violet-500 group text-black font-black italic shadow-sm uppercase italic';
-                card.innerHTML = `<span class="label-tiny italic font-black uppercase">Registro: ${w.dateStr || 'N/A'}</span><h4 class="font-black uppercase text-sm group-hover:text-violet-600 tracking-tighter italic font-black uppercase italic">${w.adultName}</h4><p class="text-[10px] text-slate-400 font-mono italic font-black uppercase italic text-black italic">DNI: ${w.dni}</p>`;
+                card.innerHTML = `<span class="label-tiny italic font-black uppercase">Registro: ${datePart}</span><h4 class="font-black uppercase text-sm group-hover:text-violet-600 tracking-tighter italic font-black uppercase italic">${w.adultName}</h4><p class="text-[10px] text-slate-400 font-mono italic font-black uppercase italic text-black italic">DNI: ${w.dni}</p>`;
                 card.onclick = () => viewWaiver(w.id);
                 list.appendChild(card);
             });
@@ -1156,8 +1145,8 @@
             const sorted = [...allProducts].sort((a,b) => (a.name||"").localeCompare(b.name||""));
             sorted.filter(p => (p.name||"").includes(f.toUpperCase())).forEach(p => {
                 const itemInCart = saleCart.find(i => i.id === p.id); const qty = itemInCart ? itemInCart.qty : 0;
-                const row = document.createElement('div'); row.className = `pos-item-row text-black italic font-black uppercase italic ${p.stock <= 0 ? 'stock-alert' : ''}`;
-                row.innerHTML = `<div class="text-left leading-none italic font-black uppercase"><p class="font-black text-sm uppercase italic text-black font-black italic uppercase">${p.name}</p><p class="text-[10px] opacity-40 font-bold mt-1 text-black font-black uppercase italic">Stock: ${p.stock} un. • <span class="text-black font-black font-mono font-black italic">$${p.salePrice}</span></p></div><div class="flex items-center gap-4 italic font-black uppercase"><div class="flex items-center gap-2 bg-slate-100 p-1 rounded-2xl shadow-inner border border-slate-50 text-black font-black italic"><button class="w-10 h-10 bg-white rounded-xl font-black active:scale-90 shadow-sm text-black italic" onclick="window.updPOSQty('${p.id}', -1)">-</button><span class="font-black text-xl w-8 text-center italic font-mono text-slate-800 font-black">${qty}</span><button class="w-10 h-10 bg-black text-white rounded-xl font-black active:scale-90 shadow-sm text-white italic" onclick="window.updPOSQty('${p.id}', 1)">+</button></div></div>`;
+                const row = document.createElement('div'); row.className = `pos-item-row text-black italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic ${p.stock <= 0 ? 'stock-alert' : ''}`;
+                row.innerHTML = `<div class="text-left leading-none italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic"><p class="font-black text-sm uppercase italic text-black font-black italic uppercase font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic">${p.name}</p><p class="text-[10px] opacity-40 font-bold mt-1 text-black font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic">Stock: ${p.stock} un. • <span class="text-black font-black font-mono font-black italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic">$${p.salePrice}</span></p></div><div class="flex items-center gap-4 italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic"><div class="flex items-center gap-2 bg-slate-100 p-1 rounded-2xl shadow-inner border border-slate-50 text-black font-black italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic"><button class="w-10 h-10 bg-white rounded-xl font-black active:scale-90 shadow-sm text-black italic font-black italic font-black italic font-black italic font-black italic font-black italic font-black italic font-black italic font-black italic font-black italic font-black italic font-black italic font-black italic font-black italic font-black italic font-black italic" onclick="window.updPOSQty('${p.id}', -1)">-</button><span class="font-black text-xl w-8 text-center italic font-mono text-slate-800 font-black italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic">${qty}</span><button class="w-10 h-10 bg-black text-white rounded-xl font-black active:scale-90 shadow-sm text-white italic font-black italic font-black italic font-black italic font-black italic font-black italic font-black italic font-black italic font-black italic font-black italic font-black italic font-black italic font-black italic font-black italic font-black italic font-black italic" onclick="window.updPOSQty('${p.id}', 1)">+</button></div></div>`;
                 list.appendChild(row);
             });
         };
