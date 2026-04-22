@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>AeroJump Gualeguaychú - Sistema v2026</title>
+    <title>AeroJump Gualeguaychú - Sistema v3.0</title>
     
     <link rel="icon" href="data:,">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -150,7 +150,7 @@
     <section id="login-view" class="min-h-screen flex items-center justify-center p-4 bg-[#0f172a]">
         <div class="bento-card w-full max-w-sm text-center p-12 shadow-2xl border-none">
             <h2 class="text-4xl font-black italic tracking-tighter mb-2 text-slate-900 leading-none">AEROJUMP</h2>
-            <p class="text-[10px] uppercase font-black tracking-[0.4em] text-slate-400 mb-10 italic">Admin Gualeguaychú</p>
+            <p class="text-[10px] uppercase font-black tracking-[0.4em] text-slate-400 mb-10 italic">Admin Gualeguaychú v3.0</p>
             <form id="login-form" class="space-y-5">
                 <div class="text-left"><label class="label-tiny">Usuario:</label><input type="email" id="login-email" required class="bento-inner-card w-full outline-none font-bold text-black border-slate-100"></div>
                 <div class="text-left"><label class="label-tiny">Contraseña:</label><input type="password" id="login-password" required class="bento-inner-card w-full outline-none font-bold text-black border-slate-100"></div>
@@ -208,13 +208,13 @@
                 <div id="calendar-grid" class="grid grid-cols-7 gap-3"></div>
             </div>
 
-            <!-- VISTA: PRODUCTOS (INVENTARIO) -->
+            <!-- VISTA: PRODUCTOS (INVENTARIO LISTADO ACTUALIZADO Y CORREGIDO) -->
             <div id="productos-view" class="view-container is-hidden">
                 <div class="flex flex-col md:flex-row justify-between items-center mb-10 gap-5">
                     <h2 class="section-title italic uppercase text-black font-black">Inventario Real</h2>
                     <div class="flex gap-4 w-full md:w-auto">
                         <input type="text" id="inventory-search" placeholder="🔍 Buscar por nombre..." class="bento-card flex-grow p-4 px-8 outline-none font-bold text-sm italic text-black shadow-sm" oninput="window.renderProducts(this.value)">
-                        <button onclick="window.toggleProductForm()" class="btn-premium bg-violet-600 text-white text-xs font-black">+ NUEVO</button>
+                        <button id="btn-new-product" onclick="window.toggleProductForm()" class="btn-premium bg-violet-600 text-white text-xs font-black">+ NUEVO</button>
                     </div>
                 </div>
                 
@@ -236,16 +236,17 @@
                     </form>
                 </div>
 
-                <!-- Contenedor de Lista con Cabecera Fija -->
+                <!-- Contenedor del Listado con Cabecera Fija -->
                 <div class="bento-card p-0 overflow-hidden bg-white mb-10 flex flex-col border-none shadow-xl">
-                    <div class="hidden md:grid grid-cols-12 gap-4 px-6 py-4 bg-slate-50 text-slate-500 font-black text-[10px] uppercase tracking-widest italic border-b border-slate-200 shrink-0">
-                        <div class="col-span-4">Nombre del Artículo</div>
-                        <div class="col-span-2 text-center">Stock Disp.</div>
-                        <div class="col-span-2 text-center">Precio Venta</div>
-                        <div class="col-span-4 text-center">Panel de Acciones</div>
+                    <!-- Cabecera Inmovilizada -->
+                    <div id="product-list-header" class="hidden md:grid grid-cols-12 gap-4 px-6 py-4 bg-slate-50 text-slate-500 font-black text-[10px] uppercase tracking-widest italic border-b border-slate-200 shrink-0">
+                        <div class="col-span-4" id="header-name">Nombre del Artículo</div>
+                        <div class="col-span-2 text-center" id="header-stock">Stock Disp.</div>
+                        <div class="col-span-2 text-center" id="header-price">Precio Venta</div>
+                        <div class="col-span-4 text-center" id="header-actions">Panel de Acciones</div>
                     </div>
+                    <!-- Lista Scrolleable -->
                     <div id="product-list" class="flex flex-col max-h-[50vh] overflow-y-auto custom-scrollbar divide-y divide-slate-100 bg-white">
-                        <!-- Inyectado dinámicamente -->
                     </div>
                 </div>
             </div>
@@ -282,7 +283,7 @@
                 <div id="stats-list" class="max-w-2xl mx-auto space-y-5"></div>
             </div>
 
-            <!-- VISTA: CONFIG -->
+            <!-- VISTA: CONFIG (CON NUEVO MÓDULO DE USUARIOS) -->
             <div id="config-view" class="view-container is-hidden text-black font-black italic uppercase">
                 <h2 class="section-title text-center mb-12 uppercase text-black font-black leading-none">Ajustes</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
@@ -300,34 +301,45 @@
                         <button onclick="window.openPromoModal()" class="w-full bg-violet-600 btn-premium text-white py-8 font-black uppercase italic shadow-xl shadow-violet-100 text-lg uppercase italic font-black">+ CREAR PROMO ✨</button>
                     </div>
 
-                    <!-- Módulo de Administración de Usuarios -->
+                    <!-- Módulo de Administración de Usuarios con Edición -->
                     <div class="bento-card p-12 col-span-1 md:col-span-2 mt-4 border-none shadow-2xl">
                         <h3 class="label-tiny mb-8 text-black tracking-[0.3em] font-black italic uppercase border-b border-slate-100 pb-4">Administración de Usuarios y Permisos</h3>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
-                            <!-- Columna Izquierda: Formulario -->
+                            <!-- Columna Izquierda: Formulario (Ahora editable) -->
                             <form id="user-form" class="space-y-6 text-left">
+                                <input type="hidden" id="edit-user-id">
+                                
                                 <div class="bento-inner-card"><label class="label-tiny">Correo Electrónico (Usuario)</label><input type="email" id="new-user-email" required class="input-clean text-black"></div>
                                 <div class="bento-inner-card"><label class="label-tiny">Contraseña de Ingreso</label><input type="text" id="new-user-pass" required class="input-clean text-black font-mono"></div>
+                                
                                 <div class="bento-inner-card bg-slate-50 border-slate-200">
-                                    <label class="label-tiny mb-4 text-violet-600">Asignar Permisos y Accesos</label>
+                                    <label class="label-tiny mb-4 text-violet-600">Asignar Permisos Detallados</label>
                                     <div class="grid grid-cols-1 gap-3 text-black">
-                                        <label class="flex items-center gap-3 cursor-pointer p-2 hover:bg-white rounded-lg transition-colors border border-transparent hover:border-slate-200"><input type="checkbox" id="perm-agenda" class="w-5 h-5 accent-violet-600"><span class="font-bold text-xs uppercase">Gestión de Agenda y Reservas</span></label>
-                                        <label class="flex items-center gap-3 cursor-pointer p-2 hover:bg-white rounded-lg transition-colors border border-transparent hover:border-slate-200"><input type="checkbox" id="perm-kiosco" class="w-5 h-5 accent-violet-600"><span class="font-bold text-xs uppercase">Punto de Venta e Inventario</span></label>
+                                        <label class="flex items-center gap-3 cursor-pointer p-2 hover:bg-white rounded-lg transition-colors border border-transparent hover:border-slate-200"><input type="checkbox" id="perm-agenda" class="w-5 h-5 accent-violet-600"><span class="font-bold text-xs uppercase">Agenda y Reservas</span></label>
+                                        <label class="flex items-center gap-3 cursor-pointer p-2 hover:bg-white rounded-lg transition-colors border border-transparent hover:border-slate-200"><input type="checkbox" id="perm-pos" class="w-5 h-5 accent-violet-600"><span class="font-bold text-xs uppercase">Venta Kiosco (Solo Cobrar)</span></label>
+                                        <label class="flex items-center gap-3 cursor-pointer p-2 hover:bg-white rounded-lg transition-colors border border-transparent hover:border-slate-200"><input type="checkbox" id="perm-inv" class="w-5 h-5 accent-violet-600"><span class="font-bold text-xs uppercase">Modificar Inventario / Stock</span></label>
+                                        <label class="flex items-center gap-3 cursor-pointer p-2 hover:bg-white rounded-lg transition-colors border border-transparent hover:border-slate-200"><input type="checkbox" id="perm-firmas" class="w-5 h-5 accent-violet-600"><span class="font-bold text-xs uppercase">Certificados y Firmas</span></label>
+                                        <label class="flex items-center gap-3 cursor-pointer p-2 hover:bg-white rounded-lg transition-colors border border-transparent hover:border-slate-200"><input type="checkbox" id="perm-stats" class="w-5 h-5 accent-violet-600"><span class="font-bold text-xs uppercase">Ranking Clientes</span></label>
                                         <label class="flex items-center gap-3 cursor-pointer p-2 hover:bg-white rounded-lg transition-colors border border-transparent hover:border-slate-200"><input type="checkbox" id="perm-caja" class="w-5 h-5 accent-violet-600"><span class="font-bold text-xs uppercase">Arqueo de Caja y Finanzas</span></label>
-                                        <label class="flex items-center gap-3 cursor-pointer p-2 hover:bg-white rounded-lg transition-colors border border-transparent hover:border-slate-200"><input type="checkbox" id="perm-config" class="w-5 h-5 accent-violet-600"><span class="font-bold text-xs uppercase">Configuración (Administrador)</span></label>
+                                        <label class="flex items-center gap-3 cursor-pointer p-2 hover:bg-white rounded-lg transition-colors border border-transparent hover:border-slate-200"><input type="checkbox" id="perm-config" class="w-5 h-5 accent-violet-600"><span class="font-bold text-xs uppercase">Admin Total (Configuración)</span></label>
                                     </div>
                                 </div>
-                                <button type="submit" class="w-full bg-slate-900 btn-premium text-white py-6 shadow-xl uppercase italic font-black text-sm">Guardar Nuevo Usuario 👤</button>
+                                <div class="flex gap-2">
+                                    <button type="submit" id="btn-save-user" class="w-full bg-slate-900 btn-premium text-white py-6 shadow-xl uppercase italic font-black text-sm">GUARDAR USUARIO 👤</button>
+                                    <button type="button" id="btn-cancel-user" class="is-hidden w-auto bg-slate-200 btn-premium text-slate-500 py-6 shadow-xl uppercase italic font-black text-sm hover:bg-slate-300" onclick="window.cancelEditUser()">✕</button>
+                                </div>
                             </form>
+                            
                             <!-- Columna Derecha: Lista en vivo -->
                             <div class="flex flex-col bg-slate-50 p-8 rounded-[1.5rem] border border-slate-100 text-left">
                                 <h4 class="label-tiny mb-6 text-black font-black italic tracking-widest text-base">Usuarios Autorizados</h4>
-                                <div id="users-list" class="flex-grow overflow-y-auto custom-scrollbar space-y-3 max-h-[400px] pr-2">
+                                <div id="users-list" class="flex-grow overflow-y-auto custom-scrollbar space-y-3 max-h-[500px] pr-2">
                                     <!-- Inyectado por JS -->
                                 </div>
                             </div>
                         </div>
                     </div>
+                    <!-- Fin Módulo Usuarios -->
 
                 </div>
             </div>
@@ -510,6 +522,7 @@
         let canvas, ctx, isDrawing = false, lastX = 0, lastY = 0;
         let detailedData = {};
         let selectedPromoDays = [];
+        let currentUserPerms = { agenda: true, pos: true, inv: true, firmas: true, stats: true, caja: true, config: true };
 
         // PERSISTENCIA CONFIG
         async function loadConfig() {
@@ -559,8 +572,11 @@
                 
                 let permsHtml = '';
                 if(u.perms.agenda) permsHtml += '<span class="text-[8px] bg-blue-100 text-blue-700 px-2 py-1 rounded-md font-black mr-1">AGENDA</span>';
-                if(u.perms.kiosco) permsHtml += '<span class="text-[8px] bg-green-100 text-green-700 px-2 py-1 rounded-md font-black mr-1">KIOSCO</span>';
+                if(u.perms.pos) permsHtml += '<span class="text-[8px] bg-green-100 text-green-700 px-2 py-1 rounded-md font-black mr-1">VEND KIOSCO</span>';
+                if(u.perms.inv) permsHtml += '<span class="text-[8px] bg-teal-100 text-teal-700 px-2 py-1 rounded-md font-black mr-1">MOD STOCK</span>';
                 if(u.perms.caja) permsHtml += '<span class="text-[8px] bg-orange-100 text-orange-700 px-2 py-1 rounded-md font-black mr-1">CAJA</span>';
+                if(u.perms.firmas) permsHtml += '<span class="text-[8px] bg-indigo-100 text-indigo-700 px-2 py-1 rounded-md font-black mr-1">FIRMAS</span>';
+                if(u.perms.stats) permsHtml += '<span class="text-[8px] bg-pink-100 text-pink-700 px-2 py-1 rounded-md font-black mr-1">RANKING</span>';
                 if(u.perms.config) permsHtml += '<span class="text-[8px] bg-purple-100 text-purple-700 px-2 py-1 rounded-md font-black mr-1">ADMIN</span>';
 
                 card.innerHTML = `
@@ -569,40 +585,108 @@
                         <p class="text-[10px] text-slate-400 font-mono mt-1">Pass: ${u.password}</p>
                         <div class="mt-2 flex flex-wrap gap-1">${permsHtml}</div>
                     </div>
-                    <button class="bg-red-50 text-red-500 p-3 rounded-xl border border-red-100 hover:bg-red-500 hover:text-white transition-colors" onclick="window.deleteUser('${u.id}')">🗑️</button>
+                    <div class="flex flex-col gap-2">
+                        <button class="bg-slate-100 text-black p-2 rounded-xl border border-slate-200 hover:bg-slate-300 transition-colors" onclick="window.editUser('${u.id}')">✏️</button>
+                        <button class="bg-red-50 text-red-500 p-2 rounded-xl border border-red-100 hover:bg-red-500 hover:text-white transition-colors" onclick="window.deleteUser('${u.id}')">🗑️</button>
+                    </div>
                 `;
                 list.appendChild(card);
             });
         };
 
+        window.editUser = (id) => {
+            const u = allAppUsers.find(x => x.id === id);
+            if (!u) return;
+            document.getElementById('edit-user-id').value = u.id;
+            document.getElementById('new-user-email').value = u.email;
+            document.getElementById('new-user-pass').value = u.password;
+            
+            document.getElementById('perm-agenda').checked = u.perms.agenda || false;
+            document.getElementById('perm-pos').checked = u.perms.pos || false;
+            document.getElementById('perm-inv').checked = u.perms.inv || false;
+            document.getElementById('perm-firmas').checked = u.perms.firmas || false;
+            document.getElementById('perm-stats').checked = u.perms.stats || false;
+            document.getElementById('perm-caja').checked = u.perms.caja || false;
+            document.getElementById('perm-config').checked = u.perms.config || false;
+
+            document.getElementById('btn-save-user').textContent = "ACTUALIZAR USUARIO 🔄";
+            document.getElementById('btn-cancel-user').classList.remove('is-hidden');
+            window.showMessage("Modo edición activado");
+        };
+
+        window.cancelEditUser = () => {
+            document.getElementById('user-form').reset();
+            document.getElementById('edit-user-id').value = "";
+            document.getElementById('btn-save-user').textContent = "GUARDAR USUARIO 👤";
+            document.getElementById('btn-cancel-user').classList.add('is-hidden');
+        };
+
         window.handleSaveUser = async (e) => {
             e.preventDefault();
+            const editId = document.getElementById('edit-user-id').value;
             const email = document.getElementById('new-user-email').value.trim().toLowerCase();
             const pass = document.getElementById('new-user-pass').value.trim();
             
-            window.showMessage("Creando registro...");
+            const perms = {
+                agenda: document.getElementById('perm-agenda').checked,
+                pos: document.getElementById('perm-pos').checked,
+                inv: document.getElementById('perm-inv').checked,
+                firmas: document.getElementById('perm-firmas').checked,
+                stats: document.getElementById('perm-stats').checked,
+                caja: document.getElementById('perm-caja').checked,
+                config: document.getElementById('perm-config').checked,
+            };
+
+            window.showMessage(editId ? "Actualizando usuario..." : "Creando registro...");
             
             try {
-                // Creamos el usuario en Firebase Auth usando la app secundaria para NO desloguear al admin
-                await createUserWithEmailAndPassword(secondaryAuth, email, pass);
-                await secondaryAuth.signOut(); // Limpiamos la sesión secundaria
+                if (editId) {
+                    // MODO EDICIÓN
+                    const oldUser = allAppUsers.find(u => u.id === editId);
+                    
+                    // Actualización solo en Firestore. Los cambios de clave/email en Firebase Auth requieren Admin SDK.
+                    // Para este sistema en el navegador, se sobrescriben los datos en DB. 
+                    await updateDoc(getDocRef("app_users", editId), {
+                        email: email,
+                        password: pass,
+                        perms: perms
+                    });
+                    
+                    window.cancelEditUser();
+                    window.showMessage("USUARIO ACTUALIZADO ✅");
+                    
+                } else {
+                    // MODO CREACIÓN
+                    try {
+                        await createUserWithEmailAndPassword(secondaryAuth, email, pass);
+                        await secondaryAuth.signOut();
+                    } catch (authError) {
+                        if (authError.code === 'auth/email-already-in-use') {
+                            console.log("El usuario ya existe en Auth. Actualizando permisos...");
+                        } else {
+                            throw authError;
+                        }
+                    }
 
-                // Guardamos los permisos en Firestore
-                const data = {
-                    email: email,
-                    password: pass,
-                    perms: {
-                        agenda: document.getElementById('perm-agenda').checked,
-                        kiosco: document.getElementById('perm-kiosco').checked,
-                        caja: document.getElementById('perm-caja').checked,
-                        config: document.getElementById('perm-config').checked,
-                    },
-                    timestamp: Timestamp.now()
-                };
-                await addDoc(getCol("app_users"), data);
-                
-                document.getElementById('user-form').reset();
-                window.showMessage("USUARIO CREADO Y AUTORIZADO ✅");
+                    const data = {
+                        email: email,
+                        password: pass,
+                        perms: perms,
+                        timestamp: Timestamp.now()
+                    };
+
+                    const q = query(getCol("app_users"), where("email", "==", email));
+                    const snap = await getDocs(q);
+
+                    if (!snap.empty) {
+                        await updateDoc(getDocRef("app_users", snap.docs[0].id), data);
+                    } else {
+                        await addDoc(getCol("app_users"), data);
+                    }
+                    
+                    document.getElementById('user-form').reset();
+                    window.showMessage("USUARIO CREADO Y AUTORIZADO ✅");
+                }
             } catch (error) {
                 console.error(error);
                 window.showMessage("Error: " + error.message, true);
@@ -610,7 +694,7 @@
         };
 
         window.deleteUser = async (id) => {
-            if(confirm("¿Eliminar usuario del sistema de permisos? (Deberás borrarlo de Firebase Auth manualmente)")) {
+            if(confirm("¿Eliminar usuario del sistema de permisos? (Deberás borrarlo de Firebase Auth manualmente si quieres bloquear el acceso total al sitio)")) {
                 await deleteDoc(getDocRef("app_users", id));
                 window.showMessage("Usuario eliminado");
             }
@@ -655,8 +739,8 @@
                 document.getElementById('login-view').classList.add('is-hidden');
                 document.getElementById('user-email-display').textContent = user.email;
                 
-                // --- BARRERA DE SEGURIDAD (PERMISOS) ---
-                let perms = { agenda: true, kiosco: true, caja: true, config: true }; // Por defecto asumimos master si no está en la db
+                // --- BARRERA DE SEGURIDAD (PERMISOS GLOBALES) ---
+                let perms = { agenda: true, pos: true, inv: true, firmas: true, stats: true, caja: true, config: true };
                 
                 try {
                     const q = query(getCol("app_users"), where("email", "==", user.email.toLowerCase()));
@@ -666,31 +750,36 @@
                     }
                 } catch(e) { console.error("Error validando permisos", e); }
 
-                // Ocultamos/Mostramos opciones del menú según permisos
-                const elAgenda = document.getElementById('menu-agenda');
-                const elFirmas = document.getElementById('menu-firmas');
-                const elStats = document.getElementById('menu-stats');
-                if(elAgenda) elAgenda.style.display = perms.agenda ? 'block' : 'none';
-                if(elFirmas) elFirmas.style.display = perms.agenda ? 'block' : 'none';
-                if(elStats) elStats.style.display = perms.agenda ? 'block' : 'none';
+                currentUserPerms = perms; // Se guarda para validación del modo de vista Inventario
                 
-                const elKiosco = document.getElementById('menu-kiosco');
-                const elBtnVenta = document.getElementById('btn-header-sale');
-                if(elKiosco) elKiosco.style.display = perms.kiosco ? 'block' : 'none';
-                if(elBtnVenta) elBtnVenta.style.display = perms.kiosco ? 'block' : 'none';
+                // Ocultar Opciones de Menú
+                const menuAgenda = document.getElementById('menu-agenda');
+                if(menuAgenda) menuAgenda.style.display = perms.agenda ? 'block' : 'none';
                 
-                const elCaja = document.getElementById('menu-caja');
-                if(elCaja) elCaja.style.display = perms.caja ? 'block' : 'none';
+                const menuFirmas = document.getElementById('menu-firmas');
+                if(menuFirmas) menuFirmas.style.display = perms.firmas ? 'block' : 'none';
                 
-                const elConfig = document.getElementById('menu-config');
-                if(elConfig) elConfig.style.display = perms.config ? 'block' : 'none';
+                const menuStats = document.getElementById('menu-stats');
+                if(menuStats) menuStats.style.display = perms.stats ? 'block' : 'none';
+                
+                const menuKiosco = document.getElementById('menu-kiosco');
+                if(menuKiosco) menuKiosco.style.display = (perms.pos || perms.inv) ? 'block' : 'none';
+                
+                const btnHeaderSale = document.getElementById('btn-header-sale');
+                if(btnHeaderSale) btnHeaderSale.style.display = perms.pos ? 'block' : 'none';
+                
+                const menuCaja = document.getElementById('menu-caja');
+                if(menuCaja) menuCaja.style.display = perms.caja ? 'block' : 'none';
+                
+                const menuConfig = document.getElementById('menu-config');
+                if(menuConfig) menuConfig.style.display = perms.config ? 'block' : 'none';
 
-                // Redirección a la primera vista disponible
+                // Redirección Inicial
                 if(perms.agenda) window.showView('calendar');
-                else if(perms.kiosco) window.showView('productos');
+                else if(perms.pos || perms.inv) window.showView('productos');
                 else if(perms.caja) window.showView('caja');
                 else if(perms.config) window.showView('config');
-                else window.showView('calendar'); // Seguridad fallback
+                else window.showView('calendar');
 
                 loadConfig(); syncBookings(); syncProducts(); syncWaivers(); syncPromos(); syncUsers();
             } else {
@@ -739,9 +828,7 @@
         // ==========================================
         function syncBookings() {
             const monthStr = currentMonthDate.toISOString().substring(0, 7);
-            // Lectura Plana Completa para evitar errores silenciosos de índice compuesto
             onSnapshot(getCol("bookings"), (snap) => {
-                // Se filtra por código en lugar de la base de datos
                 allBookings = snap.docs.map(d => ({ id: d.id, ...d.data() })).filter(b => b.monthYear === monthStr);
                 renderCalendar();
             });
@@ -883,7 +970,7 @@
         window.nextMonth = () => { currentMonthDate.setMonth(currentMonthDate.getMonth() + 1); syncBookings(); syncPromos(); };
 
         // ==========================================
-        // 3. INVENTARIO (TABULAR SIN DUPLICADO)
+        // 3. INVENTARIO MODO LECTURA Y EDICIÓN
         // ==========================================
         function syncProducts() {
             onSnapshot(getCol("products"), (snap) => {
@@ -905,8 +992,18 @@
 
         window.renderProducts = (f = "") => {
             const list = document.getElementById('product-list');
-            if(!list) return; list.innerHTML = '';
+            const btnNewProduct = document.getElementById('btn-new-product');
+            const headerActions = document.getElementById('header-actions');
             
+            if(!list) return; 
+            list.innerHTML = '';
+            
+            // VERIFICACIÓN DE PERMISOS: Ocultar si solo puede vender pero NO modificar inventario
+            const canEditInv = currentUserPerms.config || currentUserPerms.inv;
+            
+            if (btnNewProduct) btnNewProduct.style.display = canEditInv ? 'inline-flex' : 'none';
+            if (headerActions) headerActions.style.display = canEditInv ? 'block' : 'none';
+
             const filtered = allProducts
                 .filter(p => (p.name || "").includes(f.toUpperCase()))
                 .sort((a,b) => (a.name||"").localeCompare(b.name||""));
@@ -918,8 +1015,16 @@
 
             filtered.forEach(p => {
                 const row = document.createElement('div');
-                row.className = `flex flex-col md:grid md:grid-cols-12 md:items-center gap-4 p-5 md:p-4 transition-colors hover:bg-slate-50 font-black italic uppercase text-xs ${p.stock <= 0 ? 'bg-red-50' : ''}`;
+                row.className = `flex flex-col md:grid ${canEditInv ? 'md:grid-cols-12' : 'md:grid-cols-8'} md:items-center gap-4 p-5 md:p-4 transition-colors hover:bg-slate-50 font-black italic uppercase text-xs ${p.stock <= 0 ? 'bg-red-50' : ''}`;
                 
+                let actionsHtml = canEditInv ? `
+                    <div class="md:col-span-4 grid grid-cols-3 gap-2 mt-2 md:mt-0">
+                        <button class="inv-action-btn hover:bg-violet-600 hover:text-white border-2 border-slate-200 bg-white" onclick="window.openRestock('${p.id}')">🔄 Reponer</button>
+                        <button class="inv-action-btn hover:bg-slate-900 hover:text-white border-2 border-slate-200 bg-white" onclick="window.openEditProduct('${p.id}')">📝 Ficha</button>
+                        <button class="inv-action-btn !text-red-500 opacity-40 hover:opacity-100 border-2 border-red-100 bg-white" onclick="window.deleteProduct('${p.id}')">🗑️ Eliminar</button>
+                    </div>
+                ` : '';
+
                 row.innerHTML = `
                     <div class="md:col-span-4 flex justify-between items-center md:block">
                         <span class="font-black uppercase text-sm text-black italic">${p.name}</span>
@@ -932,11 +1037,7 @@
                         <span class="md:hidden text-[10px] text-slate-400 font-bold uppercase block mb-1">Precio</span>
                         <strong class="text-lg font-black font-mono italic text-emerald-600">$${p.salePrice}</strong>
                     </div>
-                    <div class="md:col-span-4 grid grid-cols-3 gap-2 mt-2 md:mt-0">
-                        <button class="inv-action-btn hover:bg-violet-600 hover:text-white border-2 border-slate-200 bg-white" onclick="window.openRestock('${p.id}')">🔄 Reponer</button>
-                        <button class="inv-action-btn hover:bg-slate-900 hover:text-white border-2 border-slate-200 bg-white" onclick="window.openEditProduct('${p.id}')">📝 Ficha</button>
-                        <button class="inv-action-btn !text-red-500 opacity-40 hover:opacity-100 border-2 border-red-100 bg-white" onclick="window.deleteProduct('${p.id}')">🗑️ Eliminar</button>
-                    </div>
+                    ${actionsHtml}
                 `;
                 list.appendChild(row);
             });
@@ -960,10 +1061,8 @@
             const p = allProducts.find(x => x.id === id); if(!p) return;
             const modalId = document.getElementById('restock-prod-id');
             const modalName = document.getElementById('restock-name');
-            const modalStock = document.getElementById('restock-current-stock');
             if(modalId) modalId.value = p.id;
             if(modalName) modalName.textContent = p.name;
-            if(modalStock) modalStock.textContent = p.stock;
             window.openModal('restock-modal');
         };
 
@@ -973,7 +1072,7 @@
             const qty = parseInt(document.getElementById('restock-qty').value);
             const costBatch = parseFloat(document.getElementById('restock-batch-cost').value);
             const p = allProducts.find(x => x.id === id);
-            await updateDoc(getDocRef("products", id), { 
+            await updateDoc(getDocRef("products", id), { 
                 stock: (p.stock || 0) + qty,
                 unitCost: costBatch / qty
             });
@@ -1094,10 +1193,9 @@
             const list = document.getElementById('waiver-list'); if(!list) return; list.innerHTML = '';
             const filtered = allWaivers.filter(w => (w.adultName||"").includes(f.toUpperCase()) || (w.dni||"").includes(f));
             filtered.forEach(w => {
-                const datePart = (w.dateStr || "N/A").split(' ')[0];
                 const card = document.createElement('div');
                 card.className = 'bento-card p-5 cursor-pointer hover:border-violet-500 group text-black font-black italic shadow-sm uppercase italic';
-                card.innerHTML = `<span class="label-tiny italic font-black uppercase">Registro: ${datePart}</span><h4 class="font-black uppercase text-sm group-hover:text-violet-600 tracking-tighter italic font-black uppercase italic">${w.adultName}</h4><p class="text-[10px] text-slate-400 font-mono italic font-black uppercase italic text-black italic">DNI: ${w.dni}</p>`;
+                card.innerHTML = `<span class="label-tiny italic font-black uppercase">Registro: ${w.dateStr || 'N/A'}</span><h4 class="font-black uppercase text-sm group-hover:text-violet-600 tracking-tighter italic font-black uppercase italic">${w.adultName}</h4><p class="text-[10px] text-slate-400 font-mono italic font-black uppercase italic text-black italic">DNI: ${w.dni}</p>`;
                 card.onclick = () => viewWaiver(w.id);
                 list.appendChild(card);
             });
@@ -1158,7 +1256,7 @@
             sorted.filter(p => (p.name||"").includes(f.toUpperCase())).forEach(p => {
                 const itemInCart = saleCart.find(i => i.id === p.id); const qty = itemInCart ? itemInCart.qty : 0;
                 const row = document.createElement('div'); row.className = `pos-item-row text-black italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic ${p.stock <= 0 ? 'stock-alert' : ''}`;
-                row.innerHTML = `<div class="text-left leading-none italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic"><p class="font-black text-sm uppercase italic text-black font-black italic uppercase font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic">${p.name}</p><p class="text-[10px] opacity-40 font-bold mt-1 text-black font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic">Stock: ${p.stock} un. • <span class="text-black font-black font-mono font-black italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic">$${p.salePrice}</span></p></div><div class="flex items-center gap-4 italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic"><div class="flex items-center gap-2 bg-slate-100 p-1 rounded-2xl shadow-inner border border-slate-50 text-black font-black italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic"><button class="w-10 h-10 bg-white rounded-xl font-black active:scale-90 shadow-sm text-black italic font-black italic font-black italic font-black italic font-black italic font-black italic font-black italic font-black italic font-black italic font-black italic font-black italic font-black italic font-black italic font-black italic font-black italic font-black italic" onclick="window.updPOSQty('${p.id}', -1)">-</button><span class="font-black text-xl w-8 text-center italic font-mono text-slate-800 font-black italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic">${qty}</span><button class="w-10 h-10 bg-black text-white rounded-xl font-black active:scale-90 shadow-sm text-white italic font-black italic font-black italic font-black italic font-black italic font-black italic font-black italic font-black italic font-black italic font-black italic font-black italic font-black italic font-black italic font-black italic font-black italic font-black italic" onclick="window.updPOSQty('${p.id}', 1)">+</button></div></div>`;
+                row.innerHTML = `<div class="text-left leading-none italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic"><p class="font-black text-sm uppercase italic text-black font-black italic uppercase font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic">${p.name}</p><p class="text-[10px] opacity-40 font-bold mt-1 text-black font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic">Stock: ${p.stock} un. • <span class="text-black font-black font-mono font-black italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic">$${p.salePrice}</span></p></div><div class="flex items-center gap-4 italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic"><div class="flex items-center gap-2 bg-slate-100 p-1 rounded-2xl shadow-inner border border-slate-50 text-black font-black italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic"><button class="w-10 h-10 bg-white rounded-xl font-black active:scale-90 shadow-sm text-black italic font-black italic font-black italic font-black italic font-black italic font-black italic font-black italic font-black italic font-black italic font-black italic font-black italic font-black italic font-black italic font-black italic font-black italic font-black italic" onclick="window.updPOSQty('${p.id}', -1)">-</button><span class="font-black text-xl w-8 text-center italic font-mono text-slate-800 font-black italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic font-black uppercase italic">${qty}</span><button class="w-10 h-10 bg-black text-white rounded-xl font-black active:scale-90 shadow-sm text-white italic font-black italic font-black italic font-black italic font-black italic font-black italic font-black italic font-black italic font-black italic font-black italic font-black italic font-black italic font-black italic font-black italic font-black italic font-black italic" onclick="window.updPOSQty('${p.id}', 1)">+</button></div></div>`;
                 list.appendChild(row);
             });
         };
